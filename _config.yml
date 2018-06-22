@@ -1,1 +1,122 @@
-theme: jekyll-theme-cayman
+# Site settings
+title: USTACK Blog
+SEOTitle: USTACK.IO | USTACK Blog
+header-img: img/home-bg.jpg
+email: zouyee1989@gmail.com
+description: "关于Golang、Kubernetes、Infra与生活、思想 | USTACK.IO，Golang、 Kubernetes、Infra ，Software Engineer，thinker | 这里是 @ustack.io/zouyee 的个人博客，热爱生活与自由。"
+keyword: "USTACK.IO, USTACK, zouyee, 优栈科技, kubernetes, k8s, @zouyee, 浮世绘的理想国, USTACK Blog, 博客, 个人网站, 互联网, Web, Golang, 区块链, 股票，量化交易"
+url: "https://ustack.io"              # your host, for absolute URL
+baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
+
+
+
+# SNS settings
+RSS: true
+weibo_username:     skyplate   
+github_username:    ustackq
+twitter_username:   ustack
+#facebook_username:  huxpro
+# linkedin_username:  firstname-lastname-idxxxx
+
+
+
+# Build settings
+# from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
+highlighter: rouge
+permalink: pretty
+paginate: 10
+exclude: ["less","node_modules","Gruntfile.js","package.json","README.md","README.zh.md"]
+anchorjs: true                          # if you want to customize anchor. check out line:181 of `post.html`
+
+
+
+# Gems
+# from PR#40, to support local preview for Jekyll 3.0
+gems: [jekyll-paginate]
+
+
+
+# Markdown settings
+# replace redcarpet to kramdown,
+# although redcarpet can auto highlight code, the lack of header-id make the catalog impossible, so I switch to kramdown
+# document: http://jekyllrb.com/docs/configuration/#kramdown
+markdown: kramdown
+kramdown:
+  input: GFM                            # use Github Flavored Markdown !important
+
+
+
+# Disqus settings
+disqus_username: ustack
+
+# Netease setttings
+netease_comment: false
+
+
+
+# Analytics settings
+# Baidu Analytics 
+# ba_track_id: [your track id]
+
+# Google Analytics
+ga_track_id: 'UA-49627206-2'            # Format: UA-xxxxxx-xx
+ga_domain: ustack.io
+
+
+
+# Sidebar settings
+sidebar: true                           # whether or not using Sidebar.
+sidebar-about-description: "努力学习，热爱生活，<br>让无力者有力，让悲观者前行"
+sidebar-avatar: /img/avatar-hux.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
+
+
+
+# Featured Tags
+featured-tags: true                     # whether or not using Feature-Tags
+featured-condition-size: 1              # A tag will be featured if the size of it is more than this condition value
+
+
+
+# Progressive Web Apps
+chrome-tab-theme-color: "#000000"
+service-worker: true
+
+
+
+# Friends
+friends: [
+    {
+    #     title: "Su",
+    #     href: "http://su.gallery/"
+    # },{
+        title: "Kubernetes",
+        href: "https://k8s.io/"
+    },{
+        title: "Giantswarm",
+        href: "https://giantswarm.io/"
+    },{
+        title: "Stackpoint",
+        href: "https://stackpoint.io/"
+    },{
+        title: "CoreOS",
+        href: "https://coreos.io"
+    },{
+        title: "Fabric8",
+        href: "https://fabric8.io/"
+    },{
+        title: "Linkerd",
+        href: "https://linkerd.io"
+    },{
+        title: "Prometheus",
+        href: "https://prometheus.io/"
+    },{
+        title: "Isito",
+        href: "http://dhong.co"
+    },{
+        title: "Firmament",
+        href: "http://firmament.io//"
+    },{
+        title: "Draw",
+        href: "https://draw.io/"
+    }
+]
