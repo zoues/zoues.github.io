@@ -1,0 +1,13 @@
+/*
+Theme Name: Boroda
+Theme URI: http://themeforest.net/user/GuRoN/portfolio
+Description: Boroda - Responsive Theme For WordPress
+Author: GuRoN
+Author URI: http://themeforest.net/user/GuRoN
+Version: 1.3
+Tags: one-column, two-columns, left-sidebar, right-sidebar, fluid-layout, fixed-layout, custom-menu, full-width-template, rtl-language-support, sticky-post, theme-options, translation-ready
+License:
+License URI:
+*/
+@import url('/css/bootstrap.min.css');
+@import url('/css/main_style.css');
