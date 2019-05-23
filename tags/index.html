@@ -899,37 +899,8 @@
                     </div>
                     <div class="col-md-4 col-sm-12 col-xs-12">
                         <div class="gr_widget">
-                            <h6 class="gr_widget_title"><span>Flickr Feed</span></h6>
-                            <script src="/js/jflickrfeed.min.js"></script>
-                            <script type="text/javascript">
-                                /***************************************************
-                                            Flickr Feed
-                                ***************************************************/
-                                jQuery.noConflict()(function ($) {
-                                    $(document).ready(function () {
-
-                                        $('#gr_flick').jflickrfeed({
-                                            limit: 9,
-                                            qstrings: {
-                                                id: '37762355@N04'
-                                            },
-                                            itemTemplate: '<li><a href="" title="" data-lightbox="flickr" style="background:url() no-repeat center center;background-size: cover"></a></li>'
-                                        }, function (data) {
-                                            $('.gr_flick li').css({
-                                                'height': $('.gr_flick li').outerWidth()
-                                            });
-                                            $(window).resize(function () {
-                                                $('.gr_flick li').css({
-                                                    'height': $('.gr_flick li').outerWidth()
-                                                })
-                                            });
-
-                                        });
-
-
-                                    });
-                                });
-                            </script>
+                            <h6 class="gr_widget_title"><span>Douban Feed</span></h6>
+                            
 
                             <ul id="gr_flick" class="gr_flick"></ul>
                             <div class="clearfix"></div>
