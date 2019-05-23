@@ -87,7 +87,7 @@ theme: hexo-theme-next
 deploy:
   type: git
   repo:
-    github: git@github.com:Doublemine/Doublemine.github.io.git,master
+    github: git@github.com:zoues/zoues.github.io.git,master
 
 
 rss: /atom.xml

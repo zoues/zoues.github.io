@@ -76,3 +76,27 @@ div.wpcf7 div.ajax-error {
 div.wpcf7 .placeheld {
 	color: #888;
 }
+
+.qr_code_pc {
+	box-sizing: border-box;
+	position: fixed;
+    right: 140px;
+    top: 450px;
+    width: 140px;
+    padding: 16px;
+    border: 1px solid #d9dadc;
+    background-color: #fff;
+    word-wrap: break-word;
+	word-break: break-all;
+	color: #717375;
+	text-align: center;
+	letter-spacing: .034em;
+}
+
+.qr_code_pc_img {
+	width: 102px;
+	height: auto!important;
+	color: #717375;
+	text-align: center;	
+}
+

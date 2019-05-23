@@ -9,5 +9,6 @@ Tags: one-column, two-columns, left-sidebar, right-sidebar, fluid-layout, fixed-
 License:
 License URI:
 */
-@import url('/css/bootstrap.min.css');
+
 @import url('/css/main_style.css');
+@import url('/css/bootstrap.min.css');

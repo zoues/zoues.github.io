@@ -8,7 +8,6 @@
 .item {
     width: 100%;
     float: none;
-    padding: 0;
     margin-bottom: 50px;
 }
 .gr_blog_post_featuder_holder {
@@ -29,13 +28,8 @@
 }
 .item .gr_post_holder:not(.quote_post):not(.link_post) {
 	background-color:#fbfbfb;
-	padding-bottom:20px;
 }
-.item .gr_post_holder img {
-    transition: transform 0.15s ease-in-out;
-	-moz-transition: transform 0.15s ease-in-out;
-	-webkit-transition: -webkit-transform 0.15s ease-in-out;
-}
+
 .item .gr_img_grid:hover img,
 .item .gr_simple_image:hover img {
     transition: transform 0.2s ease-in-out;
