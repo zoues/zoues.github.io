@@ -11,4 +11,4 @@ License URI:
 */
 
 @import url('/css/main_style.css');
-@import url('/css/bootstrap.min.css');
+@import url('https://cdn.bootcss.com/twitter-bootstrap/3.2.0/css/bootstrap.min.css');
