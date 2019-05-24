@@ -635,7 +635,7 @@
     
       <div class="qr_code_pc_inner">
         <div class="qr_code_pc">
-    <img id="js_pc_qr_code_img" class="qr_code_pc_img" src="https://i.loli.net/2019/05/23/5ce6bb948551d91634.png" alt="zouyee wechat" style="width: 200px; max-width: 100%;">
+    <img id="js_pc_qr_code_img" class="qr_code_pc_img" src="/images/wechat-qcode.png" alt="zouyee wechat" style="width: 200px; max-width: 100%;">
     <p>微信扫一扫<br>关注该公众号</p>
 </div>
 <script>
@@ -686,7 +686,7 @@ jQuery.noConflict()(function ($) {
 
     
       <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="https://i.loli.net/2019/05/23/5ce6bb6d4193a12080.jpg" alt="zouyee 微信支付">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="zouyee 微信支付">
         
       </div>
     
@@ -1180,8 +1180,37 @@ jQuery.noConflict()(function ($) {
                     </div>
                     <div class="col-md-4 col-sm-12 col-xs-12">
                         <div class="gr_widget">
-                            <h6 class="gr_widget_title"><span>Douban Feed</span></h6>
-                            
+                            <h6 class="gr_widget_title"><span>Flickr Feed</span></h6>
+                            <script src="/js/jflickrfeed.min.js"></script>
+                            <script type="text/javascript">
+                                /***************************************************
+                                            Flickr Feed
+                                ***************************************************/
+                                jQuery.noConflict()(function ($) {
+                                    $(document).ready(function () {
+
+                                        $('#gr_flick').jflickrfeed({
+                                            limit: 9,
+                                            qstrings: {
+                                                id: '37762355@N04'
+                                            },
+                                            itemTemplate: '<li><a href="" title="" data-lightbox="flickr" style="background:url() no-repeat center center;background-size: cover"></a></li>'
+                                        }, function (data) {
+                                            $('.gr_flick li').css({
+                                                'height': $('.gr_flick li').outerWidth()
+                                            });
+                                            $(window).resize(function () {
+                                                $('.gr_flick li').css({
+                                                    'height': $('.gr_flick li').outerWidth()
+                                                })
+                                            });
+
+                                        });
+
+
+                                    });
+                                });
+                            </script>
 
                             <ul id="gr_flick" class="gr_flick"></ul>
                             <div class="clearfix"></div>
