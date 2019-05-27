@@ -173,6 +173,8 @@
   </style>
 </noscript>
 
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  
   <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
   <script type="text/javascript" src="https://cdn.bootcss.com/jquery-migrate/1.4.1/jquery-migrate.min.js"></script>
   <link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css">
@@ -278,7 +280,7 @@
 
     <main id="main" class="main row">
          
-        <div class="main-inner" style="width: 58%">
+        <div class="main-inner">
          
             <div class="content-wrap">
                 
@@ -552,6 +554,7 @@
 jQuery.noConflict()(function ($) {
     $(function () {
 		var offsetTop = $('#comments').offset().top - $(window).height();
+		
 		if (offsetTop <= 0) {
 			// load directly when there's no a scrollbar
 			console.log("....")
@@ -559,7 +562,7 @@ jQuery.noConflict()(function ($) {
 			$(window).on('scroll', function () {
 				var scrollTop = document.documentElement.scrollTop;
 				var copyright = $('.post-copyright').offset().top;
-
+				
 				var imageH = $('.qr_code_pc').offset().top;
 				console.log("scrollTop", scrollTop)
 				console.log("copyright", copyright)
@@ -1410,7 +1413,7 @@ jQuery.noConflict()(function ($) {
   
 
   
-  <script type="text/javascript" src></script>
+  <script type="text/javascript" src="https://cdn.bootcss.com/js-cookie/2.1.4/js.cookie.js"></script>
   <script type="text/javascript" src="/js/src/scroll-cookie.js?v=6.3.0"></script>
 
 
