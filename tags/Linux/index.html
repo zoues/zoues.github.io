@@ -53,7 +53,9 @@
 
 
 
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+  
+
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
@@ -180,7 +182,7 @@
   <link rel="stylesheet" id="gr_style-css" href="/css/style1.css" type="text/css" media="all">
   <link rel="stylesheet" id="contact-form-7-css" href="/css/styles.css" type="text/css" media="all">
   <link rel="stylesheet" id="cff-css" href="/css/cff-style.css" type="text/css" media="all">
-  <link rel="stylesheet" id="cff-font-awesome-css" href="/css/font-awesome.min.css" type="text/css" media="all">
+  <link rel="stylesheet" id="cff-font-awesome-css" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css" media="all">
   <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
   <script src="/js/Valine.min.js"></script>
   
@@ -980,67 +982,6 @@
               /* Set ACL */
               var acl = new AV.ACL();
               acl.setPublicReadAccess(true);
-              acl.setPublicWriteAccess(true);
-              newcounter.setACL(acl);
-              /* End Set ACL */
-              newcounter.set("title", title);
-              newcounter.set("url", url);
-              newcounter.set("time", 1);
-              newcounter.save(null, {
-                success: function(newcounter) {
-                  var $element = $(document.getElementById(url));
-                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
-                },
-                error: function(newcounter, error) {
-                  console.log('Failed to create');
-                }
-              });
-            
-          }
-        },
-        error: function(error) {
-          console.log('Error:' + error.code + " " + error.message);
-        }
-      });
-    }
-
-    $(function() {
-      var Counter = AV.Object.extend("Counter");
-      if ($('.leancloud_visitors').length == 1) {
-        addCount(Counter);
-      } else if ($('.post-title-link').length > 1) {
-        showTime(Counter);
-      }
-    });
-  </script>
-
-
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-
-  
-  <script type="text/javascript" src="https://cdn.bootcss.com/js-cookie/2.1.4/js.cookie.js"></script>
-  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=6.3.0"></script>
-
-
-  
-
-  
-
-  
-
-</body>
-</html>
-ue);
               acl.setPublicWriteAccess(true);
               newcounter.setACL(acl);
               /* End Set ACL */

@@ -21,7 +21,7 @@ Primary use:	Blog site
 [0. Import]
 -------------------------------------------------------------------*/
 
-@import url('font-awesome.min.css');
+@import url('https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css');
 @import url('lightbox.css');
 @import url('flexslider.css');
 @import url('owl.carousel.css');
