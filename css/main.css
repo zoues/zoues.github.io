@@ -525,9 +525,17 @@ td {
   }
 }
 @media screen and (min-width: 0px) and (max-width: 1000px) {
+  #main {
+    margin-right: 0px;
+    margin-left: 0px;
+  }
+  #main-inner {
+    padding-right: 0px;
+    padding-left: 0px;
+  }
   .main-inner {
     margin: 0 auto;
-    width: 100%;
+    width: 98%;
   }
   .gr_header_background {
     display: none;
@@ -1890,7 +1898,7 @@ img:hover {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #1479ff;
+  background: #8c0b26;
 }
 .links-of-blogroll {
   font-size: 13px;

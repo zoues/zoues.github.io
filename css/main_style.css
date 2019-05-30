@@ -2073,7 +2073,7 @@ blockquote:after {
 	}
 
 	.gr_sidebar_pad {
-		padding-right:15px !important;
+		padding-right:0px !important;
 	}
 	.gr_footer_widget .gr_widget {
 		margin-bottom:20px;
