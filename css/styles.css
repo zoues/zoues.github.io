@@ -100,4 +100,36 @@ div.wpcf7 .placeheld {
 	text-align: center;	
 }
 
+.TableObject {
+    display: table;
+}
 
+.org-header-wrapper .avatar {
+    /* display: block; */
+	width: 50px;
+	max-width: inherit;
+}
+
+.org-header-wrapper .douban {
+    /* display: block; */
+	width: 180px;
+	max-width: inherit;
+}
+
+.org-header-wrapper .TableObject-item--primary {
+    padding-left: 20px;
+}
+
+.TableObject-item--primary {
+    width: 99%;
+}
+
+.TableObject-item {
+    display: table-cell;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.meta-item {
+	padding: 0px 0px;
+}
