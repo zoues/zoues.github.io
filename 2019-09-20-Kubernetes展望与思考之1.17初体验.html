@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.3.0',
+    sidebar: {"position":"right","display":"hide","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。 kubernetes 1.16已在前天正式发布， kubeadm是Kubernetes官方提供的用于快速安装Kubernetes集群的工具，其中kubespray比">
+<meta name="keywords" content="kubernetes,cloudnative">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes展望与思考之1.17初体验">
+<meta property="og:url" content="https://ustack.io/2019-09-20-Kubernetes展望与思考之1.17初体验.html">
+<meta property="og:site_name" content="Indagate">
+<meta property="og:description" content="接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。 kubernetes 1.16已在前天正式发布， kubeadm是Kubernetes官方提供的用于快速安装Kubernetes集群的工具，其中kubespray比">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://wx2.sinaimg.cn/mw690/007uo485ly1g765pj92okj314i0eb0zs.jpg">
+<meta property="og:image" content="https://wx1.sinaimg.cn/mw690/007uo485gy1g77n6cqw7sj30l40kl7ag.jpg">
+<meta property="og:image" content="https://wx2.sinaimg.cn/mw690/007uo485ly1g76v2icpkuj31e00u0n6d.jpg">
+<meta property="og:updated_time" content="2019-09-21T17:25:38.412Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kubernetes展望与思考之1.17初体验">
+<meta name="twitter:description" content="接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。 kubernetes 1.16已在前天正式发布， kubeadm是Kubernetes官方提供的用于快速安装Kubernetes集群的工具，其中kubespray比">
+<meta name="twitter:image" content="https://wx2.sinaimg.cn/mw690/007uo485ly1g765pj92okj314i0eb0zs.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Indagate" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://ustack.io/2019-09-20-Kubernetes展望与思考之1.17初体验.html">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Kubernetes展望与思考之1.17初体验 | Indagate</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  
+  <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.bootcss.com/jquery-migrate/1.4.1/jquery-migrate.min.js"></script>
+  <link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" id="stylesheet-css" href="/css/style.css" type="text/css" media="all">
+  <link rel="stylesheet" id="gr_classic_style-css" href="/css/classic.css" type="text/css" media="all">
+  <link rel="stylesheet" id="gr_options-css" href="/css/options.css" type="text/css" media="all">
+  <link rel="stylesheet" id="gr_style-css" href="/css/style1.css" type="text/css" media="all">
+  <link rel="stylesheet" id="contact-form-7-css" href="/css/styles.css" type="text/css" media="all">
+  <link rel="stylesheet" id="cff-css" href="/css/cff-style.css" type="text/css" media="all">
+  <link rel="stylesheet" id="cff-font-awesome-css" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css" media="all">
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="/js/Valine.min.js"></script>
+  
+ 
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN" style="opacity: 1;" class="home blog">
+
+  
+  
+    
+  
+<div class="preloader">
+	<div class="gr_preload_logo">
+    	<img src="/images/logo.png" alt="indagate">
+    </div>
+    <div class="gr_load_ring">
+    	<h2>LOADING</h2>
+    </div>
+</div>
+<div id="gr_box_search" class="gr_box_overlay">
+    <div class="gr_close_over"></div>
+    <div class="gr_box_holder">
+        <h3 class="gr_box_title">Let's search</h3>
+        <form role="search" method="get" action="/">
+            <input type="search" name="s" value placeholder="..." class="gr_search_input">
+            <button type="submit" value="Search" class="gr_search_submit">Search</button>
+        </form>
+        <button type="button" class="gr_close">Close</button>
+    </div>
+</div>
+<div id="gr_box_social" class="gr_box_overlay">
+    <div class="gr_close_over"></div>
+    <div class="gr_box_holder">
+        <h3 class="gr_box_title">Follow me</h3>
+        <div class="gr_box_share_holder">
+        <a href="http://github.com/zoues" target="_blank"><i class="fa fa-github"></i></a>                                                <a href="/atom.xml" target="_blank"><i class="fa fa-rss"></i></a>        </div>
+        <button type="button" class="gr_close">Close</button>
+    </div>
+</div>
+  <div class="gr_site_holder">
+    <header>
+            <div class="gr_header_background">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 col-xs-4">
+                            <div class="gr-search">
+                                <a href="#" title>search</a>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-4">
+                            <div class="gr-menu-top">
+                                <div class="gr_menu_holder" style="margin-left: -60px; width:120px">
+                                    <a href="#" title class="gr_menu_button">menu</a>
+                                    <div class="menu-main-menu-container">
+                                        <ul id="menu-main-menu" class="gr_header_menu center-block" style="display: none;">
+                                            <li id="menu-item-344" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-344">
+                                                <a href="/categories/" style="opacity: 1;">开发实践</a>
+                                            </li>
+                                            <li id="menu-item-344" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-344">
+                                                <a href="/categories/" style="opacity: 1;">行业动态</a>
+                                            </li>
+                                            <li id="menu-item-344" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-344">
+                                                <a href="/categories/" style="opacity: 1;">入门教程</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-4">
+                            <div class="gr-social">
+                                <a href="#" title class="gr_share_button">follow</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="gr-logo">
+                                <a href="/">
+                                    <img class="img-responsive" src="/images/logo.png" alt="Boroda">
+                                </a>
+                                <h2>My name is <span>Zouyee</span>. I’m a blogger based in SUZHOU.</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main row">
+         
+        <div class="main-inner">
+         
+            <div class="content-wrap">
+                
+                <div id="content" class="content gr_grid_container">
+                
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-09-20-Kubernetes展望与思考之1.17初体验.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">Kubernetes展望与思考之1.17初体验</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">9月 20 2019</span><span class="gr_separate">|</span>
+          
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
+        
+          
+          <h3 class="blog_title" itemprop="name headline">Kubernetes展望与思考之1.17初体验
+              
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：9月 20 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-09-20T20:40:08+08:00">9月 20 2019</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：9月 22 2019 01:25:38" itemprop="dateModified" datetime="2019-09-22T01:25:38+08:00">9月 22 2019</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019-09-20-Kubernetes展望与思考之1.17初体验.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-09-20-Kubernetes展望与思考之1.17初体验.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019-09-20-Kubernetes展望与思考之1.17初体验.html" class="leancloud_visitors" data-flag-title="Kubernetes展望与思考之1.17初体验">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span>℃</span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
+      
+      </div>
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
+    
+      
+        <p><img src="https://wx2.sinaimg.cn/mw690/007uo485ly1g765pj92okj314i0eb0zs.jpg" alt></p>
+<div class="note info"><p>接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。</p>
+<p><a href="https://kubernetes.io/blog/2019/09/18/kubernetes-1-16-release-announcement" target="_blank" rel="noopener">kubernetes 1.16</a>已在前天正式发布，</p></div>
+<p>kubeadm是Kubernetes官方提供的用于快速安装Kubernetes集群的工具，其中<a href="https://github.com/kubernetes-sigs/kubespray" target="_blank" rel="noopener">kubespray</a>比较适合较大规模的集群部署，*步骤，为可选操作，该文章主要介绍，以下内容:</p>
+<ul>
+<li>kubernetes编译</li>
+<li>kubernetes部署</li>
+<li>kubernetes测试(待续)</li>
+</ul>
+<p>下面我们看看如何编译及部署,在使用kubeadm部署前，需要编译以下镜像及执行文件,下面我们以v1.17.0-alpha.0版本为例：</p>
+<ol>
+<li><p>通过关注右侧公众号，输出<code>1.17a</code> 获取下面的基础镜像<br> 其中prepare.tgz为编译基础镜像，117alpha.tgz为v1.17.0-alpha.0所需镜像及二进制文件</p>
+</li>
+<li><p><code>golang 1.12.9+</code></p>
+</li>
+<li><p><code>ip、iptables、ipset、mount、nsenter、ebtables、ethtool, socat, tc、touch、conntrack、ipvsadm、jq、sysstat、curl、libseccomp</code> 等命令行</p>
+</li>
+</ol>
+<a id="more"></a>
+<hr>
+<h4 id="1-16版本回顾"><a href="#1-16版本回顾" class="headerlink" title="1.16版本回顾"></a>1.16版本回顾</h4><blockquote>
+<p>9月18日，Kubernetes 1.16正式发布，其包含31项增强功能，其中8项增强功能已经GA，另有8项增强功能处于beta阶段，15项处于alpha阶段，该版本有以下亮点:</p>
+</blockquote>
+<ul>
+<li><p>自定义资源(CRD)</p>
+<p>  CRD作为Kubernetes的可扩展机制之一得到广泛使用，其自1.7版本发布以来就一直处于beta阶段。Kubernetes 1.16版本，也标志着CRD迎来了GA版本。</p>
+</li>
+<li><p>存储卷扩展</p>
+<p>  新版本当中包含一系列与存储卷以及卷修改相关的功能。CSI规范中的存储卷大小调整能力提升为beta阶段，允许用户对CSI规范下的存储卷插件进行大小调整。</p>
+</li>
+<li><p>拓扑管理[alpha]</p>
+<p>  Kubelet中旨在协调资源分配决策，从而提供优化效果更好的资源分配能力</p>
+</li>
+<li><p>双栈[alpha]</p>
+<p>  IPv4/IPv6双栈可以将IPv4与IPv6地址分配给各Pod与服务</p>
+<p><strong>若只需要部署v1.17.0-alpha.0版本，可跳过编译过程。</strong><br><br></p>
+</li>
+</ul>
+<h4 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h4><p><a href="https://github.com/kubernetes/kubernetes/tree/master/build" target="_blank" rel="noopener">社区</a>的文档介绍了如果编译相关镜像等工作，如果有兴趣，可仔细阅读，确认golang版本<code>go version</code> &gt;= 1.12.9：</p>
+<ul>
+<li><a href="https://golang.org/doc/install" target="_blank" rel="noopener">golang install</a></li>
+</ul>
+<h5 id="下载编译镜像"><a href="#下载编译镜像" class="headerlink" title="下载编译镜像*"></a>下载编译镜像*</h5><p>目前基础镜像为<code>k8s.gcr.io/kube-cross:v1.12.9-1</code>,如果需要确认读者目前所需镜像，在执行<code>KUBE_GIT_VERSION=v1.17.0-alpha.0 KUBE_FASTBUILD=true  KUBE_BUILD_PULL_LATEST_IMAGES=n make release-images</code>时需要，若本地不存在该镜像，会出现报错，因某种不可抗力因数，需要使用代理进行镜像拉取</p>
+<ul>
+<li><a href="https://github.com/Azure/container-service-for-azure-china/blob/master/aks/README.md#22-container-registry-proxy" target="_blank" rel="noopener">Azure 中国镜像 <code>https://gcr.azk8s.cn</code></a></li>
+<li><a href="https://cr.console.aliyun.com/cn-hangzhou/mirrors" target="_blank" rel="noopener">阿里云加速器(需登录获取)</a></li>
+</ul>
+<p>国内无法直接获取 <code>gcr.io/*</code> 镜像，我们可以将 <code>gcr.io/&lt;repo-name&gt;/&lt;image-name&gt;:&lt;version&gt;</code> 替换为 <code>gcr.azk8s.cn/&lt;repo-name&gt;/&lt;image-name&gt;:&lt;version&gt;</code> ,例如</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># $ docker pull k8s.gcr.io/kube-cross:v1.12.9-1</span></span><br><span class="line"><span class="comment"># k8s.gcr.io可以转换为gcr.io/google_containers</span></span><br><span class="line">$ docker pull gcr.azk8s.cn/google_containers/kube-cross:v1.12.9-1</span><br><span class="line">$ docker tag gcr.azk8s.cn/google_containers/kube-cross:v1.12.9-1 k8s.gcr.io/kube-cross:v1.12.9-1</span><br></pre></td></tr></table></figure>
+<h5 id="编译代码"><a href="#编译代码" class="headerlink" title="编译代码"></a>编译代码</h5><p>下面切换到$GOPATH/src/k8s.io目录，如无则创建，执行<code>git clone https://github.com/kubernetes/kubernetes</code>,<br>下载完成后，切换到该目录，执行以下操作</p>
+<ul>
+<li><p>获取基础镜像</p>
+<p> 通过右侧公众号获取的下载链接，解压<code>prepare.tgz</code>，解压加载以下面的基础镜像</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">tar -zxvf prepare.tgz</span><br><span class="line"><span class="comment"># docker load -i 解压的tar包，最终得到下列镜像</span></span><br><span class="line">k8s.gcr.io/kube-cross                       v1.12.9-1   a808db72440c    5 weeks ago         1.87GB</span><br><span class="line">k8s.gcr.io/debian-iptables-amd64            v11.0.2     01a746008995    5 months ago        45.4MB</span><br><span class="line">k8s.gcr.io/debian-base-amd64                v1.0.0      204e96332c91    5 months ago        42.3MB</span><br><span class="line">k8s.gcr.io/debian-hyperkube-base-amd64      v0.12.1     a46476511725    7 months ago        393MB</span><br></pre></td></tr></table></figure>
+<ul>
+<li>修改设置<br>确认<code>bash --version</code> &gt; 4.3,否则出现以下问题</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/root/go/src/k8s.io/kubernetes/build/lib/release.sh:行385: docker_build_opts[@]: 为绑定变量</span><br><span class="line">/root/go/src/k8s.io/kubernetes/build/lib/release.sh:行385: docker_build_opts[@]: 为绑定变量</span><br><span class="line">/root/go/src/k8s.io/kubernetes/build/lib/release.sh:行385: docker_build_opts[@]: 为绑定变量</span><br><span class="line">/root/go/src/k8s.io/kubernetes/build/lib/release.sh:行385: docker_build_opts[@]: 为绑定变量</span><br></pre></td></tr></table></figure>
+<p>  若不打算更新bash，则做以下修改：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">git diff build/lib/release.sh</span><br><span class="line">diff --git a/build/lib/release.sh b/build/lib/release.sh</span><br><span class="line">index 73c0bcc..e7bd1b1 100644</span><br><span class="line">--- a/build/lib/release.sh</span><br><span class="line">+++ b/build/lib/release.sh</span><br><span class="line">@@ -382,7 +382,7 @@ EOF</span><br><span class="line">         <span class="keyword">if</span> [[ <span class="string">"<span class="variable">$&#123;KUBE_BUILD_PULL_LATEST_IMAGES&#125;</span>"</span> =~ [yY] ]]; <span class="keyword">then</span></span><br><span class="line">             docker_build_opts+=(<span class="string">"--pull"</span>)</span><br><span class="line">         <span class="keyword">fi</span></span><br><span class="line">-        <span class="string">"<span class="variable">$&#123;DOCKER[@]&#125;</span>"</span> build <span class="string">"<span class="variable">$&#123;docker_build_opts[@]&#125;</span>"</span> -q -t <span class="string">"<span class="variable">$&#123;docker_image_tag&#125;</span>"</span> <span class="string">"<span class="variable">$&#123;docker_build_path&#125;</span>"</span> &gt;/dev/null</span><br><span class="line">+        <span class="string">"<span class="variable">$&#123;DOCKER[@]&#125;</span>"</span> build -q -t <span class="string">"<span class="variable">$&#123;docker_image_tag&#125;</span>"</span> <span class="string">"<span class="variable">$&#123;docker_build_path&#125;</span>"</span> &gt;/dev/null</span><br></pre></td></tr></table></figure>
+<p>修改完记得提交，若编译前，对代码有改动，且未提交,即未执行<code>git commit</code>操作,执行编译<code>KUBE_GIT_VERSION=v1.17.0-alpha.0 KUBE_FASTBUILD=true  KUBE_BUILD_PULL_LATEST_IMAGES=n make release-images</code>,则生成的镜像即版本为dirty版本，其他编译操作参见下面链接：</p>
+<ul>
+<li><a href="https://github.com/kubernetes/kubernetes/blob/master/README.md" target="_blank" rel="noopener">https://github.com/kubernetes/kubernetes</a></li>
+<li><a href="https://github.com/kubernetes/kubernetes/tree/master/build" target="_blank" rel="noopener">https://github.com/kubernetes/kubernetes/tree/master/build</a></li>
+</ul>
+<p>若编译前，对代码有改动，且未提交，即未执行<code>git commit</code>操作，则生成的镜像即版本为dirty版本，执行下述命令(可执行bash -x)：</p>
+<p><img src="https://wx1.sinaimg.cn/mw690/007uo485gy1g77n6cqw7sj30l40kl7ag.jpg" alt="编译过程"></p>
+<p><strong><strong>最终生成以下镜像结果</strong></strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ls _output/release-images/amd64/</span><br><span class="line">conformance-amd64.tar  kube-apiserver.tar           kube-proxy.tar</span><br><span class="line">hyperkube-amd64.tar    kube-controller-manager.tar  kube-scheduler.tar</span><br></pre></td></tr></table></figure>
+<p><strong><strong>下面为二进制执行文件</strong></strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ls _output/dockerized/bin/linux/amd64/</span><br><span class="line">apiextensions-apiserver  e2e.test            genyaml     hyperkube                kubelet         mounter</span><br><span class="line">conversion-gen           gendocs             ginkgo      kubeadm                  kubemark        openapi-gen</span><br><span class="line">deepcopy-gen             genkubedocs         go2make     kube-apiserver           kube-proxy</span><br><span class="line">defaulter-gen            genman              go-bindata  kube-controller-manager  kube-scheduler</span><br><span class="line">e2e_node.test            genswaggertypedocs  go-runner   kubectl                  linkcheck</span><br><span class="line"><span class="comment"># 将kubelet、kubeadm、kubectl拷贝到/usr/bin/目录</span></span><br></pre></td></tr></table></figure>
+<p>下述表单为kubeadm及kubernetes维护时限</p>
+<h6 id="kubeadm-成熟程度"><a href="#kubeadm-成熟程度" class="headerlink" title="kubeadm 成熟程度"></a>kubeadm 成熟程度</h6><table>
+<thead>
+<tr>
+<th>功能</th>
+<th>成熟程度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>命令行用户体验</td>
+<td>beta</td>
+</tr>
+<tr>
+<td>功能实现</td>
+<td>beta</td>
+</tr>
+<tr>
+<td>配置文件 API</td>
+<td>alpha</td>
+</tr>
+<tr>
+<td>自托管</td>
+<td>alpha</td>
+</tr>
+<tr>
+<td>kubeadm alpha 子命令</td>
+<td>alpha</td>
+</tr>
+<tr>
+<td>CoreDNS</td>
+<td>GA</td>
+</tr>
+<tr>
+<td>动态 Kubelet 配置</td>
+<td>alpha</td>
+</tr>
+</tbody>
+</table>
+<h6 id="维护周期"><a href="#维护周期" class="headerlink" title="维护周期"></a>维护周期</h6><p>Kubernetes 发现版本的通常只维护支持九个月，在维护周期内，如果发现有比较重大的 bug 或者安全问题的话，<br>可能会发布一个补丁版本。下面是 Kubernetes 的发布和维护周期，同时也适用于 <code>kubeadm</code>。</p>
+<table>
+<thead>
+<tr>
+<th>Kubernetes 版本</th>
+<th>发行月份</th>
+<th>终止维护月份</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1.10.x</td>
+<td>2018 年 3 月</td>
+<td>2018 年 12 月</td>
+</tr>
+<tr>
+<td>v1.11.x</td>
+<td>2018 年 6 月</td>
+<td>2019 年 3 月</td>
+</tr>
+<tr>
+<td>v1.12.x</td>
+<td>2018 年 9 月</td>
+<td>2019 年 6 月</td>
+</tr>
+<tr>
+<td>v1.13.x</td>
+<td>2018 年 12 月</td>
+<td>2019 年 9 月</td>
+</tr>
+<tr>
+<td>v1.14.x</td>
+<td>2019 年 3 月</td>
+<td>2019 年 12 月</td>
+</tr>
+<tr>
+<td>v1.15.x</td>
+<td>2019 年 6 月</td>
+<td>2020 年 3 月</td>
+</tr>
+<tr>
+<td>v1.16.x</td>
+<td>2019 年 9 月</td>
+<td>2020 年 6 月</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h4 id="系统配置"><a href="#系统配置" class="headerlink" title="系统配置"></a>系统配置</h4><p>在安装之前，需要做一些设置处理，当前准备两台CentOS 7.x如下所示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/hosts</span><br><span class="line">10.142.21.132 kargo</span><br><span class="line">10.142.114.189 paasn1</span><br></pre></td></tr></table></figure>
+<p>下面需要对各主机进行安装前<a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm" target="_blank" rel="noopener">检查</a></p>
+<h5 id="设置防火墙"><a href="#设置防火墙" class="headerlink" title="设置防火墙"></a>设置防火墙</h5><p>简单起见，可以关闭所有节点的防火墙：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld</span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld</span><br></pre></td></tr></table></figure>
+<h5 id="禁用SElinux"><a href="#禁用SElinux" class="headerlink" title="禁用SElinux"></a>禁用SElinux</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 临时禁用selinux</span></span><br><span class="line">setenforce 0</span><br><span class="line"><span class="comment"># 永久禁用selinux</span></span><br><span class="line">vi /etc/selinux/config</span><br><span class="line">SELINUX=disabled</span><br></pre></td></tr></table></figure>
+<h5 id="内核配置"><a href="#内核配置" class="headerlink" title="内核配置"></a>内核配置</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt;  /etc/sysctl.d/k8s.conf</span><br><span class="line">net.bridge.bridge-nf-call-ip6tables = 1</span><br><span class="line">net.bridge.bridge-nf-call-iptables = 1</span><br><span class="line">EOF</span><br><span class="line">sysctl -p /etc/sysctl.d/k8s.conf</span><br></pre></td></tr></table></figure>
+<p>确认br_netfilter模块<br><code>lsmod | grep br_netfilter</code></p>
+<p>启用此内核模块，以便遍历桥的数据包​​由iptables进行处理以进行过滤和端口转发，并且群集中的kubernetes窗格可以相互通信<br><code>modprobe br_netfilter</code></p>
+<p>安装依赖命令行</p>
+<p>yum install -y conntrack ipvsadm ipset jq sysstat curl iptables libseccomp socat -y</p>
+<p>若kube-proxy需要开启ipvs，则下述模块需要存在</p>
+<ul>
+<li>ip_vs</li>
+<li>ip_vs_rr</li>
+<li>ip_vs_wrr</li>
+<li>ip_vs_sh</li>
+<li>nf_conntrack_ipv4</li>
+</ul>
+<div class="note warning"><p>可选：<br>   若kube-proxy需要开启ipvs，则下述模块需要存在, 在所有的Kubernetes节点kargo和paasn1上执行以下脚本</p>
+undefined</div>
+<h5 id="磁盘配置"><a href="#磁盘配置" class="headerlink" title="磁盘配置"></a>磁盘配置</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 临时禁用swap即可，重启后，需要再此执行，当然也可以把磁盘信息写入/etc/fstab</span></span><br><span class="line">swapoff -a</span><br></pre></td></tr></table></figure>
+<h5 id="容器引擎安装"><a href="#容器引擎安装" class="headerlink" title="容器引擎安装"></a>容器引擎安装</h5><p>从docker官方库安装kubernetes最新兼容性测试的匹配版本，Kubernetes 1.16+支持的docker版本列表依然是1.13.1, 17.03, 17.06, 17.09, 18.06, 18.09<br>安装docker-ce的软件包依赖,当前安装18.09.7：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">yum install -y yum-utils \</span><br><span class="line">  device-mapper-persistent-data \</span><br><span class="line">  lvm2</span><br><span class="line">yum-config-manager \</span><br><span class="line">    --add-repo \</span><br><span class="line">    https://download.docker.com/linux/centos/docker-ce.repo</span><br><span class="line"><span class="comment"># 18.09.7</span></span><br><span class="line">yum install docker-ce docker-ce-cli containerd.io -y</span><br><span class="line"><span class="comment"># 通过yum list docker-ce --showduplicates | sort -r 获取版本信息，执行以下命令安装指定版本</span></span><br><span class="line"><span class="comment"># yum install docker-ce-&lt;VERSION_STRING&gt; docker-ce-cli-&lt;VERSION_STRING&gt; containerd.i</span></span><br></pre></td></tr></table></figure>
+<p>对于使用systemd作为的Linux的发行版，使用systemd作为docker的cgroup-river<br>可以确保服务器节点在资源紧张的情况更加稳定，因此这里修改各节点上docker的cgroup-driver为systemd。<br>创建/etc/docker/daemon.json</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"exec-opts"</span>: [<span class="string">"native.cgroupdriver=systemd"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>重启docker服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart docker</span><br><span class="line"><span class="comment"># 确认修改生效</span></span><br><span class="line">docker info | grep Cgroup</span><br><span class="line">Cgroup Driver: systemd</span><br><span class="line"><span class="comment"># enable 服务</span></span><br><span class="line">systemctl <span class="built_in">enable</span> docker</span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="2-使用kubeadm部署kubernetes"><a href="#2-使用kubeadm部署kubernetes" class="headerlink" title="2. 使用kubeadm部署kubernetes"></a>2. 使用kubeadm部署kubernetes</h4><p>以下为kubernetes 1.16+软件版本依赖信息：<br>执行<code>kubeadm config  images list</code>获取镜像版本信息</p>
+<table>
+<thead>
+<tr>
+<th>软件</th>
+<th>版本或镜像</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>apiserver</td>
+<td>k8s.gcr.io/kube-apiserver:v1.17.0-alpha.0</td>
+</tr>
+<tr>
+<td>controller-manager</td>
+<td>k8s.gcr.io/kube-controller-manager:v1.17.0-alpha.0</td>
+</tr>
+<tr>
+<td>scheduler</td>
+<td>k8s.gcr.io/kube-scheduler:v1.17.0-alpha.0</td>
+</tr>
+<tr>
+<td>proxy</td>
+<td>k8s.gcr.io/kube-proxy:v1.17.0-alpha.0</td>
+</tr>
+<tr>
+<td>pause</td>
+<td>k8s.gcr.io/pause:3.1</td>
+</tr>
+<tr>
+<td>etcd</td>
+<td>k8s.gcr.io/etcd:3.3.15-0</td>
+</tr>
+<tr>
+<td>coredns</td>
+<td>k8s.gcr.io/coredns:1.6.2</td>
+</tr>
+</tbody>
+</table>
+<p>同样kubernetes-cni-0.7.5-0.x86_64也需要安装</p>
+<h5 id="2-1-安装kubeadm及kubelet"><a href="#2-1-安装kubeadm及kubelet" class="headerlink" title="2.1 安装kubeadm及kubelet"></a>2.1 安装kubeadm及kubelet</h5><p>所有节点执行以下操作:</p>
+<ul>
+<li>安装依赖软件<br>解压117alpha.tgz，<code>tar -xzvf 117alpha.tgz -C /root/</code>,切换至<code>/root/</code>目录<br>执行<code>rpm -ivh *.rpm</code></li>
+<li>安装kubelet、kubeadm、kubectl<br>若已经执行编译操作，则该操作跳过<br>否则，将/root/下上述执行文件拷贝到/usr/bin/目录下</li>
+<li>创建kubelet.service<br>其中kubelet配置通过命令行–config指定配置文件,其内容在kubeadm执行时，进行初始化。具体查看官网<a href="https://kubernetes.io/docs/tasks/administer-cluster/kubelet-config-file/" target="_blank" rel="noopener">kubelet配置</a>。<br>Kubernetes关于为了Kubelet动态配置的特性当前为beta版本。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt;/etc/systemd/system/kubelet.service.d/10-kubeadm.conf</span><br><span class="line"><span class="comment"># Note: This dropin only works with kubeadm and kubelet v1.11+</span></span><br><span class="line">[Service]</span><br><span class="line">Environment=<span class="string">"KUBELET_KUBECONFIG_ARGS=--v=6 --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf"</span></span><br><span class="line">Environment=<span class="string">"KUBELET_CONFIG_ARGS=--config=/var/lib/kubelet/config.yaml"</span></span><br><span class="line"><span class="comment"># This is a file that "kubeadm init" and "kubeadm join" generates at runtime, populating the KUBELET_KUBEADM_ARGS variable dynamically</span></span><br><span class="line">EnvironmentFile=-/var/lib/kubelet/kubeadm-flags.env</span><br><span class="line"><span class="comment"># This is a file that the user can use for overrides of the kubelet args as a last resort. Preferably, the user should use</span></span><br><span class="line"><span class="comment"># the .NodeRegistration.KubeletExtraArgs object in the configuration files instead. KUBELET_EXTRA_ARGS should be sourced from this file.</span></span><br><span class="line">EnvironmentFile=-/etc/sysconfig/kubelet</span><br><span class="line">ExecStart=</span><br><span class="line">ExecStart=/usr/bin/kubelet <span class="variable">$KUBELET_KUBECONFIG_ARGS</span> <span class="variable">$KUBELET_CONFIG_ARGS</span> <span class="variable">$KUBELET_KUBEADM_ARGS</span> <span class="variable">$KUBELET_EXTRA_ARGS</span></span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt;/etc/systemd/system/kubelet.service</span><br><span class="line">[Unit]</span><br><span class="line">Description=kubelet: The Kubernetes Node Agent</span><br><span class="line">Documentation=http://kubernetes.io/docs/</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">ExecStart=/usr/bin/kubelet</span><br><span class="line">Restart=always</span><br><span class="line">StartLimitInterval=0</span><br><span class="line">RestartSec=10</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># enable kubelet服务</span></span><br><span class="line">systemctl daemon-reloads</span><br><span class="line">systemctl <span class="built_in">enable</span> kubelet.service</span><br></pre></td></tr></table></figure>
+<h5 id="2-2-kubeadm初始化"><a href="#2-2-kubeadm初始化" class="headerlink" title="2.2 kubeadm初始化"></a>2.2 kubeadm初始化</h5><p>使用kubeadm config print init-defaults可以打印集群初始化默认的使用的配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: kubeadm.k8s.io/v1beta2</span><br><span class="line">bootstrapTokens:</span><br><span class="line">- groups:</span><br><span class="line">  - system:bootstrappers:kubeadm:default-node-token</span><br><span class="line">  token: abcdef.0123456789abcdef</span><br><span class="line">  ttl: 24h0m0s</span><br><span class="line">  usages:</span><br><span class="line">  - signing</span><br><span class="line">  - authentication</span><br><span class="line">kind: InitConfiguration</span><br><span class="line">localAPIEndpoint:</span><br><span class="line">  advertiseAddress: 1.2.3.4</span><br><span class="line">  bindPort: 6443</span><br><span class="line">nodeRegistration:</span><br><span class="line">  criSocket: /var/run/dockershim.sock</span><br><span class="line">  name: kargo</span><br><span class="line">  taints:</span><br><span class="line">  - effect: NoSchedule</span><br><span class="line">    key: node-role.kubernetes.io/master</span><br><span class="line">---</span><br><span class="line">apiServer:</span><br><span class="line">  timeoutForControlPlane: 4m0s</span><br><span class="line">apiVersion: kubeadm.k8s.io/v1beta2</span><br><span class="line">certificatesDir: /etc/kubernetes/pki</span><br><span class="line">clusterName: kubernetes</span><br><span class="line">controllerManager: &#123;&#125;</span><br><span class="line">dns:</span><br><span class="line">  <span class="built_in">type</span>: CoreDNS</span><br><span class="line">etcd:</span><br><span class="line">  <span class="built_in">local</span>:</span><br><span class="line">    dataDir: /var/lib/etcd</span><br><span class="line">imageRepository: k8s.gcr.io</span><br><span class="line">kind: ClusterConfiguration</span><br><span class="line">kubernetesVersion: v1.16.0</span><br><span class="line">networking:</span><br><span class="line">  dnsDomain: cluster.local</span><br><span class="line">  serviceSubnet: 10.96.0.0/12</span><br><span class="line">scheduler: &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>其中镜像地址可通过imageRepository参数进行自定义，若本地已加载所需镜像，则无须改变，根据测试环境的实际情况,kubernetesVersion对应<code>kubeadm version</code>中GitVersion版本，将kubeadm.conf修改为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt;/root/kubeadm.conf</span><br><span class="line">apiVersion: kubeadm.k8s.io/v1beta2</span><br><span class="line">bootstrapTokens:</span><br><span class="line">- groups:</span><br><span class="line">  - system:bootstrappers:kubeadm:default-node-token</span><br><span class="line">  token: abcdef.0123456789abcdef</span><br><span class="line">  ttl: 24h0m0s</span><br><span class="line">  usages:</span><br><span class="line">  - signing</span><br><span class="line">  - authentication</span><br><span class="line">kind: InitConfiguration</span><br><span class="line">localAPIEndpoint:</span><br><span class="line">  advertiseAddress: 10.142.21.132</span><br><span class="line">  bindPort: 6443</span><br><span class="line">nodeRegistration:</span><br><span class="line">  criSocket: /var/run/dockershim.sock</span><br><span class="line">  name: kargo</span><br><span class="line">  taints:</span><br><span class="line">  - effect: NoSchedule</span><br><span class="line">    key: node-role.kubernetes.io/master</span><br><span class="line">---</span><br><span class="line">apiServer:</span><br><span class="line">  timeoutForControlPlane: 4m0s</span><br><span class="line">apiVersion: kubeadm.k8s.io/v1beta2</span><br><span class="line">certificatesDir: /etc/kubernetes/pki</span><br><span class="line">clusterName: kubernetes</span><br><span class="line">controllerManager: &#123;&#125;</span><br><span class="line">dns:</span><br><span class="line">  <span class="built_in">type</span>: CoreDNS</span><br><span class="line">etcd:</span><br><span class="line">  <span class="built_in">local</span>:</span><br><span class="line">    dataDir: /var/lib/etcd</span><br><span class="line">imageRepository: k8s.gcr.io</span><br><span class="line">kind: ClusterConfiguration</span><br><span class="line">kubernetesVersion: v1.17.0-alpha.0</span><br><span class="line">networking:</span><br><span class="line">  dnsDomain: cluster.local</span><br><span class="line">  serviceSubnet: 10.96.0.0/12</span><br><span class="line">scheduler: &#123;&#125;</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p>接下来使用kubeadm初始化集群，选择kargo作为Master Node，在kargo上执行下面的命令：<br><code>kubeadm init --config /root/kubeadm.conf</code><br>该命令会生成以下内容：</p>
+<ul>
+<li>[kubelet-start] 生成kubelet的配置文件”/var/lib/kubelet/config.yaml”</li>
+<li>[kubeconfig]生成相关的kubeconfig文件</li>
+<li>[control-plane]使用/etc/kubernetes/manifests目录中的yaml文件创建apiserver、controller-manager、scheduler的静态pod</li>
+<li>[bootstraptoken]生成token记录下来，后边使用kubeadm join往集群中添加节点时会用到</li>
+<li>[certs]生成相关的各种证书</li>
+</ul>
+<h5 id="访问集群"><a href="#访问集群" class="headerlink" title="访问集群"></a>访问集群</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p <span class="variable">$HOME</span>/.kube</span><br><span class="line">cp -i /etc/kubernetes/admin.conf /root/.kube/config</span><br></pre></td></tr></table></figure>
+<p>关于kubernetes的接入说明，具体可参看<a href="https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/" target="_blank" rel="noopener">集群接入</a></p>
+<h5 id="验证集群"><a href="#验证集群" class="headerlink" title="验证集群"></a>验证集群</h5><p>查看一下集群状态，确认个组件都处于healthy状态：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kubectl cluster-info</span></span><br><span class="line">Kubernetes master is running at https://10.233.0.1</span><br><span class="line">CoreDNS is running at https://10.233.0.1/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy</span><br><span class="line"></span><br><span class="line"><span class="comment"># kubectl get cs</span></span><br><span class="line">NAME                 STATUS    MESSAGE             ERROR</span><br><span class="line">controller-manager   Healthy   ok</span><br><span class="line">scheduler            Healthy   ok</span><br><span class="line">etcd-0               Healthy   &#123;<span class="string">"health"</span>:<span class="string">"true"</span>&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="加入节点"><a href="#加入节点" class="headerlink" title="加入节点"></a>加入节点</h5><p>若有详细了解<code>kubeadm join</code>命令的需求，可参看<a href="https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-join/" target="_blank" rel="noopener">kubeadm join</a><br>加入集群，需要提供CA密钥的哈希，格式：sha256:&lt;hex_encoded_hash&gt;,在成功<code>kubeadm init</code>后，输出结果会显示合适的join命令，当然可以如下自己生成，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成token</span></span><br><span class="line">kubeadm token create</span><br><span class="line">a9trii.8d52xbbusol0glji</span><br><span class="line"></span><br><span class="line">openssl x509 -pubkey -<span class="keyword">in</span> /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2&gt;/dev/null | openssl dgst -sha256 -hex | sed <span class="string">'s/^.* //'</span></span><br><span class="line">31b110e7fea9c86ddc6c1caa9f27f39021ea115ab7d2b5a86e157c42d9c8c57c</span><br><span class="line"></span><br><span class="line">kubeadm join --discovery-token 9trii.8d52xbbusol0glji --discovery-token-ca-cert-hash sha256:31b110e7fea9c86ddc6c1caa9f27f39021ea115ab7d2b5a86e157c42d9c8c57c 10.142.21.132:6443 -v=6</span><br></pre></td></tr></table></figure>
+<p>paasn1加入集群成功后，在kargo节点上执行命令查看集群中的节点：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">kubectl get node</span><br><span class="line">NAME    STATUS   ROLES    AGE   VERSION</span><br><span class="line">kargo   Ready    master   57m   v1.17.0-alpha.0</span><br><span class="line">passn1   Ready    &lt;none&gt;   11s   v1.17.0-alpha.0</span><br></pre></td></tr></table></figure>
+<h5 id="验证etcd安装"><a href="#验证etcd安装" class="headerlink" title="验证etcd安装*"></a>验证etcd安装*</h5><p>如果配置正确，那么上述命令执行结果应该是任何输出的。如果结果有错，请参照上述配置和环境变量文件检查配置。一旦我们顺利启动<code>etcd</code>服务，我们还需要正确检查我们的<code>etcd</code>集群是否可用，在<code>etcd</code>集群中任一节点中执行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">docker ps|grep etcd</span><br><span class="line">0214f9a78ba5        b2756210eeab                              <span class="string">"etcd --advertise-cl…"</span>   4 hours ago         Up 4 hours                              k8s_etcd_etcd-kargo_kube-system_2b66f634d9a00ad56540109b231dd318_3</span><br><span class="line">20419a0de748        k8s.gcr.io/pause:3.1                      <span class="string">"/pause"</span>                 9 days ago          Up 1 days                               k8s_POD_etcd-kargo_kube-system_2b66f634d9a00ad56540109b231dd318_2</span><br><span class="line"></span><br><span class="line"> docker <span class="built_in">exec</span> -it 168729f100e0 etcdctl --endpoint https://127.0.0.1:2379   \</span><br><span class="line"> --endpoint https://127.0.0.1:2379    \</span><br><span class="line"> --ca-file=/etc/ssl/etcd/ssl/ca.pem \</span><br><span class="line"> --cert-file=/etc/ssl/etcd/ssl/ca.pem \</span><br><span class="line"> --key-file=/etc/ssl/etcd/ssl/ca-key.pem \</span><br><span class="line"> cluster-health</span><br><span class="line"></span><br><span class="line"> member 38ee253c41f760ca is healthy: got healthy result from https://10.142.21.132:2379</span><br><span class="line"> cluster is healthy</span><br></pre></td></tr></table></figure>
+<h5 id="集群重置"><a href="#集群重置" class="headerlink" title="集群重置*"></a>集群重置*</h5><p>集群初始化如果遇到问题，可以使用下面的命令进行清理</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubeadm reset</span><br><span class="line">rm -rf /var/lib/cni/ /var/lib/etcd/</span><br><span class="line">rm -rf /var/lib/kubelet /etc/kubernetes/</span><br></pre></td></tr></table></figure>
+<h5 id="安装网络"><a href="#安装网络" class="headerlink" title="安装网络"></a>安装网络</h5><p>接下来，选择calico作为网络插件，具体说明，参见相关文档<a href="https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/" target="_blank" rel="noopener">网络插件</a><br>其中calico部署简单如下所述：</p>
+<ul>
+<li>下载部署脚本<br>curl <a href="https://docs.projectcalico.org/v3.9/manifests/calico.yaml" target="_blank" rel="noopener">https://docs.projectcalico.org/v3.9/manifests/calico.yaml</a> -O</li>
+<li>配置pod cidr<br>若pod cidr非192.168.0.0/16，则执行以下命令</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">POD_CIDR=<span class="string">"&lt;your-pod-cidr&gt;"</span> \</span><br><span class="line">sed -i -e <span class="string">"s?192.168.0.0/16?<span class="variable">$POD_CIDR</span>?g"</span> calico.yaml</span><br></pre></td></tr></table></figure>
+<p>相关文档，参见<a href="https://docs.projectcalico.org/v3.9/getting-started/kubernetes/installation/calico" target="_blank" rel="noopener">calico部署</a></p>
+<ul>
+<li>执行部署脚本<br><code>kubectl apply -f calico.yaml</code></li>
+</ul>
+<h5 id="测试网络及dns"><a href="#测试网络及dns" class="headerlink" title="测试网络及dns"></a>测试网络及dns</h5><p>首先，确认calico及coredns相关pod是否运行正确<br>在一切正常情况下，你会得到类似如下的输出结果:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#kubectl get po -n kube-system|grep calico</span></span><br><span class="line">calico-kube-controllers-744795b577-jc4r7                          1/1     Running                 0          1d</span><br><span class="line">calico-node-7lbdm                                                 1/1     Running                 8          1d</span><br><span class="line"></span><br><span class="line"><span class="comment">#kubectl get po -n kube-system|grep dns</span></span><br><span class="line">coredns-7f547f9899-7l9cq                                          1/1     Running                 0          1d</span><br><span class="line">dns-autoscaler-7bf66d8bd8-l52bn                                   1/1     Running                 0          1d</span><br><span class="line"></span><br><span class="line">kubectl run  busybox --image=busybox:latest --restart=Never</span><br></pre></td></tr></table></figure>
+<p>进入busybox执行nslookup，查询kubernetes服务地址：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">kubectl run -it busybox sh</span><br><span class="line">nslookup kubernetes.default</span><br><span class="line"></span><br><span class="line">Server:    10.233.0.3</span><br><span class="line">Address 1: 10.233.0.3 kube-dns.kube-system.svc.cluster.local</span><br><span class="line"></span><br><span class="line">Name:      kubernetes.default</span><br><span class="line">Address 1: 10.233.0.3 kubernetes.default.svc.cluster.local</span><br><span class="line"></span><br><span class="line">ping 10.142.21.132</span><br><span class="line">若ping通，则网络正常</span><br></pre></td></tr></table></figure>
+<h4 id="部署插件"><a href="#部署插件" class="headerlink" title="部署插件*"></a>部署插件*</h4><p>为了更好的管理与使用kubernetes集群，开源社区提供了多种工具，如应用管理、监控、日志、负载均衡等，另外kubernetes提供两种扩展方式：<a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/" target="_blank" rel="noopener">使用聚合层</a>与<a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/" target="_blank" rel="noopener">第三方资源管理</a></p>
+<h5 id="软件包管理"><a href="#软件包管理" class="headerlink" title="软件包管理"></a>软件包管理</h5><p>Helm工具由Deis发起，该公司在17年初收购，该软件由客户端命helm令行工具和服务端tiller组成，Helm的安装十分简单。 下载helm命令行工具到master节点node1的/usr/local/bin下，这里下载的2.14.3版本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl -O https://get.helm.sh/helm-v2.14.3-linux-amd64.tar.gz</span><br><span class="line">tar -zxvf helm-v2.14.3-linux-amd64.tar.gz</span><br><span class="line"><span class="built_in">cd</span> linux-amd64/</span><br><span class="line">cp helm /usr/<span class="built_in">local</span>/bin/</span><br></pre></td></tr></table></figure>
+<p>软件包的管理理念并不是Deis,这里势必需要提及一下mesosphere，其开创软件包c/s管理模式，可惜在mesos vs kubernetes的战争中落败，而失去初始的光芒。<br>为了安装服务端tiller，需要在主机配置kubectl工具和kubeconfig文件，确保kubectl工具可以在这台机器上访问apiserver且正常使用。 这里的kargo节点已经配置好了kubectl。</p>
+<p>因为Kubernetes APIServer开启了RBAC访问控制，所以需要创建tiller使用的service account: tiller并分配合适的角色给它。 详细内容可以查看helm文档中的<a href="https://docs.helm.sh/using_helm/#role-based-access-control" target="_blank" rel="noopener">RBAC</a>。 这里简单起见直接分配cluster-admin这个集群内置的ClusterRole给它。创建helm-rbac.yaml文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">cat &lt;&lt;EOF &gt;/root/helm.yaml</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: ServiceAccount</span><br><span class="line">metadata:</span><br><span class="line">  name: tiller</span><br><span class="line">  namespace: kube-system</span><br><span class="line">---</span><br><span class="line">apiVersion: rbac.authorization.k8s.io/v1beta1</span><br><span class="line">kind: ClusterRoleBinding</span><br><span class="line">metadata:</span><br><span class="line">  name: tiller</span><br><span class="line">roleRef:</span><br><span class="line">  apiGroup: rbac.authorization.k8s.io</span><br><span class="line">  kind: ClusterRole</span><br><span class="line">  name: cluster-admin</span><br><span class="line">subjects:</span><br><span class="line">  - kind: ServiceAccount</span><br><span class="line">    name: tiller</span><br><span class="line">    namespace: kube-system</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">kubectl apply -f /root/helm.yaml</span><br></pre></td></tr></table></figure>
+<p>接下来部署tiller：</p>
+<p><code>helm init --service-account tiller --skip-refresh</code> tiller默认被部署在k8s集群中的kube-system这个namespace下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pod -n kube-system -l app=helm</span><br><span class="line">NAME                             READY   STATUS    RESTARTS   AGE</span><br><span class="line">tiller-deploy-7d666f8ccc-92h27   1/1     Running   5          1d</span><br></pre></td></tr></table></figure>
+<div class="note warning"><p>如上所述，使用代理镜像库<code>helm init --service-account tiller --tiller-image &lt;你指定的镜像库名称&gt;/tiller:v2.13.3 --skip-refresh</code>，实际如下：<br><code>helm init --service-account tiller --tiller-image gcr.azk8s.cn/google_containers/tiller:v2.13.1 --skip-refresh</code></p></div>
+<p>修改helm charts仓库地址为微软提供的镜像地址：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">helm repo add stable http://mirror.azure.cn/kubernetes/charts</span><br><span class="line"><span class="string">"stable"</span> has been added to your repositories</span><br><span class="line"></span><br><span class="line">helm repo list</span><br><span class="line">NAME  URL</span><br><span class="line">stable http://mirror.azure.cn/kubernetes/charts</span><br><span class="line"><span class="built_in">local</span> http://127.0.0.1:8879/charts</span><br></pre></td></tr></table></figure>
+<h5 id="部署核心监控"><a href="#部署核心监控" class="headerlink" title="部署核心监控"></a>部署核心监控</h5><p>kubernetes使用<a href="https://github.com/kubernetes-incubator/metrics-server" target="_blank" rel="noopener">metrics-server</a>提供节点及pod级别的资源监控, 其为<code>metrics.k8s.io</code>接口组，为弹性伸缩模块等模块提供接口，具体详见<a href="https://github.com/kubernetes/community/blob/master/contributors/design-proposals/instrumentation/monitoring_architecture.md" target="_blank" rel="noopener">kubernetes监控架构</a></p>
+<ul>
+<li>拉取代码<br><code>git clone https://github.com/kubernetes-incubator/metrics-server</code></li>
+<li>修改配置<br>修改<code>deploy/1.8+/metrics-server-deployment.yaml</code>文件</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: ServiceAccount</span><br><span class="line">metadata:</span><br><span class="line">  name: metrics-server</span><br><span class="line">  namespace: kube-system</span><br><span class="line">---</span><br><span class="line">apiVersion: apps/v1</span><br><span class="line">kind: Deployment</span><br><span class="line">metadata:</span><br><span class="line">  name: metrics-server</span><br><span class="line">  namespace: kube-system</span><br><span class="line">  labels:</span><br><span class="line">    k8s-app: metrics-server</span><br><span class="line">spec:</span><br><span class="line">  selector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      k8s-app: metrics-server</span><br><span class="line">  template:</span><br><span class="line">    metadata:</span><br><span class="line">      name: metrics-server</span><br><span class="line">      labels:</span><br><span class="line">        k8s-app: metrics-server</span><br><span class="line">    spec:</span><br><span class="line">      serviceAccountName: metrics-server</span><br><span class="line">      volumes:</span><br><span class="line">      <span class="comment"># mount in tmp so we can safely use from-scratch images and/or read-only containers</span></span><br><span class="line">      - name: tmp-dir</span><br><span class="line">        emptyDir: &#123;&#125;</span><br><span class="line">      containers:</span><br><span class="line">      - name: metrics-server</span><br><span class="line">        image: k8s.gcr.io/metrics-server-amd64:v0.3.4</span><br><span class="line">        imagePullPolicy: Always</span><br><span class="line">        args:</span><br><span class="line">        - --logtostderr</span><br><span class="line">        - --kubelet-insecure-tls</span><br><span class="line">        - --kubelet-preferred-address-types=InternalIP</span><br><span class="line">        volumeMounts:</span><br><span class="line">        - name: tmp-dir</span><br><span class="line">          mountPath: /tmp</span><br></pre></td></tr></table></figure>
+<ul>
+<li>验证结果</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">kubectl get po -n kube-system -l k8s-app=metrics-server</span><br><span class="line">NAME                              READY   STATUS    RESTARTS   AGE</span><br><span class="line">metrics-server-66fc8cddfb-cwvcf   1/1     Running   6          1d</span><br><span class="line"></span><br><span class="line">kubectl top node</span><br><span class="line">NAME     CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%</span><br><span class="line">kargo   1533m        19%    9430Mi          61%</span><br><span class="line">paasn1   4443m        56%    10490Mi         67%</span><br></pre></td></tr></table></figure>
+<h5 id="部署仪表盘"><a href="#部署仪表盘" class="headerlink" title="部署仪表盘"></a>部署仪表盘</h5><p>社区提供Dashboard项目，它为用户提供一个可视化的Web界面来查看当前集群的各种信息。用户可以使用Kubernetes Dashboard部署容器化的应用、监控应用的状态、执行故障排查任务以及管理Kubernetes各类资源。部署方式如下；</p>
+<ul>
+<li>拉取代码<br><code>https://github.com/kubernetes/dashboard</code></li>
+<li>修改配置<br>将<code>aio/deploy/recommended/02_dashboard-service.yaml</code>配置修改为：</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">kind: Service</span><br><span class="line">apiVersion: v1</span><br><span class="line">metadata:</span><br><span class="line">  labels:</span><br><span class="line">    k8s-app: kubernetes-dashboard</span><br><span class="line">  name: kubernetes-dashboard</span><br><span class="line">  namespace: kubernetes-dashboard</span><br><span class="line">spec:</span><br><span class="line">  ports:</span><br><span class="line">    - port: 443</span><br><span class="line">      targetPort: 8443</span><br><span class="line">  selector:</span><br><span class="line">    k8s-app: kubernetes-dashboard</span><br><span class="line">  <span class="built_in">type</span>: NodePort</span><br></pre></td></tr></table></figure>
+<p>获取分配访问端口：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl get svc -n kubernetes-dashboard</span><br><span class="line">NAME                   TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)         AGE</span><br><span class="line">kubernetes-dashboard   NodePort   10.233.41.73   &lt;none&gt;        443:30479/TCP   1d</span><br></pre></td></tr></table></figure>
+<p>获得主机端口30479，dashboard的界面绕过https,通过<a href="https://10.142.21.132:30479" target="_blank" rel="noopener">https://10.142.21.132:30479</a><a href="https://kubernetes.io/docs/concepts/services-networking/service/" target="_blank" rel="noopener">nodeport方式</a>进行访问外，还可以执行以下代理操作</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl proxy --accept-hosts=<span class="string">'^.*'</span> --address=<span class="string">'10.142.113.20'</span> --port 8080</span><br></pre></td></tr></table></figure>
+<p>我们还可以通过<a href="http://10.142.21.132:8080/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/" target="_blank" rel="noopener">http://10.142.21.132:8080/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/</a><br>，如下图所示。</p>
+<p><img src="https://wx2.sinaimg.cn/mw690/007uo485ly1g76v2icpkuj31e00u0n6d.jpg" alt="Dashboard UI workloads page"></p>
+<h5 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h5><p>针对上述涉及的内容，请关注后续文章</p>
+<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul>
+<li><a href="https://kubernetes.io/blog/2019/09/18/kubernetes-1-16-release-announcement/" target="_blank" rel="noopener">kubernetes 1.16</a></li>
+<li><a href="https://kubernetes.io/docs/reference/setup-tools/kubeadm" target="_blank" rel="noopener">kubeadm</a></li>
+<li><a href="https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-join/" target="_blank" rel="noopener">kubeadm join</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/" target="_blank" rel="noopener">网络插件</a></li>
+<li><a href="https://docs.projectcalico.org/v3.9/getting-started/kubernetes/installation/calico" target="_blank" rel="noopener">calico部署</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/" target="_blank" rel="noopener">集群接入</a></li>
+<li><a href="https://github.com/kubernetes/community/blob/master/contributors/design-proposals/instrumentation/monitoring_architecture.md" target="_blank" rel="noopener">监控架构</a></li>
+</ul>
+
+      
+    </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+      <div class="qr_code_pc_inner">
+        <div class="qr_code_pc">
+    <img id="js_pc_qr_code_img" class="qr_code_pc_img" src="https://i.loli.net/2019/06/06/5cf91a4ba4a1c41751.jpg" alt="zouyee wechat" style="width: 200px; max-width: 100%;">
+    <p>微信扫一扫<br>关注该公众号</p>
+</div>
+<script>
+jQuery.noConflict()(function ($) {
+    $(function () {
+		var offsetTop = $('#comments').offset().top - $(window).height();
+		
+		if (offsetTop <= 0) {
+			// load directly when there's no a scrollbar
+			console.log("....")
+		} else {
+			$(window).on('scroll', function () {
+				var scrollTop = document.documentElement.scrollTop;
+				var copyright = $('.post-copyright').offset().top;
+				
+				var imageH = $('.qr_code_pc').offset().top;
+				console.log("scrollTop", scrollTop)
+				console.log("copyright", copyright)
+				console.log("qr_code_pc", imageH)
+				if (scrollTop <= offsetTop) {
+					$('.qr_code_pc').css('position', 'absolute')
+					$('.qr_code_pc').css('top', 420)
+				}
+				if (scrollTop > 450 && copyright > scrollTop) {
+					$('.qr_code_pc').css('top', 20)
+					$('.qr_code_pc').css('position', 'fixed')
+				} else {
+					$('.qr_code_pc').css('position', 'absolute')
+				}
+			});
+		}
+	});
+
+})
+</script>
+
+      </div>
+      
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span style="padding-top: 5px;">打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="http://wx4.sinaimg.cn/small/007uo485ly1g3u48deh3gj307i0a70ss.jpg" alt="zouyee 微信支付">
+        
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>zouyee</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://ustack.io/2019-09-20-Kubernetes展望与思考之1.17初体验.html" title="Kubernetes展望与思考之1.17初体验">https://ustack.io/2019-09-20-Kubernetes展望与思考之1.17初体验.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+          
+            <a href="/tags/cloudnative/" rel="tag"># cloudnative</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018-03-26-Kubernetes集群之路之TLS证书配置.html" rel="next" title="Kubernetes集群之路（一）TLS证书配置">
+                <i class="fa fa-chevron-left"></i> Kubernetes集群之路（一）TLS证书配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+                </div>
+                
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+            </div>
+                
+                
+  
+
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/author.webp" alt="zouyee">
+            
+              <p class="site-author-name" itemprop="name">zouyee</p>
+              <p class="site-description motion-element" itemprop="description">Keep motivation for the world</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">35</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">47</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/zouyee" target="_blank" title="Twitter" rel="external nofollow"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.instagram.com/ustackq/" target="_blank" title="Instagram" rel="external nofollow"><i class="fa fa-fw fa-instagram"></i>Instagram</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/zouyee" target="_blank" title="GitHub" rel="external nofollow"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank" rel="external nofollow">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.zoues.com/" title="Zoues" target="_blank">Zoues</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-16版本回顾"><span class="nav-number">1.</span> <span class="nav-text">1.16版本回顾</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#前期准备"><span class="nav-number">2.</span> <span class="nav-text">前期准备</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#下载编译镜像"><span class="nav-number">2.1.</span> <span class="nav-text">下载编译镜像*</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#编译代码"><span class="nav-number">2.2.</span> <span class="nav-text">编译代码</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#kubeadm-成熟程度"><span class="nav-number">2.2.1.</span> <span class="nav-text">kubeadm 成熟程度</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#维护周期"><span class="nav-number">2.2.2.</span> <span class="nav-text">维护周期</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#系统配置"><span class="nav-number">3.</span> <span class="nav-text">系统配置</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#设置防火墙"><span class="nav-number">3.1.</span> <span class="nav-text">设置防火墙</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#禁用SElinux"><span class="nav-number">3.2.</span> <span class="nav-text">禁用SElinux</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#内核配置"><span class="nav-number">3.3.</span> <span class="nav-text">内核配置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#磁盘配置"><span class="nav-number">3.4.</span> <span class="nav-text">磁盘配置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#容器引擎安装"><span class="nav-number">3.5.</span> <span class="nav-text">容器引擎安装</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-使用kubeadm部署kubernetes"><span class="nav-number">4.</span> <span class="nav-text">2. 使用kubeadm部署kubernetes</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1-安装kubeadm及kubelet"><span class="nav-number">4.1.</span> <span class="nav-text">2.1 安装kubeadm及kubelet</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2-kubeadm初始化"><span class="nav-number">4.2.</span> <span class="nav-text">2.2 kubeadm初始化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#访问集群"><span class="nav-number">4.3.</span> <span class="nav-text">访问集群</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#验证集群"><span class="nav-number">4.4.</span> <span class="nav-text">验证集群</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#加入节点"><span class="nav-number">4.5.</span> <span class="nav-text">加入节点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#验证etcd安装"><span class="nav-number">4.6.</span> <span class="nav-text">验证etcd安装*</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#集群重置"><span class="nav-number">4.7.</span> <span class="nav-text">集群重置*</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#安装网络"><span class="nav-number">4.8.</span> <span class="nav-text">安装网络</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#测试网络及dns"><span class="nav-number">4.9.</span> <span class="nav-text">测试网络及dns</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#部署插件"><span class="nav-number">5.</span> <span class="nav-text">部署插件*</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#软件包管理"><span class="nav-number">5.1.</span> <span class="nav-text">软件包管理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#部署核心监控"><span class="nav-number">5.2.</span> <span class="nav-text">部署核心监控</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#部署仪表盘"><span class="nav-number">5.3.</span> <span class="nav-text">部署仪表盘</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#后续"><span class="nav-number">5.4.</span> <span class="nav-text">后续</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考资料"><span class="nav-number">6.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+                
+        </div>
+        
+        
+    </main>
+
+
+    <div class="gr_footer_widget">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="gr_widget">
+                            <h6 class="gr_widget_title"><span>Serveless Repo</span></h6>
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item avatar" src="http://wx2.sinaimg.cn/mw690/007uo485ly1g3vc37ipvgj305k05kwep.jpg" width="50" height="50" alt="@virtual-kubelet">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <p class="org-description" itemprop="description"></p><div>OCI-based implementation CRI</div><p></p>
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="https://cri-o.io" href="https://cri-o.io">https://cri-o.io</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item avatar" src="http://wx3.sinaimg.cn/mw690/007uo485ly1g3vc375d2vj305k05kglt.jpg" width="50" height="50" alt="@openfaas">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <p class="org-description" itemprop="description"></p><div>Serverless Functions Made Simple</div><p></p>
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="https://www.openfaas.com" href="https://www.openfaas.com">https://www.openfaas.com</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item avatar" src="http://wx1.sinaimg.cn/mw690/007uo485ly1g3vc36nmvuj305k05k0sk.jpg" width="50" height="50" alt="@virtual-kubelet">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <p class="org-description" itemprop="description"></p><div>Building serverless within Kubernetes</div><p></p>
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="https://virtual-kubelet.io" href="https://virtual-kubelet.io">https://virtual-kubelet.io</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item avatar" src="http://wx4.sinaimg.cn/mw690/007uo485ly1g3vc37xk43j305k05kglj.jpg" width="50" height="50" alt="@virtual-kubelet">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <p class="org-description" itemprop="description"></p><div>Manage modern serverless workloads</div><p></p>
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="https://knative.dev" href="https://knative.dev">https://knative.dev</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="gr_widget" style="line-height: 18px;">
+                            <h6 class="gr_widget_title"><span>Calendar</span></h6>
+                            <div id="calendar_wrap" class="calendar_wrap">
+                                <table id="wp-calendar">
+                                    <caption>July 2019</caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" title="Monday">M</th>
+                                            <th scope="col" title="Tuesday">T</th>
+                                            <th scope="col" title="Wednesday">W</th>
+                                            <th scope="col" title="Thursday">T</th>
+                                            <th scope="col" title="Friday">F</th>
+                                            <th scope="col" title="Saturday">S</th>
+                                            <th scope="col" title="Sunday">S</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3" id="prev"><a href="./wp/boroda/2015/05/">« May</a></td>
+                                            <td class="pad">&nbsp;</td>
+                                            <td colspan="3" id="next" class="pad">&nbsp;</td>
+                                        </tr>
+                                    </tfoot>
+
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="5" class="pad">&nbsp;</td>
+                                            <td>1</td>
+                                            <td>2</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>4</td>
+                                            <td>5</td>
+                                            <td>6</td>
+                                            <td>7</td>
+                                            <td>8</td>
+                                            <td>9</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10</td>
+                                            <td>11</td>
+                                            <td>12</td>
+                                            <td>13</td>
+                                            <td>14</td>
+                                            <td>15</td>
+                                            <td>16</td>
+                                        </tr>
+                                        <tr>
+                                            <td>17</td>
+                                            <td>18</td>
+                                            <td id="today">19</td>
+                                            <td>20</td>
+                                            <td>21</td>
+                                            <td>22</td>
+                                            <td>23</td>
+                                        </tr>
+                                        <tr>
+                                            <td>24</td>
+                                            <td>25</td>
+                                            <td>26</td>
+                                            <td>27</td>
+                                            <td>28</td>
+                                            <td>29</td>
+                                            <td>30</td>
+                                        </tr>
+                                        <tr>
+                                            <td>31</td>
+                                            <td class="pad" colspan="6">&nbsp;</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="gr_widget">
+                            <h6 class="gr_widget_title"><span>Dou Feed</span></h6>
+                            
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item douban" src="http://wx3.sinaimg.cn/mw690/007uo485gy1g3vcq8x3dpj30b40fwdgm.jpg" width="50" height="50" alt="@virtual-kubelet">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="少年赫比" href="https://book.douban.com/subject/33408001/?icn=index-latestbook-subject">书名: 少年赫比</a>
+                                        </li>
+                                         <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <a rel="nofollow" itemprop="url" class="text-gray">出版年: 2019-5</a>
+                                        </li>
+                                         <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <a rel="nofollow" itemprop="url" class="text-gray">原作名: CITY BOY</a>
+                                        </li>
+                                         <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <a rel="nofollow" itemprop="url" class="text-gray">定价: 58.00元</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zouyee</span>
+
+  
+
+  
+</div>
+
+
+  
+
+
+
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" rel="external nofollow" href="https://github.com/theme-next/hexo-theme-next">NexT.Muse</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery.form/3.51/jquery.form.min.js"></script>
+  </div>
+    <script type="text/javascript" src="/js/custom.js"></script>
+    <script type="text/javascript" src="/js/menu.js"></script>
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="/js/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'jTOUB0OQ83CnjWySYgN5W1PV-gzGzoHsz',
+        appKey: '8upIEt85LzIaq3NWQbUbfWI8',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("Qg4Aol4dtKwpnLstsoOct5Ya-gzGzoHsz", "pRvygLtQ4atIrsbLXpXi9HXa");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text(counter.get('time'));
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+  <script type="text/javascript" src="https://cdn.bootcss.com/js-cookie/2.1.4/js.cookie.js"></script>
+  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=6.3.0"></script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

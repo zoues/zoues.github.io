@@ -1,6 +1,6 @@
 /* Preload images */
 body:after {
-  content: url(http://wx3.sinaimg.cn/mw690/007uo485gy1g3u3ibb7h9j300r00r07s.jpg) url(http://wx1.sinaimg.cn/mw690/007uo485gy1g3u3ibrdwpg300w00waa0.gif) url(http://wx1.sinaimg.cn/mw690/007uo485gy1g3u3icyfrfj301e019a9t.jpg) url(http://wx3.sinaimg.cn/mw690/007uo485gy1g3u3icgeu7j301e019a9t.jpg);
+  content: url(http://wx3.sinaimg.cn/mw690/007uo485gy1g3u3ibb7h9j300r00r07s.jpg) url(https://wx1.sinaimg.cn/square/007uo485gy1g3u3ibrdwpg300w00waa0.gif) url(https://wx1.sinaimg.cn/square/007uo485gy1g3u3icyfrfj301e019a9t.jpg) url(http://wx3.sinaimg.cn/mw690/007uo485gy1g3u3icgeu7j301e019a9t.jpg);
   display: none;
 }
 
@@ -79,7 +79,7 @@ body:after {
   width: 32px;
   height: 32px;
   margin: 0 auto;
-  background: url(http://wx1.sinaimg.cn/mw690/007uo485gy1g3u3ibrdwpg300w00waa0.gif) no-repeat;
+  background: url(https://wx1.sinaimg.cn/square/007uo485gy1g3u3ibrdwpg300w00waa0.gif) no-repeat;
 }
 
 .lb-nav {
@@ -110,7 +110,7 @@ body:after {
   width: 34%;
   left: 0;
   float: left;
-  background: url(http://wx1.sinaimg.cn/mw690/007uo485gy1g3u3icyfrfj301e019a9t.jpg) left 48% no-repeat;
+  background: url(https://wx1.sinaimg.cn/square/007uo485gy1g3u3icyfrfj301e019a9t.jpg) left 48% no-repeat;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
   -webkit-transition: opacity 0.6s;
