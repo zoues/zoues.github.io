@@ -113,14 +113,14 @@
 <meta property="og:site_name" content="Indagate">
 <meta property="og:description" content="接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。 kubernetes 1.16已在前天正式发布， kubeadm是Kubernetes官方提供的用于快速安装Kubernetes集群的工具，其中kubespray比">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://wx2.sinaimg.cn/mw690/007uo485ly1g765pj92okj314i0eb0zs.jpg">
-<meta property="og:image" content="https://wx1.sinaimg.cn/mw690/007uo485gy1g77n6cqw7sj30l40kl7ag.jpg">
-<meta property="og:image" content="https://wx2.sinaimg.cn/mw690/007uo485ly1g76v2icpkuj31e00u0n6d.jpg">
-<meta property="og:updated_time" content="2019-09-21T17:25:38.412Z">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/22/uSXR8e.jpg">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/22/uSqqC4.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/22/uSXDD1.png">
+<meta property="og:updated_time" content="2019-09-22T03:09:05.529Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kubernetes展望与思考之1.17初体验">
 <meta name="twitter:description" content="接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。 kubernetes 1.16已在前天正式发布， kubeadm是Kubernetes官方提供的用于快速安装Kubernetes集群的工具，其中kubespray比">
-<meta name="twitter:image" content="https://wx2.sinaimg.cn/mw690/007uo485ly1g765pj92okj314i0eb0zs.jpg">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/09/22/uSXR8e.jpg">
 
 
 
@@ -376,7 +376,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：9月 22 2019 01:25:38" itemprop="dateModified" datetime="2019-09-22T01:25:38+08:00">9月 22 2019</time>
+                <time title="修改时间：9月 22 2019 11:09:05" itemprop="dateModified" datetime="2019-09-22T11:09:05+08:00">9月 22 2019</time>
               
             
           </span>
@@ -435,7 +435,7 @@
     <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
     
       
-        <p><img src="https://wx2.sinaimg.cn/mw690/007uo485ly1g765pj92okj314i0eb0zs.jpg" alt></p>
+        <p><img src="https://s2.ax1x.com/2019/09/22/uSXR8e.jpg" alt></p>
 <div class="note info"><p>接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。</p>
 <p><a href="https://kubernetes.io/blog/2019/09/18/kubernetes-1-16-release-announcement" target="_blank" rel="noopener">kubernetes 1.16</a>已在前天正式发布，</p></div>
 <p>kubeadm是Kubernetes官方提供的用于快速安装Kubernetes集群的工具，其中<a href="https://github.com/kubernetes-sigs/kubespray" target="_blank" rel="noopener">kubespray</a>比较适合较大规模的集群部署，*步骤，为可选操作，该文章主要介绍，以下内容:</p>
@@ -503,7 +503,7 @@
 <li><a href="https://github.com/kubernetes/kubernetes/tree/master/build" target="_blank" rel="noopener">https://github.com/kubernetes/kubernetes/tree/master/build</a></li>
 </ul>
 <p>若编译前，对代码有改动，且未提交，即未执行<code>git commit</code>操作，则生成的镜像即版本为dirty版本，执行下述命令(可执行bash -x)：</p>
-<p><img src="https://wx1.sinaimg.cn/mw690/007uo485gy1g77n6cqw7sj30l40kl7ag.jpg" alt="编译过程"></p>
+<p><img src="https://s2.ax1x.com/2019/09/22/uSqqC4.png" alt="编译过程"></p>
 <p><strong><strong>最终生成以下镜像结果</strong></strong></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ls _output/release-images/amd64/</span><br><span class="line">conformance-amd64.tar  kube-apiserver.tar           kube-proxy.tar</span><br><span class="line">hyperkube-amd64.tar    kube-controller-manager.tar  kube-scheduler.tar</span><br></pre></td></tr></table></figure>
 <p><strong><strong>下面为二进制执行文件</strong></strong></p>
@@ -720,7 +720,7 @@ undefined</div>
 <p>接下来部署tiller：</p>
 <p><code>helm init --service-account tiller --skip-refresh</code> tiller默认被部署在k8s集群中的kube-system这个namespace下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pod -n kube-system -l app=helm</span><br><span class="line">NAME                             READY   STATUS    RESTARTS   AGE</span><br><span class="line">tiller-deploy-7d666f8ccc-92h27   1/1     Running   5          1d</span><br></pre></td></tr></table></figure>
-<div class="note warning"><p>如上所述，使用代理镜像库<code>helm init --service-account tiller --tiller-image &lt;你指定的镜像库名称&gt;/tiller:v2.13.3 --skip-refresh</code>，实际如下：<br><code>helm init --service-account tiller --tiller-image gcr.azk8s.cn/google_containers/tiller:v2.13.1 --skip-refresh</code></p></div>
+<div class="note warning"><p>如上所述，使用代理镜像库<br>  helm init –service-account tiller –tiller-image &lt;你指定的镜像库名称&gt;/tiller:v2.13.3 –skip-refresh<br>实际如下：<br>  helm init –service-account tiller –tiller-image gcr.azk8s.cn/google_containers/tiller:v2.13.1 –skip-refresh</p></div>
 <p>修改helm charts仓库地址为微软提供的镜像地址：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">helm repo add stable http://mirror.azure.cn/kubernetes/charts</span><br><span class="line"><span class="string">"stable"</span> has been added to your repositories</span><br><span class="line"></span><br><span class="line">helm repo list</span><br><span class="line">NAME  URL</span><br><span class="line">stable http://mirror.azure.cn/kubernetes/charts</span><br><span class="line"><span class="built_in">local</span> http://127.0.0.1:8879/charts</span><br></pre></td></tr></table></figure>
 <h5 id="部署核心监控"><a href="#部署核心监控" class="headerlink" title="部署核心监控"></a>部署核心监控</h5><p>kubernetes使用<a href="https://github.com/kubernetes-incubator/metrics-server" target="_blank" rel="noopener">metrics-server</a>提供节点及pod级别的资源监控, 其为<code>metrics.k8s.io</code>接口组，为弹性伸缩模块等模块提供接口，具体详见<a href="https://github.com/kubernetes/community/blob/master/contributors/design-proposals/instrumentation/monitoring_architecture.md" target="_blank" rel="noopener">kubernetes监控架构</a></p>
@@ -744,7 +744,7 @@ undefined</div>
 <p>获得主机端口30479，dashboard的界面绕过https,通过<a href="https://10.142.21.132:30479" target="_blank" rel="noopener">https://10.142.21.132:30479</a><a href="https://kubernetes.io/docs/concepts/services-networking/service/" target="_blank" rel="noopener">nodeport方式</a>进行访问外，还可以执行以下代理操作</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl proxy --accept-hosts=<span class="string">'^.*'</span> --address=<span class="string">'10.142.113.20'</span> --port 8080</span><br></pre></td></tr></table></figure>
 <p>我们还可以通过<a href="http://10.142.21.132:8080/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/" target="_blank" rel="noopener">http://10.142.21.132:8080/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/</a><br>，如下图所示。</p>
-<p><img src="https://wx2.sinaimg.cn/mw690/007uo485ly1g76v2icpkuj31e00u0n6d.jpg" alt="Dashboard UI workloads page"></p>
+<p><img src="https://s2.ax1x.com/2019/09/22/uSXDD1.png" alt="Dashboard UI workloads page"></p>
 <h5 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h5><p>针对上述涉及的内容，请关注后续文章</p>
 <h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul>
 <li><a href="https://kubernetes.io/blog/2019/09/18/kubernetes-1-16-release-announcement/" target="_blank" rel="noopener">kubernetes 1.16</a></li>
