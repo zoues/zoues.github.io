@@ -301,6 +301,189 @@
   
   
   <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2017-07-11-Docker非Root用户运行.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">Docker非Root运行</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">7月 11 2017</span><span class="gr_separate">|</span>
+          
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
+        
+          
+          <h3 class="blog_title" itemprop="name headline">
+                
+                <a class="blog_title_a" href="/2017-07-11-Docker非Root用户运行.html" itemprop="url">
+                  Docker非Root运行
+                </a>
+              
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：7月 11 2017 10:56:01" itemprop="dateCreated datePublished" datetime="2017-07-11T10:56:01+08:00">7月 11 2017</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017-07-11-Docker非Root用户运行.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017-07-11-Docker非Root用户运行.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
+      
+      </div>
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+    
+      
+        
+          
+            <div class="note info"><p>Docker Engine的Deamon进程是以root权限运行的，如果是普通用户要与之交互，需要使用<code>sudo</code>命令来提权与之交互。之前使用Docker官方的安装脚本安装完成之后，会给出一个提示将当前非root用户添加到doker组之中，以避免每次都需要输入<code>sudo</code>的麻烦。</p></div>
+<p>然而随着Docker版本的迭代和官网的安装方式的更改，现在官方给出的安装方式是添加仓库源地址，然后使用默认的<code>apt</code>或者<code>yum</code>包管理工具来完成后安装。并不再提示用户添加非root用户到组。</p>
+<p>默认情况下，完成Docker Engine的安装之后，Docker将会自动创建一个名为<code>docker</code>的用户组，所以<code>root</code>用户和在<code>docker</code>组中的用户都可以免去<code>sudo</code>来与Docker Engine交互。知道原理之后就简单了：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo usermod -aG docker $&#123;whoami&#125; #添加当前用户到docker组</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
     <link itemprop="mainEntityOfPage" href="https://ustack.io/2017-06-30-Spring-Boot使用Swagger自动生成Api-Doc.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1229,196 +1412,6 @@
             </a>
           </div>
           <!--/noindex-->
-        
-      
-    </div>
-
-    
-      
-
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer" stype="color:#5d3434">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2017-01-13-FFmpeg折腾笔记之编译FFmpeg.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zouyee">
-      <meta itemprop="description" content="Keep motivation for the world">
-      <meta itemprop="image" content="/images/author.webp">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Indagate">
-    </span>
-
-    
-    <div class="head">
-        <div class="gr_up_title">
-          <span class="text-overflow-center">FFmpeg折腾笔记之编译FFmpeg</span>
-        </div>
-        <div class="gr_blog_post_cat">
-          <span class="gr_ddate">1月 13 2017</span><span class="gr_separate">|</span>
-          
-            
-              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
-            
-        </div>
-        <div class="gr_blog_post_title_holder">
-        
-          
-          <h3 class="blog_title" itemprop="name headline">
-                
-                <a class="blog_title_a" href="/2017-01-13-FFmpeg折腾笔记之编译FFmpeg.html" itemprop="url">
-                  FFmpeg折腾笔记之编译FFmpeg
-                </a>
-              
-            
-          </h3>
-          
-        </div>
-        <div class="gr_blog_post_cat" style="text-align: center;">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：1月 13 2017 21:58:04" itemprop="dateCreated datePublished" datetime="2017-01-13T21:58:04+08:00">1月 13 2017</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017-01-13-FFmpeg折腾笔记之编译FFmpeg.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017-01-13-FFmpeg折腾笔记之编译FFmpeg.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-    </div>   
-    
-
-    
-    
-    
-    
-    <div class="gr_media">
-      <div class="gr_blog_post_featuder_holder text-center">
-      
-      </div>
-    </div>
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-    
-      
-        
-          
-            <p>​        又有很久没有写新的文章了，感觉再不写点什么东西博客草都长满了。于是打算折腾下FFmpeg，记录下折腾的过程，以熟悉Android NDK开发的基本操作。过程中有地方有错误欢迎指出，如果你对这个方面有所了解，欢迎讨论指教。</p>
-<h4 id="编译环境"><a href="#编译环境" class="headerlink" title="编译环境"></a>编译环境</h4><ul>
-<li><a href="https://ffmpeg.org/releases/ffmpeg-2.8.11.tar.bz2" target="_blank" rel="noopener">FFmpeg 2.8.11 “Feynman”</a></li>
-<li>Mac OS X </li>
-<li>NDK  <code>14.0.3770861</code></li>
-</ul>
-<p>下载完成FFmpeg源码之后，先对源码根目录中的<code>configure</code>文件进行修改以适应Android平台。因为默认编译出来的动态库文件版本号在<code>.so</code>之后，例如：<code>libavcodec.so.56.60.100</code>。Android平台对这种格式不能很好的识别（如果你不介意一个一个修改文件名的话）。通过<code>Vim</code>或者其他文本编辑器打开<code>configure</code>文件的第<code>2934</code>行（如果你下载的FFmpeg版本和我的一样的话）将:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SLIBNAME_WITH_MAJOR='$(SLIBNAME).$(LIBMAJOR)'</span><br><span class="line">LIB_INSTALL_EXTRA_CMD='$$(RANLIB) "$(LIBDIR)/$(LIBNAME)"'</span><br><span class="line">SLIB_INSTALL_NAME='$(SLIBNAME_WITH_VERSION)'</span><br><span class="line">SLIB_INSTALL_LINKS='$(SLIBNAME_WITH_MAJOR) $(SLIBNAME)'</span><br></pre></td></tr></table></figure>
-<p>修改为:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SLIBNAME_WITH_MAJOR='$(SLIBPREF)$(FULLNAME)-$(LIBMAJOR)$(SLIBSUF)'  </span><br><span class="line">LIB_INSTALL_EXTRA_CMD='$$(RANLIB)"$(LIBDIR)/$(LIBNAME)"'  </span><br><span class="line">SLIB_INSTALL_NAME='$(SLIBNAME_WITH_MAJOR)'  </span><br><span class="line">SLIB_INSTALL_LINKS='$(SLIBNAME)'</span><br></pre></td></tr></table></figure>
-<p>后保存。</p>
-
-          
         
       
     </div>

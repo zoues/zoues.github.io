@@ -108,7 +108,7 @@
   <meta name="description" content="Keep motivation for the world">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Indagate">
-<meta property="og:url" content="https://ustack.io/tags/linux/index.html">
+<meta property="og:url" content="https://ustack.io/tags/Linux/index.html">
 <meta property="og:site_name" content="Indagate">
 <meta property="og:description" content="Keep motivation for the world">
 <meta property="og:locale" content="zh-CN">
@@ -123,7 +123,7 @@
 
 
 
-  <link rel="canonical" href="https://ustack.io/tags/linux/">
+  <link rel="canonical" href="https://ustack.io/tags/Linux/">
 
 
 
@@ -133,7 +133,7 @@
   };
 </script>
 
-  <title>标签: linux | Indagate</title>
+  <title>标签: Linux | Indagate</title>
   
 
 
@@ -292,7 +292,7 @@
 
     <div id="posts" class="posts-collapse">
       <div class="collection-title">
-        <h2>linux<small>标签</small>
+        <h2>Linux<small>标签</small>
         </h2>
       </div>
 
@@ -304,17 +304,69 @@
 
       <h3 class="post-title">
         
-            <a class="post-title-link" href="/2015-04-24-Linux-学习笔记-软件包管理.html" itemprop="url">
+            <a class="post-title-link" href="/2015-07-18-基于Debian-Linux搭建Git服务器.html" itemprop="url">
               
-                <span itemprop="name">Linux 学习笔记-软件包管理</span>
+                <span itemprop="name">基于Debian Linux搭建Git服务器</span>
               
             </a>
         
       </h3>
 
       <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2015-04-24T10:06:02+08:00" content="4月 24 2015">
-          04-24
+        <time class="post-time" itemprop="dateCreated" datetime="2015-07-18T17:47:37+08:00" content="7月 18 2015">
+          07-18
+        </time>
+      </div>
+
+    </header>
+  </article>
+
+
+      
+        
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h3 class="post-title">
+        
+            <a class="post-title-link" href="/2015-06-02-Shell学习笔记.html" itemprop="url">
+              
+                <span itemprop="name">Linux学习笔记-Shell变量</span>
+              
+            </a>
+        
+      </h3>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated" datetime="2015-06-02T09:14:41+08:00" content="6月 02 2015">
+          06-02
+        </time>
+      </div>
+
+    </header>
+  </article>
+
+
+      
+        
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h3 class="post-title">
+        
+            <a class="post-title-link" href="/2015-04-27-Debian下配置exim4-邮件服务器.html" itemprop="url">
+              
+                <span itemprop="name">Debian下配置exim4 邮件服务器</span>
+              
+            </a>
+        
+      </h3>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated" datetime="2015-04-27T11:19:53+08:00" content="4月 27 2015">
+          04-27
         </time>
       </div>
 
@@ -405,7 +457,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">8</span>
+                      
+                    
+                    <span class="site-state-item-count">9</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -512,7 +566,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">47</span>
+                      
+                    
+                    <span class="site-state-item-count">44</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1028,67 +1084,6 @@
               /* Set ACL */
               var acl = new AV.ACL();
               acl.setPublicReadAccess(true);
-              acl.setPublicWriteAccess(true);
-              newcounter.setACL(acl);
-              /* End Set ACL */
-              newcounter.set("title", title);
-              newcounter.set("url", url);
-              newcounter.set("time", 1);
-              newcounter.save(null, {
-                success: function(newcounter) {
-                  var $element = $(document.getElementById(url));
-                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
-                },
-                error: function(newcounter, error) {
-                  console.log('Failed to create');
-                }
-              });
-            
-          }
-        },
-        error: function(error) {
-          console.log('Error:' + error.code + " " + error.message);
-        }
-      });
-    }
-
-    $(function() {
-      var Counter = AV.Object.extend("Counter");
-      if ($('.leancloud_visitors').length == 1) {
-        addCount(Counter);
-      } else if ($('.post-title-link').length > 1) {
-        showTime(Counter);
-      }
-    });
-  </script>
-
-
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-
-  
-  <script type="text/javascript" src="https://cdn.bootcss.com/js-cookie/2.1.4/js.cookie.js"></script>
-  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=6.3.0"></script>
-
-
-  
-
-  
-
-  
-
-</body>
-</html>
-ue);
               acl.setPublicWriteAccess(true);
               newcounter.setACL(acl);
               /* End Set ACL */
