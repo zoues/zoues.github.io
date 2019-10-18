@@ -301,7 +301,7 @@
   
   
   <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2016-07-02-RxJava配合Retofit接收错误body.html">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2017-05-20-解决Mysql的Python驱动安装失败.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zouyee">
@@ -316,16 +316,13 @@
     
     <div class="head">
         <div class="gr_up_title">
-          <span class="text-overflow-center">RxJava、Retrofit接收Error Response Body</span>
+          <span class="text-overflow-center">MySQL API Drivers安装小记</span>
         </div>
         <div class="gr_blog_post_cat">
-          <span class="gr_ddate">7月 02 2016</span><span class="gr_separate">|</span>
+          <span class="gr_ddate">5月 20 2017</span><span class="gr_separate">|</span>
           
-                <a href="/categories/Android/" itemprop="url" rel="category tag"><span itemprop="name">Android</span></a>
-
-                
-                
-              
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
             
         </div>
         <div class="gr_blog_post_title_holder">
@@ -333,8 +330,8 @@
           
           <h3 class="blog_title" itemprop="name headline">
                 
-                <a class="blog_title_a" href="/2016-07-02-RxJava配合Retofit接收错误body.html" itemprop="url">
-                  RxJava、Retrofit接收Error Response Body
+                <a class="blog_title_a" href="/2017-05-20-解决Mysql的Python驱动安装失败.html" itemprop="url">
+                  MySQL API Drivers安装小记
                 </a>
               
             
@@ -360,7 +357,7 @@
                 
               
 
-              <time title="创建时间：7月 02 2016 22:10:53" itemprop="dateCreated datePublished" datetime="2016-07-02T22:10:53+08:00">7月 02 2016</time>
+              <time title="创建时间：5月 20 2017 02:12:46" itemprop="dateCreated datePublished" datetime="2017-05-20T02:12:46+08:00">5月 20 2017</time>
             
 
             
@@ -383,24 +380,6 @@
           </span>
 
           
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
-
-                
-                
-              
-            </span>
-          
 
           
             
@@ -409,8 +388,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016-07-02-RxJava配合Retofit接收错误body.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2016-07-02-RxJava配合Retofit接收错误body.html" itemprop="commentCount"></span>
+                <a href="/2017-05-20-解决Mysql的Python驱动安装失败.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017-05-20-解决Mysql的Python驱动安装失败.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -443,848 +422,11 @@
     
       
         
-          <p><code>RxJava</code>配合<code>Retrofit</code>能够大大简化Android项目中的网络请求代码量，使得逻辑更清晰，当然也可能会遇到一些问题。下面给出一种问题的解决方案。</p>
-<h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>一个基本的RxJava配合Retrofit以及Lambda的网络调用看起来像这个样子的:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Subscription subscription = mApi.getSimpleApi()</span><br><span class="line">       .subscribeOn(Schedulers.io())</span><br><span class="line">       .observeOn(AndroidSchedulers.mainThread())</span><br><span class="line">       .subscribe(response -&gt; &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//do Something</span></span><br><span class="line"></span><br><span class="line">       &#125;, throwable -&gt; &#123;</span><br><span class="line"></span><br><span class="line">       <span class="comment">//Ops Error</span></span><br><span class="line"></span><br><span class="line">       &#125;);</span><br></pre></td></tr></table></figure>
-<p>当<code>Retrofit</code>中的网络请求返回码状态码为<code>200</code>时，执行<code>do Something</code>中的逻辑处理正常的<br>业务流程，但是当服务器返回状态码为<code>非200</code>时，将会执行<code>Ops Error</code>中的业务流程而不会<br>执行<code>do Something</code>中的业务逻辑。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016-07-02-RxJava配合Retofit接收错误body.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-      
-
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer" stype="color:#5d3434">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2015-10-21-为NexT主题添加文章阅读量统计功能.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zouyee">
-      <meta itemprop="description" content="Keep motivation for the world">
-      <meta itemprop="image" content="/images/author.webp">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Indagate">
-    </span>
-
-    
-    <div class="head">
-        <div class="gr_up_title">
-          <span class="text-overflow-center">为NexT主题添加文章阅读量统计功能</span>
-        </div>
-        <div class="gr_blog_post_cat">
-          <span class="gr_ddate">10月 21 2015</span><span class="gr_separate">|</span>
-          
-                <a href="/categories/Hexo/" itemprop="url" rel="category tag"><span itemprop="name">Hexo</span></a>
-
-                
-                
-              
-            
-        </div>
-        <div class="gr_blog_post_title_holder">
-        
-          
-          <h3 class="blog_title" itemprop="name headline">
-                
-                <a class="blog_title_a" href="/2015-10-21-为NexT主题添加文章阅读量统计功能.html" itemprop="url">
-                  为NexT主题添加文章阅读量统计功能
-                </a>
-              
-            
-          </h3>
-          
-        </div>
-        <div class="gr_blog_post_cat" style="text-align: center;">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：10月 21 2015 21:57:00" itemprop="dateCreated datePublished" datetime="2015-10-21T21:57:00+08:00">10月 21 2015</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2015-10-21-为NexT主题添加文章阅读量统计功能.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015-10-21-为NexT主题添加文章阅读量统计功能.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-    </div>   
-    
-
-    
-    
-    
-    
-    <div class="gr_media">
-      <div class="gr_blog_post_featuder_holder text-center">
-      
-      </div>
-    </div>
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-    
-      
-        
-          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><hr>
-<p>由于最近在折腾Android项目，需要用到一些与服务器交互、以及数据存储的相关功能，然后发现了<a href="https://leancloud.cn" target="_blank" rel="noopener">LeanCloud</a>这家服务提供商,使用下来还感觉还挺靠谱的(请给我广告费)。正好发现他们服务提供了<a href="https://leancloud.cn/docs/js_guide.html" target="_blank" rel="noopener">JavaScript SDK</a>，于是就想着尝试着实现Hexo博客文章的浏览数统计功能，之前虽然在使用不蒜子，但是不蒜子不能够在主页展示文章阅读量啊！对于博主这种有强迫症又想装X的人来说果断不能忍啊！</p>
-<h3 id="修改NexT主题模版"><a href="#修改NexT主题模版" class="headerlink" title="修改NexT主题模版"></a><del>修改NexT主题模版</del></h3><p><del>本方法理论上对Hexo博客通用，由于博主使用的是NexT主题，所以当然针对NexT来说咯。</del><strong><font color="red">NexT主题目前已经合并这个Feature，因此如果你使用的是NexT主题，可以直接使用不用修改主题模版而直接在<code>_config.yml</code>中配置即可，请直接跳转查看<a href="#%E9%85%8D%E7%BD%AELeanCloud">配置LeanCloud</a></font></strong></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2015-10-21-为NexT主题添加文章阅读量统计功能.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-      
-
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer" stype="color:#5d3434">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2015-09-04-Create-a-Simple-Android-Keyboard.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zouyee">
-      <meta itemprop="description" content="Keep motivation for the world">
-      <meta itemprop="image" content="/images/author.webp">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Indagate">
-    </span>
-
-    
-    <div class="head">
-        <div class="gr_up_title">
-          <span class="text-overflow-center">Create a Simple Android Keyboard</span>
-        </div>
-        <div class="gr_blog_post_cat">
-          <span class="gr_ddate">9月 04 2015</span><span class="gr_separate">|</span>
-          
-                <a href="/categories/Android/" itemprop="url" rel="category tag"><span itemprop="name">Android</span></a>
-
-                
-                
-              
-            
-        </div>
-        <div class="gr_blog_post_title_holder">
-        
-          
-          <h3 class="blog_title" itemprop="name headline">
-                
-                <a class="blog_title_a" href="/2015-09-04-Create-a-Simple-Android-Keyboard.html" itemprop="url">
-                  Create a Simple Android Keyboard
-                </a>
-              
-            
-          </h3>
-          
-        </div>
-        <div class="gr_blog_post_cat" style="text-align: center;">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：9月 04 2015 15:12:11" itemprop="dateCreated datePublished" datetime="2015-09-04T15:12:11+08:00">9月 04 2015</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2015-09-04-Create-a-Simple-Android-Keyboard.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015-09-04-Create-a-Simple-Android-Keyboard.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-    </div>   
-    
-
-    
-    
-    
-    
-    <div class="gr_media">
-      <div class="gr_blog_post_featuder_holder text-center">
-      
-      </div>
-    </div>
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-    
-      
-        
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;由于最近做的一个Android项目需要用到用户的输入一些字符，常规的输入法输入非常的不方便。因此有必要自定义一个输入法来完成这个过程。此处给出一个简单的输入法Demo<br>来帮助理解自定义输入法的一些实现过程。</p>
-<ul>
-<li><strong>有关输入法的一些说明，请参见:<a href="http://notes.xiamo.tk/2015-04-01-Create-an-Android-IME.html" target="_blank" rel="noopener">Create a Android IME</a></strong></li>
-</ul>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2015-09-04-Create-a-Simple-Android-Keyboard.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-      
-
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer" stype="color:#5d3434">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2015-08-20-MySQL开启远程访问权限.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zouyee">
-      <meta itemprop="description" content="Keep motivation for the world">
-      <meta itemprop="image" content="/images/author.webp">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Indagate">
-    </span>
-
-    
-    <div class="head">
-        <div class="gr_up_title">
-          <span class="text-overflow-center">MySQL开启远程访问授权</span>
-        </div>
-        <div class="gr_blog_post_cat">
-          <span class="gr_ddate">8月 20 2015</span><span class="gr_separate">|</span>
-          
-                <a href="/categories/数据库/" itemprop="url" rel="category tag"><span itemprop="name">数据库</span></a>
-
-                
-                
-              
-            
-        </div>
-        <div class="gr_blog_post_title_holder">
-        
-          
-          <h3 class="blog_title" itemprop="name headline">
-                
-                <a class="blog_title_a" href="/2015-08-20-MySQL开启远程访问权限.html" itemprop="url">
-                  MySQL开启远程访问授权
-                </a>
-              
-            
-          </h3>
-          
-        </div>
-        <div class="gr_blog_post_cat" style="text-align: center;">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：8月 20 2015 17:39:55" itemprop="dateCreated datePublished" datetime="2015-08-20T17:39:55+08:00">8月 20 2015</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/数据库/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2015-08-20-MySQL开启远程访问权限.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015-08-20-MySQL开启远程访问权限.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-    </div>   
-    
-
-    
-    
-    
-    
-    <div class="gr_media">
-      <div class="gr_blog_post_featuder_holder text-center">
-      
-      </div>
-    </div>
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-    
-      
-        
-          <p>在做开发测试的时候，经常会用到MySQL数据库。测试使用的数据库不在本机上而在虚拟机里，访问数据库就比较蛋碎了。因为MySQL数据库默认是没有开放远程访问授权的。不能够直接访问，下面介绍两种常用的开启MySQL远程访问权限开启方法:</p>
-<h3 id="方法一：修改user表开启远程访问"><a href="#方法一：修改user表开启远程访问" class="headerlink" title="方法一：修改user表开启远程访问"></a>方法一：修改<code>user</code>表开启远程访问</h3><p>在终端中键入以下命令登录MySQL数据库:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -uROOT -pPASSWORD</span><br></pre></td></tr></table></figure>
-<p>其中，<font color="red"><code>ROOT</code></font>表示登录的用户名，<font color="red"><code>PASSWORD</code></font>表示登录的该用户的密码。登录成功之后，访问<code>mysql</code>数据库，依次执行以下SQL语句:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt;  use mysql;</span><br><span class="line">mysql&gt;  select host,user from user;</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2015-08-20-MySQL开启远程访问权限.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-      
-
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer" stype="color:#5d3434">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2015-07-25-多说主动邮件提醒.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zouyee">
-      <meta itemprop="description" content="Keep motivation for the world">
-      <meta itemprop="image" content="/images/author.webp">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Indagate">
-    </span>
-
-    
-    <div class="head">
-        <div class="gr_up_title">
-          <span class="text-overflow-center">开启NexT主题多说主动评论邮件通知</span>
-        </div>
-        <div class="gr_blog_post_cat">
-          <span class="gr_ddate">7月 25 2015</span><span class="gr_separate">|</span>
-          
-                <a href="/categories/Hexo/" itemprop="url" rel="category tag"><span itemprop="name">Hexo</span></a>
-
-                
-                
-              
-            
-        </div>
-        <div class="gr_blog_post_title_holder">
-        
-          
-          <h3 class="blog_title" itemprop="name headline">
-                
-                <a class="blog_title_a" href="/2015-07-25-多说主动邮件提醒.html" itemprop="url">
-                  开启NexT主题多说主动评论邮件通知
-                </a>
-              
-            
-          </h3>
-          
-        </div>
-        <div class="gr_blog_post_cat" style="text-align: center;">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：7月 25 2015 12:00:22" itemprop="dateCreated datePublished" datetime="2015-07-25T12:00:22+08:00">7月 25 2015</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2015-07-25-多说主动邮件提醒.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015-07-25-多说主动邮件提醒.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-    </div>   
-    
-
-    
-    
-    
-    
-    <div class="gr_media">
-      <div class="gr_blog_post_featuder_holder text-center">
-      
-      </div>
-    </div>
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-    
-      
-        
-          <p>经过一段时间的折腾多说，博主发现原来多说是不支持主动评论提醒的。也就是说如果在一篇博客中有人主动评论留言的话，多说是不会邮件通知的。除非他回复了你，那么多说才会邮件通知。（怪不得博主觉得一会儿有邮件提醒一会儿没有咋个这么奇怪。。）</p>
+          <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>最近需要使用Django写点东西，由于自己的macbook上没有也不打算安装MySQL而是以Docker的MySQL镜像替代，Django文档提供了三种MySQL驱动供选择，官方推荐的是<a href="https://pypi.python.org/pypi/mysqlclient" target="_blank" rel="noopener"><code>mysqlclient</code></a>,由于我本地没有安装MySQL，所以是没有Native Driver的以至于在安装MySQL驱动的时候遇到了点小问题，在此记录下。</p>
 <hr>
-<p>去多说的官方一番折腾，找到了官方文档，有说到使用<code>data-author-key</code>可以设置主动邮件提醒,以下给出多说官网说明的传送门：</p>
-<ul>
-<li><strong><a href="http://dev.duoshuo.com/docs/51435552047fe92f490225de" target="_blank" rel="noopener">同步用户到多说</a></strong></li>
-<li><strong><a href="http://dev.duoshuo.com/docs/5003ecd94cab3e7250000008/" target="_blank" rel="noopener">评论框调用代码参数说明</a></strong></li>
-</ul>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2015-07-25-多说主动邮件提醒.html#more" rel="contents">
+            <a class="btn" href="/2017-05-20-解决Mysql的Python驱动安装失败.html#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1344,7 +486,7 @@
   
   
   <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2015-07-18-基于Debian-Linux搭建Git服务器.html">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2017-03-21-Android-Studio支持生成Java-Native方法签名.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zouyee">
@@ -1359,16 +501,13 @@
     
     <div class="head">
         <div class="gr_up_title">
-          <span class="text-overflow-center">基于Debian Linux搭建Git服务器</span>
+          <span class="text-overflow-center">Android Studio生成Java方法描述符</span>
         </div>
         <div class="gr_blog_post_cat">
-          <span class="gr_ddate">7月 18 2015</span><span class="gr_separate">|</span>
+          <span class="gr_ddate">3月 21 2017</span><span class="gr_separate">|</span>
           
-                <a href="/categories/Linux/" itemprop="url" rel="category tag"><span itemprop="name">Linux</span></a>
-
-                
-                
-              
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
             
         </div>
         <div class="gr_blog_post_title_holder">
@@ -1376,8 +515,8 @@
           
           <h3 class="blog_title" itemprop="name headline">
                 
-                <a class="blog_title_a" href="/2015-07-18-基于Debian-Linux搭建Git服务器.html" itemprop="url">
-                  基于Debian Linux搭建Git服务器
+                <a class="blog_title_a" href="/2017-03-21-Android-Studio支持生成Java-Native方法签名.html" itemprop="url">
+                  Android Studio生成Java方法描述符
                 </a>
               
             
@@ -1403,7 +542,807 @@
                 
               
 
-              <time title="创建时间：7月 18 2015 17:47:37" itemprop="dateCreated datePublished" datetime="2015-07-18T17:47:37+08:00">7月 18 2015</time>
+              <time title="创建时间：3月 21 2017 21:32:50" itemprop="dateCreated datePublished" datetime="2017-03-21T21:32:50+08:00">3月 21 2017</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017-03-21-Android-Studio支持生成Java-Native方法签名.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017-03-21-Android-Studio支持生成Java-Native方法签名.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
+      
+      </div>
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+    
+      
+        
+          <div class="note info"><p>在日常的Android NDK开发中，会不可避免的用到C与Java代码相互调用的情况。Java调用C的方法还好，C调用Java的方法就比较麻烦了。需要编写看着就头疼的Java方法描述符才能正确的调用Java方法。 </p></div>
+<p>其中常见的Java方法域和描述符如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Java类型</th>
+<th style="text-align:center">签名</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Boolean</td>
+<td style="text-align:center">Z</td>
+</tr>
+<tr>
+<td style="text-align:center">Byte</td>
+<td style="text-align:center">B</td>
+</tr>
+<tr>
+<td style="text-align:center">Char</td>
+<td style="text-align:center">C</td>
+</tr>
+<tr>
+<td style="text-align:center">Short</td>
+<td style="text-align:center">S</td>
+</tr>
+<tr>
+<td style="text-align:center">Int</td>
+<td style="text-align:center">I</td>
+</tr>
+<tr>
+<td style="text-align:center">Long</td>
+<td style="text-align:center">J</td>
+</tr>
+<tr>
+<td style="text-align:center">Float</td>
+<td style="text-align:center">F</td>
+</tr>
+<tr>
+<td style="text-align:center">Double</td>
+<td style="text-align:center">D</td>
+</tr>
+<tr>
+<td style="text-align:center">Fully-qualified-class</td>
+<td style="text-align:center">Lfully-qualified-class</td>
+</tr>
+<tr>
+<td style="text-align:center">type[]</td>
+<td style="text-align:center">[type</td>
+</tr>
+<tr>
+<td style="text-align:center">Method type</td>
+<td style="text-align:center">(arg-type)ret-type</td>
+</tr>
+</tbody>
+</table>
+<p>通过上述对照表，我们可以通过C代码查找一个为<code>String</code>类型的Java静态字段，例如:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">jfieldID staticJavaFieldId;</span><br><span class="line">staticJavaFieldId = env-&gt;GetStaticFieldID(clazz, <span class="string">"mStaticField"</span>, <span class="string">"Ljava/lang/String;"</span>);</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* do something...</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017-03-21-Android-Studio支持生成Java-Native方法签名.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2017-01-13-FFmpeg折腾笔记之编译FFmpeg.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">FFmpeg折腾笔记之编译FFmpeg</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">1月 13 2017</span><span class="gr_separate">|</span>
+          
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
+        
+          
+          <h3 class="blog_title" itemprop="name headline">
+                
+                <a class="blog_title_a" href="/2017-01-13-FFmpeg折腾笔记之编译FFmpeg.html" itemprop="url">
+                  FFmpeg折腾笔记之编译FFmpeg
+                </a>
+              
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：1月 13 2017 21:58:04" itemprop="dateCreated datePublished" datetime="2017-01-13T21:58:04+08:00">1月 13 2017</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017-01-13-FFmpeg折腾笔记之编译FFmpeg.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017-01-13-FFmpeg折腾笔记之编译FFmpeg.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
+      
+      </div>
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+    
+      
+        
+          
+            <p>​        又有很久没有写新的文章了，感觉再不写点什么东西博客草都长满了。于是打算折腾下FFmpeg，记录下折腾的过程，以熟悉Android NDK开发的基本操作。过程中有地方有错误欢迎指出，如果你对这个方面有所了解，欢迎讨论指教。</p>
+<h4 id="编译环境"><a href="#编译环境" class="headerlink" title="编译环境"></a>编译环境</h4><ul>
+<li><a href="https://ffmpeg.org/releases/ffmpeg-2.8.11.tar.bz2" target="_blank" rel="noopener">FFmpeg 2.8.11 “Feynman”</a></li>
+<li>Mac OS X </li>
+<li>NDK  <code>14.0.3770861</code></li>
+</ul>
+<p>下载完成FFmpeg源码之后，先对源码根目录中的<code>configure</code>文件进行修改以适应Android平台。因为默认编译出来的动态库文件版本号在<code>.so</code>之后，例如：<code>libavcodec.so.56.60.100</code>。Android平台对这种格式不能很好的识别（如果你不介意一个一个修改文件名的话）。通过<code>Vim</code>或者其他文本编辑器打开<code>configure</code>文件的第<code>2934</code>行（如果你下载的FFmpeg版本和我的一样的话）将:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SLIBNAME_WITH_MAJOR='$(SLIBNAME).$(LIBMAJOR)'</span><br><span class="line">LIB_INSTALL_EXTRA_CMD='$$(RANLIB) "$(LIBDIR)/$(LIBNAME)"'</span><br><span class="line">SLIB_INSTALL_NAME='$(SLIBNAME_WITH_VERSION)'</span><br><span class="line">SLIB_INSTALL_LINKS='$(SLIBNAME_WITH_MAJOR) $(SLIBNAME)'</span><br></pre></td></tr></table></figure>
+<p>修改为:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SLIBNAME_WITH_MAJOR='$(SLIBPREF)$(FULLNAME)-$(LIBMAJOR)$(SLIBSUF)'  </span><br><span class="line">LIB_INSTALL_EXTRA_CMD='$$(RANLIB)"$(LIBDIR)/$(LIBNAME)"'  </span><br><span class="line">SLIB_INSTALL_NAME='$(SLIBNAME_WITH_MAJOR)'  </span><br><span class="line">SLIB_INSTALL_LINKS='$(SLIBNAME)'</span><br></pre></td></tr></table></figure>
+<p>后保存。</p>
+
+          
+        
+      
+    </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2016-11-24-Mac自带VNC-Client.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">Mac自带VNC Client</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">11月 24 2016</span><span class="gr_separate">|</span>
+          
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
+        
+          
+          <h3 class="blog_title" itemprop="name headline">
+                
+                <a class="blog_title_a" href="/2016-11-24-Mac自带VNC-Client.html" itemprop="url">
+                  Mac自带VNC Client
+                </a>
+              
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：11月 24 2016 21:57:28" itemprop="dateCreated datePublished" datetime="2016-11-24T21:57:28+08:00">11月 24 2016</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016-11-24-Mac自带VNC-Client.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2016-11-24-Mac自带VNC-Client.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
+      
+      </div>
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+    
+      
+        
+          
+            <p>由于有需要远程VNC的需要，苦苦寻找一款Mac上比较好使的VNC Client，结果经人指点，发现原来MacOS自带了VNC Client，只是没有在Launchpad中显示罢了。使用<code>command</code>+<code>space</code> 调出<code>Spotlight搜索</code>键入<code>screen Sharing.app</code>即可。</p>
+
+          
+        
+      
+    </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2016-11-24-开启Git大小写敏感.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">开启Git大小写敏感</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">11月 24 2016</span><span class="gr_separate">|</span>
+          
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
+        
+          
+          <h3 class="blog_title" itemprop="name headline">
+                
+                <a class="blog_title_a" href="/2016-11-24-开启Git大小写敏感.html" itemprop="url">
+                  开启Git大小写敏感
+                </a>
+              
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：11月 24 2016 21:35:57" itemprop="dateCreated datePublished" datetime="2016-11-24T21:35:57+08:00">11月 24 2016</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016-11-24-开启Git大小写敏感.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2016-11-24-开启Git大小写敏感.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
+      
+      </div>
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+    
+      
+        
+          
+            <p>最近公司开发的项目的时候，自己或者队友都经常会手抖针对某些文件的命名规范大小写写错。（毕竟入冬了。。）尤其是包名小写手抖写成大写了。。又由于我设置Android Studio新建文件自动添加到Git，一来二往，导致推上服务器之后发现自己命名有问题，顺手改成小写，这个时候问题就来了。</p>
+<p>由于Git默认是大小写不敏感的，导致我这边虽然修改了，然而队友那边还是老样子，可能会导致后续的提交出现问题让项目无法编译通过，虽然不是什么大问题，稍微小改一下就行。然而鉴于这种问题出现了几次，每次都手动修改还是挺闹心的。我们还是来动手让Git区分大小写吧。</p>
+<p>如果只是想应用于当前项目，那么在当前项目中使用执行以下<code>Git命令</code>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config core.ignorecase false</span><br></pre></td></tr></table></figure>
+<p>当然，如果想一劳永逸的话，推荐还是做一个全局配置:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global core.ignorecase false</span><br></pre></td></tr></table></figure>
+<p>这样之后的项目都不用担心大小写都问题闹心了。</p>
+
+          
+        
+      
+    </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2016-10-26-基于LeanCloud、Telegram实现多说评论推送.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">基于LeanCloud、Telegram实现多说评论推送</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">10月 26 2016</span><span class="gr_separate">|</span>
+          
+                <a href="/categories/Python/" itemprop="url" rel="category tag"><span itemprop="name">Python</span></a>
+
+                
+                
+              
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
+        
+          
+          <h3 class="blog_title" itemprop="name headline">
+                
+                <a class="blog_title_a" href="/2016-10-26-基于LeanCloud、Telegram实现多说评论推送.html" itemprop="url">
+                  基于LeanCloud、Telegram实现多说评论推送
+                </a>
+              
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：10月 26 2016 00:19:53" itemprop="dateCreated datePublished" datetime="2016-10-26T00:19:53+08:00">10月 26 2016</time>
             
 
             
@@ -1437,7 +1376,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
 
                 
                 
@@ -1452,8 +1391,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2015-07-18-基于Debian-Linux搭建Git服务器.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015-07-18-基于Debian-Linux搭建Git服务器.html" itemprop="commentCount"></span>
+                <a href="/2016-10-26-基于LeanCloud、Telegram实现多说评论推送.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2016-10-26-基于LeanCloud、Telegram实现多说评论推送.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1486,25 +1425,17 @@
     
       
         
-          <p>&ensp;&ensp;&ensp;&ensp;因为一些众所周知的原因，某些项目不适合开源（代码写的烂我会乱说？(╯﹏╰)b ）。又因为博主不是壕，买不起Github的私有空间，所以只能利用手头上的Debian服务器搭建Git服务器咯~</p>
+          
+            <p>众所周知多说评论是不支持主动推送的，也就是说如果访客主动留言评论，多说是不会给我们邮件推送提醒的。但是我们总不能每隔一段时间去检查下博客的评论留言吧，这样效率也太低了ヾ(。￣□￣)ﾂ゜゜゜于是趁着最近闲的蛋疼折腾出了这么个东东，能够实现访客主动评论的时候，在5分钟之内响应并通过Telegram推送到手机上方便查看和浏览。</p>
 <hr>
-<h3 id="安装Git"><a href="#安装Git" class="headerlink" title="安装Git"></a>安装Git</h3><p>    要搭建Git服务器，第一步当然是要安装Git了，键入以下命令来完成Git的安装：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install git</span><br></pre></td></tr></table></figure>
-<h3 id="新建Git用户"><a href="#新建Git用户" class="headerlink" title="新建Git用户"></a>新建Git用户</h3><p>&ensp;&ensp;&ensp;&ensp;出于安全的原因考虑，我们肯定是不会使用<code>root</code>或者其它具有完整的shell执行权限的用户来运行Git的。因此，我们需要创建一个<code>git</code>用户来运行<code>git</code>服务。</p>
-<p>键入以下命令来完成<code>git</code>用户的创建：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo adduser git</span><br></pre></td></tr></table></figure>
-<p>创建用户的途中会要求输入用户密码，这个密码请务必记住，这个密码的作用我们后面再说。<code>git</code>用户的其它配置使用默认值直接回车就行。</p>
-<h3 id="禁用shell登录"><a href="#禁用shell登录" class="headerlink" title="禁用shell登录"></a>禁用shell登录</h3><p><code>git</code>用户创建完成之后，系统默认是为其分配的<code>bash</code>的，我们不希望<code>git</code>用户拥有shell执行权限，因此我们需要更改<code>git</code>用户的默认shell，使其不允许登录shell。</p>
-<p>我们可以通过编辑<font color="red"><code>/etc/passwd</code></font>文件来完成对<code>git</code>用户shell的更改。</p>
-<p>键入以下命令编辑<font color="red"><code>/etc/passwd</code></font>文件：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/passwd</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2015-07-18-基于Debian-Linux搭建Git服务器.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+<p>嗯，相关的源码和基本的部署说明丢在Github上了,感兴趣的可以<font color="red"><strong><a href="https://github.com/Doublemine/TelegramBot" target="_blank" rel="noopener">戳此查看</a></strong></font>。</p>
+<ul>
+<li><a href="https://github.com/Doublemine/TelegramBot" target="_blank" rel="noopener">Telegram Bot For DuoShuo</a></li>
+</ul>
+<p>目前保证基本的功能能够稳定的运行，后续再添加一些其它的功能吧。嗯，详细的配置说明先挖个坑，改天再写。懒癌犯了，先休息~</p>
+<p><img src="https://ws1.sinaimg.cn/large/694830ebgy1fh3r3jys56g208c08cx6p.jpg" alt title="休息"></p>
+
+          
         
       
     </div>
@@ -1549,7 +1480,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 

@@ -301,7 +301,7 @@
   
   
   <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2017-07-11-Docker非Root用户运行.html">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-10-04-Golang漫谈之反射.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zouyee">
@@ -316,13 +316,16 @@
     
     <div class="head">
         <div class="gr_up_title">
-          <span class="text-overflow-center">Docker非Root运行</span>
+          <span class="text-overflow-center">Golang漫谈之channel妙法</span>
         </div>
         <div class="gr_blog_post_cat">
-          <span class="gr_ddate">7月 11 2017</span><span class="gr_separate">|</span>
+          <span class="gr_ddate">10月 04 2019</span><span class="gr_separate">|</span>
           
-            
-              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
+                <a href="/categories/golang漫谈/" itemprop="url" rel="category tag"><span itemprop="name">golang漫谈</span></a>
+
+                
+                
+              
             
         </div>
         <div class="gr_blog_post_title_holder">
@@ -330,8 +333,8 @@
           
           <h3 class="blog_title" itemprop="name headline">
                 
-                <a class="blog_title_a" href="/2017-07-11-Docker非Root用户运行.html" itemprop="url">
-                  Docker非Root运行
+                <a class="blog_title_a" href="/2019-10-04-Golang漫谈之反射.html" itemprop="url">
+                  Golang漫谈之channel妙法
                 </a>
               
             
@@ -357,7 +360,7 @@
                 
               
 
-              <time title="创建时间：7月 11 2017 10:56:01" itemprop="dateCreated datePublished" datetime="2017-07-11T10:56:01+08:00">7月 11 2017</time>
+              <time title="创建时间：10月 04 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-10-04T20:40:08+08:00">10月 04 2019</time>
             
 
             
@@ -374,11 +377,29 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
+                <time title="修改时间：10月 05 2019 22:06:57" itemprop="dateModified" datetime="2019-10-05T22:06:57+08:00">10月 05 2019</time>
               
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/golang漫谈/" itemprop="url" rel="index"><span itemprop="name">golang漫谈</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -388,8 +409,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017-07-11-Docker非Root用户运行.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017-07-11-Docker非Root用户运行.html" itemprop="commentCount"></span>
+                <a href="/2019-10-04-Golang漫谈之反射.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-10-04-Golang漫谈之反射.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -422,566 +443,23 @@
     
       
         
-          
-            <div class="note info"><p>Docker Engine的Deamon进程是以root权限运行的，如果是普通用户要与之交互，需要使用<code>sudo</code>命令来提权与之交互。之前使用Docker官方的安装脚本安装完成之后，会给出一个提示将当前非root用户添加到doker组之中，以避免每次都需要输入<code>sudo</code>的麻烦。</p></div>
-<p>然而随着Docker版本的迭代和官网的安装方式的更改，现在官方给出的安装方式是添加仓库源地址，然后使用默认的<code>apt</code>或者<code>yum</code>包管理工具来完成后安装。并不再提示用户添加非root用户到组。</p>
-<p>默认情况下，完成Docker Engine的安装之后，Docker将会自动创建一个名为<code>docker</code>的用户组，所以<code>root</code>用户和在<code>docker</code>组中的用户都可以免去<code>sudo</code>来与Docker Engine交互。知道原理之后就简单了：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo usermod -aG docker $&#123;whoami&#125; #添加当前用户到docker组</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    
-      
-
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer" stype="color:#5d3434">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2017-06-30-Spring-Boot使用Swagger自动生成Api-Doc.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zouyee">
-      <meta itemprop="description" content="Keep motivation for the world">
-      <meta itemprop="image" content="/images/author.webp">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Indagate">
-    </span>
-
-    
-    <div class="head">
-        <div class="gr_up_title">
-          <span class="text-overflow-center">Spring Boot使用SpringFox自动生成Api Doc</span>
-        </div>
-        <div class="gr_blog_post_cat">
-          <span class="gr_ddate">6月 30 2017</span><span class="gr_separate">|</span>
-          
-            
-              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
-            
-        </div>
-        <div class="gr_blog_post_title_holder">
-        
-          
-          <h3 class="blog_title" itemprop="name headline">
-                
-                <a class="blog_title_a" href="/2017-06-30-Spring-Boot使用Swagger自动生成Api-Doc.html" itemprop="url">
-                  Spring Boot使用SpringFox自动生成Api Doc
-                </a>
-              
-            
-          </h3>
-          
-        </div>
-        <div class="gr_blog_post_cat" style="text-align: center;">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：6月 30 2017 10:56:01" itemprop="dateCreated datePublished" datetime="2017-06-30T10:56:01+08:00">6月 30 2017</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017-06-30-Spring-Boot使用Swagger自动生成Api-Doc.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017-06-30-Spring-Boot使用Swagger自动生成Api-Doc.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-    </div>   
-    
-
-    
-    
-    
-    
-    <div class="gr_media">
-      <div class="gr_blog_post_featuder_holder text-center">
-      
-      </div>
-    </div>
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-    
-      
-        
-          <div class="note info"><p>在做Android开发的时候，对于Api接口的对接有着深刻的体会：后端通过Markdown或者Word写好Api文档，然后通过类似Samba或者Dropbox这样的服务与移动端实现文档共享。有的时候因为接口出了问题，中间还得来回修改对接，效率低下不说，要是后端手抖写错参数而没有意识到，移动端埋头一顿调试。。。说多了都是泪。</p></div>
-<p>为了避免同时维护代码和文档来保持两者之间的同步而带来的额外负担，同事推荐了<a href="http://apidocjs.com/" target="_blank" rel="noopener"><code>ApiDoc</code></a>来生成文档，虽然生成的文档界面比较清爽然而前提是必须得按照规定的语法写上详细的注释，才能生成对应的文档，虽然写注释本身是一件好事，不过有能够自动生成的方法为啥不使用呢?</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017-06-30-Spring-Boot使用Swagger自动生成Api-Doc.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-      
-
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer" stype="color:#5d3434">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2017-06-28-解决Git-refusing-to-merge-unrelated-histories问题.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zouyee">
-      <meta itemprop="description" content="Keep motivation for the world">
-      <meta itemprop="image" content="/images/author.webp">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Indagate">
-    </span>
-
-    
-    <div class="head">
-        <div class="gr_up_title">
-          <span class="text-overflow-center">解决Git refusing to merge unrelated histories问题</span>
-        </div>
-        <div class="gr_blog_post_cat">
-          <span class="gr_ddate">6月 28 2017</span><span class="gr_separate">|</span>
-          
-            
-              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
-            
-        </div>
-        <div class="gr_blog_post_title_holder">
-        
-          
-          <h3 class="blog_title" itemprop="name headline">
-                
-                <a class="blog_title_a" href="/2017-06-28-解决Git-refusing-to-merge-unrelated-histories问题.html" itemprop="url">
-                  解决Git refusing to merge unrelated histories问题
-                </a>
-              
-            
-          </h3>
-          
-        </div>
-        <div class="gr_blog_post_cat" style="text-align: center;">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：6月 28 2017 10:40:36" itemprop="dateCreated datePublished" datetime="2017-06-28T10:40:36+08:00">6月 28 2017</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017-06-28-解决Git-refusing-to-merge-unrelated-histories问题.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017-06-28-解决Git-refusing-to-merge-unrelated-histories问题.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-    </div>   
-    
-
-    
-    
-    
-    
-    <div class="gr_media">
-      <div class="gr_blog_post_featuder_holder text-center">
-      
-      </div>
-    </div>
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-    
-      
-        
-          
-            <p>最近在使用brew更新了git之后，发现在与Github上的新创建的<code>repo</code>建立关联的之后，进行<code>pull</code>操作会出现类似于下面的这种错误：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> * branch            master     -&gt; FETCH_HEAD</span><br><span class="line"> * [new branch]      master     -&gt; origin/master</span><br><span class="line">fatal: refusing to merge unrelated histories</span><br></pre></td></tr></table></figure>
-<p>通过查阅资料显示，GIt从版本<code>2.9.0</code>开始，预设行为不允许合并没有共同祖先的分支，需要加上<code>--allow-unrelated-histories</code>选项进行pull操作才不会出现此类错误信息：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull origin master --allow-unrelated-histories</span><br></pre></td></tr></table></figure>
-<p>相关参考：</p>
+          <p><img src="https://s2.ax1x.com/2019/09/28/u1f2UU.md.jpg" alt></p>
+<div class="note info"><p>除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的<a href="github.com/qyuhen/book">Golang 源码剖析</a>。</p>
+<p><a href="https://github.com/golang/go/releases" target="_blank" rel="noopener">Golang 1.13.1</a>已在9月26日正式发布，主要修复<code>CVE-2019-16276</code>,当然docker等相关组件也同时做了update</p></div>
+<p>channel是Golang提供的goroutine间的通信方式，其为Golang并发模型CSP的关键，Golang鼓励用通讯实现数据共享，如果需要跨进程通信，建议使用分布式方案或者消息队列来解决。该文章主要介绍，以下内容:</p>
 <ul>
-<li><a href="https://git-scm.com/docs/git-merge/2.9.0" target="_blank" rel="noopener">Git merge (2.9.0)</a></li>
-<li><a href="https://stackoverflow.com/questions/37937984/git-refusing-to-merge-unrelated-histories" target="_blank" rel="noopener">StackoverFlow: Git refusing to merge unrelated histories</a></li>
+<li>channel介绍及范例</li>
+<li>channel用法</li>
+<li>channel使用场景</li>
+<li>channel原理赏析</li>
 </ul>
-
-          
-        
-      
-    </div>
-
-    
-      
-
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer" stype="color:#5d3434">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2017-06-12-Docker-Compose-链接外部容器的几种方式.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zouyee">
-      <meta itemprop="description" content="Keep motivation for the world">
-      <meta itemprop="image" content="/images/author.webp">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Indagate">
-    </span>
-
-    
-    <div class="head">
-        <div class="gr_up_title">
-          <span class="text-overflow-center">Docker Compose：链接外部容器的几种方式</span>
-        </div>
-        <div class="gr_blog_post_cat">
-          <span class="gr_ddate">6月 12 2017</span><span class="gr_separate">|</span>
-          
-            
-              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
-            
-        </div>
-        <div class="gr_blog_post_title_holder">
-        
-          
-          <h3 class="blog_title" itemprop="name headline">
-                
-                <a class="blog_title_a" href="/2017-06-12-Docker-Compose-链接外部容器的几种方式.html" itemprop="url">
-                  Docker Compose：链接外部容器的几种方式
-                </a>
-              
-            
-          </h3>
-          
-        </div>
-        <div class="gr_blog_post_cat" style="text-align: center;">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：6月 12 2017 23:04:41" itemprop="dateCreated datePublished" datetime="2017-06-12T23:04:41+08:00">6月 12 2017</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017-06-12-Docker-Compose-链接外部容器的几种方式.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017-06-12-Docker-Compose-链接外部容器的几种方式.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-    </div>   
-    
-
-    
-    
-    
-    
-    <div class="gr_media">
-      <div class="gr_blog_post_featuder_holder text-center">
-      
-      </div>
-    </div>
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-    
-      
-        
-          <div class="note info"><p>在Docker中，容器之间的链接是一种很常见的操作：它提供了访问其中的某个容器的网络服务而不需要将所需的端口暴露给Docker Host主机的功能。Docker Compose中对该特性的支持同样是很方便的。然而，如果需要链接的容器没有定义在同一个<code>docker-compose.yml</code>中的时候，这个时候就稍微麻烦复杂了点。</p></div>
+<p>下面在进入正题之前，简要介绍一下CSP模型：</p>
+<blockquote>
+<p>传统并发模型分为Actor模型与CSP模型，其中CSP全称为Communicating Sequential Processess，CSP模型有并发执行体(进程、线程、协程)，和消息通道组成，执行体之间通过消息通道进行通讯，CSP模型关注消息发送的载体，即消息管道，而Actor关注的是内部的状态，那么Golang中执行体对应的是goroutine，消息通道对应的是channel。</p>
+</blockquote>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017-06-12-Docker-Compose-链接外部容器的几种方式.html#more" rel="contents">
+            <a class="btn" href="/2019-10-04-Golang漫谈之反射.html#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1041,7 +519,7 @@
   
   
   <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2017-05-20-解决Mysql的Python驱动安装失败.html">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-10-04-Golang漫谈之数组.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zouyee">
@@ -1056,13 +534,16 @@
     
     <div class="head">
         <div class="gr_up_title">
-          <span class="text-overflow-center">MySQL API Drivers安装小记</span>
+          <span class="text-overflow-center">Golang漫谈之channel妙法</span>
         </div>
         <div class="gr_blog_post_cat">
-          <span class="gr_ddate">5月 20 2017</span><span class="gr_separate">|</span>
+          <span class="gr_ddate">10月 04 2019</span><span class="gr_separate">|</span>
           
-            
-              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
+                <a href="/categories/golang漫谈/" itemprop="url" rel="category tag"><span itemprop="name">golang漫谈</span></a>
+
+                
+                
+              
             
         </div>
         <div class="gr_blog_post_title_holder">
@@ -1070,8 +551,8 @@
           
           <h3 class="blog_title" itemprop="name headline">
                 
-                <a class="blog_title_a" href="/2017-05-20-解决Mysql的Python驱动安装失败.html" itemprop="url">
-                  MySQL API Drivers安装小记
+                <a class="blog_title_a" href="/2019-10-04-Golang漫谈之数组.html" itemprop="url">
+                  Golang漫谈之channel妙法
                 </a>
               
             
@@ -1097,7 +578,7 @@
                 
               
 
-              <time title="创建时间：5月 20 2017 02:12:46" itemprop="dateCreated datePublished" datetime="2017-05-20T02:12:46+08:00">5月 20 2017</time>
+              <time title="创建时间：10月 04 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-10-04T20:40:08+08:00">10月 04 2019</time>
             
 
             
@@ -1114,11 +595,29 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
+                <time title="修改时间：10月 05 2019 22:04:50" itemprop="dateModified" datetime="2019-10-05T22:04:50+08:00">10月 05 2019</time>
               
             
           </span>
 
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/golang漫谈/" itemprop="url" rel="index"><span itemprop="name">golang漫谈</span></a></span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -1128,8 +627,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017-05-20-解决Mysql的Python驱动安装失败.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017-05-20-解决Mysql的Python驱动安装失败.html" itemprop="commentCount"></span>
+                <a href="/2019-10-04-Golang漫谈之数组.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-10-04-Golang漫谈之数组.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1162,252 +661,823 @@
     
       
         
-          <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>最近需要使用Django写点东西，由于自己的macbook上没有也不打算安装MySQL而是以Docker的MySQL镜像替代，Django文档提供了三种MySQL驱动供选择，官方推荐的是<a href="https://pypi.python.org/pypi/mysqlclient" target="_blank" rel="noopener"><code>mysqlclient</code></a>,由于我本地没有安装MySQL，所以是没有Native Driver的以至于在安装MySQL驱动的时候遇到了点小问题，在此记录下。</p>
+          <p><img src="https://s2.ax1x.com/2019/09/28/u1f2UU.md.jpg" alt></p>
+<div class="note info"><p>除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的<a href="github.com/qyuhen/book">Golang 源码剖析</a>。</p>
+<p><a href="https://github.com/golang/go/releases" target="_blank" rel="noopener">Golang 1.13.1</a>已在9月26日正式发布，主要修复<code>CVE-2019-16276</code>,当然docker等相关组件也同时做了update</p></div>
+<p>channel是Golang提供的goroutine间的通信方式，其为Golang并发模型CSP的关键，Golang鼓励用通讯实现数据共享，如果需要跨进程通信，建议使用分布式方案或者消息队列来解决。该文章主要介绍，以下内容:</p>
+<ul>
+<li>channel介绍及范例</li>
+<li>channel用法</li>
+<li>channel使用场景</li>
+<li>channel原理赏析</li>
+</ul>
+<p>下面在进入正题之前，简要介绍一下CSP模型：</p>
+<blockquote>
+<p>传统并发模型分为Actor模型与CSP模型，其中CSP全称为Communicating Sequential Processess，CSP模型有并发执行体(进程、线程、协程)，和消息通道组成，执行体之间通过消息通道进行通讯，CSP模型关注消息发送的载体，即消息管道，而Actor关注的是内部的状态，那么Golang中执行体对应的是goroutine，消息通道对应的是channel。</p>
+</blockquote>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019-10-04-Golang漫谈之数组.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-10-04-Golang漫谈之结构体.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">Golang漫谈之channel妙法</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">10月 04 2019</span><span class="gr_separate">|</span>
+          
+                <a href="/categories/golang漫谈/" itemprop="url" rel="category tag"><span itemprop="name">golang漫谈</span></a>
+
+                
+                
+              
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
+        
+          
+          <h3 class="blog_title" itemprop="name headline">
+                
+                <a class="blog_title_a" href="/2019-10-04-Golang漫谈之结构体.html" itemprop="url">
+                  Golang漫谈之channel妙法
+                </a>
+              
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：10月 04 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-10-04T20:40:08+08:00">10月 04 2019</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：10月 05 2019 22:06:19" itemprop="dateModified" datetime="2019-10-05T22:06:19+08:00">10月 05 2019</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/golang漫谈/" itemprop="url" rel="index"><span itemprop="name">golang漫谈</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019-10-04-Golang漫谈之结构体.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-10-04-Golang漫谈之结构体.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
+      
+      </div>
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+    
+      
+        
+          <p><img src="https://s2.ax1x.com/2019/09/28/u1f2UU.md.jpg" alt></p>
+<div class="note info"><p>除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的<a href="github.com/qyuhen/book">Golang 源码剖析</a>。</p>
+<p><a href="https://github.com/golang/go/releases" target="_blank" rel="noopener">Golang 1.13.1</a>已在9月26日正式发布，主要修复<code>CVE-2019-16276</code>,当然docker等相关组件也同时做了update</p></div>
+<p>channel是Golang提供的goroutine间的通信方式，其为Golang并发模型CSP的关键，Golang鼓励用通讯实现数据共享，如果需要跨进程通信，建议使用分布式方案或者消息队列来解决。该文章主要介绍，以下内容:</p>
+<ul>
+<li>channel介绍及范例</li>
+<li>channel用法</li>
+<li>channel使用场景</li>
+<li>channel原理赏析</li>
+</ul>
+<p>下面在进入正题之前，简要介绍一下CSP模型：</p>
+<blockquote>
+<p>传统并发模型分为Actor模型与CSP模型，其中CSP全称为Communicating Sequential Processess，CSP模型有并发执行体(进程、线程、协程)，和消息通道组成，执行体之间通过消息通道进行通讯，CSP模型关注消息发送的载体，即消息管道，而Actor关注的是内部的状态，那么Golang中执行体对应的是goroutine，消息通道对应的是channel。</p>
+</blockquote>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019-10-04-Golang漫谈之结构体.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-09-20-Kubernetes展望与思考之1.17初体验.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">Kubernetes展望与思考之1.17初体验</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">9月 20 2019</span><span class="gr_separate">|</span>
+          
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
+        
+          
+          <h3 class="blog_title" itemprop="name headline">
+                
+                <a class="blog_title_a" href="/2019-09-20-Kubernetes展望与思考之1.17初体验.html" itemprop="url">
+                  Kubernetes展望与思考之1.17初体验
+                </a>
+              
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：9月 20 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-09-20T20:40:08+08:00">9月 20 2019</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：9月 22 2019 11:09:05" itemprop="dateModified" datetime="2019-09-22T11:09:05+08:00">9月 22 2019</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019-09-20-Kubernetes展望与思考之1.17初体验.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-09-20-Kubernetes展望与思考之1.17初体验.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
+      
+      </div>
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+    
+      
+        
+          <p><img src="https://s2.ax1x.com/2019/09/22/uSXR8e.jpg" alt></p>
+<div class="note info"><p>接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。</p>
+<p><a href="https://kubernetes.io/blog/2019/09/18/kubernetes-1-16-release-announcement" target="_blank" rel="noopener">kubernetes 1.16</a>已在前天正式发布，</p></div>
+<p>kubeadm是Kubernetes官方提供的用于快速安装Kubernetes集群的工具，其中<a href="https://github.com/kubernetes-sigs/kubespray" target="_blank" rel="noopener">kubespray</a>比较适合较大规模的集群部署，*步骤，为可选操作，该文章主要介绍，以下内容:</p>
+<ul>
+<li>kubernetes编译</li>
+<li>kubernetes部署</li>
+<li>kubernetes测试(待续)</li>
+</ul>
+<p>下面我们看看如何编译及部署,在使用kubeadm部署前，需要编译以下镜像及执行文件,下面我们以v1.17.0-alpha.0版本为例：</p>
+<ol>
+<li><p>通过关注右侧公众号，输出<code>1.17a</code> 获取下面的基础镜像<br> 其中prepare.tgz为编译基础镜像，117alpha.tgz为v1.17.0-alpha.0所需镜像及二进制文件</p>
+</li>
+<li><p><code>golang 1.12.9+</code></p>
+</li>
+<li><p><code>ip、iptables、ipset、mount、nsenter、ebtables、ethtool, socat, tc、touch、conntrack、ipvsadm、jq、sysstat、curl、libseccomp</code> 等命令行</p>
+</li>
+</ol>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019-09-20-Kubernetes展望与思考之1.17初体验.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2018-03-26-Kubernetes集群之路之TLS证书配置.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">Kubernetes集群之路（一）TLS证书配置</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">3月 26 2018</span><span class="gr_separate">|</span>
+          
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
+        
+          
+          <h3 class="blog_title" itemprop="name headline">
+                
+                <a class="blog_title_a" href="/2018-03-26-Kubernetes集群之路之TLS证书配置.html" itemprop="url">
+                  Kubernetes集群之路（一）TLS证书配置
+                </a>
+              
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：3月 26 2018 12:40:08" itemprop="dateCreated datePublished" datetime="2018-03-26T12:40:08+08:00">3月 26 2018</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018-03-26-Kubernetes集群之路之TLS证书配置.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018-03-26-Kubernetes集群之路之TLS证书配置.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
+      
+      </div>
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+    
+      
+        
+          <p><img src="https://upload.wikimedia.org/wikipedia/commons/6/67/Kubernetes_logo.svg" alt></p>
+<div class="note default"><p>Kubernetes是Google开源的容器化集群管理系统，其提供的应用部署、扩展、服务发现等机制对于微服务化架构应用有着十分重要的作用。</p>
+<p>本系列文章基于以下版本来讲述如何使用二进制方式安装Kubernetes集群顺便讲述下踩坑的心路历程：</p>
+<ul>
+<li>Kubernetes version: <code>v1.10</code></li>
+<li>System: <code>CentOS Linux 7</code></li>
+<li>Kernel: <code>Linux 3.10.0</code></li>
+</ul></div>
+<p>Kubernetes系统的各个组件需要使用TLS证书对其通信加密以及授权认证，所以在部署之前我们需要先生成相关的TLS证书以便后续操作能够顺利进行。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018-03-26-Kubernetes集群之路之TLS证书配置.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2018-01-26-lua读取redis数据的null判断.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">lua读取redis数据的null判断</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">1月 26 2018</span><span class="gr_separate">|</span>
+          
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
+        
+          
+          <h3 class="blog_title" itemprop="name headline">
+                
+                <a class="blog_title_a" href="/2018-01-26-lua读取redis数据的null判断.html" itemprop="url">
+                  lua读取redis数据的null判断
+                </a>
+              
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：1月 26 2018 12:40:08" itemprop="dateCreated datePublished" datetime="2018-01-26T12:40:08+08:00">1月 26 2018</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018-01-26-lua读取redis数据的null判断.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018-01-26-lua读取redis数据的null判断.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
+      
+      </div>
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+    
+      
+        
+          <p>最近在配合移动端调试的时候，被抓去debug一个在清除redis缓存之后才会出现的网关错误。于是打开服务器上的log定位到类似错误:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[error] 7#7: *12030 lua entry thread aborted: runtime error: /data/share/apps/lua/access_check.lua:133: bad argument #1 to &apos;decode&apos; (string expected, got userdata)</span><br></pre></td></tr></table></figure>
+<p>该段代码的主要作用是在<code>openresty</code>中<code>lua</code>读取<code>redis</code>中数据并解码为<code>json</code>：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> access_token = redis_client:read_by_key(token_key)</span><br><span class="line">   <span class="keyword">if</span> access_token == <span class="literal">nil</span> <span class="keyword">then</span></span><br><span class="line">       <span class="comment">-- do something...</span></span><br><span class="line">       <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">   <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">   <span class="keyword">local</span> obj_token = cjson.decode(access_token)</span><br><span class="line">   <span class="comment">-- do something</span></span><br></pre></td></tr></table></figure>
+<p>通过查询资料得知原因：<strong><code>lua</code>读取<code>redis</code>数据返回结果为空时，返回的结果不是<code>nil</code>而是<code>userdata</code>类型的<code>ngx.null</code>。</strong></p>
 <hr>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017-05-20-解决Mysql的Python驱动安装失败.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-      
-
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer" stype="color:#5d3434">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2017-03-21-Android-Studio支持生成Java-Native方法签名.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zouyee">
-      <meta itemprop="description" content="Keep motivation for the world">
-      <meta itemprop="image" content="/images/author.webp">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Indagate">
-    </span>
-
-    
-    <div class="head">
-        <div class="gr_up_title">
-          <span class="text-overflow-center">Android Studio生成Java方法描述符</span>
-        </div>
-        <div class="gr_blog_post_cat">
-          <span class="gr_ddate">3月 21 2017</span><span class="gr_separate">|</span>
-          
-            
-              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
-            
-        </div>
-        <div class="gr_blog_post_title_holder">
-        
-          
-          <h3 class="blog_title" itemprop="name headline">
-                
-                <a class="blog_title_a" href="/2017-03-21-Android-Studio支持生成Java-Native方法签名.html" itemprop="url">
-                  Android Studio生成Java方法描述符
-                </a>
-              
-            
-          </h3>
-          
-        </div>
-        <div class="gr_blog_post_cat" style="text-align: center;">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：3月 21 2017 21:32:50" itemprop="dateCreated datePublished" datetime="2017-03-21T21:32:50+08:00">3月 21 2017</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017-03-21-Android-Studio支持生成Java-Native方法签名.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017-03-21-Android-Studio支持生成Java-Native方法签名.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-    </div>   
-    
-
-    
-    
-    
-    
-    <div class="gr_media">
-      <div class="gr_blog_post_featuder_holder text-center">
-      
-      </div>
-    </div>
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-    
-      
-        
-          <div class="note info"><p>在日常的Android NDK开发中，会不可避免的用到C与Java代码相互调用的情况。Java调用C的方法还好，C调用Java的方法就比较麻烦了。需要编写看着就头疼的Java方法描述符才能正确的调用Java方法。 </p></div>
-<p>其中常见的Java方法域和描述符如下表所示：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">Java类型</th>
-<th style="text-align:center">签名</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Boolean</td>
-<td style="text-align:center">Z</td>
-</tr>
-<tr>
-<td style="text-align:center">Byte</td>
-<td style="text-align:center">B</td>
-</tr>
-<tr>
-<td style="text-align:center">Char</td>
-<td style="text-align:center">C</td>
-</tr>
-<tr>
-<td style="text-align:center">Short</td>
-<td style="text-align:center">S</td>
-</tr>
-<tr>
-<td style="text-align:center">Int</td>
-<td style="text-align:center">I</td>
-</tr>
-<tr>
-<td style="text-align:center">Long</td>
-<td style="text-align:center">J</td>
-</tr>
-<tr>
-<td style="text-align:center">Float</td>
-<td style="text-align:center">F</td>
-</tr>
-<tr>
-<td style="text-align:center">Double</td>
-<td style="text-align:center">D</td>
-</tr>
-<tr>
-<td style="text-align:center">Fully-qualified-class</td>
-<td style="text-align:center">Lfully-qualified-class</td>
-</tr>
-<tr>
-<td style="text-align:center">type[]</td>
-<td style="text-align:center">[type</td>
-</tr>
-<tr>
-<td style="text-align:center">Method type</td>
-<td style="text-align:center">(arg-type)ret-type</td>
-</tr>
-</tbody>
-</table>
-<p>通过上述对照表，我们可以通过C代码查找一个为<code>String</code>类型的Java静态字段，例如:</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">jfieldID staticJavaFieldId;</span><br><span class="line">staticJavaFieldId = env-&gt;GetStaticFieldID(clazz, <span class="string">"mStaticField"</span>, <span class="string">"Ljava/lang/String;"</span>);</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* do something...</span></span><br><span class="line"><span class="comment">**/</span></span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017-03-21-Android-Studio支持生成Java-Native方法签名.html#more" rel="contents">
+            <a class="btn" href="/2018-01-26-lua读取redis数据的null判断.html#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1456,7 +1526,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 

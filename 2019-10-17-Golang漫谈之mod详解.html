@@ -105,18 +105,18 @@
 
 
 
-  <meta name="description" content="RPM软件包管理rpm包管理查询参数选项:  -a 查询所有已安装的软件包 -f 查询文件所属软件包 -p 查询软件包 -i 显示软件包信息 -l 显示软件包中的文件列表 -d 显示被标注为文档的文件列表 -c 显示被标注为配置文件的文件列表">
-<meta name="keywords" content="linux,rpm,apt,yum">
+  <meta name="description" content="除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的Golang 源码剖析。 Golang 1.13.1已在9月26日正式发布，主要修复CVE-2019-16276,当然docker等相关组件也同时做了update Go modules是Golang官方在1.11版本推出的包管理工具，在此之前，周边社">
+<meta name="keywords" content="golang">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux 学习笔记-软件包管理">
-<meta property="og:url" content="https://ustack.io/2015-04-24-Linux-学习笔记-软件包管理.html">
+<meta property="og:title" content="Golang漫谈之mod详解">
+<meta property="og:url" content="https://ustack.io/2019-10-17-Golang漫谈之mod详解.html">
 <meta property="og:site_name" content="Indagate">
-<meta property="og:description" content="RPM软件包管理rpm包管理查询参数选项:  -a 查询所有已安装的软件包 -f 查询文件所属软件包 -p 查询软件包 -i 显示软件包信息 -l 显示软件包中的文件列表 -d 显示被标注为文档的文件列表 -c 显示被标注为配置文件的文件列表">
+<meta property="og:description" content="除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的Golang 源码剖析。 Golang 1.13.1已在9月26日正式发布，主要修复CVE-2019-16276,当然docker等相关组件也同时做了update Go modules是Golang官方在1.11版本推出的包管理工具，在此之前，周边社">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-16T22:56:27.000Z">
+<meta property="og:updated_time" content="2019-10-18T08:50:47.449Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Linux 学习笔记-软件包管理">
-<meta name="twitter:description" content="RPM软件包管理rpm包管理查询参数选项:  -a 查询所有已安装的软件包 -f 查询文件所属软件包 -p 查询软件包 -i 显示软件包信息 -l 显示软件包中的文件列表 -d 显示被标注为文档的文件列表 -c 显示被标注为配置文件的文件列表">
+<meta name="twitter:title" content="Golang漫谈之mod详解">
+<meta name="twitter:description" content="除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的Golang 源码剖析。 Golang 1.13.1已在9月26日正式发布，主要修复CVE-2019-16276,当然docker等相关组件也同时做了update Go modules是Golang官方在1.11版本推出的包管理工具，在此之前，周边社">
 
 
 
@@ -125,7 +125,7 @@
 
 
 
-  <link rel="canonical" href="https://ustack.io/2015-04-24-Linux-学习笔记-软件包管理.html">
+  <link rel="canonical" href="https://ustack.io/2019-10-17-Golang漫谈之mod详解.html">
 
 
 
@@ -135,7 +135,7 @@
   };
 </script>
 
-  <title>Linux 学习笔记-软件包管理 | Indagate</title>
+  <title>Golang漫谈之mod详解 | Indagate</title>
   
 
 
@@ -303,7 +303,7 @@
   
   
   <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2015-04-24-Linux-学习笔记-软件包管理.html">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-10-17-Golang漫谈之mod详解.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zouyee">
@@ -318,12 +318,12 @@
     
     <div class="head">
         <div class="gr_up_title">
-          <span class="text-overflow-center">Linux 学习笔记-软件包管理</span>
+          <span class="text-overflow-center">Golang漫谈之mod详解</span>
         </div>
         <div class="gr_blog_post_cat">
-          <span class="gr_ddate">4月 24 2015</span><span class="gr_separate">|</span>
+          <span class="gr_ddate">10月 17 2019</span><span class="gr_separate">|</span>
           
-                <a href="/categories/学习笔记/" itemprop="url" rel="category tag"><span itemprop="name">学习笔记</span></a>
+                <a href="/categories/golang漫谈/" itemprop="url" rel="category tag"><span itemprop="name">golang漫谈</span></a>
 
                 
                 
@@ -333,7 +333,7 @@
         <div class="gr_blog_post_title_holder">
         
           
-          <h3 class="blog_title" itemprop="name headline">Linux 学习笔记-软件包管理
+          <h3 class="blog_title" itemprop="name headline">Golang漫谈之mod详解
               
             
           </h3>
@@ -358,7 +358,7 @@
                 
               
 
-              <time title="创建时间：4月 24 2015 10:06:02" itemprop="dateCreated datePublished" datetime="2015-04-24T10:06:02+08:00">4月 24 2015</time>
+              <time title="创建时间：10月 17 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-10-17T20:40:08+08:00">10月 17 2019</time>
             
 
             
@@ -375,7 +375,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
+                <time title="修改时间：10月 18 2019 16:50:47" itemprop="dateModified" datetime="2019-10-18T16:50:47+08:00">10月 18 2019</time>
               
             
           </span>
@@ -392,7 +392,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/学习笔记/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/golang漫谈/" itemprop="url" rel="index"><span itemprop="name">golang漫谈</span></a></span>
 
                 
                 
@@ -407,8 +407,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2015-04-24-Linux-学习笔记-软件包管理.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015-04-24-Linux-学习笔记-软件包管理.html" itemprop="commentCount"></span>
+                <a href="/2019-10-17-Golang漫谈之mod详解.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-10-17-Golang漫谈之mod详解.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -416,7 +416,7 @@
 
           
           
-             <span id="/2015-04-24-Linux-学习笔记-软件包管理.html" class="leancloud_visitors" data-flag-title="Linux 学习笔记-软件包管理">
+             <span id="/2019-10-17-Golang漫谈之mod详解.html" class="leancloud_visitors" data-flag-title="Golang漫谈之mod详解">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -452,291 +452,125 @@
     <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
     
       
-        <h1 id="RPM软件包管理"><a href="#RPM软件包管理" class="headerlink" title="RPM软件包管理"></a>RPM软件包管理</h1><h3 id="rpm包管理查询"><a href="#rpm包管理查询" class="headerlink" title="rpm包管理查询"></a>rpm包管理查询</h3><p>参数选项:</p>
+        <div class="note info"><p>除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的<a href="github.com/qyuhen/book">Golang 源码剖析</a>。</p>
+<p><a href="https://github.com/golang/go/releases" target="_blank" rel="noopener">Golang 1.13.1</a>已在9月26日正式发布，主要修复<code>CVE-2019-16276</code>,当然docker等相关组件也同时做了update</p></div>
+<p>Go modules是Golang官方在1.11版本推出的包管理工具，在此之前，周边社区提供多种包管理方案，在讨论此类方案之前，可以先回顾一个golang关于包管理的发展。该文章主要介绍，以下内容:</p>
 <ul>
-<li><code>-a</code> 查询所有已安装的软件包</li>
-<li><code>-f</code> 查询文件所属软件包</li>
-<li><code>-p</code> 查询软件包</li>
-<li><code>-i</code> 显示软件包信息</li>
-<li><code>-l</code> 显示软件包中的文件列表</li>
-<li><code>-d</code> 显示被标注为文档的文件列表</li>
-<li><code>-c</code> 显示被标注为配置文件的文件列表</li>
+<li>mod简介及入门</li>
+<li>mod特性</li>
+<li>社区动向</li>
 </ul>
 <a id="more"></a>
+<hr>
+<h4 id="一、mod简介"><a href="#一、mod简介" class="headerlink" title="一、mod简介"></a>一、mod简介</h4><h5 id="1-1-包管理历史发展"><a href="#1-1-包管理历史发展" class="headerlink" title="1.1 包管理历史发展"></a>1.1 包管理历史发展</h5><p> 官方对于Golang的包管理前期一直未释出官方版本，这同样也是被人所诟病的一大缺陷，下面我们看看包管理的历史发展：</p>
+<ul>
+<li>在1.5版本前，所有的依赖都在GOPATH之下，没有版本控制，更别谈其他特性，该方式无法实现包的多版本依赖控制，如project A和B依赖不同的project C版本</li>
+<li>1.15推出vendor机制，即每个项目的跟目录下可以有一个vendor目录，里面存放该项目的依赖库，类似nodejs，在执行go build时会先查找vendor目录</li>
+<li>1.9版本推出dep、vgo，dep被废弃</li>
+<li>1.11版本推出modules机制，基于vgo实现，1.11.2得到增强，并在1.12中默认开启</li>
+</ul>
+<p>除此之外，社区周边还活跃着以下几种包管理工具：</p>
+<ul>
+<li>godep 废弃</li>
+<li>glide 不再维护</li>
+<li>govendor 维护</li>
+</ul>
+<h5 id="1-2-环境介绍"><a href="#1-2-环境介绍" class="headerlink" title="1.2 环境介绍"></a>1.2 环境介绍</h5><p>Golang版本: 1.12.7，在1.12之前，启用mod需要设置环境变量<code>GO111MODULE=on</code>，若需要关闭该特性使用GOPATH，则<code>GO111MODULE=off</code>，说明如下：</p>
+<ul>
+<li>GO111MODULE=off：关闭mod特性，使用GOPATH</li>
+<li>GO111MODULE=on：启用mod特性</li>
+<li>GO111MODULE=auto：自动检测是否使用</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  kubernetes git:(master) <span class="keyword">go</span> version</span><br><span class="line"><span class="keyword">go</span> version go1<span class="number">.12</span><span class="number">.7</span> darwin/amd64</span><br></pre></td></tr></table></figure>
+<h5 id="1-3-项目体验"><a href="#1-3-项目体验" class="headerlink" title="1.3 项目体验"></a>1.3 项目体验</h5><h5 id="项目初始化"><a href="#项目初始化" class="headerlink" title="项目初始化"></a>项目初始化</h5><p>mod的初始化工作：</p>
+<ul>
+<li>创建项目目录，如项目：indagate，该目录需要在GOPATH之外</li>
+<li>切换到项目目录，如<code>/Users/zoues/Code/indagate</code></li>
+<li>执行初始化目录：<code>go mod init &lt;项目名称&gt;</code>，如 go mod init github.com/ustackq/indagate</li>
+</ul>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">➜  mkdir indagate</span><br><span class="line">➜  cd indagate</span><br><span class="line">➜  <span class="keyword">go</span> mod init github.com/ustackq/indagate</span><br><span class="line"><span class="keyword">go</span>: creating <span class="built_in">new</span> <span class="keyword">go</span>.mod: module github.com/ustackq/indagate</span><br><span class="line">➜  indagate ll</span><br><span class="line">total <span class="number">8</span></span><br><span class="line">-rw-------  <span class="number">1</span> zoues  staff    <span class="number">25</span>B <span class="number">10</span> <span class="number">17</span> <span class="number">17</span>:<span class="number">00</span> <span class="keyword">go</span>.mod</span><br><span class="line">➜  indagate cat <span class="keyword">go</span>.mod</span><br><span class="line">module github.com/ustackq/indagate</span><br><span class="line"></span><br><span class="line"><span class="keyword">go</span> <span class="number">1.12</span></span><br></pre></td></tr></table></figure>
+<p>使用init命令，会自动生成go.mod文件，在该文件中，存储项目的第三方包的依赖版本，需要注意的是，只有在run/test或者go mod tidy时，才会触发依赖解析，如下所示：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">➜  indagate git:(master) ✗ <span class="keyword">go</span> mod tidy</span><br><span class="line">➜ indagate git:(master) ✗ cat <span class="keyword">go</span>.mod</span><br><span class="line">module github.com/ustackq/indagate</span><br><span class="line"></span><br><span class="line"><span class="keyword">go</span> <span class="number">1.12</span></span><br><span class="line"></span><br><span class="line">require (</span><br><span class="line">	github.com/coreos/<span class="keyword">go</span>-systemd v0<span class="number">.0</span><span class="number">.0</span><span class="number">-20190719114852</span>-fd7a80b32e1f</span><br><span class="line">  github.com/denisenkom/<span class="keyword">go</span>-mssqldb v0<span class="number">.0</span><span class="number">.0</span><span class="number">-20191001013358</span>-cfbb681360f0</span><br><span class="line">  ...</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">➜  indagate git:(master) ✗ ls|grep <span class="keyword">go</span>.</span><br><span class="line"><span class="keyword">go</span>.mod</span><br><span class="line"><span class="keyword">go</span>.sum</span><br></pre></td></tr></table></figure>
+<p>此时，可以发现上述目录多了go.sum文件，其用于记录每个包的版本及hash。go.mod 文件正常情况会包含 module 和 require 模块，除此之外还可以包含 replace 和 exclude等模块。</p>
+<h5 id="上传代码仓库"><a href="#上传代码仓库" class="headerlink" title="上传代码仓库"></a>上传代码仓库</h5><p>然后上传代码至代码仓库，如：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br><span class="line">git add *</span><br><span class="line">git commit -am <span class="string">"First commit"</span></span><br><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
+<p>在上传完毕后，可以通过<code>go get -v github.com/ustackq/indagate</code>拉取进行测试，该命令获取的是master分支最新代码，这种方式不好之处就是无法对其进行版本管理。</p>
+<p> 在构建项目时，可以为代码库添加tag：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git tag v1<span class="number">.0</span><span class="number">.0</span></span><br><span class="line">git push --tags</span><br></pre></td></tr></table></figure>
+<p>如果不打算维护小版本，可以简化成如下操作：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b v1</span><br><span class="line">git push -u origin v1</span><br></pre></td></tr></table></figure>
+<h5 id="修改代码"><a href="#修改代码" class="headerlink" title="修改代码"></a>修改代码</h5><p>项目在v1.0.1上新增功能，并且在v1修复某一个bug，操作如下：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git commit -m <span class="string">"Emphasize our friendliness"</span> testmod.<span class="keyword">go</span></span><br><span class="line">git tag v1<span class="number">.0</span><span class="number">.1</span></span><br><span class="line">git push --tags origin v1</span><br></pre></td></tr></table></figure>
+<h5 id="依赖升级"><a href="#依赖升级" class="headerlink" title="依赖升级"></a>依赖升级</h5><p>golang提供包依赖查询命令，<code>go help list</code>，如下所示：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">➜  indagate git:(master) ✗ <span class="keyword">go</span> list -m -u all</span><br><span class="line"><span class="keyword">go</span>: finding github.com/<span class="keyword">go</span>-openapi/validate v0<span class="number">.19</span><span class="number">.4</span></span><br><span class="line"><span class="keyword">go</span>: finding gopkg.in/gomail.v2 latest</span><br><span class="line"><span class="keyword">go</span>: finding github.com/modern-<span class="keyword">go</span>/concurrent latest</span><br><span class="line"><span class="keyword">go</span>: finding github.com/nfnt/resize latest</span><br><span class="line"><span class="keyword">go</span>: finding github.com/coreos/pkg latest</span><br><span class="line"><span class="keyword">go</span>: finding github.com/<span class="keyword">go</span>-openapi/runtime v0<span class="number">.19</span><span class="number">.7</span></span><br><span class="line"><span class="keyword">go</span>: finding golang.org/x/sync latest</span><br><span class="line"><span class="keyword">go</span>: finding gopkg.in/check.v1 latest</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>若需要升/降某个包时，可以执行 <code>go help get</code>，如：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span> get -v &lt;包&gt;@&lt;版本号&gt;</span><br><span class="line"># 该处为将validate v0<span class="number">.19</span><span class="number">.4</span>降级到<span class="number">0.19</span><span class="number">.3</span></span><br><span class="line">➜  indagate git:(master) ✗ <span class="keyword">go</span> get -v github.com/<span class="keyword">go</span>-openapi/validate@v0<span class="number">.19</span><span class="number">.3</span></span><br><span class="line">Fetching https:<span class="comment">//goproxy.io/github.com/go-openapi/validate/@v/list</span></span><br><span class="line">github.com/<span class="keyword">go</span>-openapi/validate</span><br><span class="line">➜  indagate git:(master) ✗ cat <span class="keyword">go</span>.sum|grep v0<span class="number">.19</span><span class="number">.3</span></span><br><span class="line">github.com/<span class="keyword">go</span>-openapi/jsonpointer v0<span class="number">.19</span><span class="number">.3</span> h1:gihV7YNZK1iK6Tgwwsxo2rJbD1GTbdm72325Bq8FI3w=</span><br><span class="line">github.com/<span class="keyword">go</span>-openapi/jsonpointer v0<span class="number">.19</span><span class="number">.3</span>/<span class="keyword">go</span>.mod h1:Pl9vOtqEWErmShwVjC8pYs9cog34VGT37dQOVbmoatg=</span><br><span class="line">github.com/<span class="keyword">go</span>-openapi/loads v0<span class="number">.19</span><span class="number">.3</span> h1:jwIoahqCmaA5OBoc/B+<span class="number">1</span>+Mu2L0Gr8xYQnbeyQEo/<span class="number">7</span>b0=</span><br><span class="line">github.com/<span class="keyword">go</span>-openapi/loads v0<span class="number">.19</span><span class="number">.3</span>/<span class="keyword">go</span>.mod h1:YVfqhUCdahYwR3f3iiwQLhicVRvLlU/WO5WPaZvcvSI=</span><br><span class="line">github.com/<span class="keyword">go</span>-openapi/spec v0<span class="number">.19</span><span class="number">.3</span> h1:<span class="number">0</span>XRyw8kguri6Yw4SxhsQA/atC88yqrk0+G4YhI2wabc=</span><br><span class="line">github.com/<span class="keyword">go</span>-openapi/spec v0<span class="number">.19</span><span class="number">.3</span>/<span class="keyword">go</span>.mod h1:FpwSN1ksY1eteniUU7X0N/BgJ7a4WvBFVA8Lj9mJglo=</span><br><span class="line">github.com/<span class="keyword">go</span>-openapi/strfmt v0<span class="number">.19</span><span class="number">.3</span> h1:eRfyY5SkaNJCAwmmMcADjY31ow9+N7MCLW7oRkbsINA=</span><br><span class="line">github.com/<span class="keyword">go</span>-openapi/strfmt v0<span class="number">.19</span><span class="number">.3</span>/<span class="keyword">go</span>.mod h1:<span class="number">0</span>yX7dbo8mKIvc3XSKp7MNfxw4JytCfCD6+bY1AVL9LU=</span><br><span class="line">github.com/<span class="keyword">go</span>-openapi/validate v0<span class="number">.19</span><span class="number">.3</span> h1:PAH/<span class="number">2</span>DylwWcIU1s0Y7k3yNmeAgWOcKrNE2Q7Ww/kCg4=</span><br><span class="line">github.com/<span class="keyword">go</span>-openapi/validate v0<span class="number">.19</span><span class="number">.3</span>/<span class="keyword">go</span>.mod h1:<span class="number">90</span>Vh6jjkTn+OT1Eefm0ZixWNFjhtOH7vS9k0lo6zwJo=</span><br><span class="line">➜  indagate git:(master) ✗ cat <span class="keyword">go</span>.mod|grep v0<span class="number">.19</span><span class="number">.3</span></span><br><span class="line">	github.com/<span class="keyword">go</span>-openapi/loads v0<span class="number">.19</span><span class="number">.3</span></span><br><span class="line">	github.com/<span class="keyword">go</span>-openapi/spec v0<span class="number">.19</span><span class="number">.3</span></span><br><span class="line">	github.com/<span class="keyword">go</span>-openapi/strfmt v0<span class="number">.19</span><span class="number">.3</span></span><br><span class="line">	github.com/<span class="keyword">go</span>-openapi/validate v0<span class="number">.19</span><span class="number">.3</span></span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>rpm查询应用案列:</p>
+<p>需要注意的是，在 modules 模式开启和关闭的情况下，go get 的使用方式不是完全相同的。在 modules 模式开启的情况下，可以通过在 package 后面添加 @version 来表明要升级（降级）到某个版本。如果没有指明 version 的情况下，则默认先下载打了 tag 的 release 版本，比如 v0.4.5 或者 v1.2.3；如果没有 release 版本，则下载最新的 pre release 版本，比如 v0.0.1-pre1。如果还没有则下载最新的 commit。包的的tag需要遵循semver规范，否则modules 是无法管理的。version 的格式为 v(major).(minor).(patch) 即vX.Y.Z，更多信息可以参考参考链接 。</p>
 </blockquote>
-<ol start="0">
-<li>查看软件是否被安装:</li>
-</ol>
-<blockquote>
-<p><code>rpm -q xxxx软件包名</code>将显示指定的软件包名是否被安装。<br>以下示例将显示<code>sudo</code>命令是否被安装:</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rpm -q sudo</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><code>-qa</code>将会显示所有被安装的软件包，从中过滤指定的软件包，可以使用管道组合命令:<br><code>rpm -qa | grep xxxx软件包名</code>来查看指定软件包是否被安装。</p>
-</blockquote>
-<p>以下示例将查询<code>sudo</code>命令是否被安装:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rpm -qa | grep sudo</span></span><br></pre></td></tr></table></figure>
+<p>此外，在 modules 开启的模式下，go get 还支持 version 模糊查询，比如&gt;v1.0.0表示大于v1.0.0的可使用版本；&lt; v1.12.0 表示小于 v1.12.0  版本下最近可用的版本。版本的比较规按照semver规范的各个字段来进行。</p>
+<h5 id="vendor依赖"><a href="#vendor依赖" class="headerlink" title="vendor依赖"></a>vendor依赖</h5><p> Go 1.5 推出了 vendor 机制，go mod 也可以支持 vendor 机制，将依赖包拷贝到 vendor 目录。但是像一些 test case 里面的依赖包并不会拷贝的 vendor 目录中。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">➜  indagate git:(master) ✗ <span class="keyword">go</span> help mod vendor</span><br><span class="line">usage: <span class="keyword">go</span> mod vendor [-v]</span><br><span class="line"></span><br><span class="line">Vendor resets the main module<span class="string">'s vendor directory to include all packages</span></span><br><span class="line"><span class="string">needed to build and test all the main module'</span>s packages.</span><br><span class="line">It does not include test code <span class="keyword">for</span> vendored packages.</span><br><span class="line"></span><br><span class="line">The -v flag causes vendor to <span class="built_in">print</span> the names of vendored</span><br><span class="line">modules and packages to standard error.</span><br></pre></td></tr></table></figure>
+<h5 id="build"><a href="#build" class="headerlink" title="build"></a>build</h5><p>在处理完项目的初步功能，需要编译时，执行以下步骤</p>
+<ul>
+<li>清理不需要的依赖，下载所缺依赖：go mod tidy</li>
+<li>使用依赖编译执行文件：go build -mod vendor main.go</li>
+</ul>
+<hr>
+<h5 id="2-mod特性"><a href="#2-mod特性" class="headerlink" title="2 mod特性"></a>2 mod特性</h5><p>上面介绍了 go modules 的简单使用方法，但是 modules 的一些更高级的特性没有介绍，将在下面进行展开。</p>
 <ol>
-<li>查询文件隶属的软件包: <blockquote>
-<p><code>rpm --qf xxxx软件包名</code> 其中<code>f</code>代表file的意思。</p>
-</blockquote>
-</li>
+<li>GoProxy</li>
+<li>Replace</li>
 </ol>
-<p>以下示例为查询<code>/etc/services</code>文件所属的软件包:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rpm -qf /etc/services</span></span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li>查询软件包信息:<blockquote>
-<p><code>rpm -qi xxx软件包名</code>查询已安装包信息<br><code>rpm -qip xxxx.rpm</code>查询指定rpm软件包信息（未安装包信息）</p>
-</blockquote>
-</li>
-</ol>
-<p>以下示例为查询<code>sudo</code>命令软件包的信息:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rpm -qi sudo</span></span><br></pre></td></tr></table></figure>
-<ol start="3">
-<li>查询软件包安装文件：<blockquote>
-<p><code>rpm -ql xxx软件包名</code>查询已安装软件包安装了哪些文件<br><code>rpm -qlp xxxx.rpm</code>查询指定的rpm软件包将会安装哪些文件（未安装包安装将会安装的文件） </p>
-</blockquote>
-</li>
-</ol>
-<p>以下示例为显示<code>sudo</code>命令软件包安装的文件:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rpm -ql sudo</span></span><br></pre></td></tr></table></figure>
-<ol start="4">
-<li>查询软件包帮助文档:<blockquote>
-<p><code>rpm -qd xxx软件包名</code> 查询已安装的软件包安装的帮助文档<br><code>rpm -qdp xxx.rpm</code> 查询指定rpm软件包将会安装的帮助文档（未安装软件包将会安装的帮助文档）</p>
-</blockquote>
-</li>
-</ol>
-<p>以下示例将会显示<code>sudo</code>命令安装的帮助文档:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rpm -qd sudo</span></span><br></pre></td></tr></table></figure>
-<ol start="5">
-<li>查询软件包配置文件： <blockquote>
-<p><code>rpm -qc xxxx软件包名</code> 查询已安装软件包包含的配置文件<br><code>rpmm -qcp xxxx.rpm</code> 查询指定rpm软件包将会安装的配置文件（为安装软件包将会安装的配置文件）</p>
-</blockquote>
-</li>
-</ol>
-<p>以下示例将会显示<code>sudo</code>命令安装的配置文件:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rpm -qc sudo</span></span><br></pre></td></tr></table></figure>
-<p>学会这些，可以查看linux系统中的文件隶属于那个软件包，再查看该软件包的信息，以确定该软件包是否需要来确定软件包的开启与否。来达到服务器的精简不必要的软件运行以降低负载。</p>
-<h3 id="rpm软件包的安装、卸载"><a href="#rpm软件包的安装、卸载" class="headerlink" title="rpm软件包的安装、卸载"></a>rpm软件包的安装、卸载</h3><h4 id="卸载软件包"><a href="#卸载软件包" class="headerlink" title="卸载软件包:"></a>卸载软件包:</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#  rpm -e xxx软件包名</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>其中<code>xxx软件包名</code>为软件包名称。<br>注意:如果其它软件包有依赖关系，卸载时会产生提示信息。可以使用–nodeps强行卸载。</p>
-</blockquote>
-<p>以下为强制卸载<code>samba</code>软件包 示例:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rpm -e --nodeps samba</span></span><br></pre></td></tr></table></figure>
-<h4 id="安装本地rpm软件包"><a href="#安装本地rpm软件包" class="headerlink" title="安装本地rpm软件包:"></a>安装本地rpm软件包:</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rpm -ivh xxxxxxxxx.rpm</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>其中<code>-ivh</code>代表的意思为:</p>
+<h6 id="GoProxy"><a href="#GoProxy" class="headerlink" title="GoProxy"></a>GoProxy</h6><p>proxy 顾名思义，代理服务器。众所周知，有些 Golang 的 package 在国内是无法直接 go get 的。在之前，我们解决这个问题，一般都是通过设置 http_proxy/https_proxy 来解决。GoProxy 相当于官方提供了一种 proxy 的方式让用户来进行包下载。要使用 GoProxy 只需要设置环境变量 GOPROXY 即可。目前公开的 GOPROXY 有：</p>
 <ul>
-<li>i :安装（install）</li>
-<li>v :显示安装过程中的详细信息</li>
-<li>h :用<code>#</code>号显示安装进度（hash）</li>
-<li>U :用大写的U来表示升级安装（update）</li>
+<li>goproxy.io</li>
+<li>goproxy.cn: 由七牛云提供，参考 github repo</li>
 </ul>
-</blockquote>
-<p>升级安装示例:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rpm -Uvh xxxxx.rpm</span></span><br></pre></td></tr></table></figure></p>
-<p>如果想忽略进度和安装信息，直接安装可使用:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># rpm -i xxxxxxxxx.rpm</span><br></pre></td></tr></table></figure>
-<h4 id="安装本地软件包附带参数说明"><a href="#安装本地软件包附带参数说明" class="headerlink" title="安装本地软件包附带参数说明:"></a>安装本地软件包附带参数说明:</h4><p><code>--excludedocs</code></p>
-<blockquote>
-<p>不安装软件包中的文档文件(如果你已经足够熟悉这个软件包并且服务器空间紧张的话）</p>
-</blockquote>
-<p>以下为示例:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rpm -ivh --excludedocs xxxxx.rpm</span></span><br></pre></td></tr></table></figure>
-<p><code>--prefix PATH</code></p>
-<blockquote>
-<p>将软件包安装到由<code>PATH</code>指定的路径下,通常不建议这样做或者说这样指定无效果。因为大部分rpm软件包在打包的时候开发人员指定了安装时软件包文件存放的位置了。</p>
-</blockquote>
-<p>以下为示例:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rpm -ivh --prefix=/usr/xiamo/ xxxx.rpm</span></span><br></pre></td></tr></table></figure>
-<p><code>--test</code></p>
-<blockquote>
-<p>只对安装进行测试，并不实际安装。实际环境中比较有用的一个参数，可以测试安装软件包需要哪些依赖需要是否存在安装兼容性问题等等。</p>
-</blockquote>
-<p>以下为示例:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rpm -ivh --test xxxx.rpm</span></span><br></pre></td></tr></table></figure>
-<p><code>--replacepkgs</code></p>
-<blockquote>
-<p>覆盖安装<br>软件包已经被安装,如果要覆盖安装该软件包，例如某个软件包的某个文件丢失，就可以覆盖安装。可以再命令行上使用该参数.</p>
-</blockquote>
-<p>以下为示例:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rpm -ivh --replacepkgs xxxx.rpm</span></span><br></pre></td></tr></table></figure>
-<p><code>--replacefiles</code></p>
-<blockquote>
-<p>文件冲突<br>如果要安装的软件包中有一个文件已在安装其它软件包时安装，会出现错误信息，要想让rpm忽略该错误信息，请使用命令行选项。</p>
-</blockquote>
-<p>以下为示例:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rpm -ivh --replacefiles xxxx.rpm</span></span><br></pre></td></tr></table></figure>
-<p><code>--nodeps</code></p>
-<blockquote>
-<p>未解决依赖关系<br>rpm软件包可能依赖于其它软件包，在安装了特定的软件包之后才能安装该软件包。你必须安装完所有依赖的软件包，才能解决这个问题。强制安装使用该选项。事实上，这样做安装好的软件包十有八九是无法运行的。这也是rpm比较头疼的地方。还好yum解决了这个问题:)</p>
-</blockquote>
-<p>以下为示例:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rpm -ivh --nodeps xxx.rpm</span></span><br></pre></td></tr></table></figure>
-<h3 id="rpm软件包校验"><a href="#rpm软件包校验" class="headerlink" title="rpm软件包校验"></a>rpm软件包校验</h3><blockquote>
-<p>在linux日常应用中，可能其它管理员误操作将某个软件包的文件更改了，这个时候，为了查看哪些文件被更改，就必须校验软件包是否被更改。<br><code>rpm -V 软件名称</code>将会校验指定的已安装的软件包。</p>
+<p>当然你也可以实现自己的 GoProxy 服务，比如项目中的依赖包含外部依赖和内部依赖的时候，那么只需要实现 module proxy protocal 协议即可。</p>
+<p>值得注意的是，在最新 release 的 Go 1.13 版本中默认将 GOPROXY 设置为 <a href="https://proxy.golang.org" target="_blank" rel="noopener">https://proxy.golang.org</a>，这个对于国内的开发者是无法直接使用的。所以如果升级了 Go 1.13 版本一定要把 GOPROXY 手动改掉。</p>
+<h6 id="Replace"><a href="#Replace" class="headerlink" title="Replace"></a>Replace</h6><p>replace 主要有以下典型应用：</p>
 <ul>
-<li>如果软件包没有被做过任何修改，那么执行该命令将不会有任何提示信息。</li>
-<li>如果软件包被改动过，那么将会出现提示信息。</li>
+<li>为了解决某些包发生改名的问题</li>
+<li>解决包名不规范问题，如github.com/sirupsen/Logrus当初的不规范问题，现在已经改名为github.com/sirupsen/logrus</li>
+<li>比如对于有些 golang.org/x/ 下面的包由于某些原因在国内是下载不了的，但是对应的包在 github 上面是有一份拷贝的，这个时候我们就可以将 go.mod 中的包进行 replace 操作</li>
 </ul>
-</blockquote>
-<p>以下为提示信息代表的含义:</p>
+<p>比较典型的是kubernetes中go.mod 的replace使用。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">replace (</span><br><span class="line">	bitbucket.org/bertimus9/systemstat =&gt; bitbucket.org/bertimus9/systemstat v0<span class="number">.0</span><span class="number">.0</span><span class="number">-20180207000608</span><span class="number">-0</span>eeff89b0690</span><br><span class="line">  cloud.google.com/<span class="keyword">go</span> =&gt; cloud.google.com/<span class="keyword">go</span> v0<span class="number">.38</span><span class="number">.0</span></span><br><span class="line">  ...</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h6 id="SubCommand"><a href="#SubCommand" class="headerlink" title="SubCommand"></a>SubCommand</h6><p>modules 支持的 subcommand 如下:</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">➜  indagate git:(master) ✗ <span class="keyword">go</span> help mod</span><br><span class="line">Go mod provides access to operations on modules.</span><br><span class="line"></span><br><span class="line">Note that support <span class="keyword">for</span> modules is built into all the <span class="keyword">go</span> commands,</span><br><span class="line">not just <span class="string">'go mod'</span>. For example, day-to-day adding, removing, upgrading,</span><br><span class="line">and downgrading of dependencies should be done using <span class="string">'go get'</span>.</span><br><span class="line">See <span class="string">'go help modules'</span> <span class="keyword">for</span> an overview of module functionality.</span><br><span class="line"></span><br><span class="line">Usage:</span><br><span class="line"></span><br><span class="line">	<span class="keyword">go</span> mod &lt;command&gt; [arguments]</span><br><span class="line"></span><br><span class="line">The commands are:</span><br><span class="line"></span><br><span class="line">	download    download modules to local cache</span><br><span class="line">	edit        edit <span class="keyword">go</span>.mod from tools or scripts</span><br><span class="line">	graph       <span class="built_in">print</span> module requirement graph</span><br><span class="line">	init        initialize <span class="built_in">new</span> module in current directory</span><br><span class="line">	tidy        add missing and remove unused modules</span><br><span class="line">	vendor      <span class="built_in">make</span> vendored <span class="built_in">copy</span> of dependencies</span><br><span class="line">	verify      verify dependencies have expected content</span><br><span class="line">	why         explain why packages or modules are needed</span><br><span class="line"></span><br><span class="line">Use <span class="string">"go help mod &lt;command&gt;"</span> <span class="keyword">for</span> more information about a command.</span><br></pre></td></tr></table></figure>
+<p>对应解释如下：</p>
 <ul>
-<li><code>5</code> 文件的md5校验值</li>
-<li><code>S</code> 文件大小</li>
-<li><code>L</code> 链接文件</li>
-<li><code>T</code> 文件的创建时间</li>
-<li><code>D</code> 设备文件按</li>
-<li><code>U</code> 文件的用户</li>
-<li><code>G</code> 文件的用户组</li>
-<li><code>M</code> 文件的权限</li>
+<li>download: 下载 modules 到本地缓存</li>
+<li>edit: 提供一种命令行交互修改 go.mod 的方式</li>
+<li>graph: 将 module 的依赖图在命令行打印出来，其实并不是很直观</li>
+<li>init: 初始化 modules，会生成一个 go.mod 文件</li>
+<li>tidy: 清理 go.mod 中的依赖，会添加缺失的依赖，同时移除没有用到的依赖</li>
+<li>vendor: 将依赖包打包拷贝到项目的 vendor 目录下，值得注意的是并不会将 test code 中的依赖包打包到 vendor 中。这种设计在社区也引起过几次争论，但是并没有达成一致。</li>
+<li>verify: verify 用来检测依赖包自下载之后是否被改动过。</li>
+<li>why: 解释为什么 package 或者 module 是需要，但是看上去解释的理由并不是非常的直观。</li>
 </ul>
-<h3 id="rpm软件包文件提取"><a href="#rpm软件包文件提取" class="headerlink" title="rpm软件包文件提取"></a>rpm软件包文件提取</h3><ul>
-<li><p>解压所有文件到当前目录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rpm2cpio xxxxxx.rpm | cpio -idv</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>解压指定文件到当前目录</p>
-</li>
+<hr>
+<h5 id="4-社区动向"><a href="#4-社区动向" class="headerlink" title="4 社区动向"></a>4 社区动向</h5><p>上面在讨论 GoProxy 的时候提到了 Go 1.13 默认设置环境变量 GOPROXY 的值，除此之外 Go 1.13 对 modules 还有哪些值得注意的改动呢？</p>
+<h6 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h6><p>modules 在 Go 1.13 的版本下是默认开启的。</p>
+<h6 id="私库"><a href="#私库" class="headerlink" title="私库"></a>私库</h6><p>前面也说到对于一些内部的 package，GoProxy 并不能很好的处理，Go 1.13 推出了 GOPRIVATE 机制。只需要设置这个环境变量，然后标识出哪些 package 是 private 的，那么对于这个 package 的处理将不会从 proxy 下载。GOPRIVATE 的值是一个以逗号分隔的列表，支持正则（正则语法遵守 Golang 的 包 path.Match）。下面是一个 GOPRIVATE 的示例：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GOPRIVATE=*.xxx.com,yy.zz/private</span><br></pre></td></tr></table></figure>
+<h6 id="校验"><a href="#校验" class="headerlink" title="校验"></a>校验</h6><p>GOSUMDB 的全称为 Go CheckSum Database，用来下载的包的安全性校验问题。包的安全性在使用 GoProxy 之后更容易出现，比如我们引用了一个不安全的 GoProxy 之后然后下载了一个不安全的包，这个时候就出现了安全性问题。对于这种情况，可以通过 GOSUMDB 来对包的哈希值进行校验。当然如果想要关闭哈希校验，可以将 GOSUMDB 设置为 off；如果要对部分包关闭哈希校验，则可以将包的前缀设置到环境变量中 GONOSUMDB 中，设置规则类似 GOPRIVATE。</p>
+<p>关于 GOSUMDB 的配置格式为：<code>&lt;db_name&gt;+&lt;publickey&gt;+&lt;url&gt;</code>。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GOSUMDB=<span class="string">"sum.golang.org"</span></span><br><span class="line">GOSUMDB=<span class="string">"sum.golang.org+&lt;publickey&gt;"</span></span><br><span class="line">GOSUMDB=<span class="string">"sum.golang.org+&lt;publickey&gt; https://sum.golang.org"</span></span><br></pre></td></tr></table></figure>
+<p>上面三种配置都是合理的，因为对于 sum.golang.org，Go 自己知道其对应的 publickey 和 url，所以我们只要配置一个名字即可，对于另外一个 sum.golang.google.cn 也是一样。除此之外的，都需要指明 publickey，url 默认是 <code>https://&lt;db_name&gt;</code>。</p>
+<hr>
+<h4 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h4><p>**请关注后续golang内置数据结构漫谈<br>Golang 包管理历经多个版本，目前来看并没有一个完全让开发者满意的方案，比如类似 Java 的 maven 的包管理方式。很多开发者也表示 modules 的管理方式也不是很直观。其实 Golang 的 package 使用 git 的管理方式来管理其实是一个很好的管理方式，我们最需要的其实如何能让普通开发者获取到任何 package 的心智负担降到最低。值得欣慰的是我们确实有看到大家在这个方向上的努力，比如 modules 的 GoProxy。</p>
+<hr>
+<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul>
+<li><a href="https://github.com/golang/go/wiki/Modules" target="_blank" rel="noopener">Modules-wiki]</a></li>
+<li><a href="https://roberto.selbach.ca/playing-with-go-modules/" target="_blank" rel="noopener">playing-with-go-modules</a></li>
+<li><a href="https://roberto.selbach.ca/intro-to-go-modules/" target="_blank" rel="noopener">introduce-go-modules</a></li>
+<li><a href="https://roberto.selbach.ca/go-proxies/" target="_blank" rel="noopener">learning-go-proxy</a></li>
+<li><a href="https://blog.golang.org/modules2019" target="_blank" rel="noopener">modules2019</a></li>
+<li><a href="https://semver.org/lang/zh-CN/" target="_blank" rel="noopener">版本</a></li>
+<li><a href="https://mp.weixin.qq.com/s/v-NdYEJBgKbiKsdoQaRsQg##" target="_blank" rel="noopener">golang不完全教程</a></li>
 </ul>
-<blockquote>
-<p>以下命令将指定的rpm解包，并将其中的的<code>/etc/inittab</code>文件提取到当前目录得<code>etc</code>目录下。（当前目录的<code>etc</code>目录下将会有一个<code>inittab</code>文件。)<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rpm2cpio xxxx.rpm | cpio -idv ./etc/inittab</span></span><br></pre></td></tr></table></figure></p>
-</blockquote>
-<h2 id="yum软件包管理工具"><a href="#yum软件包管理工具" class="headerlink" title="yum软件包管理工具"></a>yum软件包管理工具</h2><p>应用yum包管理工具的好处:</p>
-<blockquote>
-<ul>
-<li>自动解决软件包依赖关系</li>
-<li>方便的软件包升级</li>
-<li>软件包可信任</li>
-</ul>
-</blockquote>
-<p>缺点:</p>
-<blockquote>
-<ul>
-<li>比rpm慢（需要读取yum源）</li>
-<li>需要联网</li>
-</ul>
-</blockquote>
-<h3 id="yum软件包常用选项"><a href="#yum软件包常用选项" class="headerlink" title="yum软件包常用选项:"></a>yum软件包常用选项:</h3><ul>
-<li>安装<blockquote>
-<p><code>yum install xxx软件包名</code>将会在yum源查找并安装该软件包。</p>
-</blockquote>
-</li>
-</ul>
-<p>以下为安装<code>sudo</code>命令示例:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># yum install sudo</span></span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>检测升级 <blockquote>
-<p><code>yum check-update xxxx软件包名</code>将会在yum源查询指定软件是否有更新可用。(不会安装更新）</p>
-</blockquote>
-</li>
-</ul>
-<p>以下为检测<code>sudo</code>命令是否有更新可用示例:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># yum check-update sudo</span></span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<font color="red">如果不指定软件包名，将检测升级所有软件包。（只检测，不进行升级操作)</font>
-</blockquote>
-<p>以下为检测所有安装的软件包是否有更新可用:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># yum check-update</span></span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>升级<blockquote>
-<p><code>yum update xxx软件包名</code>将会更新升级指定的软件包（如果有更新可用的话），因此次命令最好配合<code>yum check-update</code>使用。</p>
-</blockquote>
-</li>
-</ul>
-<p>以下为升级安装<code>sudo</code>软件包示例：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># yum update sudo</span></span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>软件包查询<blockquote>
-<p><code>yum list</code>列出yum源上所有的软件包,并标注哪些软件包已安装，哪些软件包可更新。（此命令不时列出系统安装的软件包哦，而是yum源上的。所有一般不建议直接这样执行。可以使用管道配合<code>more</code>命令来分页查看。</p>
-</blockquote>
-</li>
-</ul>
-<p>以下为使用示例:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># yum list</span></span><br><span class="line"><span class="comment"># yum list | more</span></span><br></pre></td></tr></table></figure></p>
-<p>列出yum源上指定的软件包可以管道配合<code>grep</code>，以下为示例:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># yum list | grep sudo</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>软件包信息<blockquote>
-<p><code>yum info xxx软件包名</code> 列出软件包的详细信息以及软件包的作用介绍。</p>
-</blockquote>
-</li>
-</ul>
-<p>以下示例将会列出<code>sudo</code>命令的详细说明,以及该软件包的作用介绍:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># yum info sudo</span></span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>卸载<blockquote>
-<p><code>yum remove xxxx软件名</code> 卸载指定的软件包</p>
-</blockquote>
-</li>
-</ul>
-<p>以下示例将会卸载<code>sudo</code>命令:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># yum remove sudo</span></span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>帮助<blockquote>
-<p>查看更多的关系yum的帮助信息,来更好的了解yum软件包管理机制并且灵活的使用。</p>
-</blockquote>
-</li>
-</ul>
-<p>示例:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># yum --help</span></span><br><span class="line"><span class="comment"># man yum</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="源代码包安装"><a href="#源代码包安装" class="headerlink" title="源代码包安装"></a>源代码包安装</h2><blockquote>
-<p>源码安装不同于二进制包安装，它有着很高的自由度。可以个性化定制。但是也往往存在着缺少编译器而无法正常编译安装以及安装之后配置文件的管理问题。</p>
-</blockquote>
-<p>应用举例:</p>
-<blockquote>
-<p>此处用<code>proftpd</code>举例。</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># tar -zxvf proftpd-1.3.3d.tar.gz (解压源码包）</span></span><br><span class="line"><span class="comment"># cd proftpf-1.3.3d （进入源码包目录）</span></span><br><span class="line"><span class="comment"># ./config --prefix=/usr/local/proftpd （配置安装路径）</span></span><br><span class="line"><span class="comment"># make (编译）</span></span><br><span class="line"><span class="comment"># make install  （安装）</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>软件下载地址: <a href="http://www.proftpd.org" target="_blank" rel="noopener">www.proftpd.org</a></p>
-</blockquote>
-<p>其中，配置安装路径是非常必要的，因为源码安装不同于二进制安装。通常没有统一的卸载命令。存在管理不方便以及卸载不干净等问题。因此需要统一指定安装目录。习惯性的，将<code>/usr/local</code>设置为软件的安装目录，后面再跟上软件包的名称建立安装文件夹。</p>
-<h2 id="脚本安装"><a href="#脚本安装" class="headerlink" title="脚本安装"></a>脚本安装</h2><blockquote>
-<p>过于简单，就不解释了。。。</p>
-</blockquote>
-<h2 id="APT软件包管理"><a href="#APT软件包管理" class="headerlink" title="APT软件包管理"></a>APT软件包管理</h2><ul>
-<li>搜索软件包<blockquote>
-<p><code>apt-cache search xxx软件包名</code>将会搜索指定的软件包，并列出其所有的相关软件的信息。类似于<code>yum list</code></p>
-</blockquote>
-</li>
-</ul>
-<p>以下示例将会列出<code>sudo</code>命令的软件包:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># apt-cache search sudo</span></span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>软件包信息<blockquote>
-<p><code>apt-cache show xxx软件包名</code>将会显示软件包的详细信息，并列出其作用介绍。类比于<code>yum info</code>。</p>
-</blockquote>
-</li>
-</ul>
-<p>以下示例将会显示<code>sudo</code>软件有关详细信息:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># apt-cache show sudo</span></span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>安装<blockquote>
-<p><code>apt-get install xxx软件包名</code>将会安装制定的软件包。</p>
-<ul>
-<li><code>reinstall</code>参数替换install将会覆盖安装制定软件包。</li>
-<li><code>-f</code>参数将会修复安装制定软件包。</li>
-</ul>
-</blockquote>
-</li>
-</ul>
-<p>以下示例将会安装、覆盖安装、修复安装<code>sudo</code>：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># apt-get install sudo (安装）</span></span><br><span class="line"><span class="comment"># apt-get reinstall sudo （覆盖安装）</span></span><br><span class="line"><span class="comment"># apt-get install -f sudo （修复安装）</span></span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>删除卸载<blockquote>
-<p><code>apt-get remove xxx软件包名</code>将会卸载指定的软件包。</p>
-<ul>
-<li><code>autoremove</code>将会自动卸载依赖关系软件包（连同主程序的依赖一起卸载）</li>
-<li><code>--purge</code>连同软件的配置文件一起删除（不保留配置文件）。</li>
-</ul>
-</blockquote>
-</li>
-</ul>
-<p>以下示例将会卸载、连同依赖一起卸载、不保留配置文件卸载<code>sudo</code>：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># apt-get remove sudo (卸载）</span></span><br><span class="line"><span class="comment"># apt-get autoremove sudo （连同卸载sudo的依赖）</span></span><br><span class="line"><span class="comment"># apt-get remove --purge （卸载sudo以及配置文件）</span></span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>更新软件源<blockquote>
-<p><code>apt-get update</code>更新软件源</p>
-</blockquote>
-</li>
-</ul>
-<p>示例:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># apt-get update</span></span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>更新已安装软件包<blockquote>
-<p><code>apt-get upgrade</code>将会对已经安装的软件包进行更新。</p>
-</blockquote>
-</li>
-</ul>
-<p>示例:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># apt-get upgrade</span></span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -828,7 +662,7 @@ jQuery.noConflict()(function ($) {
     <strong>本文作者： </strong>zouyee</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://ustack.io/2015-04-24-Linux-学习笔记-软件包管理.html" title="Linux 学习笔记-软件包管理">https://ustack.io/2015-04-24-Linux-学习笔记-软件包管理.html</a>
+    <a href="https://ustack.io/2019-10-17-Golang漫谈之mod详解.html" title="Golang漫谈之mod详解">https://ustack.io/2019-10-17-Golang漫谈之mod详解.html</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -841,13 +675,7 @@ jQuery.noConflict()(function ($) {
       
         <div class="post-tags">
           
-            <a href="/tags/linux/" rel="tag"># linux</a>
-          
-            <a href="/tags/rpm/" rel="tag"># rpm</a>
-          
-            <a href="/tags/apt/" rel="tag"># apt</a>
-          
-            <a href="/tags/yum/" rel="tag"># yum</a>
+            <a href="/tags/golang/" rel="tag"># golang</a>
           
         </div>
       
@@ -860,8 +688,8 @@ jQuery.noConflict()(function ($) {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015-04-06-备份Hexo博客源文件.html" rel="next" title="备份Hexo博客源文件">
-                <i class="fa fa-chevron-left"></i> 备份Hexo博客源文件
+              <a href="/2019-10-04-Golang漫谈之channel妙法.html" rel="next" title="Golang漫谈之channel妙法">
+                <i class="fa fa-chevron-left"></i> Golang漫谈之channel妙法
               </a>
             
           </div>
@@ -869,10 +697,6 @@ jQuery.noConflict()(function ($) {
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015-04-27-Debian下配置exim4-邮件服务器.html" rel="prev" title="Debian下配置exim4 邮件服务器">
-                Debian下配置exim4 邮件服务器 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -952,7 +776,7 @@ jQuery.noConflict()(function ($) {
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">35</span>
+                    <span class="site-state-item-count">43</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -981,7 +805,11 @@ jQuery.noConflict()(function ($) {
                     
                       
                     
-                    <span class="site-state-item-count">8</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1088,7 +916,9 @@ jQuery.noConflict()(function ($) {
                     
                       
                     
-                    <span class="site-state-item-count">47</span>
+                      
+                    
+                    <span class="site-state-item-count">44</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1170,7 +1000,7 @@ jQuery.noConflict()(function ($) {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RPM软件包管理"><span class="nav-number">1.</span> <span class="nav-text">RPM软件包管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rpm包管理查询"><span class="nav-number">1.0.1.</span> <span class="nav-text">rpm包管理查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rpm软件包的安装、卸载"><span class="nav-number">1.0.2.</span> <span class="nav-text">rpm软件包的安装、卸载</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#卸载软件包"><span class="nav-number">1.0.2.1.</span> <span class="nav-text">卸载软件包:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装本地rpm软件包"><span class="nav-number">1.0.2.2.</span> <span class="nav-text">安装本地rpm软件包:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装本地软件包附带参数说明"><span class="nav-number">1.0.2.3.</span> <span class="nav-text">安装本地软件包附带参数说明:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rpm软件包校验"><span class="nav-number">1.0.3.</span> <span class="nav-text">rpm软件包校验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rpm软件包文件提取"><span class="nav-number">1.0.4.</span> <span class="nav-text">rpm软件包文件提取</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#yum软件包管理工具"><span class="nav-number">1.1.</span> <span class="nav-text">yum软件包管理工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#yum软件包常用选项"><span class="nav-number">1.1.1.</span> <span class="nav-text">yum软件包常用选项:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#源代码包安装"><span class="nav-number">1.2.</span> <span class="nav-text">源代码包安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#脚本安装"><span class="nav-number">1.3.</span> <span class="nav-text">脚本安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#APT软件包管理"><span class="nav-number">1.4.</span> <span class="nav-text">APT软件包管理</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、mod简介"><span class="nav-number">1.</span> <span class="nav-text">一、mod简介</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1-包管理历史发展"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 包管理历史发展</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-环境介绍"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 环境介绍</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-3-项目体验"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 项目体验</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#项目初始化"><span class="nav-number">1.4.</span> <span class="nav-text">项目初始化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#上传代码仓库"><span class="nav-number">1.5.</span> <span class="nav-text">上传代码仓库</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#修改代码"><span class="nav-number">1.6.</span> <span class="nav-text">修改代码</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#依赖升级"><span class="nav-number">1.7.</span> <span class="nav-text">依赖升级</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#vendor依赖"><span class="nav-number">1.8.</span> <span class="nav-text">vendor依赖</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#build"><span class="nav-number">1.9.</span> <span class="nav-text">build</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-mod特性"><span class="nav-number">1.10.</span> <span class="nav-text">2 mod特性</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#GoProxy"><span class="nav-number">1.10.1.</span> <span class="nav-text">GoProxy</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Replace"><span class="nav-number">1.10.2.</span> <span class="nav-text">Replace</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#SubCommand"><span class="nav-number">1.10.3.</span> <span class="nav-text">SubCommand</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-社区动向"><span class="nav-number">1.11.</span> <span class="nav-text">4 社区动向</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#特性"><span class="nav-number">1.11.1.</span> <span class="nav-text">特性</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#私库"><span class="nav-number">1.11.2.</span> <span class="nav-text">私库</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#校验"><span class="nav-number">1.11.3.</span> <span class="nav-text">校验</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#后续"><span class="nav-number">2.</span> <span class="nav-text">后续</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考资料"><span class="nav-number">3.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
             
 
           </div>
