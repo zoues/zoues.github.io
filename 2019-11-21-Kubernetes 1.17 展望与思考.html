@@ -105,30 +105,20 @@
 
 
 
-  <meta name="description" content="后端的数据持久化使用的是 Mybatis ，在做高并发下账户增减余额的时候，打算使用乐观锁来解决这个问题。在获取update操作的返回值时遇到了一个问题，似乎 Mybatis 进行 update 操作得到的 int 返回值并不是影响的行数。这下就尴尬了。 一般而言，我们知道当我们使用 Mybatis 在 mapper 接口中定义 insert delete 等操作，定义一个 int 类型的返回值，">
-<meta name="keywords" content="MySQL,Mybatis,JDBC">
+  <meta name="description" content="接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。 kubernetes 1.17当前changlog， 距离Kubernetes 1.17正式发布还剩不到一个月，那么我们在即将迎来的1.17版本中，会引入哪些新特性">
+<meta name="keywords" content="kubernetes,cloudnative">
 <meta property="og:type" content="article">
-<meta property="og:title" content="聊聊Mybatis Update操作返回值">
-<meta property="og:url" content="https://ustack.io/2017-09-06-聊聊Mybatis-Update操作返回值.html">
+<meta property="og:title" content="Kubernetes展望与思考">
+<meta property="og:url" content="https://ustack.io/2019-11-21-Kubernetes 1.17 展望与思考.html">
 <meta property="og:site_name" content="Indagate">
-<meta property="og:description" content="后端的数据持久化使用的是 Mybatis ，在做高并发下账户增减余额的时候，打算使用乐观锁来解决这个问题。在获取update操作的返回值时遇到了一个问题，似乎 Mybatis 进行 update 操作得到的 int 返回值并不是影响的行数。这下就尴尬了。 一般而言，我们知道当我们使用 Mybatis 在 mapper 接口中定义 insert delete 等操作，定义一个 int 类型的返回值，">
+<meta property="og:description" content="接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。 kubernetes 1.17当前changlog， 距离Kubernetes 1.17正式发布还剩不到一个月，那么我们在即将迎来的1.17版本中，会引入哪些新特性">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/694830ebgy1fja7y057g3j20x004yjst.jpg">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/694830ebgy1fja7tn625wj210q0ekgnn.jpg">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/694830ebgy1fja7wi2iv9j20se0k076a.jpg">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/694830ebgy1fja83t5sf3j20sg0oggoq.jpg">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/694830ebgy1fja8bdifgjj20jq0423yx.jpg">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/694830ebgy1fja8ifpsyyj20x206u3zr.jpg">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/694830ebgy1fja8m25otsj204305h0sm.jpg">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/694830ebgy1fja8rrcju0j20ne03i74t.jpg">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/694830ebgy1fja8xe6fwgj20ju050t9b.jpg">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/694830ebgy1fja9nv1e5xj20u80kcdhz.jpg">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/694830ebgy1fja9psbcjpj21hy08eabi.jpg">
-<meta property="og:updated_time" content="2019-05-16T22:56:27.000Z">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/22/MTa1tH.png">
+<meta property="og:updated_time" content="2019-11-22T06:50:31.030Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="聊聊Mybatis Update操作返回值">
-<meta name="twitter:description" content="后端的数据持久化使用的是 Mybatis ，在做高并发下账户增减余额的时候，打算使用乐观锁来解决这个问题。在获取update操作的返回值时遇到了一个问题，似乎 Mybatis 进行 update 操作得到的 int 返回值并不是影响的行数。这下就尴尬了。 一般而言，我们知道当我们使用 Mybatis 在 mapper 接口中定义 insert delete 等操作，定义一个 int 类型的返回值，">
-<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/694830ebgy1fja7y057g3j20x004yjst.jpg">
+<meta name="twitter:title" content="Kubernetes展望与思考">
+<meta name="twitter:description" content="接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。 kubernetes 1.17当前changlog， 距离Kubernetes 1.17正式发布还剩不到一个月，那么我们在即将迎来的1.17版本中，会引入哪些新特性">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/11/22/MTa1tH.png">
 
 
 
@@ -137,7 +127,7 @@
 
 
 
-  <link rel="canonical" href="https://ustack.io/2017-09-06-聊聊Mybatis-Update操作返回值.html">
+  <link rel="canonical" href="https://ustack.io/2019-11-21-Kubernetes 1.17 展望与思考.html">
 
 
 
@@ -147,7 +137,7 @@
   };
 </script>
 
-  <title>聊聊Mybatis Update操作返回值 | Indagate</title>
+  <title>Kubernetes展望与思考 | Indagate</title>
   
 
 
@@ -315,7 +305,7 @@
   
   
   <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2017-09-06-聊聊Mybatis-Update操作返回值.html">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-11-21-Kubernetes 1.17 展望与思考.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zouyee">
@@ -330,10 +320,10 @@
     
     <div class="head">
         <div class="gr_up_title">
-          <span class="text-overflow-center">聊聊Mybatis Update操作返回值</span>
+          <span class="text-overflow-center">Kubernetes展望与思考</span>
         </div>
         <div class="gr_blog_post_cat">
-          <span class="gr_ddate">9月 06 2017</span><span class="gr_separate">|</span>
+          <span class="gr_ddate">11月 21 2019</span><span class="gr_separate">|</span>
           
             
               <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
@@ -342,7 +332,7 @@
         <div class="gr_blog_post_title_holder">
         
           
-          <h3 class="blog_title" itemprop="name headline">聊聊Mybatis Update操作返回值
+          <h3 class="blog_title" itemprop="name headline">Kubernetes展望与思考
               
             
           </h3>
@@ -367,7 +357,7 @@
                 
               
 
-              <time title="创建时间：9月 06 2017 20:00:03" itemprop="dateCreated datePublished" datetime="2017-09-06T20:00:03+08:00">9月 06 2017</time>
+              <time title="创建时间：11月 21 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-11-21T20:40:08+08:00">11月 21 2019</time>
             
 
             
@@ -384,7 +374,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
+                <time title="修改时间：11月 22 2019 14:50:31" itemprop="dateModified" datetime="2019-11-22T14:50:31+08:00">11月 22 2019</time>
               
             
           </span>
@@ -398,8 +388,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017-09-06-聊聊Mybatis-Update操作返回值.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017-09-06-聊聊Mybatis-Update操作返回值.html" itemprop="commentCount"></span>
+                <a href="/2019-11-21-Kubernetes 1.17 展望与思考.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-11-21-Kubernetes 1.17 展望与思考.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -407,7 +397,7 @@
 
           
           
-             <span id="/2017-09-06-聊聊Mybatis-Update操作返回值.html" class="leancloud_visitors" data-flag-title="聊聊Mybatis Update操作返回值">
+             <span id="/2019-11-21-Kubernetes 1.17 展望与思考.html" class="leancloud_visitors" data-flag-title="Kubernetes展望与思考">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -443,43 +433,236 @@
     <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
     
       
-        <div class="note info"><p>后端的数据持久化使用的是 Mybatis ，在做高并发下账户增减余额的时候，打算使用乐观锁来解决这个问题。在获取update操作的返回值时遇到了一个问题，似乎 Mybatis 进行 update 操作得到的 <code>int</code> 返回值并不是影响的行数。这下就尴尬了。</p></div>
-<p>一般而言，我们知道当我们使用 Mybatis 在 <code>mapper</code> 接口中定义 <code>insert</code> <code>delete</code> 等操作，定义一个 <code>int</code> 类型的返回值，通过该值是否为 0 来判断数据库中受影响的行数进而判断操作是否成功。</p>
+        <p><img src="https://s2.ax1x.com/2019/11/22/MTa1tH.png" alt></p>
+<div class="note info"><p>接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。</p>
+<p><a href="https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.17.md" target="_blank" rel="noopener">kubernetes 1.17</a>当前changlog，</p></div>
+<p>距离Kubernetes 1.17正式发布还剩不到一个月，那么我们在即将迎来的1.17版本中，会引入哪些新特性以及性能增强呢？下⾯我们基于最新commit状态，分享社区最新动向。</p>
 <a id="more"></a>
 <hr>
-<p>到底 <code>update</code> 返回值代表什么呢？我们来验证一下便知道了，假设有如下一张表以及两条数据：</p>
-<p><img src="https://ws1.sinaimg.cn/large/694830ebgy1fja7y057g3j20x004yjst.jpg" alt title="数据库更新之前记录"></p>
-<p>我们来编写一个简单的单元测试用例来验证下,首先使用 mybatis 简单的写个 mapper 进行更新操作，其中 xml 中的内容为：</p>
-<p><img src="https://ws1.sinaimg.cn/large/694830ebgy1fja7tn625wj210q0ekgnn.jpg" alt title="mapper 更新语句"></p>
-<p>数据库连接配置为：</p>
-<p><img src="https://ws1.sinaimg.cn/large/694830ebgy1fja7wi2iv9j20se0k076a.jpg" alt title="数据库连接配置"></p>
-<p>接来下，我们来编写一个简单的单元测试来验证下：<strong>update 的返回值是不是受影响的记录的条数</strong>，对应的单元测试代码如下：</p>
-<p><img src="https://ws1.sinaimg.cn/large/694830ebgy1fja83t5sf3j20sg0oggoq.jpg" alt title="单元测试代码"></p>
-<p>由单元测试代码可以得知，我们将要把数据库中两条记录的 <code>phone</code> 字段的值由 <code>12345678</code> 修改为 <code>66666666</code> ,正常情况下，<code>resultCode</code> 将会返回 2 。因为 <code>update</code> 操作影响到数据库中这 2 条记录，这和我们期望 2 是相符合的。那么一切正常的情况下，这次单元测试将会通过，那么我们运行看看结果：</p>
-<p><img src="https://ws1.sinaimg.cn/large/694830ebgy1fja8bdifgjj20jq0423yx.jpg" alt title="单元测试通过"></p>
-<p>单元测试通过了，再查看数据库中的记录：</p>
-<p><img src="https://ws1.sinaimg.cn/large/694830ebgy1fja8ifpsyyj20x206u3zr.jpg" alt title="更新后的数据库记录"></p>
-<p>这说明 mybatis 的 update 更新操作返回值的确是返回受影响的行数……真的是这样吗？</p>
-<p><img src="https://ws1.sinaimg.cn/large/694830ebgy1fja8m25otsj204305h0sm.jpg" alt></p>
-<p>我们知道，当数据库中的记录被修改之后，再次执行重复的 <code>update</code> 操作将不会影响到新的行数，为了验证我说的话，我们试试：</p>
-<p><img src="https://ws1.sinaimg.cn/large/694830ebgy1fja8rrcju0j20ne03i74t.jpg" alt></p>
-<p>那么，按照这个逻辑：我们再次执行这个单元测试应该是，<code>resultCode</code> 返回的应该是 <code>0</code> ，和我们的期望的数字 <code>2</code> 不一致，将会导致测试不通过。再次运行单元测试：</p>
-<p><img src="https://ws1.sinaimg.cn/large/694830ebgy1fja8xe6fwgj20ju050t9b.jpg" alt title="单元测试依然通过"></p>
-<p>居然还是 <code>passed</code> ,看到这里聪明的你已经看出来了，<font color="red">默认情况下，mybatis 的 <code>update</code> 操作返回值是记录的  <code>matched</code> 的条数，并不是影响的记录条数。</font></p>
+<h3 id="一、1-16版本回顾"><a href="#一、1-16版本回顾" class="headerlink" title="一、1.16版本回顾"></a>一、1.16版本回顾</h3><blockquote>
+<p>9月18日，Kubernetes 1.16正式发布，其包含31项增强功能，其中8项增强功能已经GA，另有8项增强功能处于beta阶段，15项处于alpha阶段，该版本有以下亮点:</p>
+</blockquote>
+<ul>
+<li><p>自定义资源(CRD)</p>
+<p>  CRD作为Kubernetes的可扩展机制之一得到广泛使用，其自1.7版本发布以来就一直处于beta阶段。Kubernetes 1.16版本，也标志着CRD迎来了GA版本。</p>
+</li>
+<li><p>存储卷扩展</p>
+<p>  新版本当中包含一系列与存储卷以及卷修改相关的功能。CSI规范中的存储卷大小调整能力提升为beta阶段，允许用户对CSI规范下的存储卷插件进行大小调整。</p>
+</li>
+<li><p>拓扑管理[alpha]</p>
+<p>  Kubelet中旨在协调资源分配决策，从而提供优化效果更好的资源分配能力</p>
+</li>
+<li><p>双栈[alpha]</p>
+<p>  IPv4/IPv6双栈可以将IPv4与IPv6地址分配给各Pod与服务<br>  a. Pod 的多个 IPv4/IPv6 地址分配<br>  b. 集群之间本地双栈通信</p>
+</li>
+</ul>
+<p>下述表单为kubernetes维护时限</p>
+<h4 id="维护周期"><a href="#维护周期" class="headerlink" title="维护周期"></a>维护周期</h4><p>Kubernetes 发现版本的通常只维护支持九个月，在维护周期内，如果发现有比较重大的 bug 或者安全问题的话，<br>可能会发布补丁版本。下面是 Kubernetes 的发布和维护周期。</p>
+<table>
+<thead>
+<tr>
+<th>Kubernetes 版本</th>
+<th>发行月份</th>
+<th>终止维护月份</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1.11.x</td>
+<td>2018 年 6 月</td>
+<td>2019 年 3 月</td>
+</tr>
+<tr>
+<td>v1.12.x</td>
+<td>2018 年 9 月</td>
+<td>2019 年 6 月</td>
+</tr>
+<tr>
+<td>v1.13.x</td>
+<td>2018 年 12 月</td>
+<td>2019 年 9 月</td>
+</tr>
+<tr>
+<td>v1.14.x</td>
+<td>2019 年 3 月</td>
+<td>2019 年 12 月</td>
+</tr>
+<tr>
+<td>v1.15.x</td>
+<td>2019 年 6 月</td>
+<td>2020 年 3 月</td>
+</tr>
+<tr>
+<td>v1.16.x</td>
+<td>2019 年 9 月</td>
+<td>2020 年 6 月</td>
+</tr>
+<tr>
+<td>v1.17.x</td>
+<td>2019 年 12 月</td>
+<td>2020 年9 月</td>
+</tr>
+</tbody>
+</table>
 <hr>
-<p>严格意义上来将，这并不是 mybatis 的返回值，mybatis 仅仅只是返回的数据库连接驱动（通常是 <code>JDBC</code> ）的返回值，也就是说，如果驱动告知更新 2 条记录受影响，那么我们将得到 mybatis 的返回值就会是 2 和 mybatis 本身是没有关系的。</p>
-<p>道理我都懂，如果我们非得要 mybatis 的 <code>update</code> 操作明确的返回受影响的记录条数，有没有什么办法呢？</p>
-<p>当然是有的。</p>
-<p>通过对 <code>JDBC</code> URL 显式的指定 <strong><code>useAffectedRows</code></strong>选项，我们将可以得到受影响的记录的条数：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jdbc:mysql:<span class="comment">//$&#123;jdbc.host&#125;/$&#123;jdbc.db&#125;?useAffectedRows=true</span></span><br></pre></td></tr></table></figure>
-<p>我们对我们的数据库连接配置稍做修改，添加 <code>useAffectedRows</code> 字段：</p>
-<p><img src="https://ws1.sinaimg.cn/large/694830ebgy1fja9nv1e5xj20u80kcdhz.jpg" alt title="修改之后的数据库连接配置"></p>
-<p>此时，mybatis 的 update 操作返回的应该是受影响的条数了，我们再次运行单元测试试试看：</p>
-<p><img src="https://ws1.sinaimg.cn/large/694830ebgy1fja9psbcjpj21hy08eabi.jpg" alt title="单元测试不通过"></p>
-<p><code>update</code> 操作返回的是受影响的记录条数，我们知道为 <code>0</code> 和我们预期的 <code>2</code> 不一致，自然而然单元测试不通过咯～。</p>
-<h5 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h5><ul>
-<li><a href="http://mybatis-user.963551.n3.nabble.com/Return-number-of-changed-rows-td3888464.html" target="_blank" rel="noopener">“Return number of changed rows”</a></li>
-<li><a href="http://www.peristblog.com/c?id=10164" target="_blank" rel="noopener">“mybatis实现乐观锁”</a></li>
+<h3 id="二、1-17-版本动态"><a href="#二、1-17-版本动态" class="headerlink" title="二、1.17 版本动态"></a>二、1.17 版本动态</h3><pre><code>社区1.17版本的代码freeze时间节点为11月18日，正式发布在12月9日左右，社区在调度、存储等方面进行大量优化，一些PR的进展如下：
+</code></pre><h4 id="一般更新"><a href="#一般更新" class="headerlink" title="一般更新"></a>一般更新</h4><ol>
+<li>klog升级至v1.0.0</li>
+<li><p>更新SIG图谱，详见community#4129</p>
+<ul>
+<li><p>将特定cloud provider修改为公有云SIG子项目</p>
+</li>
+<li><p>移除容器认证工作组</p>
+</li>
+<li><p>新增Usability SIG等</p>
+</li>
+</ul>
+</li>
+<li>推迟NodeRestriction admission插件研发时间至1.19</li>
+<li>解决kubectl flag <code>--certificate-authority</code>重写问题</li>
+<li>kubeadm不再移除/etc/cni/net.d目录</li>
+<li>etcd server版本升级至3.3.17</li>
+<li>kubeadm配置版本从v1beta1升级至v1beta2</li>
+<li><p>golang性能优化</p>
+<ul>
+<li><p>encoding/json中的sync.Pool使用scanner</p>
+</li>
+<li><p>golang抢占调度，详见golang#24543，里程碑设定于Go 1.14版本</p>
+</li>
+<li><p>优化complie、link</p>
+</li>
+</ul>
+</li>
+<li><p>统一CRI于docker shim字节流长度，限定readiness/liveness字节流输出长度10kb</p>
+</li>
+<li>为相关组件新增readyz及livez接口</li>
+<li>限制kubelet静态pod文件最大长度为10MB，防范Dos</li>
+<li>增加PVC存储需求为负数的校验</li>
+<li>移除firewalld监控，优化iptables处理</li>
+<li><p>云服务商相关：</p>
+<ul>
+<li><p>openstack中doSafeMakeDir时可能带来的fd泄露</p>
+</li>
+<li><p>openstack LB删除故障处理，详见kubernetes#82264</p>
+</li>
+<li><p>azure控制器新增操作技术相关指标</p>
+</li>
+<li><p>升级azure sdk client至v33.1.0，优化API调用</p>
+</li>
+</ul>
+</li>
+<li><p>metrics-server版本升级至0.3.5</p>
+</li>
+<li>hyperkube镜像将不再与kubernetes一同发行</li>
+</ol>
+<h4 id="安全相关"><a href="#安全相关" class="headerlink" title="安全相关"></a>安全相关</h4><ul>
+<li><p>解决API-Server处理JSON/YAML时面临DoS安全风险（CVE-2019-11253），详情可参看issue#83253</p>
+</li>
+<li><p>net/textproto 头部字段兼容性处理导致CVE-2019-16276</p>
+</li>
+<li><p>非常规构建JSON安全风险问题，详见kubernetes#81158</p>
+</li>
+</ul>
+<h4 id="故障解决"><a href="#故障解决" class="headerlink" title="故障解决"></a>故障解决</h4><ol>
+<li><p>升级Go 1.13.3</p>
+<ul>
+<li><p>解决当http2握手时的写错误，transport永久缓存断链，详见go#34978</p>
+</li>
+<li><p>Go页分配器未优化导致apiserver延迟及内存趋高等问题，解决详见go#34978、go#35112，此问题的讨论过程详见go#32828</p>
+</li>
+<li><p>解决go mod在k8s模块的使用，更新heketi模块，详见kuberneets#82506</p>
+</li>
+</ul>
+</li>
+<li><p>升级etcd client 3.3.17：详见kubernetes#83801</p>
+<ul>
+<li><p>解决客户端无法正确解析IPv6</p>
+</li>
+<li><p>etcd集群故障时无法证书检查时dns不匹配</p>
+</li>
+</ul>
+</li>
+<li><p>apiserver故障</p>
+<ul>
+<li>当CRD资源定义中包含x-kubernetes-int-or-string字段，导致apiextensions panic：详见kubernetes#83787</li>
+</ul>
+</li>
+<li><p>存储故障</p>
+<ul>
+<li>kubelet重启时清理raw bolck，详见kubernetes#83451</li>
+</ul>
+</li>
+</ol>
+<h4 id="特性维护"><a href="#特性维护" class="headerlink" title="特性维护"></a>特性维护</h4><ol>
+<li><p>调度优化</p>
+<ul>
+<li><p>新增pre-filter插件以更新pod状态</p>
+</li>
+<li><p>将内置调度算法插件化：framwork等</p>
+</li>
+<li><p>TaintNodesByCondition特性1.17正式GA，移除节点状态相关predicate算法：内存、磁盘、PID、状态，以TaintNodesByCondition替换</p>
+</li>
+<li><p>新增调度队列操作pod的相关指标</p>
+</li>
+<li><p>新增调度相关延迟及请求相关指标</p>
+</li>
+<li><p>将调度插件中节点计算分范围从【0，10】调整为【0，100】，其不会影响第三方及RequestedToCapacityRatio算法</p>
+</li>
+</ul>
+</li>
+<li><p>优化EndpointSlice特性</p>
+<ul>
+<li>通过使用string对比替换IP，在kube-proxy启用EndpointSlice时，显著提升性能～50%，详见kubernetes#83035</li>
+</ul>
+</li>
+<li><p>apiserver增强</p>
+<ul>
+<li>新增认证功能延迟的监控指标</li>
+<li>移除apiserver loopback客户端QPS限制，其将影响apiserver性能，详见kuberneets#80465</li>
+<li>提供开启/关闭 REST API及特性配置：–runtime-config=api/beta=false –feature-gates=AllBeta=false</li>
+<li>解决kube-apiserver goroutine泄露，详见kubernetes#83333</li>
+<li>WatchBookmark特性1.17正式GA</li>
+</ul>
+</li>
+<li><p>dns优化</p>
+<ul>
+<li>kube-dns降权运行，详见kubernetes#82347</li>
+</ul>
+</li>
+<li><p>存储优化：</p>
+<p> a. CSI raw block特性</p>
+<ul>
+<li>拆分NodeStage / NodePublish</li>
+<li><p>修改重启kubelet时的volume重建逻辑</p>
+<p>b. VolumeSubpathEnvExpansion特性正式GA</p>
+</li>
+</ul>
+</li>
+<li><p>控制器优化</p>
+<ul>
+<li><p>优化ReplicaSet处理逻辑：创建/删除时考虑pod相关性，详见kubernetes#80004</p>
+</li>
+<li><p>Pod Disruption Budged对象处理优化，详见kubernetes#83951</p>
+</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="三、CNCF相关"><a href="#三、CNCF相关" class="headerlink" title="三、CNCF相关"></a>三、CNCF相关</h3><ol>
+<li><p>Jaeger项目顺利毕业</p>
+<p> 相关介绍：Jaeger由Uber开源的端到端分布式追踪平台，用于监控与排查应用故障。</p>
+</li>
+<li><p>Vitess项目顺利毕业</p>
+<p> 相关介绍：Vitess最初在2010年由YouTube创建的一个内部解决方案，用于MySQL集群扩展 ，近期发布4.0版本。</p>
+</li>
+<li><p>CNCF发布2019/2020赞助企划书及KubeCon相关日程</p>
+<p> 会议：2020年KubeCon + CloudNativeCon + 中国开源峰会<br> 日程：中国上海|2020年7月28日-30日<br> 人数：4000多名参会者</p>
+</li>
+</ol>
+<hr>
+<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul>
+<li><a href="https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.17.md" target="_blank" rel="noopener">kubernetes 1.17</a></li>
+<li><a href="https://github.com/golang/go" target="_blank" rel="noopener">Golang</a></li>
 </ul>
 
       
@@ -572,7 +755,7 @@ jQuery.noConflict()(function ($) {
     <strong>本文作者： </strong>zouyee</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://ustack.io/2017-09-06-聊聊Mybatis-Update操作返回值.html" title="聊聊Mybatis Update操作返回值">https://ustack.io/2017-09-06-聊聊Mybatis-Update操作返回值.html</a>
+    <a href="https://ustack.io/2019-11-21-Kubernetes 1.17 展望与思考.html" title="Kubernetes展望与思考">https://ustack.io/2019-11-21-Kubernetes 1.17 展望与思考.html</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -585,11 +768,9 @@ jQuery.noConflict()(function ($) {
       
         <div class="post-tags">
           
-            <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
           
-            <a href="/tags/Mybatis/" rel="tag"># Mybatis</a>
-          
-            <a href="/tags/JDBC/" rel="tag"># JDBC</a>
+            <a href="/tags/cloudnative/" rel="tag"># cloudnative</a>
           
         </div>
       
@@ -602,8 +783,8 @@ jQuery.noConflict()(function ($) {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017-08-21-CNCF在中国 2019.html" rel="next" title="Gradle、Maven项目相互转换">
-                <i class="fa fa-chevron-left"></i> Gradle、Maven项目相互转换
+              <a href="/2019-11-21-证书相关概念梳理.html" rel="next" title="证书相关概念">
+                <i class="fa fa-chevron-left"></i> 证书相关概念
               </a>
             
           </div>
@@ -612,8 +793,8 @@ jQuery.noConflict()(function ($) {
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018-01-26-lua读取redis数据的null判断.html" rel="prev" title="lua读取redis数据的null判断">
-                lua读取redis数据的null判断 <i class="fa fa-chevron-right"></i>
+              <a href="/2019-11-21-container相关概念梳理.html" rel="prev" title="容器那些事">
+                容器那些事 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -694,7 +875,7 @@ jQuery.noConflict()(function ($) {
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">43</span>
+                    <span class="site-state-item-count">23</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -727,7 +908,7 @@ jQuery.noConflict()(function ($) {
                     
                       
                     
-                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -836,7 +1017,7 @@ jQuery.noConflict()(function ($) {
                     
                       
                     
-                    <span class="site-state-item-count">44</span>
+                    <span class="site-state-item-count">15</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -918,7 +1099,7 @@ jQuery.noConflict()(function ($) {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#相关阅读"><span class="nav-number">1.</span> <span class="nav-text">相关阅读</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、1-16版本回顾"><span class="nav-number">1.</span> <span class="nav-text">一、1.16版本回顾</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#维护周期"><span class="nav-number">1.1.</span> <span class="nav-text">维护周期</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、1-17-版本动态"><span class="nav-number">2.</span> <span class="nav-text">二、1.17 版本动态</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一般更新"><span class="nav-number">2.1.</span> <span class="nav-text">一般更新</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安全相关"><span class="nav-number">2.2.</span> <span class="nav-text">安全相关</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#故障解决"><span class="nav-number">2.3.</span> <span class="nav-text">故障解决</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#特性维护"><span class="nav-number">2.4.</span> <span class="nav-text">特性维护</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、CNCF相关"><span class="nav-number">3.</span> <span class="nav-text">三、CNCF相关</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参考资料"><span class="nav-number">3.1.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
             
 
           </div>

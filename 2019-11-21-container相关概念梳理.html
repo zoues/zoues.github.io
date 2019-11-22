@@ -105,16 +105,23 @@
 
 
 
-  <meta name="description" content="Keep motivation for the world">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Indagate">
-<meta property="og:url" content="https://ustack.io/tags/android/index.html">
+  <meta name="description" content="接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。 在使用k8s时，经常会遇到docker、oci、runc、containerd、oci-o、cri、kata等概念。本文对相关名词和其之间的联系进行一下梳理和总结，以">
+<meta name="keywords" content="kubernetes,cloudnative">
+<meta property="og:type" content="article">
+<meta property="og:title" content="容器那些事">
+<meta property="og:url" content="https://ustack.io/2019-11-21-container相关概念梳理.html">
 <meta property="og:site_name" content="Indagate">
-<meta property="og:description" content="Keep motivation for the world">
+<meta property="og:description" content="接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。 在使用k8s时，经常会遇到docker、oci、runc、containerd、oci-o、cri、kata等概念。本文对相关名词和其之间的联系进行一下梳理和总结，以">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/22/MTc92D.jpg">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/22/MTc1qs.jpg">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/22/MTgdtP.jpg">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/22/MTWv90.md.png">
+<meta property="og:updated_time" content="2019-11-22T08:53:09.670Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Indagate">
-<meta name="twitter:description" content="Keep motivation for the world">
+<meta name="twitter:title" content="容器那些事">
+<meta name="twitter:description" content="接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。 在使用k8s时，经常会遇到docker、oci、runc、containerd、oci-o、cri、kata等概念。本文对相关名词和其之间的联系进行一下梳理和总结，以">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/11/22/MTc92D.jpg">
 
 
 
@@ -123,7 +130,7 @@
 
 
 
-  <link rel="canonical" href="https://ustack.io/tags/android/">
+  <link rel="canonical" href="https://ustack.io/2019-11-21-container相关概念梳理.html">
 
 
 
@@ -133,7 +140,7 @@
   };
 </script>
 
-  <title>标签: android | Indagate</title>
+  <title>容器那些事 | Indagate</title>
   
 
 
@@ -285,56 +292,360 @@
                 <div id="content" class="content gr_grid_container">
                 
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h2>android<small>标签</small>
-        </h2>
-      </div>
+  
 
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-11-21-container相关概念梳理.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">容器那些事</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">11月 21 2019</span><span class="gr_separate">|</span>
+          
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
+        
+          
+          <h3 class="blog_title" itemprop="name headline">容器那些事
+              
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：11月 21 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-11-21T20:40:08+08:00">11月 21 2019</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：11月 22 2019 16:53:09" itemprop="dateModified" datetime="2019-11-22T16:53:09+08:00">11月 22 2019</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019-11-21-container相关概念梳理.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-11-21-container相关概念梳理.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019-11-21-container相关概念梳理.html" class="leancloud_visitors" data-flag-title="容器那些事">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span>℃</span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
       
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2015-04-01-Create-an-Android-IME.html" itemprop="url">
-              
-                <span itemprop="name">Create an Android IME</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2015-04-01T23:25:22+08:00" content="4月 01 2015">
-          04-01
-        </time>
       </div>
-
-    </header>
-  </article>
-
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
+    
+      
+        <div class="note info"><p>接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。</p>
+<p>在使用k8s时，经常会遇到docker、oci、runc、containerd、oci-o、cri、kata等概念。本文对相关名词和其之间的联系进行一下梳理和总结，以此作为后续对于kubelet相关分析的铺垫。</p></div>
+<a id="more"></a>
+<hr>
+<h3 id="容器相关"><a href="#容器相关" class="headerlink" title="容器相关"></a>容器相关</h3><h4 id="container与docker"><a href="#container与docker" class="headerlink" title="container与docker"></a>container与docker</h4><blockquote>
+<p>container的概念早于docker，其源于LXC技术，当然在此需要感谢docker社区对于容器技术的贡献，因为docker的出现，container的概念深入人心，容器的特性类似sandbox，进程受到资源的限制，并且彼此间隔离，当然容器区别与虚拟机的技术，主要区别在于内核的是否共享，上述的论断可能不太精确，因此后期如gvisor技术，其通过隔离层实现系统调用。通俗来说容器技术主要指资源限制的cgroup、用于隔离的namespace以及共享内核。</p>
+</blockquote>
+<p>11月13日，Mirantis收购Docker的消息引爆开源届。</p>
+<h4 id="OCI标准"><a href="#OCI标准" class="headerlink" title="OCI标准"></a>OCI标准</h4><p>Open Container Initiative，也就是常说的OCI，是由多家公司共同成立的项目，并由linux基金会进行管理，致力于container runtime的标准的制定和runc的开发等工作。<br>所谓container runtime，主要负责的是容器的生命周期的管理。oci的runtime spec标准中对于容器的状态描述，以及对于容器的创建、删除、查看等操作进行了定义。<br>其中<code>runc</code>，是对于OCI标准的一个参考实现，是一个可以用于创建和运行容器的CLI(command-line interface)工具。runc直接与容器所依赖的cgroup/linux kernel等进行交互，负责为容器配置cgroup/namespace等启动容器所需的环境，创建启动容器的相关进程。</p>
+<p>为了兼容oci标准，docker也做了架构调整。将容器运行时相关的程序从docker daemon剥离出来，形成了containerd。Containerd向docker提供运行容器的API，二者通过grpc进行交互。containerd最后会通过runc来实际运行容器。</p>
+<h4 id="container-engine"><a href="#container-engine" class="headerlink" title="container engine"></a>container engine</h4><p>容器引擎，或者说容器平台，不仅包含对于容器的生命周期的管理，还包括了对于容器生态的管理，比如对于镜像等。现在的docker、rkt以及阿里推出的pouch均可属于此范畴。<br>docker，随着docker的发展，docker就不再局限于容器的管理，还囊括了存储(volume)、网络(net)等的管理，因此后来的docker是一个容器的管理平台。而runtime逐渐插件化，如下图的runc与kata runtime。</p>
+<p><img src="https://s2.ax1x.com/2019/11/22/MTc92D.jpg" alt="docker runtime plugin"></p>
+<hr>
+<h3 id="Kubernetes相关"><a href="#Kubernetes相关" class="headerlink" title="Kubernetes相关"></a>Kubernetes相关</h3><p>kubernetes在初期版本里，就对多个容器引擎做了兼容，因此可以使用docker、rkt对容器进行管理。以docker为例，kubelet中会启动一个docker manager，通过直接调用docker的api进行容器的创建等操作。</p>
+<p>在k8s 1.5版本之后，kubernetes推出了自己的运行时接口CRI(container runtime interface)。cri接口的推出，隔离了各个容器引擎之间的差异，而通过统一的接口与各个容器引擎之间进行互动。</p>
+<p>与oci不同，cri与kubernetes的概念更加贴合，并紧密绑定。cri不仅定义了容器的生命周期的管理，还引入了k8s中pod的概念，并定义了管理pod的生命周期。在kubernetes中，pod是由一组进行了资源限制的，在隔离环境中的容器组成。而这个隔离环境，称之为PodSandbox。在cri开始之初，主要是支持docker和rkt两种。其中kubelet是通过cri接口，调用dockershim，并进一步调用docker api实现的。</p>
+<p>如上文所述，docker独立出来了containerd。kubernetes也顺应潮流，孵化了cri-containerd项目，用以将containerd接入到cri的标准中。</p>
+<p>在之后的社区发展中，kubelet支持docker及remote两种类型，其中docker即内置的dockershim以满足CRI接口，remote方式同样需要满足CRI接口规范。</p>
+<blockquote>
+<p>下图为各runtime与kubelet的通信</p>
+</blockquote>
+<p><img src="https://s2.ax1x.com/2019/11/22/MTc1qs.jpg" alt="kubelet CRI"></p>
+<p>其中的CRI-O插件实现kubelet CRI接口，并能够兼容OCI标准，作为一种可替换docker的轻量级运行时方案，其允许kubelet允许任一符合OCI标准的runtime来运行Pod。<br>下图为CRI-O与OCI接口通信图示。</p>
+<p><img src="https://s2.ax1x.com/2019/11/22/MTgdtP.jpg" alt="CRI-O通信"></p>
+<p>CRI-O插件主要有以下功能：</p>
+<ul>
+<li>镜像服务</li>
+<li>runtime服务</li>
+<li>CNI</li>
+<li>OCI 生成器</li>
+</ul>
+<p>最后，kubelet与CRI-O的交互流程如下：</p>
+<ol>
+<li>kubelet通过list接口获悉启动POD，其中POD是kubernetes的一个概念，由一个或多个共享IPC，NET和PID名称空间并位于同一cgroup中的容器组成。</li>
+<li>kubelet将请求下发到kubernetes CRI-O服务，即kubelet启动时的remote配置（容器运行时接口），以启动新的POD。</li>
+<li>CRI-O使用containers/image库从镜像仓库拉取镜像。</li>
+<li>下载后的镜像解压存储到为容器创建rootfs，即存储在COW文件系统中。</li>
+<li>在rootfs创建后，CRI-O会生成OCI运行时规范json文件，该文件描述了如何使用OCI Generate工具运行容器。</li>
+<li>CRI-O使用该配置启动OCI兼容的运行时，以运行容器进程。默认的OCI运行时是runc。</li>
+<li>每个容器都由单独的通用程序进行监控。 conmon进程保留了容器进程的PID1。它处理容器的日志记录并记录容器过程的退出代码。</li>
+<li>通过CNI设置Pod的网络，因此任何CNI插件均可与CRI-O一起使用。</li>
+</ol>
+<p>下图为CRI的功能图。<br><img src="https://s2.ax1x.com/2019/11/22/MTWv90.md.png" alt="CRI-O功能"></p>
+<hr>
+<h3 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h3><p>后续将推出kubernetes runtimeclass文章</p>
+<hr>
+<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul>
+<li><a href="https://medium.com/kata-containers/why-kata-containers-doesnt-replace-kubernetes-75e484679727" target="_blank" rel="noopener">why-kata-containers-doesnt-replace-kubernetes</a></li>
+<li><a href="https://github.com/golang/go" target="_blank" rel="noopener">CRI-O</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/containers/runtime-class/" target="_blank" rel="noopener">runtime-class</a></li>
+</ul>
 
       
     </div>
 
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+      <div class="qr_code_pc_inner">
+        <div class="qr_code_pc">
+    <img id="js_pc_qr_code_img" class="qr_code_pc_img" src="https://s2.ax1x.com/2019/09/22/upS79K.jpg" alt="zouyee wechat" style="width: 200px; max-width: 100%;">
+    <p>微信扫一扫<br>关注该公众号</p>
+</div>
+<script>
+jQuery.noConflict()(function ($) {
+    $(function () {
+		var offsetTop = $('#comments').offset().top - $(window).height();
+		
+		if (offsetTop <= 0) {
+			// load directly when there's no a scrollbar
+			console.log("....")
+		} else {
+			$(window).on('scroll', function () {
+				var scrollTop = document.documentElement.scrollTop;
+				var copyright = $('.post-copyright').offset().top;
+				
+				var imageH = $('.qr_code_pc').offset().top;
+				console.log("scrollTop", scrollTop)
+				console.log("copyright", copyright)
+				console.log("qr_code_pc", imageH)
+				if (scrollTop <= offsetTop) {
+					$('.qr_code_pc').css('position', 'absolute')
+					$('.qr_code_pc').css('top', 420)
+				}
+				if (scrollTop > 450 && copyright > scrollTop) {
+					$('.qr_code_pc').css('top', 20)
+					$('.qr_code_pc').css('position', 'fixed')
+				} else {
+					$('.qr_code_pc').css('position', 'absolute')
+				}
+			});
+		}
+	});
+
+})
+</script>
+
+      </div>
+      
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span style="padding-top: 5px;">打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="https://s2.ax1x.com/2019/09/22/uppS4P.jpg" alt="zouyee 微信支付">
+        
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>zouyee</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://ustack.io/2019-11-21-container相关概念梳理.html" title="容器那些事">https://ustack.io/2019-11-21-container相关概念梳理.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+          
+            <a href="/tags/cloudnative/" rel="tag"># cloudnative</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019-11-21-Kubernetes 1.17 展望与思考.html" rel="next" title="Kubernetes展望与思考">
+                <i class="fa fa-chevron-left"></i> Kubernetes展望与思考
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
                 </div>
                 
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
 
             </div>
                 
@@ -358,8 +669,15 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -376,7 +694,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">43</span>
+                    <span class="site-state-item-count">23</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -409,7 +727,7 @@
                     
                       
                     
-                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -518,7 +836,7 @@
                     
                       
                     
-                    <span class="site-state-item-count">44</span>
+                    <span class="site-state-item-count">15</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -590,6 +908,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#容器相关"><span class="nav-number">1.</span> <span class="nav-text">容器相关</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#container与docker"><span class="nav-number">1.1.</span> <span class="nav-text">container与docker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#OCI标准"><span class="nav-number">1.2.</span> <span class="nav-text">OCI标准</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#container-engine"><span class="nav-number">1.3.</span> <span class="nav-text">container engine</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kubernetes相关"><span class="nav-number">2.</span> <span class="nav-text">Kubernetes相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后续"><span class="nav-number">3.</span> <span class="nav-text">后续</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参考资料"><span class="nav-number">3.1.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -891,6 +1225,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
 
   
 
@@ -942,159 +1280,6 @@
         appId: 'jTOUB0OQ83CnjWySYgN5W1PV-gzGzoHsz',
         appKey: '8upIEt85LzIaq3NWQbUbfWI8',
         placeholder: 'Just go go',
-        avatar:'mm',
-        guest_info:guest,
-        pageSize:'10' || 10,
-    });
-  </script>
-
-
-
-  
-
-
-
-
-
-  
-
-  
-  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
-  <script>AV.initialize("Qg4Aol4dtKwpnLstsoOct5Ya-gzGzoHsz", "pRvygLtQ4atIrsbLXpXi9HXa");</script>
-  <script>
-    function showTime(Counter) {
-      var query = new AV.Query(Counter);
-      var entries = [];
-      var $visitors = $(".leancloud_visitors");
-
-      $visitors.each(function () {
-        entries.push( $(this).attr("id").trim() );
-      });
-
-      query.containedIn('url', entries);
-      query.find()
-        .done(function (results) {
-          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
-
-          if (results.length === 0) {
-            $visitors.find(COUNT_CONTAINER_REF).text(0);
-            return;
-          }
-
-          for (var i = 0; i < results.length; i++) {
-            var item = results[i];
-            var url = item.get('url');
-            var time = item.get('time');
-            var element = document.getElementById(url);
-
-            $(element).find(COUNT_CONTAINER_REF).text(time);
-          }
-          for(var i = 0; i < entries.length; i++) {
-            var url = entries[i];
-            var element = document.getElementById(url);
-            var countSpan = $(element).find(COUNT_CONTAINER_REF);
-            if( countSpan.text() == '') {
-              countSpan.text(0);
-            }
-          }
-        })
-        .fail(function (object, error) {
-          console.log("Error: " + error.code + " " + error.message);
-        });
-    }
-
-    function addCount(Counter) {
-      var $visitors = $(".leancloud_visitors");
-      var url = $visitors.attr('id').trim();
-      var title = $visitors.attr('data-flag-title').trim();
-      var query = new AV.Query(Counter);
-
-      query.equalTo("url", url);
-      query.find({
-        success: function(results) {
-          if (results.length > 0) {
-            var counter = results[0];
-            counter.fetchWhenSave(true);
-            counter.increment("time");
-            
-              var $element = $(document.getElementById(url));
-              $element.find('.leancloud-visitors-count').text(counter.get('time'));
-            
-            counter.save(null, {
-              success: function(counter) {
-                
-              },
-              error: function(counter, error) {
-                console.log('Failed to save Visitor num, with error message: ' + error.message);
-              }
-            });
-          } else {
-            
-              var newcounter = new Counter();
-              /* Set ACL */
-              var acl = new AV.ACL();
-              acl.setPublicReadAccess(true);
-              acl.setPublicWriteAccess(true);
-              newcounter.setACL(acl);
-              /* End Set ACL */
-              newcounter.set("title", title);
-              newcounter.set("url", url);
-              newcounter.set("time", 1);
-              newcounter.save(null, {
-                success: function(newcounter) {
-                  var $element = $(document.getElementById(url));
-                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
-                },
-                error: function(newcounter, error) {
-                  console.log('Failed to create');
-                }
-              });
-            
-          }
-        },
-        error: function(error) {
-          console.log('Error:' + error.code + " " + error.message);
-        }
-      });
-    }
-
-    $(function() {
-      var Counter = AV.Object.extend("Counter");
-      if ($('.leancloud_visitors').length == 1) {
-        addCount(Counter);
-      } else if ($('.post-title-link').length > 1) {
-        showTime(Counter);
-      }
-    });
-  </script>
-
-
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-
-  
-  <script type="text/javascript" src="https://cdn.bootcss.com/js-cookie/2.1.4/js.cookie.js"></script>
-  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=6.3.0"></script>
-
-
-  
-
-  
-
-  
-
-</body>
-</html>
-
         avatar:'mm',
         guest_info:guest,
         pageSize:'10' || 10,

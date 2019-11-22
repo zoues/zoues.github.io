@@ -105,18 +105,16 @@
 
 
 
-  <meta name="description" content="最近在配合移动端调试的时候，被抓去debug一个在清除redis缓存之后才会出现的网关错误。于是打开服务器上的log定位到类似错误: 1[error] 7#7: *12030 lua entry thread aborted: runtime error: /data/share/apps/lua/access_check.lua:133: bad argument #1 to &amp;apos;dec">
-<meta name="keywords" content="openresty,lua,Redis">
-<meta property="og:type" content="article">
-<meta property="og:title" content="lua读取redis数据的null判断">
-<meta property="og:url" content="https://ustack.io/2018-01-26-lua读取redis数据的null判断.html">
+  <meta name="description" content="Keep motivation for the world">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Indagate">
+<meta property="og:url" content="https://ustack.io/archives/2019/11/index.html">
 <meta property="og:site_name" content="Indagate">
-<meta property="og:description" content="最近在配合移动端调试的时候，被抓去debug一个在清除redis缓存之后才会出现的网关错误。于是打开服务器上的log定位到类似错误: 1[error] 7#7: *12030 lua entry thread aborted: runtime error: /data/share/apps/lua/access_check.lua:133: bad argument #1 to &amp;apos;dec">
+<meta property="og:description" content="Keep motivation for the world">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-16T22:56:27.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="lua读取redis数据的null判断">
-<meta name="twitter:description" content="最近在配合移动端调试的时候，被抓去debug一个在清除redis缓存之后才会出现的网关错误。于是打开服务器上的log定位到类似错误: 1[error] 7#7: *12030 lua entry thread aborted: runtime error: /data/share/apps/lua/access_check.lua:133: bad argument #1 to &amp;apos;dec">
+<meta name="twitter:title" content="Indagate">
+<meta name="twitter:description" content="Keep motivation for the world">
 
 
 
@@ -125,7 +123,7 @@
 
 
 
-  <link rel="canonical" href="https://ustack.io/2018-01-26-lua读取redis数据的null判断.html">
+  <link rel="canonical" href="https://ustack.io/archives/2019/11/">
 
 
 
@@ -135,7 +133,7 @@
   };
 </script>
 
-  <title>lua读取redis数据的null判断 | Indagate</title>
+  <title>归档 | Indagate</title>
   
 
 
@@ -287,328 +285,148 @@
                 <div id="content" class="content gr_grid_container">
                 
 
-  <div id="posts" class="posts-expand">
-    
+  
+  
+  
+  <div class="post-block archive">
+    <div id="posts" class="posts-collapse">
+      <span class="archive-move-on"></span>
 
-  
-
-  
-  
-  
-
-  
-
-  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2018-01-26-lua读取redis数据的null判断.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zouyee">
-      <meta itemprop="description" content="Keep motivation for the world">
-      <meta itemprop="image" content="/images/author.webp">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Indagate">
-    </span>
-
-    
-    <div class="head">
-        <div class="gr_up_title">
-          <span class="text-overflow-center">lua读取redis数据的null判断</span>
-        </div>
-        <div class="gr_blog_post_cat">
-          <span class="gr_ddate">1月 26 2018</span><span class="gr_separate">|</span>
-          
-            
-              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
-            
-        </div>
-        <div class="gr_blog_post_title_holder">
+      
+      <span class="archive-page-counter">
+        
+        
         
           
-          <h3 class="blog_title" itemprop="name headline">lua读取redis数据的null判断
-              
-            
-          </h3>
-          
-        </div>
-        <div class="gr_blog_post_cat" style="text-align: center;">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：1月 26 2018 12:40:08" itemprop="dateCreated datePublished" datetime="2018-01-26T12:40:08+08:00">1月 26 2018</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018-01-26-lua读取redis数据的null判断.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2018-01-26-lua读取redis数据的null判断.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2018-01-26-lua读取redis数据的null判断.html" class="leancloud_visitors" data-flag-title="lua读取redis数据的null判断">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数：</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-                 <span>℃</span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-    </div>   
-    
-
-    
-    
-    
-    
-    <div class="gr_media">
-      <div class="gr_blog_post_featuder_holder text-center">
-      
-      </div>
-    </div>
-    
-    <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
-    
-      
-        <p>最近在配合移动端调试的时候，被抓去debug一个在清除redis缓存之后才会出现的网关错误。于是打开服务器上的log定位到类似错误:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[error] 7#7: *12030 lua entry thread aborted: runtime error: /data/share/apps/lua/access_check.lua:133: bad argument #1 to &apos;decode&apos; (string expected, got userdata)</span><br></pre></td></tr></table></figure>
-<p>该段代码的主要作用是在<code>openresty</code>中<code>lua</code>读取<code>redis</code>中数据并解码为<code>json</code>：</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> access_token = redis_client:read_by_key(token_key)</span><br><span class="line">   <span class="keyword">if</span> access_token == <span class="literal">nil</span> <span class="keyword">then</span></span><br><span class="line">       <span class="comment">-- do something...</span></span><br><span class="line">       <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">   <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">   <span class="keyword">local</span> obj_token = cjson.decode(access_token)</span><br><span class="line">   <span class="comment">-- do something</span></span><br></pre></td></tr></table></figure>
-<p>通过查询资料得知原因：<strong><code>lua</code>读取<code>redis</code>数据返回结果为空时，返回的结果不是<code>nil</code>而是<code>userdata</code>类型的<code>ngx.null</code>。</strong></p>
-<hr>
-<a id="more"></a>
-<h4 id="为什么要这么设计？"><a href="#为什么要这么设计？" class="headerlink" title="为什么要这么设计？"></a><a href="https://github.com/openresty/lua-resty-redis/issues/90" target="_blank" rel="noopener">为什么要这么设计？</a></h4><blockquote>
-<p>因为<code>nil</code>在<code>lua</code>中有特殊的意义，如果一个变量被设置为<code>nil</code>相当于告知该变量<code>未定义</code>(不存在)一样，如果把<code>redis</code>查询的结果为空设置为<code>nil</code>，而该查询的<code>key</code>对应在<code>redis</code>中又是存在的，就无法把<code>查询为空</code>和<code>未定义</code>区分开来了，这样显然是不合理的。所以必须使用一个<code>userdata</code>类型的值来表示这个查询记录为空，但是又不等同于<code>未定义变量</code>（ngx.null)。</p>
-</blockquote>
-<hr>
-<p>因此，代码做如下修改即可:</p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> access_token = redis_client:read_by_key(token_key)</span><br><span class="line">   <span class="keyword">if</span> access_token == ngx.null <span class="keyword">or</span> access_token == <span class="literal">nil</span> <span class="keyword">then</span></span><br><span class="line">       <span class="comment">-- do something...</span></span><br><span class="line">       <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">   <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">   <span class="keyword">local</span> obj_token = cjson.decode(access_token)</span><br><span class="line">   <span class="comment">-- do something</span></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-      
-
-
-    
-
-    
-    
-    
-
-    
-      <div class="qr_code_pc_inner">
-        <div class="qr_code_pc">
-    <img id="js_pc_qr_code_img" class="qr_code_pc_img" src="https://s2.ax1x.com/2019/09/22/upS79K.jpg" alt="zouyee wechat" style="width: 200px; max-width: 100%;">
-    <p>微信扫一扫<br>关注该公众号</p>
-</div>
-<script>
-jQuery.noConflict()(function ($) {
-    $(function () {
-		var offsetTop = $('#comments').offset().top - $(window).height();
-		
-		if (offsetTop <= 0) {
-			// load directly when there's no a scrollbar
-			console.log("....")
-		} else {
-			$(window).on('scroll', function () {
-				var scrollTop = document.documentElement.scrollTop;
-				var copyright = $('.post-copyright').offset().top;
-				
-				var imageH = $('.qr_code_pc').offset().top;
-				console.log("scrollTop", scrollTop)
-				console.log("copyright", copyright)
-				console.log("qr_code_pc", imageH)
-				if (scrollTop <= offsetTop) {
-					$('.qr_code_pc').css('position', 'absolute')
-					$('.qr_code_pc').css('top', 420)
-				}
-				if (scrollTop > 450 && copyright > scrollTop) {
-					$('.qr_code_pc').css('top', 20)
-					$('.qr_code_pc').css('position', 'fixed')
-				} else {
-					$('.qr_code_pc').css('position', 'absolute')
-				}
-			});
-		}
-	});
-
-})
-</script>
-
-      </div>
-      
-    
-
-    
-      <div>
-        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
-  <div></div>
-  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
-    <span style="padding-top: 5px;">打赏</span>
-  </button>
-  <div id="QR" style="display: none;">
-
-    
-      <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="https://s2.ax1x.com/2019/09/22/uppS4P.jpg" alt="zouyee 微信支付">
         
-      </div>
-    
-
-    
-
-    
-
-  </div>
-</div>
-
-      </div>
-    
-
-    
-      <div>
-        <ul class="post-copyright">
-  <li class="post-copyright-author">
-    <strong>本文作者： </strong>zouyee</li>
-  <li class="post-copyright-link">
-    <strong>本文链接：</strong>
-    <a href="https://ustack.io/2018-01-26-lua读取redis数据的null判断.html" title="lua读取redis数据的null判断">https://ustack.io/2018-01-26-lua读取redis数据的null判断.html</a>
-  </li>
-  <li class="post-copyright-license">
-    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
-</ul>
-
-      </div>
-    
-
-    <footer class="post-footer" stype="color:#5d3434">
+        嗯..! 目前共计 23 篇日志。 继续努力。
+      </span>
       
-        <div class="post-tags">
+
+      
+
+        
+        
+        
+
+        
           
-            <a href="/tags/openresty/" rel="tag"># openresty</a>
-          
-            <a href="/tags/lua/" rel="tag"># lua</a>
-          
-            <a href="/tags/Redis/" rel="tag"># Redis</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2017-09-06-聊聊Mybatis-Update操作返回值.html" rel="next" title="聊聊Mybatis Update操作返回值">
-                <i class="fa fa-chevron-left"></i> 聊聊Mybatis Update操作返回值
-              </a>
-            
+          <div class="collection-title">
+            <h2 class="archive-year" id="archive-year-2019">2019</h2>
           </div>
+        
+        
 
-          <span class="post-nav-divider"></span>
+        
 
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018-03-26-Kubernetes集群之路之TLS证书配置.html" rel="prev" title="Kubernetes集群之路（一）TLS证书配置">
-                Kubernetes集群之路（一）TLS证书配置 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
 
-      
-      
-    </footer>
-  </div>
-  
-  
-  
+      <h3 class="post-title">
+        
+            <a class="post-title-link" href="/2019-11-21-container相关概念梳理.html" itemprop="url">
+              
+                <span itemprop="name">容器那些事</span>
+              
+            </a>
+        
+      </h3>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated" datetime="2019-11-21T20:40:08+08:00" content="11月 21 2019">
+          11-21
+        </time>
+      </div>
+
+    </header>
   </article>
 
 
 
-    <div class="post-spread">
       
+
+        
+        
+        
+
+        
+        
+
+        
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h3 class="post-title">
+        
+            <a class="post-title-link" href="/2019-11-21-Kubernetes 1.17 展望与思考.html" itemprop="url">
+              
+                <span itemprop="name">Kubernetes展望与思考</span>
+              
+            </a>
+        
+      </h3>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated" datetime="2019-11-21T20:40:08+08:00" content="11月 21 2019">
+          11-21
+        </time>
+      </div>
+
+    </header>
+  </article>
+
+
+
+      
+
+        
+        
+        
+
+        
+        
+
+        
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h3 class="post-title">
+        
+            <a class="post-title-link" href="/2019-11-21-证书相关概念梳理.html" itemprop="url">
+              
+                <span itemprop="name">证书相关概念</span>
+              
+            </a>
+        
+      </h3>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated" datetime="2019-11-21T20:40:08+08:00" content="11月 21 2019">
+          11-21
+        </time>
+      </div>
+
+    </header>
+  </article>
+
+
+
+      
+
     </div>
   </div>
+  
+  
+  
+
+  
+
 
 
                 </div>
                 
-
-  
-    <div class="comments" id="comments">
-    </div>
-  
-
-
 
             </div>
                 
@@ -632,15 +450,8 @@ jQuery.noConflict()(function ($) {
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -657,7 +468,7 @@ jQuery.noConflict()(function ($) {
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">43</span>
+                    <span class="site-state-item-count">23</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -690,7 +501,7 @@ jQuery.noConflict()(function ($) {
                     
                       
                     
-                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -799,7 +610,7 @@ jQuery.noConflict()(function ($) {
                     
                       
                     
-                    <span class="site-state-item-count">44</span>
+                    <span class="site-state-item-count">15</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -871,22 +682,6 @@ jQuery.noConflict()(function ($) {
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#为什么要这么设计？"><span class="nav-number">1.</span> <span class="nav-text">为什么要这么设计？</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
@@ -1188,10 +983,6 @@ jQuery.noConflict()(function ($) {
   
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
-
-
 
   
 

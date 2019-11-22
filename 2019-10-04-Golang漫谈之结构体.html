@@ -108,7 +108,7 @@
   <meta name="description" content="除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的Golang 源码剖析。 Golang 1.13.1已在9月26日正式发布，主要修复CVE-2019-16276,当然docker等相关组件也同时做了update channel是Golang提供的goroutine间的通信方式，其为Golang并">
 <meta name="keywords" content="golang">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Golang漫谈之channel妙法">
+<meta property="og:title" content="Golang漫谈之结构体">
 <meta property="og:url" content="https://ustack.io/2019-10-04-Golang漫谈之结构体.html">
 <meta property="og:site_name" content="Indagate">
 <meta property="og:description" content="除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的Golang 源码剖析。 Golang 1.13.1已在9月26日正式发布，主要修复CVE-2019-16276,当然docker等相关组件也同时做了update channel是Golang提供的goroutine间的通信方式，其为Golang并">
@@ -134,9 +134,9 @@
 <meta property="og:image" content="https://s2.ax1x.com/2019/10/04/uDAgN6.png">
 <meta property="og:image" content="https://s2.ax1x.com/2019/10/04/uDeSDH.png">
 <meta property="og:image" content="https://s2.ax1x.com/2019/10/04/uDm9QU.png">
-<meta property="og:updated_time" content="2019-10-05T14:06:19.275Z">
+<meta property="og:updated_time" content="2019-11-22T06:15:25.531Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Golang漫谈之channel妙法">
+<meta name="twitter:title" content="Golang漫谈之结构体">
 <meta name="twitter:description" content="除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的Golang 源码剖析。 Golang 1.13.1已在9月26日正式发布，主要修复CVE-2019-16276,当然docker等相关组件也同时做了update channel是Golang提供的goroutine间的通信方式，其为Golang并">
 <meta name="twitter:image" content="https://s2.ax1x.com/2019/09/28/u1f2UU.md.jpg">
 
@@ -157,7 +157,7 @@
   };
 </script>
 
-  <title>Golang漫谈之channel妙法 | Indagate</title>
+  <title>Golang漫谈之结构体 | Indagate</title>
   
 
 
@@ -340,7 +340,7 @@
     
     <div class="head">
         <div class="gr_up_title">
-          <span class="text-overflow-center">Golang漫谈之channel妙法</span>
+          <span class="text-overflow-center">Golang漫谈之结构体</span>
         </div>
         <div class="gr_blog_post_cat">
           <span class="gr_ddate">10月 04 2019</span><span class="gr_separate">|</span>
@@ -355,7 +355,7 @@
         <div class="gr_blog_post_title_holder">
         
           
-          <h3 class="blog_title" itemprop="name headline">Golang漫谈之channel妙法
+          <h3 class="blog_title" itemprop="name headline">Golang漫谈之结构体
               
             
           </h3>
@@ -397,7 +397,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：10月 05 2019 22:06:19" itemprop="dateModified" datetime="2019-10-05T22:06:19+08:00">10月 05 2019</time>
+                <time title="修改时间：11月 22 2019 14:15:25" itemprop="dateModified" datetime="2019-11-22T14:15:25+08:00">11月 22 2019</time>
               
             
           </span>
@@ -438,7 +438,7 @@
 
           
           
-             <span id="/2019-10-04-Golang漫谈之结构体.html" class="leancloud_visitors" data-flag-title="Golang漫谈之channel妙法">
+             <span id="/2019-10-04-Golang漫谈之结构体.html" class="leancloud_visitors" data-flag-title="Golang漫谈之结构体">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -858,7 +858,7 @@ jQuery.noConflict()(function ($) {
     <strong>本文作者： </strong>zouyee</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://ustack.io/2019-10-04-Golang漫谈之结构体.html" title="Golang漫谈之channel妙法">https://ustack.io/2019-10-04-Golang漫谈之结构体.html</a>
+    <a href="https://ustack.io/2019-10-04-Golang漫谈之结构体.html" title="Golang漫谈之结构体">https://ustack.io/2019-10-04-Golang漫谈之结构体.html</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -894,8 +894,8 @@ jQuery.noConflict()(function ($) {
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019-10-04-Golang漫谈之数组.html" rel="prev" title="Golang漫谈之channel妙法">
-                Golang漫谈之channel妙法 <i class="fa fa-chevron-right"></i>
+              <a href="/2019-10-04-Golang漫谈之数组.html" rel="prev" title="Golang漫谈之数组">
+                Golang漫谈之数组 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -976,7 +976,7 @@ jQuery.noConflict()(function ($) {
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">43</span>
+                    <span class="site-state-item-count">23</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1009,7 +1009,7 @@ jQuery.noConflict()(function ($) {
                     
                       
                     
-                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1118,7 +1118,7 @@ jQuery.noConflict()(function ($) {
                     
                       
                     
-                    <span class="site-state-item-count">44</span>
+                    <span class="site-state-item-count">15</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
