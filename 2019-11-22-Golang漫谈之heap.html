@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.3.0',
+    sidebar: {"position":"right","display":"hide","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的Golang 源码剖析。Go语言的OOP,接口,接口的组合,基础库的函数及接口如何抽象设计,这些东西在Go的Heap源码及演示例子处理中,都有很好的展示. [ heap是Golang内置的标准库封装，该文章主要介绍，以下内容:  heap介绍及范例">
+<meta name="keywords" content="golang">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Golang漫谈之heap">
+<meta property="og:url" content="https://ustack.io/2019-11-22-Golang漫谈之heap.html">
+<meta property="og:site_name" content="Indagate">
+<meta property="og:description" content="除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的Golang 源码剖析。Go语言的OOP,接口,接口的组合,基础库的函数及接口如何抽象设计,这些东西在Go的Heap源码及演示例子处理中,都有很好的展示. [ heap是Golang内置的标准库封装，该文章主要介绍，以下内容:  heap介绍及范例">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/23/MHIrTS.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/23/MHoCfH.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/23/MHoUNF.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/23/MHoh3d.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/23/MHovgs.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/23/MHTMVK.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/23/MHTgrq.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/23/MHTHMR.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/23/MH7SRH.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/23/MH73wV.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/23/MH7Tk8.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/23/MHHsun.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/23/MHHqUK.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/23/MHbiUf.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/23/MHbmKs.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/23/MHbG24.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/23/MHbyxH.png">
+<meta property="og:updated_time" content="2019-11-23T03:36:51.986Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Golang漫谈之heap">
+<meta name="twitter:description" content="除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的Golang 源码剖析。Go语言的OOP,接口,接口的组合,基础库的函数及接口如何抽象设计,这些东西在Go的Heap源码及演示例子处理中,都有很好的展示. [ heap是Golang内置的标准库封装，该文章主要介绍，以下内容:  heap介绍及范例">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/11/23/MHIrTS.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Indagate" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://ustack.io/2019-11-22-Golang漫谈之heap.html">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Golang漫谈之heap | Indagate</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  
+  <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.bootcss.com/jquery-migrate/1.4.1/jquery-migrate.min.js"></script>
+  <link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" id="stylesheet-css" href="/css/style.css" type="text/css" media="all">
+  <link rel="stylesheet" id="gr_classic_style-css" href="/css/classic.css" type="text/css" media="all">
+  <link rel="stylesheet" id="gr_options-css" href="/css/options.css" type="text/css" media="all">
+  <link rel="stylesheet" id="gr_style-css" href="/css/style1.css" type="text/css" media="all">
+  <link rel="stylesheet" id="contact-form-7-css" href="/css/styles.css" type="text/css" media="all">
+  <link rel="stylesheet" id="cff-css" href="/css/cff-style.css" type="text/css" media="all">
+  <link rel="stylesheet" id="cff-font-awesome-css" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css" media="all">
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="/js/Valine.min.js"></script>
+  
+ 
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN" style="opacity: 1;" class="home blog">
+
+  
+  
+    
+  
+<div class="preloader">
+	<div class="gr_preload_logo">
+    	<img src="/images/logo.png" alt="indagate">
+    </div>
+    <div class="gr_load_ring">
+    	<h2>LOADING</h2>
+    </div>
+</div>
+<div id="gr_box_search" class="gr_box_overlay">
+    <div class="gr_close_over"></div>
+    <div class="gr_box_holder">
+        <h3 class="gr_box_title">Let's search</h3>
+        <form role="search" method="get" action="/">
+            <input type="search" name="s" value placeholder="..." class="gr_search_input">
+            <button type="submit" value="Search" class="gr_search_submit">Search</button>
+        </form>
+        <button type="button" class="gr_close">Close</button>
+    </div>
+</div>
+<div id="gr_box_social" class="gr_box_overlay">
+    <div class="gr_close_over"></div>
+    <div class="gr_box_holder">
+        <h3 class="gr_box_title">Follow me</h3>
+        <div class="gr_box_share_holder">
+        <a href="http://github.com/zoues" target="_blank"><i class="fa fa-github"></i></a>                                                <a href="/atom.xml" target="_blank"><i class="fa fa-rss"></i></a>        </div>
+        <button type="button" class="gr_close">Close</button>
+    </div>
+</div>
+  <div class="gr_site_holder">
+    <header>
+            <div class="gr_header_background">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 col-xs-4">
+                            <div class="gr-search">
+                                <a href="#" title>search</a>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-4">
+                            <div class="gr-menu-top">
+                                <div class="gr_menu_holder" style="margin-left: -60px; width:120px">
+                                    <a href="#" title class="gr_menu_button">menu</a>
+                                    <div class="menu-main-menu-container">
+                                        <ul id="menu-main-menu" class="gr_header_menu center-block" style="display: none;">
+                                            <li id="menu-item-344" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-344">
+                                                <a href="/categories/" style="opacity: 1;">开发实践</a>
+                                            </li>
+                                            <li id="menu-item-344" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-344">
+                                                <a href="/categories/" style="opacity: 1;">行业动态</a>
+                                            </li>
+                                            <li id="menu-item-344" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-344">
+                                                <a href="/categories/" style="opacity: 1;">入门教程</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-4">
+                            <div class="gr-social">
+                                <a href="#" title class="gr_share_button">follow</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="gr-logo">
+                                <a href="/">
+                                    <img class="img-responsive" src="/images/logo.png" alt="Boroda">
+                                </a>
+                                <h2>My name is <span>Zouyee</span>. I’m a blogger based in SUZHOU.</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main row">
+         
+        <div class="main-inner">
+         
+            <div class="content-wrap">
+                
+                <div id="content" class="content gr_grid_container">
+                
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-11-22-Golang漫谈之heap.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">Golang漫谈之heap</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">11月 22 2019</span><span class="gr_separate">|</span>
+          
+                <a href="/categories/golang漫谈/" itemprop="url" rel="category tag"><span itemprop="name">golang漫谈</span></a>
+
+                
+                
+              
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
+        
+          
+          <h3 class="blog_title" itemprop="name headline">Golang漫谈之heap
+              
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：11月 22 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-11-22T20:40:08+08:00">11月 22 2019</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：11月 23 2019 11:36:51" itemprop="dateModified" datetime="2019-11-23T11:36:51+08:00">11月 23 2019</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/golang漫谈/" itemprop="url" rel="index"><span itemprop="name">golang漫谈</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019-11-22-Golang漫谈之heap.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-11-22-Golang漫谈之heap.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019-11-22-Golang漫谈之heap.html" class="leancloud_visitors" data-flag-title="Golang漫谈之heap">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span>℃</span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
+      
+      </div>
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
+    
+      
+        <div class="note info"><p>除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的<a href="github.com/qyuhen/book">Golang 源码剖析</a>。<br>Go语言的OOP,接口,接口的组合,基础库的函数及接口如何抽象设计,这些东西在Go的Heap源码及演示例子处理中,都有很好的展示.</p>
+<p>[</p></div>
+<p>heap是Golang内置的标准库封装，该文章主要介绍，以下内容:</p>
+<ul>
+<li>heap介绍及范例</li>
+<li>heap解析</li>
+</ul>
+<a id="more"></a>
+<hr>
+<h4 id="一、heap介绍及范例"><a href="#一、heap介绍及范例" class="headerlink" title="一、heap介绍及范例"></a>一、heap介绍及范例</h4><blockquote>
+<p>堆就是用数组实现的二叉树，所有它没有使用父指针或者子指针。堆根据“堆属性”来排序，“堆属性”决定了树中节点的位置。</p>
+</blockquote>
+<p>堆的常用方法：</p>
+<ul>
+<li><p>构建优先队列</p>
+</li>
+<li><p>支持堆排序</p>
+</li>
+<li><p>快速找出一个集合中的最小值（或者最大值）</p>
+</li>
+</ul>
+<h5 id="1-1-堆属性"><a href="#1-1-堆属性" class="headerlink" title="1.1 堆属性"></a>1.1 堆属性</h5><p>堆分为两种：最大堆和最小堆，两者的差别在于节点的排序方式。</p>
+<p>在最大堆中，父节点的值比每一个子节点的值都要大。在最小堆中，父节点的值比每一个子节点的值都要小。这就是所谓的“堆属性”，并且这个属性对堆中的每一个节点都成立。</p>
+<p><img src="https://s2.ax1x.com/2019/11/23/MHIrTS.png" alt="heap1"></p>
+<p>这是一个最大堆，，因为每一个父节点的值都比其子节点要大。10比7和2都大。7比5和1都大。</p>
+<p>根据这一属性，那么最大堆总是将其中的最大值存放在树的根节点。而对于最小堆，根节点中的元素总是树中的最小值。堆属性非常的有用，因为堆常常被当做优先队列使用，因为可以快速的访问到“最重要”的元素。</p>
+<blockquote>
+<p>堆的根节点中存放的是最大或者最小元素，但是其他节点的排序顺序是未知的。例如，在一个最大堆中，最大的那一个元素总是位于 index 0 的位置，但是最小的元素则未必是最后一个元素。–唯一能够保证的是最小的元素是一个叶节点，但是不确定是哪一个。</p>
+</blockquote>
+<h5 id="1-2-堆和普通树的区别"><a href="#1-2-堆和普通树的区别" class="headerlink" title="1.2 堆和普通树的区别"></a>1.2 堆和普通树的区别</h5><p>堆并不能取代二叉搜索树，它们之间有相似之处也有一些不同。我们来看一下两者的主要差别：</p>
+<ul>
+<li><p>节点的顺序。在二叉搜索树中，左子节点必须比父节点小，右子节点必须必比父节点大。但是在堆中并非如此。在最大堆中两个子节点都必须比父节点小，而在最小堆中，它们都必须比父节点大。</p>
+</li>
+<li><p>内存占用。普通树占用的内存空间比它们存储的数据要多。你必须为节点对象以及左/右子节点指针分配额为是我内存。堆仅仅使用一个数据来村塾数组，且不使用指针。</p>
+</li>
+<li><p>平衡。二叉搜索树必须是“平衡”的情况下，其大部分操作的复杂度才能达到O(log n)。你可以按任意顺序位置插入/删除数据，或者使用 AVL 树或者红黑树，但是在堆中实际上不需要整棵树都是有序的。我们只需要满足对属性即可，所以在堆中平衡不是问题。因为堆中数据的组织方式可以保证O(log n) 的性能。</p>
+</li>
+<li><p>搜索。在二叉树中搜索会很快，但是在堆中搜索会很慢。在堆中搜索不是第一优先级，因为使用堆的目的是将最大（或者最小）的节点放在最前面，从而快速的进行相关插入、删除操作。</p>
+</li>
+</ul>
+<p><strong><em>来自数组的树</em></strong></p>
+<p>用数组来实现树相关的数据结构也许看起来有点古怪，但是它在时间和空间山都是很高效的。我们准备将上面的例子中的树这样存储：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ 10, 7, 2, 5, 1 ]</span><br></pre></td></tr></table></figure>
+<p>就这多！我们除了一个简单的数组以外，不需要任何额外的空间。</p>
+<p>如果我们不允许使用指针，那么我们怎么知道哪一个节点是父节点，哪一个节点是它的子节点呢？问得好！节点在数组中的位置index 和它的父节点已经子节点的索引之间有一个映射关系。</p>
+<p>如果 i 是节点的索引，那么下面的公式就给出了它的父节点和子节点在数组中的位置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">parent(i) = floor((i - 1)/2)</span><br><span class="line">left(i)   = 2i + 1</span><br><span class="line">right(i)  = 2i + 2</span><br></pre></td></tr></table></figure>
+<p>注意 right(i) 就是简单的 left(i) + 1。左右节点总是处于相邻的位置。</p>
+<p>我们将写公式放到前面的例子中验证一下。</p>
+<table>
+<thead>
+<tr>
+<th>Node</th>
+<th>Array index (i)</th>
+<th>Parent index</th>
+<th>Left child</th>
+<th>Right child</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10</td>
+<td>0</td>
+<td>-1</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>7</td>
+<td>1</td>
+<td>0</td>
+<td>3</td>
+<td>4</td>
+</tr>
+<tr>
+<td>2</td>
+<td>2</td>
+<td>0</td>
+<td>5</td>
+<td>6</td>
+</tr>
+<tr>
+<td>5</td>
+<td>3</td>
+<td>1</td>
+<td>7</td>
+<td>8</td>
+</tr>
+<tr>
+<td>1</td>
+<td>4</td>
+<td>1</td>
+<td>9</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>根节点(10)没有父节点，因为 -1 不是一个有效的数组索引。同样，节点 (2)，(5)和(1) 没有子节点，因为这些索引已经超过了数组的大小，所以我们在使用这些索引值的时候需要保证是有效的索引值。</p>
+</blockquote>
+<p>在最大堆中，父节点的值总是要大于（或者等于）其子节点的值。这意味下面的公式对数组中任意一个索引i都成立：<code>array[parent(i)] &gt;= array[i]</code></p>
+<p>可以用上面的例子来验证一下这个堆属性。</p>
+<p>如你所见，这些公式允许我们不使用指针就可以找到任何一个节点的父节点或者子节点。事情比简单的去掉指针要复杂，但这就是交易：我们节约了空间，但是要进行更多计算。幸好这些计算很快并且只需要O(1)的时间。</p>
+<p>理解数组索引和节点位置之间的关系非常重要。这里有一个更大的堆，它有15个节点被分成了4层:</p>
+<p><img src="https://s2.ax1x.com/2019/11/23/MHoCfH.png" alt="树"></p>
+<p>图片中的数字不是节点的值，而是存储这个节点的数组索引！这里是数组索引和树的层级之间的关系：</p>
+<p><img src="https://s2.ax1x.com/2019/11/23/MHoUNF.png" alt="数组"></p>
+<p>由上图可以看到，数组中父节点总是在子节点的前面。注意这个方案与一些限制。你可以在普通二叉树中按照下面的方式组织数据，但是在堆中不可以：</p>
+<p><img src="https://s2.ax1x.com/2019/11/23/MHoh3d.png" alt="一般树"></p>
+<p>在堆中，在当前层级所有的节点都已经填满之前不允许开是下一层的填充，所以堆总是有这样的形状：</p>
+<p><img src="https://s2.ax1x.com/2019/11/23/MHovgs.png" alt="heapshap"></p>
+<blockquote>
+<p>注意：你可以使用普通树来模拟堆，但是那对空间是极大的浪费。</p>
+</blockquote>
+<p>假设我们有这样一个数组：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ 10, 14, 25, 33, 81, 82, 99 ]</span><br></pre></td></tr></table></figure>
+<p>这是一个有效的堆吗？答案是 yes ！一个从低到高有序排列的数组是以有效的最小堆，我们可以将这个堆画出来：</p>
+<p><img src="https://s2.ax1x.com/2019/11/23/MHTMVK.png" alt="sortedArray"></p>
+<p>堆属性适用于每一个节点，因为父节点总是比它的字节点小。（你也可以验证一下：一个从高到低有序排列的数组是一个有效的最大堆）</p>
+<blockquote>
+<p>注意：并不是每一个最小堆都是一个有序数组！要将堆转换成有序数组，需要使用堆排序。</p>
+</blockquote>
+<h5 id="1-3-堆的用途"><a href="#1-3-堆的用途" class="headerlink" title="1.3 堆的用途"></a>1.3 堆的用途</h5><p>有两个原始操作用于保证插入或删除节点以后堆是一个有效的最大堆或者最小堆：</p>
+<ul>
+<li>shiftUp(): 如果一个节点比它的父节点大（最大堆）或者小（最小堆），那么需要将它同父节点交换位置。这样是这个节点在数组的位置上升。</li>
+<li>shiftDown(): 如果一个节点比它的子节点小（最大堆）或者大（最小堆），那么需要将它向下移动。这个操作也称作“堆化（heapify）”。</li>
+</ul>
+<p>shiftUp 或者 shiftDown 是一个递归的过程，所以它的时间复杂度是 O(log n)。</p>
+<p>基于这两个原始操作还有一些其他的操作：</p>
+<ul>
+<li>insert(value): 在堆的尾部添加一个新的元素，然后使用 shiftUp 来修复对。</li>
+<li>remove(): 移除并返回最大值（最大堆）或者最小值（最小堆）。为了将这个节点删除后的空位填补上，需要将最后一个元素移到根节点的位置，然后使用 shiftDown 方法来修复堆。</li>
+<li>removeAtIndex(index): 和 remove() 一样，差别在于可以移除堆中任意节点，而不仅仅是根节点。当它与子节点比较位置不时无序时使用 shiftDown()，如果与父节点比较发现无序则使用 shiftUp()。</li>
+<li><p>replace(index, value)：将一个更小的值（最小堆）或者更大的值（最大堆）赋值给一个节点。由于这个操作破坏了堆属性，所以需要使用 shiftUp() 来修复堆属性。<br>上面所有的操作的时间复杂度都是 O(log n)，因为 shiftUp 和 shiftDown 都很费时。还有少数一些操作需要更多的时间：</p>
+</li>
+<li><p>search(value):堆不是为快速搜索而建立的，但是 replace() 和 removeAtIndex() 操作需要找到节点在数组中的index，所以你需要先找到这个index。时间复杂度：O(n)。</p>
+</li>
+<li>buildHeap(array):通过反复调用 insert() 方法将一个（无序）数组转换成一个堆。如果你足够聪明，你可以在 O(n) 时间内完成。</li>
+<li>堆排序：由于堆就是一个数组，我们可以使用它独特的属性将数组从低到高排序。时间复杂度：O(n lg n)。</li>
+</ul>
+<p>堆还有一个 peek() 方法，不用删除节点就返回最大值（最大堆）或者最小值（最小堆）。时间复杂度 O(1) 。</p>
+<blockquote>
+<p>注意：到目前为止，堆的常用操作还是使用 insert() 插入一个新的元素，和通过 remove()移除最大或者最小值。两者的时间复杂度都是O(log n)。其其他的操作是用于支持更高级的应用，比如说建立一个优先队列。</p>
+</blockquote>
+<p><strong><em>插入</em></strong></p>
+<p>我们通过一个插入例子来看看插入操作的细节。我们将数字16插入到这个堆中：</p>
+<p><img src="https://s2.ax1x.com/2019/11/23/MHTgrq.png" alt="heap1"></p>
+<p>堆的数组是： <code>[ 10, 7, 2, 5, 1 ]</code>。<br>第一股是将新的元素插入到数组的尾部。数组变成：<br><code>[ 10, 7, 2, 5, 1, 16 ]</code><br>相应的树变成了：</p>
+<p><img src="https://s2.ax1x.com/2019/11/23/MHTHMR.png" alt="Insert1"></p>
+<p>16 被添加最后一行的第一个空位。<br>不行的是，现在堆属性不满足，因为2在16的上面，我们需要将大的数字在上面（这是一个最大堆）<br>为了恢复堆属性，我们需要交换16和2。</p>
+<p><img src="https://s2.ax1x.com/2019/11/23/MH7SRH.png" alt="Insert2"></p>
+<p>现在还没有完成，因为 10 也比 16 小。我们继续交换我们的插入元素和它的父节点，直到它的父节点比它大或者我们到达树的顶部。这就是所谓的 shift-up，每一次插入操作后都需要进行。它将一个太大或者太小的数字“浮起”到树的顶部。<br>最后我们得到的堆：</p>
+<p><img src="https://s2.ax1x.com/2019/11/23/MH73wV.png" alt="Insert3"></p>
+<p>现在每一个父节点都比它的子节点大。</p>
+<p><strong><em>删除根节点</em></strong></p>
+<p>我们将这个树中的 (10) 删除：</p>
+<p><img src="https://s2.ax1x.com/2019/11/23/MH7Tk8.png" alt="Heap1"></p>
+<p>现在顶部有一个空的节点，怎么处理？</p>
+<p><img src="https://s2.ax1x.com/2019/11/23/MHHsun.png" alt="Remove1"></p>
+<p>当插入节点的时候，我们将新的值返给数组的尾部。现在我们来做相反的事情：我们取出数组中的最后一个元素，将它放到树的顶部，然后再修复堆属性。</p>
+<p><img src="https://s2.ax1x.com/2019/11/23/MHHqUK.png" alt="Remove2"></p>
+<p>现在来看怎么 shift-down (1)。为了保持最大堆的堆属性，我们需要树的顶部是最大的数据。现在有两个数字可用于交换 7 和 2。我们选择这两者中的较大者称为最大值放在树的顶部，所以交换 7 和 1，现在树变成了：</p>
+<p><img src="https://s2.ax1x.com/2019/11/23/MHbiUf.png" alt="Remove3"></p>
+<p>继续堆化直到该节点没有任何子节点或者它比两个子节点都要大为止。对于我们的堆，我们只需要再有一次交换就恢复了堆属性：</p>
+<p><img src="https://s2.ax1x.com/2019/11/23/MHbmKs.png" alt="Remove4"></p>
+<p><strong><em>删除任一节点</em></strong></p>
+<p>绝大多数时候你需要删除的是堆的根节点，因为这就是堆的设计用途。</p>
+<p>但是，删除任意节点也很有用。这是 remove() 的通用版本，它可能会使用到 shiftDown 和 shiftUp。</p>
+<p>我们还是用前面的例子，删除 (7):</p>
+<p><img src="https://s2.ax1x.com/2019/11/23/MHbG24.png" alt="Heap1"></p>
+<p>对应的数组是:<code>[ 10, 7, 2, 5, 1 ]</code></p>
+<p>你知道，移除一个元素会破坏最大堆或者最小堆属性。我们需要将删除的元素和最后一个元素交换：<br><code>[ 10, 1, 2, 5, 7 ]</code></p>
+<p>最后一个元素就是我们需要返回的元素；然后调用 removeLast() 来将它删除。 (1) 比它的子节点小，所以需要 shiftDown() 来修复。</p>
+<p>然而，shift down 不是我们要处理的唯一情况。也有可能我们需要 shift up。考虑一下从下面的堆中删除 (5) 会发生什么：</p>
+<p><img src="https://s2.ax1x.com/2019/11/23/MHbyxH.png" alt="Remove5"></p>
+<p>现在 (5) 和 (8) 交换了。因为 (8) 比它的父节点大，我们需要 shiftUp()。</p>
+<hr>
+<h4 id="二、heap解析"><a href="#二、heap解析" class="headerlink" title="二、heap解析"></a>二、heap解析</h4><h5 id="2-1-goroutine通信"><a href="#2-1-goroutine通信" class="headerlink" title="2.1 goroutine通信"></a>2.1 goroutine通信</h5><p>heap包对任意实现了heap接口的类型提供堆操作。（小根）堆是具有“每个节点都是以其为根的子树中最小值”属性的树。树的最小元素在根部，为index 0.<br>heap是常用的实现优先队列的方法。要创建一个优先队列，实现一个具有使用（负的）优先级作为比较的依据的Less方法的Heap接口，如此一来可用Push添加项目而用Pop取出队列最高优先级的项目。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Interface <span class="keyword">interface</span> &#123;</span><br><span class="line">    sort.Interface</span><br><span class="line">    Push(x <span class="keyword">interface</span>&#123;&#125;) <span class="comment">// add x as element Len()</span></span><br><span class="line">    Pop() <span class="keyword">interface</span>&#123;&#125;   <span class="comment">// remove and return element Len() - 1.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看出，这个堆结构继承自sort.Interface, 而sort.Interface，需要实现三个方法：</p>
+<ul>
+<li>Len() int</li>
+<li>Less(i, j int) bool  </li>
+<li>Swap(i, j int)</li>
+</ul>
+<p>再加上堆接口定义的两个方法：</p>
+<ul>
+<li>Push(x interface{})</li>
+<li>Pop() interface{}。</li>
+</ul>
+<p>故只要实现了这五个方法，变定义了一个堆。</p>
+<p>任何实现了本接口的类型都可以用于构建最小堆。最小堆可以通过heap.Init建立，数据是递增顺序或者空的话也是最小堆。最小堆的约束条件是：</p>
+<p><code>!h.Less(j, i) for 0 &lt;= i &lt; h.Len() and 2*i+1 &lt;= j &lt;= 2*i+2 and j &lt; h.Len()</code></p>
+<p>注意接口的Push和Pop方法是供heap包调用的，请使用heap.Push和heap.Pop来向一个堆添加或者删除元素。</p>
+<ul>
+<li>func Fix(h Interface, i int)  //  在修改第i个元素后，调用本函数修复堆，比删除第i个元素后插入新元素更有效率。复杂度O(log(n))，其中n等于h.Len()。</li>
+<li>func Init(h Interface)  //初始化一个堆。一个堆在使用任何堆操作之前应先初始化。Init函数对于堆的约束性是幂等的（多次执行无意义），并可能在任何时候堆的约束性被破坏时被调用。本函数复杂度为O(n)，其中n等于h.Len()。</li>
+<li>func Pop(h Interface) interface{}  //删除并返回堆h中的最小元素（不影响约束性）。复杂度O(log(n))，其中n等于h.Len()。该函数等价于Remove(h, 0)。</li>
+<li>func Push(h Interface, x interface{})  //向堆h中插入元素x，并保持堆的约束性。复杂度O(log(n))，其中n等于h.Len()。</li>
+<li>func Remove(h Interface, i int) interface{}  //删除堆中的第i个元素，并保持堆的约束性。复杂度O(log(n))，其中n等于h.Len()。</li>
+</ul>
+<p>利用heap创建一个优先级队列:</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">"container/heap"</span></span><br><span class="line">  <span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// An IntHeap is a min-heap of ints.</span></span><br><span class="line"><span class="keyword">type</span> IntHeap []<span class="keyword">int</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(h IntHeap)</span> <span class="title">Len</span><span class="params">()</span> <span class="title">int</span></span>           &#123; <span class="keyword">return</span> <span class="built_in">len</span>(h) &#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(h IntHeap)</span> <span class="title">Less</span><span class="params">(i, j <span class="keyword">int</span>)</span> <span class="title">bool</span></span> &#123; <span class="keyword">return</span> h[i] &lt; h[j] &#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(h IntHeap)</span> <span class="title">Swap</span><span class="params">(i, j <span class="keyword">int</span>)</span></span>      &#123; h[i], h[j] = h[j], h[i] &#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(h *IntHeap)</span> <span class="title">Push</span><span class="params">(x <span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">  <span class="comment">// Push and Pop use pointer receivers because they modify the slice's length,</span></span><br><span class="line">  <span class="comment">// not just its contents.</span></span><br><span class="line">  *h = <span class="built_in">append</span>(*h, x.(<span class="keyword">int</span>))</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(h *IntHeap)</span> <span class="title">Pop</span><span class="params">()</span> <span class="title">interface</span></span>&#123;&#125; &#123;</span><br><span class="line">  old := *h</span><br><span class="line">  n := <span class="built_in">len</span>(old)</span><br><span class="line">  x := old[n<span class="number">-1</span>]</span><br><span class="line">  *h = old[<span class="number">0</span> : n<span class="number">-1</span>]</span><br><span class="line">  <span class="keyword">return</span> x</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// This example inserts several ints into an IntHeap, checks the minimum,</span></span><br><span class="line"><span class="comment">// and removes them in order of priority.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  h := &amp;IntHeap&#123;<span class="number">2</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">100</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">4</span>, <span class="number">5</span>&#125;</span><br><span class="line">  heap.Init(h)</span><br><span class="line">  heap.Push(h, <span class="number">3</span>)</span><br><span class="line">  heap.Fix(h, <span class="number">3</span>)</span><br><span class="line">  fmt.Printf(<span class="string">"minimum: %d\n"</span>, (*h)[<span class="number">0</span>])</span><br><span class="line">  <span class="keyword">for</span> h.Len() &gt; <span class="number">0</span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"%d "</span>, heap.Pop(h))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>利用heap创建一个优先级队列</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// This example demonstrates a priority queue built using the heap interface.</span></span><br><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">"container/heap"</span></span><br><span class="line">  <span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// An Item is something we manage in a priority queue.</span></span><br><span class="line"><span class="keyword">type</span> Item <span class="keyword">struct</span> &#123;</span><br><span class="line">  value    <span class="keyword">string</span> <span class="comment">// The value of the item; arbitrary.</span></span><br><span class="line">  priority <span class="keyword">int</span>    <span class="comment">// The priority of the item in the queue.</span></span><br><span class="line">  <span class="comment">// The index is needed by update and is maintained by the heap.Interface methods.</span></span><br><span class="line">  index <span class="keyword">int</span> <span class="comment">// The index of the item in the heap.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// A PriorityQueue implements heap.Interface and holds Items.</span></span><br><span class="line"><span class="keyword">type</span> PriorityQueue []*Item</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(pq PriorityQueue)</span> <span class="title">Len</span><span class="params">()</span> <span class="title">int</span></span> &#123; <span class="keyword">return</span> <span class="built_in">len</span>(pq) &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(pq PriorityQueue)</span> <span class="title">Less</span><span class="params">(i, j <span class="keyword">int</span>)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">  <span class="comment">// We want Pop to give us the highest, not lowest, priority so we use greater than here.</span></span><br><span class="line">  <span class="keyword">return</span> pq[i].priority &gt; pq[j].priority</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(pq PriorityQueue)</span> <span class="title">Swap</span><span class="params">(i, j <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">  pq[i], pq[j] = pq[j], pq[i]</span><br><span class="line">  pq[i].index = i</span><br><span class="line">  pq[j].index = j</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(pq *PriorityQueue)</span> <span class="title">Push</span><span class="params">(x <span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">  n := <span class="built_in">len</span>(*pq)</span><br><span class="line">  item := x.(*Item)</span><br><span class="line">  item.index = n</span><br><span class="line">  *pq = <span class="built_in">append</span>(*pq, item)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(pq *PriorityQueue)</span> <span class="title">Pop</span><span class="params">()</span> <span class="title">interface</span></span>&#123;&#125; &#123;</span><br><span class="line">  old := *pq</span><br><span class="line">  n := <span class="built_in">len</span>(old)</span><br><span class="line">  item := old[n<span class="number">-1</span>]</span><br><span class="line">  item.index = <span class="number">-1</span> <span class="comment">// for safety</span></span><br><span class="line">  *pq = old[<span class="number">0</span> : n<span class="number">-1</span>]</span><br><span class="line">  <span class="keyword">return</span> item</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// update modifies the priority and value of an Item in the queue.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(pq *PriorityQueue)</span> <span class="title">update</span><span class="params">(item *Item, value <span class="keyword">string</span>, priority <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">  item.value = value</span><br><span class="line">  item.priority = priority</span><br><span class="line">  heap.Fix(pq, item.index)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// This example creates a PriorityQueue with some items, adds and manipulates an item,</span></span><br><span class="line"><span class="comment">// and then removes the items in priority order.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="comment">// Some items and their priorities.</span></span><br><span class="line">  items := <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">int</span>&#123;</span><br><span class="line">    <span class="string">"banana"</span>: <span class="number">3</span>, <span class="string">"apple"</span>: <span class="number">2</span>, <span class="string">"pear"</span>: <span class="number">4</span>,</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Create a priority queue, put the items in it, and</span></span><br><span class="line">  <span class="comment">// establish the priority queue (heap) invariants.</span></span><br><span class="line">  pq := <span class="built_in">make</span>(PriorityQueue, <span class="built_in">len</span>(items))</span><br><span class="line">  i := <span class="number">0</span></span><br><span class="line">  <span class="keyword">for</span> value, priority := <span class="keyword">range</span> items &#123;</span><br><span class="line">    pq[i] = &amp;Item&#123;</span><br><span class="line">      value:    value,</span><br><span class="line">      priority: priority,</span><br><span class="line">      index:    i,</span><br><span class="line">      &#125;</span><br><span class="line">      i++</span><br><span class="line">    &#125;</span><br><span class="line">  heap.Init(&amp;pq)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Insert a new item and then modify its priority.</span></span><br><span class="line">  item := &amp;Item&#123;</span><br><span class="line">    value:    <span class="string">"orange"</span>,</span><br><span class="line">    priority: <span class="number">1</span>,</span><br><span class="line">  &#125;</span><br><span class="line">  heap.Push(&amp;pq, item)</span><br><span class="line">  pq.update(item, item.value, <span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Take the items out; they arrive in decreasing priority order.</span></span><br><span class="line">  <span class="keyword">for</span> pq.Len() &gt; <span class="number">0</span> &#123;</span><br><span class="line">    item := heap.Pop(&amp;pq).(*Item)</span><br><span class="line">    fmt.Printf(<span class="string">"%.2d:%s \n"</span>, item.priority, item.value)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>自定义的类,实现相关接口后,交由heap.Init()去构建堆.</p>
+<ul>
+<li>从堆中Pop()后,数据就被从heap中移除了.</li>
+<li>升降序由Less()来决定.</li>
+<li>自定义类也可以直接用Sort来排序,因为实现了相关接口.</li>
+</ul>
+<hr>
+<h4 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h4><p>heap在kubernetes scheduler相关内容涉及，将会在后续推出。</p>
+<hr>
+<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul>
+<li><a href="https://golang.org/pkg/container/heap" target="_blank" rel="noopener">heap</a></li>
+<li><a href="https://github.com/raywenderlich/swift-algorithm-club/tree/master/Heap" target="_blank" rel="noopener">堆</a></li>
+</ul>
+
+      
+    </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+      <div class="qr_code_pc_inner">
+        <div class="qr_code_pc">
+    <img id="js_pc_qr_code_img" class="qr_code_pc_img" src="https://s2.ax1x.com/2019/09/22/upS79K.jpg" alt="zouyee wechat" style="width: 200px; max-width: 100%;">
+    <p>微信扫一扫<br>关注该公众号</p>
+</div>
+<script>
+jQuery.noConflict()(function ($) {
+    $(function () {
+		var offsetTop = $('#comments').offset().top - $(window).height();
+		
+		if (offsetTop <= 0) {
+			// load directly when there's no a scrollbar
+			console.log("....")
+		} else {
+			$(window).on('scroll', function () {
+				var scrollTop = document.documentElement.scrollTop;
+				var copyright = $('.post-copyright').offset().top;
+				
+				var imageH = $('.qr_code_pc').offset().top;
+				console.log("scrollTop", scrollTop)
+				console.log("copyright", copyright)
+				console.log("qr_code_pc", imageH)
+				if (scrollTop <= offsetTop) {
+					$('.qr_code_pc').css('position', 'absolute')
+					$('.qr_code_pc').css('top', 420)
+				}
+				if (scrollTop > 450 && copyright > scrollTop) {
+					$('.qr_code_pc').css('top', 20)
+					$('.qr_code_pc').css('position', 'fixed')
+				} else {
+					$('.qr_code_pc').css('position', 'absolute')
+				}
+			});
+		}
+	});
+
+})
+</script>
+
+      </div>
+      
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span style="padding-top: 5px;">打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="https://s2.ax1x.com/2019/09/22/uppS4P.jpg" alt="zouyee 微信支付">
+        
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>zouyee</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://ustack.io/2019-11-22-Golang漫谈之heap.html" title="Golang漫谈之heap">https://ustack.io/2019-11-22-Golang漫谈之heap.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/golang/" rel="tag"># golang</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019-11-21-container相关概念梳理.html" rel="next" title="容器那些事">
+                <i class="fa fa-chevron-left"></i> 容器那些事
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019-11-22-Golang漫谈之信号处理.html" rel="prev" title="Golang漫谈之信号处理">
+                Golang漫谈之信号处理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+                </div>
+                
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+            </div>
+                
+                
+  
+
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/author.webp" alt="zouyee">
+            
+              <p class="site-author-name" itemprop="name">zouyee</p>
+              <p class="site-description motion-element" itemprop="description">Keep motivation for the world</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">33</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">17</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/zouyee" target="_blank" title="Twitter" rel="external nofollow"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.instagram.com/ustackq/" target="_blank" title="Instagram" rel="external nofollow"><i class="fa fa-fw fa-instagram"></i>Instagram</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/zouyee" target="_blank" title="GitHub" rel="external nofollow"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank" rel="external nofollow">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.zoues.com/" title="Zoues" target="_blank">Zoues</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、heap介绍及范例"><span class="nav-number">1.</span> <span class="nav-text">一、heap介绍及范例</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1-堆属性"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 堆属性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-堆和普通树的区别"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 堆和普通树的区别</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-3-堆的用途"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 堆的用途</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、heap解析"><span class="nav-number">2.</span> <span class="nav-text">二、heap解析</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1-goroutine通信"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 goroutine通信</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#后续"><span class="nav-number">3.</span> <span class="nav-text">后续</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+                
+        </div>
+        
+        
+    </main>
+
+
+    <div class="gr_footer_widget">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="gr_widget">
+                            <h6 class="gr_widget_title"><span>Serveless Repo</span></h6>
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item avatar" src="https://s2.ax1x.com/2019/09/22/uSzDzD.jpg" width="50" height="50" alt="@virtual-kubelet">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <p class="org-description" itemprop="description"></p><div>OCI-based implementation CRI</div><p></p>
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="https://cri-o.io" href="https://cri-o.io">https://cri-o.io</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item avatar" src="https://s2.ax1x.com/2019/09/22/uSzISS.jpg" width="50" height="50" alt="@openfaas">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <p class="org-description" itemprop="description"></p><div>Serverless Functions Made Simple</div><p></p>
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="https://www.openfaas.com" href="https://www.openfaas.com">https://www.openfaas.com</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item avatar" src="https://s2.ax1x.com/2019/09/22/uSzbes.jpg" width="50" height="50" alt="@virtual-kubelet">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <p class="org-description" itemprop="description"></p><div>Building serverless within Kubernetes</div><p></p>
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="https://virtual-kubelet.io" href="https://virtual-kubelet.io">https://virtual-kubelet.io</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item avatar" src="https://s2.ax1x.com/2019/09/22/uSzjYV.jpg" width="50" height="50" alt="@virtual-kubelet">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <p class="org-description" itemprop="description"></p><div>Manage modern serverless workloads</div><p></p>
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="https://knative.dev" href="https://knative.dev">https://knative.dev</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="gr_widget" style="line-height: 18px;">
+                            <h6 class="gr_widget_title"><span>Calendar</span></h6>
+                            <div id="calendar_wrap" class="calendar_wrap">
+                                <table id="wp-calendar">
+                                    <caption>July 2019</caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" title="Monday">M</th>
+                                            <th scope="col" title="Tuesday">T</th>
+                                            <th scope="col" title="Wednesday">W</th>
+                                            <th scope="col" title="Thursday">T</th>
+                                            <th scope="col" title="Friday">F</th>
+                                            <th scope="col" title="Saturday">S</th>
+                                            <th scope="col" title="Sunday">S</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3" id="prev"><a href="./wp/boroda/2015/05/">« May</a></td>
+                                            <td class="pad">&nbsp;</td>
+                                            <td colspan="3" id="next" class="pad">&nbsp;</td>
+                                        </tr>
+                                    </tfoot>
+
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="5" class="pad">&nbsp;</td>
+                                            <td>1</td>
+                                            <td>2</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>4</td>
+                                            <td>5</td>
+                                            <td>6</td>
+                                            <td>7</td>
+                                            <td>8</td>
+                                            <td>9</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10</td>
+                                            <td>11</td>
+                                            <td>12</td>
+                                            <td>13</td>
+                                            <td>14</td>
+                                            <td>15</td>
+                                            <td>16</td>
+                                        </tr>
+                                        <tr>
+                                            <td>17</td>
+                                            <td>18</td>
+                                            <td id="today">19</td>
+                                            <td>20</td>
+                                            <td>21</td>
+                                            <td>22</td>
+                                            <td>23</td>
+                                        </tr>
+                                        <tr>
+                                            <td>24</td>
+                                            <td>25</td>
+                                            <td>26</td>
+                                            <td>27</td>
+                                            <td>28</td>
+                                            <td>29</td>
+                                            <td>30</td>
+                                        </tr>
+                                        <tr>
+                                            <td>31</td>
+                                            <td class="pad" colspan="6">&nbsp;</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="gr_widget">
+                            <h6 class="gr_widget_title"><span>Dou Feed</span></h6>
+                            
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item douban" src="https://s2.ax1x.com/2019/09/22/upSEY6.jpg" width="50" height="50" alt="@virtual-kubelet">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="少年赫比" href="https://book.douban.com/subject/33408001/?icn=index-latestbook-subject">书名: 少年赫比</a>
+                                        </li>
+                                         <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <a rel="nofollow" itemprop="url" class="text-gray">出版年: 2019-5</a>
+                                        </li>
+                                         <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <a rel="nofollow" itemprop="url" class="text-gray">原作名: CITY BOY</a>
+                                        </li>
+                                         <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <a rel="nofollow" itemprop="url" class="text-gray">定价: 58.00元</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zouyee</span>
+
+  
+
+  
+</div>
+
+
+  
+
+
+
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" rel="external nofollow" href="https://github.com/theme-next/hexo-theme-next">NexT.Muse</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery.form/3.51/jquery.form.min.js"></script>
+  </div>
+    <script type="text/javascript" src="/js/custom.js"></script>
+    <script type="text/javascript" src="/js/menu.js"></script>
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="/js/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'jTOUB0OQ83CnjWySYgN5W1PV-gzGzoHsz',
+        appKey: '8upIEt85LzIaq3NWQbUbfWI8',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("Qg4Aol4dtKwpnLstsoOct5Ya-gzGzoHsz", "pRvygLtQ4atIrsbLXpXi9HXa");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text(counter.get('time'));
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+  <script type="text/javascript" src="https://cdn.bootcss.com/js-cookie/2.1.4/js.cookie.js"></script>
+  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=6.3.0"></script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

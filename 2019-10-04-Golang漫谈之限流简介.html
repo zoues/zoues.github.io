@@ -105,16 +105,21 @@
 
 
 
-  <meta name="description" content="Keep motivation for the world">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Indagate">
-<meta property="og:url" content="https://ustack.io/archives/2017/06/index.html">
+  <meta name="description" content="除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的Golang 源码剖析。 为了防止网站意外暴增的流量比如活动、秒杀、攻击等，导致整个系统瘫痪，在前后端接口服务处进行流量限制是非常有必要的。">
+<meta name="keywords" content="golang">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Golang漫谈之限流简介">
+<meta property="og:url" content="https://ustack.io/2019-10-04-Golang漫谈之限流简介.html">
 <meta property="og:site_name" content="Indagate">
-<meta property="og:description" content="Keep motivation for the world">
+<meta property="og:description" content="除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的Golang 源码剖析。 为了防止网站意外暴增的流量比如活动、秒杀、攻击等，导致整个系统瘫痪，在前后端接口服务处进行流量限制是非常有必要的。">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/23/MqrO5q.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/23/MqsQZd.jpg">
+<meta property="og:updated_time" content="2019-11-23T13:47:59.442Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Indagate">
-<meta name="twitter:description" content="Keep motivation for the world">
+<meta name="twitter:title" content="Golang漫谈之限流简介">
+<meta name="twitter:description" content="除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的Golang 源码剖析。 为了防止网站意外暴增的流量比如活动、秒杀、攻击等，导致整个系统瘫痪，在前后端接口服务处进行流量限制是非常有必要的。">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/11/23/MqrO5q.png">
 
 
 
@@ -123,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="https://ustack.io/archives/2017/06/">
+  <link rel="canonical" href="https://ustack.io/2019-10-04-Golang漫谈之限流简介.html">
 
 
 
@@ -133,7 +138,7 @@
   };
 </script>
 
-  <title>归档 | Indagate</title>
+  <title>Golang漫谈之限流简介 | Indagate</title>
   
 
 
@@ -285,78 +290,395 @@
                 <div id="content" class="content gr_grid_container">
                 
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      
-      <span class="archive-page-counter">
-        
-        
+  
+
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-10-04-Golang漫谈之限流简介.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">Golang漫谈之限流简介</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">10月 04 2019</span><span class="gr_separate">|</span>
+          
+                <a href="/categories/golang漫谈/" itemprop="url" rel="category tag"><span itemprop="name">golang漫谈</span></a>
+
+                
+                
+              
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
         
           
-        
-        嗯..! 目前共计 23 篇日志。 继续努力。
-      </span>
-      
-
-      
-
-        
-        
-        
-
-        
+          <h3 class="blog_title" itemprop="name headline">Golang漫谈之限流简介
+              
+            
+          </h3>
           
-          <div class="collection-title">
-            <h2 class="archive-year" id="archive-year-2017">2017</h2>
-          </div>
-        
-        
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
 
-        
+            
+            
+            
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017-06-28-解决Git-refusing-to-merge-unrelated-histories问题.html" itemprop="url">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
               
-                <span itemprop="name">解决Git refusing to merge unrelated histories问题</span>
+                <span class="post-meta-item-text">发表于</span>
               
-            </a>
-        
-      </h3>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2017-06-28T10:40:36+08:00" content="6月 28 2017">
-          06-28
-        </time>
+              
+                
+              
+
+              <time title="创建时间：10月 04 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-10-04T20:40:08+08:00">10月 04 2019</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：11月 23 2019 21:47:59" itemprop="dateModified" datetime="2019-11-23T21:47:59+08:00">11月 23 2019</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/golang漫谈/" itemprop="url" rel="index"><span itemprop="name">golang漫谈</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019-10-04-Golang漫谈之限流简介.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-10-04-Golang漫谈之限流简介.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019-10-04-Golang漫谈之限流简介.html" class="leancloud_visitors" data-flag-title="Golang漫谈之限流简介">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span>℃</span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
+      
       </div>
-
-    </header>
-  </article>
-
-
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
+    
+      
+        <div class="note info"><p>除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的<a href="github.com/qyuhen/book">Golang 源码剖析</a>。</p>
+<p>为了防止网站意外暴增的流量比如活动、秒杀、攻击等，导致整个系统瘫痪，在前后端接口服务处进行流量限制是非常有必要的。</p></div>
+<a id="more"></a>
+<p>做限流(Rate Limiting/Throttling)的时候，除了简单的控制并发，如果要准确的控制TPS，简单的做法是维护一个单位时间内的Counter，如判断单位时间已经过去，则将Counter重置零。此做法被认为没有很好的处理单位时间的边界，比如在前一秒的最后一毫秒里和下一秒的第一毫秒都触发了最大的请求数，将目光移动一下，就看到在两毫秒内发生了两倍的TPS。<br>因此更平滑的算法如<a href="http://en.wikipedia.org/wiki/Leaky_bucket" target="_blank" rel="noopener">Leaky Bucket</a>–漏桶算法，又或者将原来单位时间内单一的Counter拆分为单位时间内的多个Buckets并滑动计算。本文内容如下：</p>
+<ul>
+<li>限流简介</li>
+<li>算法简介</li>
+</ul>
+<hr>
+<h4 id="一、限流简介"><a href="#一、限流简介" class="headerlink" title="一、限流简介"></a>一、限流简介</h4><h5 id="1-1-应用场景"><a href="#1-1-应用场景" class="headerlink" title="1.1 应用场景"></a>1.1 应用场景</h5><p>很多做服务接口的人或多或少的遇到这样的场景，由于业务应用系统的负载能力有限，为了防止非预期的请求对系统压力过大而拖垮业务应用系统。也就是面对大流量时，如何进行流量控制？</p>
+<p>服务接口的流量控制策略：分流、降级、限流等。本文讨论下限流策略，虽然降低了服务接口的访问频率和并发量，却换取服务接口和业务应用系统的高可用。</p>
+<p>实际场景中常用的限流策略：</p>
+<ul>
+<li><p>Nginx前端限流<br>按照一定的规则如帐号、IP、系统调用逻辑等在Nginx层面做限流</p>
+</li>
+<li><p>业务应用系统限流</p>
+<ol>
+<li>客户端限流: 基于IP全局限流、基于IP的端点限流、基于IP和客户端key的端点限流、IP和客户端key的白名单、IP和客户端key自定义限制频率、端点自定义限制频率、关于被拒请求的计数器</li>
+<li>服务端限流</li>
+</ol>
+</li>
+<li><p>数据库限流<br>红线区，力保数据库</p>
+</li>
+</ul>
+<h5 id="1-2-常用算法"><a href="#1-2-常用算法" class="headerlink" title="1.2 常用算法"></a>1.2 常用算法</h5><p>常用的限流算法由：楼桶算法和令牌桶算法。本文不具体的详细说明两种算法的原理，原理会在接下来的文章中做说明。</p>
+<p>1、漏桶算法</p>
+<p>漏桶(Leaky Bucket)算法思路很简单,水(请求)先进入到漏桶里,漏桶以一定的速度出水(接口有响应速率),当水流入速度过大会直接溢出(访问频率超过接口响应速率),然后就拒绝请求,可以看出漏桶算法能强行限制数据的传输速率.示意图如下:</p>
+<p><img src="https://s2.ax1x.com/2019/11/23/MqrO5q.png" alt="漏桶"></p>
+<p>可见这里有两个变量,一个是桶的大小,支持流量突发增多时可以存多少的水(burst),另一个是水桶漏洞的大小(rate)。因为漏桶的漏出速率是固定的参数,所以,即使网络中不存在资源冲突(没有发生拥塞),漏桶算法也不能使流突发(burst)到端口速率.因此,漏桶算法对于存在突发特性的流量来说缺乏效率.</p>
+<p>2、令牌桶算法</p>
+<p>令牌桶算法(Token Bucket)和 Leaky Bucket 效果一样但方向相反的算法,更加容易理解.随着时间流逝,系统会按恒定1/QPS时间间隔(如果QPS=100,则间隔是10ms)往桶里加入Token(想象和漏洞漏水相反,有个水龙头在不断的加水),如果桶已经满了就不再加了.新请求来临时,会各自拿走一个Token,如果没有Token可拿了就阻塞或者拒绝服务.</p>
+<p><img src="https://s2.ax1x.com/2019/11/23/MqsQZd.jpg" alt="令牌"></p>
+<p>令牌桶的另外一个好处是可以方便的改变速度. 一旦需要提高速率,则按需提高放入桶中的令牌的速率. 一般会定时(比如100毫秒)往桶中增加一定数量的令牌, 有些变种算法则实时的计算应该增加的令牌的数量.</p>
+<h5 id="1-3-Leaky-Bucket-与-Token-Bucket-算法"><a href="#1-3-Leaky-Bucket-与-Token-Bucket-算法" class="headerlink" title="1.3 Leaky Bucket 与 Token Bucket 算法"></a>1.3 Leaky Bucket 与 Token Bucket 算法</h5><p>漏木桶算法简单的想象有一个木桶，有新请求就是不断的倒水进来，然后桶底下有个洞，按照固定的速率把水漏走，如果水进来的速度比漏走的快，桶可能就会满了，然后就拒绝请求。</p>
+<p>可见这里有两个变量，一个是桶的大小，支持流量突发增多时可以存多少的水(burst)，另一个是水桶漏洞的大小(rate)，可以简单的让burst等于rate，也可以让burst更大接收更多突发请求，伪代码如下：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">double rate;               <span class="comment">// leak rate in calls/s</span></span><br><span class="line">double burst;              <span class="comment">// bucket size in calls</span></span><br><span class="line"></span><br><span class="line">long refreshTime;          <span class="comment">// time for last water refresh</span></span><br><span class="line">double water;              <span class="comment">// water count at refreshTime</span></span><br><span class="line"></span><br><span class="line">refreshWater() &#123;</span><br><span class="line">  long  now = getTimeOfDay();</span><br><span class="line">  water = max(<span class="number">0</span>, water- (now - refreshTime)*rate); <span class="comment">// 水随着时间流逝，不断流走，最多就流干到0.</span></span><br><span class="line">  refreshTime = now;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">bool</span> permissionGranted() &#123;</span><br><span class="line">  refreshWater();</span><br><span class="line">  <span class="keyword">if</span> (water &lt; burst) &#123; <span class="comment">// 水桶还没满，继续加1</span></span><br><span class="line">    water ++;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="http://en.wikipedia.org/wiki/Token_bucket" target="_blank" rel="noopener">Token Bucket</a> 是与 <a href="http://en.wikipedia.org/wiki/Leaky_bucket" target="_blank" rel="noopener">Leaky Bucket</a> 效果一样但方向相反的算法，更加容易理解。随着时间流逝，系统会按速率 1/rate 的时间间隔(如果rate=100，则间隔是10ms)往桶里加入Token(想象和漏洞漏水相反，有个水龙头在不断的加水)，如果桶已经满了就不再加了。新请求来临时，会各自拿走一个Token，如果没有Token可拿了就拒绝服务。</p>
+<hr>
+<h4 id="二、Guava-RateLimiter"><a href="#二、Guava-RateLimiter" class="headerlink" title="二、Guava RateLimiter"></a>二、Guava RateLimiter</h4><h5 id="2-1-使用简介"><a href="#2-1-使用简介" class="headerlink" title="2.1 使用简介"></a>2.1 使用简介</h5><p>Google Guava中的<a href="http://docs.guava-libraries.googlecode.com/git/javadoc/com/google/common/util/concurrent/RateLimiter.html" target="_blank" rel="noopener">RateLimiter</a>，实际上就实现了Token Bucket的算法。Google搜索看到有些开源项目的issues，要把自己写的Limiter换成了它。</p>
+<p>它支持两种获取permits接口，一种是如果拿不到立刻返回false，一种会阻塞等待一段时间看能不能拿到。</p>
+<p>Leacky Bucket算法默认一开始水桶是空的，可以立即就接收最多burst的请求，而Token Bucket就要设置初始Token的数量。<br>RateLimiter有两个子类，一个是WarmingUp，一个是Bursty。</p>
+<ul>
+<li>WarmingUp，burst = warmUp时间/固定token添加间隔(即上例那个10ms)，初始token数量 = burst，有算法保证系统总是相对平滑。</li>
+<li>Bursty， burst = rate或另外的参数设置，初始token数量 = 0 ，当系统冷了一段时间，支持突发到burst。</li>
+<li>Guava以micros为时间单位，计算token的变化。</li>
+</ul>
+<h5 id="2-2-多个滑动的Buckets"><a href="#2-2-多个滑动的Buckets" class="headerlink" title="2.2 多个滑动的Buckets"></a>2.2 多个滑动的Buckets</h5><p>不知道这种算法的业界命名是什么，原理也很简单，将原来的1秒划分为N个bucket。每个请求到来时，计算出当前时间属于哪个bucket，bucket的counter+1，然后计算当前bucket加上前面N-1个bucket的counter总和，看看是否达到rate。</p>
+<hr>
+<h4 id="三、算法比较"><a href="#三、算法比较" class="headerlink" title="三、算法比较"></a>三、算法比较</h4><p>Leaky Bucket只维持一个桶内水量，每个请求过来时，一是水量加一，二是根据过去的时间减少水量。<br>滑动Buckets 维持多个桶，每个请求过来时，一是计算出当前桶，当前桶水量加一，二是获得前面多个bucket的水量合计，三是可能需要滚动桶。</p>
+<ul>
+<li>滑动Buckets比Leaky Bucket需要更多的Counter。</li>
+<li>滑动Buckets需要实现滑动算法，让旧桶过期回收，或置零循环重用。</li>
+<li>Leaky Bucket支持当系统有一段时间清闲之后，能接收一个较大的burst值，当然也可以把burst值调到和rate一样大来禁止它。</li>
+</ul>
+<p>个人比较倾向Leaky Bucket。</p>
+<h5 id="3-2-集群限流"><a href="#3-2-集群限流" class="headerlink" title="3.2 集群限流"></a>3.2 集群限流</h5><p>用上Redis或Memcached，哪种算法都不会难。但首先，你要有个Redis/Memcached。</p>
+<hr>
+<h4 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h4><p>针对深入限流相关内容，将会在后续推出</p>
+<hr>
+<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul>
+<li><a href="https://www.jianshu.com/p/030aba2bff41" target="_blank" rel="noopener">深入解析Go中Slice底层实现</a></li>
+<li><a href="https://www.cnblogs.com/mushroom/archive/2015/07/21/4659200.html" target="_blank" rel="noopener">WebApiThrottle</a></li>
+</ul>
 
       
-
     </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+      <div class="qr_code_pc_inner">
+        <div class="qr_code_pc">
+    <img id="js_pc_qr_code_img" class="qr_code_pc_img" src="https://s2.ax1x.com/2019/09/22/upS79K.jpg" alt="zouyee wechat" style="width: 200px; max-width: 100%;">
+    <p>微信扫一扫<br>关注该公众号</p>
+</div>
+<script>
+jQuery.noConflict()(function ($) {
+    $(function () {
+		var offsetTop = $('#comments').offset().top - $(window).height();
+		
+		if (offsetTop <= 0) {
+			// load directly when there's no a scrollbar
+			console.log("....")
+		} else {
+			$(window).on('scroll', function () {
+				var scrollTop = document.documentElement.scrollTop;
+				var copyright = $('.post-copyright').offset().top;
+				
+				var imageH = $('.qr_code_pc').offset().top;
+				console.log("scrollTop", scrollTop)
+				console.log("copyright", copyright)
+				console.log("qr_code_pc", imageH)
+				if (scrollTop <= offsetTop) {
+					$('.qr_code_pc').css('position', 'absolute')
+					$('.qr_code_pc').css('top', 420)
+				}
+				if (scrollTop > 450 && copyright > scrollTop) {
+					$('.qr_code_pc').css('top', 20)
+					$('.qr_code_pc').css('position', 'fixed')
+				} else {
+					$('.qr_code_pc').css('position', 'absolute')
+				}
+			});
+		}
+	});
+
+})
+</script>
+
+      </div>
+      
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span style="padding-top: 5px;">打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="https://s2.ax1x.com/2019/09/22/uppS4P.jpg" alt="zouyee 微信支付">
+        
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>zouyee</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://ustack.io/2019-10-04-Golang漫谈之限流简介.html" title="Golang漫谈之限流简介">https://ustack.io/2019-10-04-Golang漫谈之限流简介.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/golang/" rel="tag"># golang</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019-09-20-Kubernetes展望与思考之1.17初体验.html" rel="next" title="Kubernetes展望与思考之1.17初体验">
+                <i class="fa fa-chevron-left"></i> Kubernetes展望与思考之1.17初体验
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019-10-04-Golang漫谈之结构体.html" rel="prev" title="Golang漫谈之结构体">
+                Golang漫谈之结构体 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
                 </div>
                 
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
 
             </div>
                 
@@ -380,8 +702,15 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -398,7 +727,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">23</span>
+                    <span class="site-state-item-count">33</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -431,7 +760,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">5</span>
+                      
+                    
+                    <span class="site-state-item-count">6</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -540,7 +871,7 @@
                     
                       
                     
-                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-count">17</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -612,6 +943,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、限流简介"><span class="nav-number">1.</span> <span class="nav-text">一、限流简介</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1-应用场景"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 应用场景</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-常用算法"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 常用算法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-3-Leaky-Bucket-与-Token-Bucket-算法"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 Leaky Bucket 与 Token Bucket 算法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、Guava-RateLimiter"><span class="nav-number">2.</span> <span class="nav-text">二、Guava RateLimiter</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1-使用简介"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 使用简介</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2-多个滑动的Buckets"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 多个滑动的Buckets</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、算法比较"><span class="nav-number">3.</span> <span class="nav-text">三、算法比较</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-集群限流"><span class="nav-number">3.1.</span> <span class="nav-text">3.2 集群限流</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#后续"><span class="nav-number">4.</span> <span class="nav-text">后续</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -913,6 +1260,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
 
   
 
