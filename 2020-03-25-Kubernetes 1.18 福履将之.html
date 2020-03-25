@@ -105,18 +105,22 @@
 
 
 
-  <meta name="description" content="接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。 首先flock和fcntl是系统调用，而lockf是库函数。lockf实际上是fcntl的封装，所以lockf和fcntl的底层实现是一样的，对文件加锁的效果也是一样">
+  <meta name="description" content="Kubernetes 1.18即将发布！ 在发布了1.17的小版本之后，1.18变得日益健壮并充满了新颖性。 关于新版本的介绍从哪里开始？ 有一些新功能，例如API Server对OIDC的支持以及kubelet关于Windows节点的功能增强，这些都会对用户产生重大影响。 我们也很高兴看到长时间处于Alpha状态的某些功能被重新考虑而备受关注，例如Ingress或API Server Netw">
 <meta name="keywords" content="kubernetes,cloudnative">
 <meta property="og:type" content="article">
-<meta property="og:title" content="谈谈linux中各式锁">
-<meta property="og:url" content="https://ustack.io/2019-11-21-谈谈linux中flock、lockf与fcntl.html">
+<meta property="og:title" content="Kubernetes 1.18 福履将之">
+<meta property="og:url" content="https://ustack.io/2020-03-25-Kubernetes 1.18 福履将之.html">
 <meta property="og:site_name" content="Indagate">
-<meta property="og:description" content="接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。 首先flock和fcntl是系统调用，而lockf是库函数。lockf实际上是fcntl的封装，所以lockf和fcntl的底层实现是一样的，对文件加锁的效果也是一样">
+<meta property="og:description" content="Kubernetes 1.18即将发布！ 在发布了1.17的小版本之后，1.18变得日益健壮并充满了新颖性。 关于新版本的介绍从哪里开始？ 有一些新功能，例如API Server对OIDC的支持以及kubelet关于Windows节点的功能增强，这些都会对用户产生重大影响。 我们也很高兴看到长时间处于Alpha状态的某些功能被重新考虑而备受关注，例如Ingress或API Server Netw">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-22T14:39:19.992Z">
+<meta property="og:image" content="https://s2.ax1x.com/2019/11/22/MTa1tH.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/25/8vKbd0.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/25/8vKOiT.md.png">
+<meta property="og:updated_time" content="2020-03-25T10:32:17.892Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="谈谈linux中各式锁">
-<meta name="twitter:description" content="接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。 首先flock和fcntl是系统调用，而lockf是库函数。lockf实际上是fcntl的封装，所以lockf和fcntl的底层实现是一样的，对文件加锁的效果也是一样">
+<meta name="twitter:title" content="Kubernetes 1.18 福履将之">
+<meta name="twitter:description" content="Kubernetes 1.18即将发布！ 在发布了1.17的小版本之后，1.18变得日益健壮并充满了新颖性。 关于新版本的介绍从哪里开始？ 有一些新功能，例如API Server对OIDC的支持以及kubelet关于Windows节点的功能增强，这些都会对用户产生重大影响。 我们也很高兴看到长时间处于Alpha状态的某些功能被重新考虑而备受关注，例如Ingress或API Server Netw">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/11/22/MTa1tH.png">
 
 
 
@@ -125,7 +129,7 @@
 
 
 
-  <link rel="canonical" href="https://ustack.io/2019-11-21-谈谈linux中flock、lockf与fcntl.html">
+  <link rel="canonical" href="https://ustack.io/2020-03-25-Kubernetes 1.18 福履将之.html">
 
 
 
@@ -135,7 +139,7 @@
   };
 </script>
 
-  <title>谈谈linux中各式锁 | Indagate</title>
+  <title>Kubernetes 1.18 福履将之 | Indagate</title>
   
 
 
@@ -303,7 +307,7 @@
   
   
   <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-11-21-谈谈linux中flock、lockf与fcntl.html">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2020-03-25-Kubernetes 1.18 福履将之.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zouyee">
@@ -318,10 +322,10 @@
     
     <div class="head">
         <div class="gr_up_title">
-          <span class="text-overflow-center">谈谈linux中各式锁</span>
+          <span class="text-overflow-center">Kubernetes 1.18 福履将之</span>
         </div>
         <div class="gr_blog_post_cat">
-          <span class="gr_ddate">11月 21 2019</span><span class="gr_separate">|</span>
+          <span class="gr_ddate">3月 25 2020</span><span class="gr_separate">|</span>
           
             
               <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
@@ -330,7 +334,7 @@
         <div class="gr_blog_post_title_holder">
         
           
-          <h3 class="blog_title" itemprop="name headline">谈谈linux中各式锁
+          <h3 class="blog_title" itemprop="name headline">Kubernetes 1.18 福履将之
               
             
           </h3>
@@ -355,24 +359,12 @@
                 
               
 
-              <time title="创建时间：11月 21 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-11-21T20:40:08+08:00">11月 21 2019</time>
+              <time title="创建时间：3月 25 2020 20:40:08 / 修改时间：18:32:17" itemprop="dateCreated datePublished" datetime="2020-03-25T20:40:08+08:00">3月 25 2020</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：11月 22 2019 22:39:19" itemprop="dateModified" datetime="2019-11-22T22:39:19+08:00">11月 22 2019</time>
               
             
           </span>
@@ -386,8 +378,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019-11-21-谈谈linux中flock、lockf与fcntl.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-11-21-谈谈linux中flock、lockf与fcntl.html" itemprop="commentCount"></span>
+                <a href="/2020-03-25-Kubernetes 1.18 福履将之.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020-03-25-Kubernetes 1.18 福履将之.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -395,7 +387,7 @@
 
           
           
-             <span id="/2019-11-21-谈谈linux中flock、lockf与fcntl.html" class="leancloud_visitors" data-flag-title="谈谈linux中各式锁">
+             <span id="/2020-03-25-Kubernetes 1.18 福履将之.html" class="leancloud_visitors" data-flag-title="Kubernetes 1.18 福履将之">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -431,55 +423,325 @@
     <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
     
       
-        <div class="note info"><p>接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。</p>
-<p>首先flock和fcntl是系统调用，而lockf是库函数。lockf实际上是fcntl的封装，所以lockf和fcntl的底层实现是一样的，对文件加锁的效果也是一样的。后面分析不同点时大多数情况是将fcntl和lockf放在一起的。下面首先看每个函数的使用，从使用的方式和效果来看各个函数的区别。</p></div>
+        <p><img src="https://s2.ax1x.com/2019/11/22/MTa1tH.png" alt="k8s"></p>
+<div class="note info"><p>Kubernetes 1.18即将发布！ 在发布了1.17的小版本之后，1.18变得日益健壮并充满了新颖性。 关于新版本的介绍从哪里开始？</p>
+<p>有一些新功能，例如API Server对OIDC的支持以及kubelet关于Windows节点的功能增强，这些都会对用户产生重大影响。</p>
+<p>我们也很高兴看到长时间处于Alpha状态的某些功能被重新考虑而备受关注，例如Ingress或API Server Network Proxy。</p></div>
+<p>此外，我们庆祝即将升级到稳定版的13个功能。 这涵盖了所有新变化的三分之一内容！</p>
+<p>以下为Kubernetes 1.18中新功能的详细列表。</p>
 <a id="more"></a>
 <hr>
-<h3 id="1、flock"><a href="#1、flock" class="headerlink" title="1、flock"></a>1、flock</h3><p><strong><strong>函数原型</strong></strong></p>
-<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> flock(<span class="keyword">int</span> fd, <span class="keyword">int</span> operation);  <span class="comment">// Apply or remove an advisory lock on the open file specified by fd，只是建议性锁</span></span><br></pre></td></tr></table></figure>
-<p>其中fd是系统调用open返回的文件描述符，operation的选项有：</p>
-<ol>
-<li>LOCK_SH ：共享锁</li>
-<li>LOCK_EX ：排他锁或者独占锁</li>
-<li>LOCK_UN : 解锁。</li>
-<li>LOCK_NB：非阻塞（与以上三种操作一起使用）</li>
-</ol>
-<p>关于flock函数，首先要知道flock函数只能对整个文件上锁，而不能对文件的某一部分上锁，这是于fcntl/lockf的第一个重要区别，后者可以对文件的某个区域上锁。其次，flock只能产生劝告性锁。我们知道，linux存在强制锁（mandatory lock）和劝告锁（advisory lock）。所谓强制锁，比较好理解，就是你家大门上的那把锁，最要命的是只有一把钥匙，只有一个进程可以操作。所谓劝告锁，本质是一种协议，你访问文件前，先检查锁，这时候锁才其作用，如果你不那么kind，不管三七二十一，就要读写，那么劝告锁没有任何的作用。而遵守协议，读写前先检查锁的那些进程，叫做合作进程。再次，flock和fcntl/lockf的区别主要在fork和dup。</p>
-<p>(1)、flock创建的锁是和文件打开表项（struct file）相关联的，而不是fd。这就意味着复制文件fd（通过fork或者dup）后，那么通过这两个fd都可以操作这把锁（例如通过一个fd加锁，通过另一个fd可以释放锁），也就是说子进程继承父进程的锁。但是上锁过程中关闭其中一个fd，锁并不会释放（因为file结构并没有释放），只有关闭所有复制出的fd，锁才会释放。对fd1上锁，并不影响程序通过fd2上锁。子进程持有锁，并不影响父进程通过相同的fd获取锁，反之亦然。<br><br><br>(2)、使用open两次打开同一个文件，得到的两个fd是独立的（因为底层对应两个file对象），通过其中一个加锁，通过另一个无法解锁，并且在前一个解锁前也无法上锁。通过fd1获取锁后，无法再通过fd2获取锁。<br><br><br>(3)、使用exec后，文件锁的状态不变。<br><br><br>(4)、flock不能再NFS文件系统上使用，如果要在NFS使用文件锁，请使用fcntl。<br><br><br>(5)、flock锁可递归，即通过dup或者或者fork产生的两个fd，都可以加锁而不会产生死锁。</p>
-<h3 id="2、lockf与fcntl"><a href="#2、lockf与fcntl" class="headerlink" title="2、lockf与fcntl"></a>2、lockf与fcntl</h3><p><strong><strong>函数原型</strong></strong></p>
-<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> lockf(<span class="keyword">int</span> fd, <span class="keyword">int</span> cmd, off_t <span class="built_in">len</span>);  <span class="comment">// fd为通过open返回的打开文件描述符。</span></span><br></pre></td></tr></table></figure>
-<p>cmd的取值为：</p>
-<ol>
-<li>F_LOCK：给文件互斥加锁，若文件以被加锁，则会一直阻塞到锁被释放。</li>
-<li>F_TLOCK：同F_LOCK，但若文件已被加锁，不会阻塞，而回返回错误。</li>
-<li>F_ULOCK：解锁。</li>
-<li>F_TEST：测试文件是否被上锁，若文件没被上锁则返回0，否则返回-1。</li>
-<li>len：为从文件当前位置的起始要锁住的长度。</li>
-</ol>
-<p>通过函数参数的功能，可以看出lockf只支持排他锁，不支持共享锁。</p>
-<p>文件记录加锁相关的cmd 分三种：</p>
-<ol>
-<li>F_SETLK：申请锁（读锁F_RDLCK，写锁F_WRLCK）或者释放所（F_UNLCK），但是如果kernel无法将锁授予本进程（被其他进程抢了先，占了锁），不傻等，返回error。</li>
-<li>F_SETLKW：和F_SETLK几乎一样，唯一的区别，这厮是个死心眼的主儿，申请不到，就傻等。</li>
-<li>F_GETLK：这个接口是获取锁的相关信息： 这个接口会修改我们传入的struct flock。</li>
-</ol>
-<p>通过函数参数功能可以看出fcntl是功能最强大的，它既支持共享锁又支持排他锁，即可以锁住整个文件，又能只锁文件的某一部分。</p>
-<h4 id="fcntl-lockf特性"><a href="#fcntl-lockf特性" class="headerlink" title="fcntl/lockf特性"></a>fcntl/lockf特性</h4><p>(1) 上锁可递归，如果一个进程对一个文件区间已经有一把锁，后来进程又企图在同一区间再加一把锁，则新锁将替换老锁。<br><br><br>(2) 加读锁（共享锁）文件必须是读打开的，加写锁（排他锁）文件必须是写打开。<br><br><br>(3) 进程不能使用F_GETLK命令来测试它自己是否再文件的某一部分持有一把锁。F_GETLK命令定义说明，返回信息指示是否现存的锁阻止调用进程设置它自己的锁。因为，F_SETLK和F_SETLKW命令总是替换进程的现有锁，所以调用进程绝不会阻塞再自己持有的锁上，于是F_GETLK命令绝不会报告调用进程自己持有的锁。<br><br><br>(4) 进程终止时，他所建立的所有文件锁都会被释放，队医flock也是一样的。<br><br><br>(5) 任何时候关闭一个描述符时，则该进程通过这一描述符可以引用的文件上的任何一把锁都被释放（这些锁都是该进程设置的），这一点与flock不同。<br><br><br>(6) 由fork产生的子进程不继承父进程所设置的锁，这点与flock也不同。<br><br><br>(8) 支持强制性锁：对一个特定文件打开其设置组ID位(S_ISGID)，并关闭其组执行位(S_IXGRP)，则对该文件开启了强制性锁机制。再Linux中如果要使用强制性锁，则要在文件系统mount时，使用_omand打开该机制。</p>
-<h4 id="fcntl-lockf关联"><a href="#fcntl-lockf关联" class="headerlink" title="fcntl/lockf关联"></a>fcntl/lockf关联</h4><blockquote>
-<p>flock和lockf/fcntl所上的锁有什么关系呢？答案时互不影响。测试程序如下：</p>
-</blockquote>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/file.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> fd, ret;</span><br><span class="line">  <span class="keyword">int</span> pid;</span><br><span class="line">  fd = open(<span class="string">"./tmp.txt"</span>, O_RDWR);</span><br><span class="line">  ret = flock(fd, LOCK_EX);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"flock return ret : %dn"</span>, ret);</span><br><span class="line">  ret = lockf(fd, F_LOCK, <span class="number">0</span>);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"lockf return ret: %dn"</span>, ret);</span><br><span class="line">  sleep(<span class="number">100</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>测试结果如下：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$./a.out</span><br><span class="line">flock <span class="built_in">return</span> ret : 0</span><br><span class="line">lockf <span class="built_in">return</span> ret: 0</span><br></pre></td></tr></table></figure>
-<p>可见flock的加锁，并不影响lockf的加锁。另外我们可以通过<code>/proc/locks</code>查看进程获取锁的状态。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ps</span> aux | grep a.out | grep -v grep</span><br><span class="line">123751   18849  0.0  0.0  11904   440 pts/5    S+   01:09   0:00 ./a.out</span><br><span class="line"><span class="variable">$sudo</span> cat /proc/locks | grep 18849</span><br><span class="line">1: POSIX  ADVISORY  WRITE 18849 08:02:852674 0 EOF</span><br><span class="line">2: FLOCK  ADVISORY  WRITE 18849 08:02:852674 0 EOF</span><br></pre></td></tr></table></figure>
-<p>我们可以看到/proc/locks下面有锁的信息：我现在分别叙述下含义：</p>
-<p>(1) POSIX FLOCK 这个比较明确，就是哪个类型的锁。flock系统调用产生的是FLOCK，fcntl调用F_SETLK，F_SETLKW或者lockf产生的是POSIX类型，有次可见两种调用产生的锁的类型是不同的；<br><br><br>(2) ADVISORY表明是劝告锁；<br><br><br>(3) WRITE顾名思义，是写锁，还有读锁；<br><br><br>(4) 18849是持有锁的进程ID。当然对于flock这种类型的锁，会出现进程已经退出的状况。<br><br><br>(5) 08:02:852674表示的对应磁盘文件的所在设备的主设备好，次设备号，还有文件对应的inode number。<br><br><br>(6) 0表示的是所的其实位置<br><br><br>(7) EOF表示的是结束位置。 这两个字段对fcntl类型比较有用，对flock来是总是0 和EOF。</p>
+<h3 id="一、版本维护"><a href="#一、版本维护" class="headerlink" title="一、版本维护"></a>一、版本维护</h3><h4 id="维护周期"><a href="#维护周期" class="headerlink" title="维护周期"></a>维护周期</h4><p>Kubernetes 发现版本的通常只维护支持九个月，在维护周期内，如果发现有比较重大的 bug 或者安全问题的话，<br>可能会发布补丁版本。下面是 Kubernetes 的发布和维护周期。</p>
+<table>
+<thead>
+<tr>
+<th>Kubernetes 版本</th>
+<th>发行月份</th>
+<th>终止维护月份</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1.11.x</td>
+<td>2018 年 6 月</td>
+<td>2019 年 3 月</td>
+</tr>
+<tr>
+<td>v1.12.x</td>
+<td>2018 年 9 月</td>
+<td>2019 年 6 月</td>
+</tr>
+<tr>
+<td>v1.13.x</td>
+<td>2018 年 12 月</td>
+<td>2019 年 9 月</td>
+</tr>
+<tr>
+<td>v1.14.x</td>
+<td>2019 年 3 月</td>
+<td>2019 年 12 月</td>
+</tr>
+<tr>
+<td>v1.15.x</td>
+<td>2019 年 6 月</td>
+<td>2020 年 3 月</td>
+</tr>
+<tr>
+<td>v1.16.x</td>
+<td>2019 年 9 月</td>
+<td>2020 年 6 月</td>
+</tr>
+<tr>
+<td>v1.17.x</td>
+<td>2019 年 12 月</td>
+<td>2020 年9 月</td>
+</tr>
+</tbody>
+</table>
 <hr>
-<h3 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h3><p>该文为kubelet相关内容的铺垫，涉及到kubelet对于锁的使用。</p>
+<h3 id="二、Kubernetes-1-18-主要变更"><a href="#二、Kubernetes-1-18-主要变更" class="headerlink" title="二、Kubernetes 1.18 主要变更"></a>二、Kubernetes 1.18 主要变更</h3><h4 id="核心变更"><a href="#核心变更" class="headerlink" title="核心变更"></a>核心变更</h4><ol>
+<li>＃1393 为服务帐户提供OIDC的支持</li>
+</ol>
+<p>维护阶段：Alpha<br>SIG-Group：auth</p>
+<p>Kubernetes服务帐户（KSA）可以使用令牌（JSON Web令牌或JWT）对Kubernetes API进行身份验证，例如使用kubectl –token &lt;the_token_string&gt;。需要注意的是，Kubernetes API是唯一可以验证这些令牌的服务。</p>
+<p>由于无法（也不应该）从公共网络访问Kubernetes API服务器，因此某些工作负载必须使用单独的系统进行身份验证。比如跨群集进行身份验证时，从群集内部到其他地方进行身份验证。</p>
+<p>此增强功能旨在让KSA令牌更实用，从而使群集外部的服务可以将它们用作常规身份验证方法，而不会使API Server过载。为此，API服务器提供了一个OpenID Connect（OIDC）相关文档，其中包含令牌公共密钥以及其他数据。现有的OIDC身份验证者可以使用这些密钥来验证KSA令牌等。</p>
+<p>可以使用ServiceAccountIssuerDiscovery功能门启用OIDC发现，但需要进行一些配置才能使用。</p>
+<ol start="2">
+<li>＃853 HPA的扩展速度可配</li>
+</ol>
+<p>维护阶段：Alpha<br>SIG-Group：autoscaling</p>
+<p>HPA可以自动扩展Pod的数量，以满足调整工作负载的需求。 到目前为止，您只能为整个集群定义全局缩放速度。 但是，并非所有应用场景的使用资源情况都一样，因此您可能更需要的是针对特殊群体的扩展效率的个性化方案。</p>
+<p>现在，可以将这些需求添加到HPA配置中：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">behavior:</span></span><br><span class="line"><span class="attr">   scaleDown:</span></span><br><span class="line"><span class="attr">     policies:</span></span><br><span class="line"><span class="attr">     - type:</span> <span class="string">Percent</span></span><br><span class="line"><span class="attr">       value:</span> <span class="number">100</span></span><br><span class="line"><span class="attr">       periodSeconds:</span> <span class="number">15</span></span><br><span class="line"><span class="attr">   scaleUp:</span></span><br><span class="line"><span class="attr">     policies:</span></span><br><span class="line"><span class="attr">     - type:</span> <span class="string">Pods</span></span><br><span class="line"><span class="attr">       value:</span> <span class="number">4</span></span><br><span class="line"><span class="attr">       periodSeconds:</span> <span class="number">60</span></span><br></pre></td></tr></table></figure>
+<p>在此示例中，pod可以每15秒加倍。 缩容时，每分钟可以减少四个pod。 检查文档中的完整语法。</p>
+<ol start="3">
+<li>＃1513 CertificateSigningRequest API</li>
+</ol>
+<p>维护阶段：Beta<br>SIG-Group：auth</p>
+<p>每个Kubernetes集群都有一个根证书颁发机构，该CA用于保护核心组件之间的通信，这些组件由Certificates API处理，它开始用于为非核心用途提供证书。</p>
+<p>此增强功能旨在适应新的应用场景，从而改善签名过程及其安全性。</p>
+<p>注册机构的数字，即批准者，确保实际的请求者已经提交了证书签名请求（CSR）； 同时他们还确保请求者具有提交该请求的适当权限。</p>
+<p><img src="https://s1.ax1x.com/2020/03/25/8vKbd0.md.png" alt="CertificateSigningRequest-API"></p>
+<h4 id="调度"><a href="#调度" class="headerlink" title="调度"></a>调度</h4><ol>
+<li>＃1451 运行多个调度配置文件</li>
+</ol>
+<p>维护阶段：Alpha<br>SIG-Group：scheduling</p>
+<p>并非Kubernetes集群中的所有工作负载都相同。您很可能希望将Web服务器分布在尽可能多的节点上，同时您可能希望在同一节点中捆绑尽可能多的对延迟敏感的资源。这就是为什么您需要在同一集群中配置多个调度程序，并指定每个Pod使用哪个调度程序的原因。</p>
+<p>但是，这可能会导致竞争状况，因为每个调度程序在给定时刻可能具有不同的集群资源数据。</p>
+<p>此增强功能使您可以运行一个具有不同配置的调度程序，每个配置都有其自己的调度名称。 Pod会继续使用schedulerName来定义要使用的配置文件，但是它将由相同的调度程序来完成工作，从而避免出现竞争情况。</p>
+<ol start="2">
+<li>＃895 topologySpreadConstraints</li>
+</ol>
+<p>维护阶段：升级到Beta<br>SIG-Group：scheduling</p>
+<p>使用topologySpreadConstraints，您可以定义规则以在整个多区域群集中均匀分布pod，因此高可用性将正确运行，并且资源利用率将得到提高。</p>
+<p>在1.16版本的Kubernetes新增功能中了解更多信息。</p>
+<ol start="3">
+<li>＃1258添加可配置的默认Even Pod传播规则</li>
+</ol>
+<p>维护阶段：Alpha<br>SIG-Group：scheduling</p>
+<p>为了利用均匀的pod扩散优势，每个pod都需要有自己的扩散规则，这可能是一项繁琐的任务。</p>
+<p>通过此增强功能，您可以定义全局defaultConstraints，这些默认defaultConstraints将在群集级别应用到所有未定义其自己的topologySpreadConstraints的Pod。</p>
+<ol start="4">
+<li>＃166基于污点驱逐</li>
+</ol>
+<p>维护阶段：GA<br>SIG-Group：scheduling</p>
+<p>在Kubernetes 1.13中，基于污点的驱逐的功能，在从alpha阶段变为beta阶段后，默认启用此功能（–feature-gates中的TaintBasedEvictions = true），NodeController（或kubelet）会自动添加污点，并且基于Ready NodeCondition禁用了从节点逐出pod的逻辑。</p>
+<p>在1.13版本的Kubernetes新增功能中了解更多信息。</p>
+<h4 id="Node"><a href="#Node" class="headerlink" title="Node"></a>Node</h4><ol>
+<li>＃1539扩展HugePages功能</li>
+</ol>
+<p>维护阶段：GA<br>SIG-Group：node</p>
+<p>HugePages是一种保留具有预定义大小的大内存块的机制，由于硬件优化，这些块可以更快地访问。这对于处理内存中的大的数据集或对内存访问延迟敏感的应用程序（例如数据库或虚拟机）特别有用。</p>
+<p>在Kubernetes 1.18中，此功能添加了两个增强配置。</p>
+<p>首先，现在允许Pod请求不同大小的HugePage。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="string">…</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  containers:</span></span><br><span class="line"><span class="string">…</span></span><br><span class="line"><span class="attr">    resources:</span></span><br><span class="line"><span class="attr">      requests:</span></span><br><span class="line"><span class="attr">        hugepages-2Mi:</span> <span class="number">1</span><span class="string">Gi</span></span><br><span class="line"><span class="attr">        hugepages-1Gi:</span> <span class="number">2</span><span class="string">Gi</span></span><br></pre></td></tr></table></figure>
+<p>其次，已经实现了HugePages的容器隔离，以解决Pod可能使用比请求更多的内存，最终导致资源匮乏的问题。</p>
+<ol start="2">
+<li>＃688 Pod Overhead：帐户资源绑定到Pod沙箱，但不包含特定的容器</li>
+</ol>
+<p>维护阶段：升级到Beta<br>SIG-Group：节点</p>
+<p>除了请求的资源之外，您的Pod还需要额外的资源来维护其运行时环境。</p>
+<p>启用PodOverhead功能后，Kubernetes将在调度Pod时考虑到此开销。此开销与pod使用的RuntimeClass相关联。</p>
+<p>在1.16版本的Kubernetes新增功能中了解更多信息。</p>
+<ol start="3">
+<li>＃693节点拓扑管理器</li>
+</ol>
+<p>维护阶段：升级到Beta<br>SIG-Group：节点</p>
+<p>机器学习，科学计算和金融服务是计算密集型且要求超低延迟的系统的场景。这些类型的工作负载受益于隔离到一个CPU内核的进程，而不是在内核之间切换或与其他进程共享。</p>
+<p>节点拓扑管理器是一个kubelet组件，可集中协调硬件资源分配。当前方法将此任务划分为几个组件（CPU管理器，设备管理器，CNI），这有时会导致分配未优化。</p>
+<p>在1.16版本的Kubernetes新增功能中了解更多信息。</p>
+<ol start="4">
+<li>＃950为慢启动的pod添加pod-startup、liveness-probe</li>
+</ol>
+<p>维护阶段：升级到Beta<br>SIG-Group：节点</p>
+<p>探针使Kubernetes可以监视应用程序的状态。如果Pod启动所需的时间太长，这些探针可能会认为Pod已死，从而导致重新启动循环。此功能使您可以定义一个启动探针，该探针将推迟所有其他探针，直到容器完成其启动。例如，“在给定的HTTP端点可用之前，请勿测试活动性”。</p>
+<p>在1.16版本的Kubernetes新增功能中了解更多信息。</p>
+<h4 id="网路"><a href="#网路" class="headerlink" title="网路"></a>网路</h4><ol>
+<li>＃752 EndpointSlice API</li>
+</ol>
+<p>维护阶段：Beta重大更新<br>SIG-Group：network</p>
+<p>新的EndpointSlice API将把端点分为几个Endpoint Slice资源。这解决了当前API中与大型Endpoints对象有关的许多问题。该新API还旨在支持其他将来的功能，例如每个吊舱有多个IP。</p>
+<p>在1.16版本的Kubernetes新增功能中了解更多信息。</p>
+<ol start="2">
+<li>＃508 IPv6支持添加</li>
+</ol>
+<p>维护阶段：升级到Beta<br>SIG-Group：network</p>
+<p>早在Kubernetes 1.9上就引入了对仅IPv6群集的支持。此功能已由社区进行了广泛的测试，现在正逐步升级为Beta。</p>
+<ol start="3">
+<li>＃1024 节点本地DNS缓存到GA</li>
+</ol>
+<p>阶段：毕业至稳定<br>功能组：网络</p>
+<p>NodeLocal DNSCache通过在群集节点上作为Daemonset运行dns缓存代理来提高群集DNS性能，从而避免了iptables DNAT规则和连接跟踪。本地缓存代理将查询dns服务以获取集群主机名的未命中缓存（默认为cluster.local后缀）。</p>
+<p>您可以阅读其Kubernetes增强建议（KEP）文档中的设计说明，以了解有关此Beta功能的更多信息。</p>
+<p>在1.15版本的Kubernetes新增功能中了解更多信息。</p>
+<ol start="4">
+<li>＃1453 ingress功能增强</li>
+</ol>
+<p>维护阶段：升级到Beta<br>SIG-Group：network</p>
+<p>Ingress资源将外部HTTP和HTTPS路由公开为服务，集群中的其他服务可以访问这些服务。</p>
+<p>该API对象包含在Kubernetes 1.1中，成为事实上的稳定功能。此增强功能消除了Ingress实施之间的不一致之处。</p>
+<p>例如，您现在可以定义一个pathType来显式声明将路径视为前缀还是完全匹配。如果Ingress中的多个路径与请求匹配，则最长的匹配路径将优先。</p>
+<p>另外，不建议使用kubernetes.io/ingress.class注释。现在应该使用新的ingressClassName字段和IngressClass资源。</p>
+<ol start="5">
+<li>＃1507将AppProtocol添加到服务和端点</li>
+</ol>
+<p>维护阶段：GA<br>SIG-Group：network</p>
+<p>EndpointSlice API在Kubernetes 1.17中添加了一个新的AppProtocol字段，以允许为每个端口指定应用程序协议。此增强功能将该字段带入ServicePort和EndpointPort资源中，替换了可能引起不良用户体验的非标准注释。</p>
+<h4 id="API相关"><a href="#API相关" class="headerlink" title="API相关"></a>API相关</h4><ol>
+<li>＃1040 API服务器请求的优先级和公平性</li>
+</ol>
+<p>维护阶段：Alpha<br>SIG-Group：api-machinery</p>
+<p>在高负载期间，Kubernetes API服务器需要负责管理和维护任务。现有的–max-requests-inflight和–max-mutating-requests-inflight命令行标志可以限制传入的请求，但它们的粒度过于粗糙，并且在流量繁忙时会过滤掉重要的请求。</p>
+<p>APIPriorityAndFairness功能门可在apiserver中启用新的请求处理流程。您可以使用FlowSchema对象定义不同类型的请求，并使用RequestPriority对象为它们设定资源优先级。</p>
+<p>例如，垃圾收集器是低优先级服务：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">FlowSchema</span></span><br><span class="line"><span class="attr">meta:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">system-low</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  matchingPriority:</span> <span class="number">900</span></span><br><span class="line"><span class="attr">  requestPriority:</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">system-low</span></span><br><span class="line"><span class="attr">  flowDistinguisher:</span></span><br><span class="line"><span class="attr">    source:</span> <span class="string">user</span></span><br><span class="line"><span class="attr">  match:</span></span><br><span class="line"><span class="attr">  - and:</span></span><br><span class="line"><span class="attr">    - equals:</span></span><br><span class="line"><span class="attr">      field:</span> <span class="string">user</span></span><br><span class="line"><span class="attr">      value:</span> <span class="attr">system:controller:garbage-collector</span></span><br></pre></td></tr></table></figure>
+<p>因此，您可以为其分配很少的资源：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">RequestPriority</span></span><br><span class="line"><span class="attr">meta:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">system-low</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  assuredConcurrencyShares:</span> <span class="number">30</span></span><br><span class="line"><span class="attr">  queues:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">  queueLengthLimit:</span> <span class="number">1000</span></span><br></pre></td></tr></table></figure>
+<p>但是，自我维护请求具有更高的优先级：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">RequestPriority</span></span><br><span class="line"><span class="attr">meta:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">system-high</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  assuredConcurrencyShares:</span> <span class="number">100</span></span><br><span class="line"><span class="attr">  queues:</span> <span class="number">128</span></span><br><span class="line"><span class="attr">  handSize:</span> <span class="number">6</span></span><br><span class="line"><span class="attr">  queueLengthLimit:</span> <span class="number">100</span></span><br></pre></td></tr></table></figure>
+<p>您可以在增强建议中找到更多示例。</p>
+<ol start="2">
+<li>＃1601 client-go签名相关重构，以标准化选项和上下文处理</li>
+</ol>
+<p>维护阶段：GA<br>SIG-Group：api-machinery</p>
+<p>在client-go上已经完成了一些代码重构，许多文件都使用该库来连接到Kubernetes API，以保持方法签名的一致性。</p>
+<p>这包括向一些方法中添加上下文对象，该对象在API边界和进程之间承载请求范围的值。访问此对象可简化一些功能的实现，例如在超时和取消后释放调用线程，或添加对分布式跟踪的支持。</p>
+<ol start="3">
+<li>＃576 APIServer DryRun</li>
+</ol>
+<p>维护阶段：GA<br>SIG-Group：api-machinery</p>
+<p>ryRun运行模式使您可以模拟真实的API请求，并查看请求是否成功（准入控制器链，验证，合并冲突等）和在不实际修改状态的情况下会发生什么。该请求的响应主体应尽可能接近非空运行响应。此核心功能将启用其他用户级别的功能，例如kubectl diff子命令。</p>
+<p>在1.13版本的Kubernetes新增功能中了解更多信息。</p>
+<ol start="4">
+<li>＃1281 API服务器网络代理KEP到Beta</li>
+</ol>
+<p>维护阶段：升级到Beta<br>SIG-Group：api-machinery</p>
+<p>有些用户（大多数是云提供商）更喜欢将其群集API Server隔离在单独的控制网络中，而不是在集群网络中。实现此功能的一种方法是保持与其他集群组件的连通性，同时使用API Server网络代理。</p>
+<p>具有此额外的层可以启用其他功能，例如元数据审核日志记录和传出API服务器连接的验证。</p>
+<p>在Kubernetes 1.18中，API Server代理允许在服务，节点，webhooks和Pods之外的单独网络中分离API。</p>
+<p><img src="https://s1.ax1x.com/2020/03/25/8vKOiT.md.png" alt="Kubernetes-1.18-enhancement-1281-API-Server-Network-Proxy.png"></p>
+<p>此增强功能涵盖了解决一些已知问题并让该代理支持一般性的工作，例如从Kubernetes API服务器中删除SSH隧道代码，以及改善控制网络与集群网络的隔离。</p>
+<h4 id="Windows变更"><a href="#Windows变更" class="headerlink" title="Windows变更"></a>Windows变更</h4><ol>
+<li>＃1001在Windows上支持CRI-ContainerD</li>
+</ol>
+<p>维护阶段：Alpha<br>SIG-Group：windows</p>
+<p>ContainerD是与Kubernetes兼容的OCI兼容运行时。与Docker相反，ContainerD在Windows Server 2019中包括对主机容器服务（HCS v2）的支持，该服务可更好地控制容器的管理方式并可以改善Kubernetes API的兼容性。</p>
+<p>此增强功能引入了Windows中作为容器运行时接口（CRI）的ContainerD 1.3支持。在此增强页面中查看更多详细信息。</p>
+<ol start="2">
+<li>＃1301在Windows上实现RuntimeClass</li>
+</ol>
+<p>维护阶段：Alpha<br>SIG-Group：windows</p>
+<p>使用RuntimeClass，您可以定义集群中存在的不同类型的节点，然后使用runtimeClassName指定可以将Pod部署在哪些节点中。此功能在Kubernetes 1.12上引入，并在Kubernetes 1.14上进行了重大更改。</p>
+<p>此增强功能将此功能扩展到Windows节点，这在异构集群包含Windows Pod时，对部署在Windows节点上非常有用。这是定义RuntimeClass的方法，以将pod限制为Windows Server 1903版（10.0.18362）。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">node.k8s.io/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">RuntimeClass</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">windows-1903</span></span><br><span class="line"><span class="attr">handler:</span> <span class="string">'docker'</span></span><br><span class="line"><span class="attr">scheduling:</span></span><br><span class="line"><span class="attr">  nodeSelector:</span></span><br><span class="line">    <span class="string">kubernetes.io/os:</span> <span class="string">'windows'</span></span><br><span class="line">    <span class="string">kubernetes.io/arch:</span> <span class="string">'amd64'</span></span><br><span class="line">    <span class="string">node.kubernetes.io/windows-build:</span> <span class="string">'10.0.18362'</span></span><br><span class="line"><span class="attr">  tolerations:</span></span><br><span class="line"><span class="attr">  - effect:</span> <span class="string">NoSchedule</span></span><br><span class="line"><span class="attr">    key:</span> <span class="string">windows</span></span><br><span class="line"><span class="attr">    operator:</span> <span class="string">Equal</span></span><br><span class="line"><span class="attr">    value:</span> <span class="string">"true"</span></span><br></pre></td></tr></table></figure>
+<p>然后，您需要在pod中使用runtimeClassName，如下所示：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">mypod</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  runtimeClassName:</span> <span class="string">windows-1903</span></span><br><span class="line">  <span class="comment"># ...</span></span><br></pre></td></tr></table></figure>
+<p>检查增强页面以获取更多详细信息。</p>
+<ol start="3">
+<li>＃689为Windows工作负载支持GMSA</li>
+</ol>
+<p>维护阶段：GA<br>SIG-Group：windows</p>
+<p>这将使操作员可以在部署时选择GMSA，并使用它运行容器以连接到现有应用程序（例如数据库或API服务器），而无需更改组织内部对身份验证和授权的管理方式。</p>
+<p>在1.14版本的Kubernetes新增功能中了解更多信息。</p>
+<ol start="4">
+<li>＃1043 Windows版RunAsUserName</li>
+</ol>
+<p>维护阶段：升级到Beta<br>SIG-Group：windows</p>
+<p>现在，Kubernetes支持组托管服务帐户，我们可以使用Windows的runAsUserName特定属性来定义哪个用户将运行容器的入口点。</p>
+<p>在1.16版本的Kubernetes新增功能中了解更多信息。</p>
+<ol start="5">
+<li>＃995 Windows版Kubeadm</li>
+</ol>
+<p>维护阶段：升级到Beta<br>SIG-Group：cluster-lifecycle</p>
+<p>Kubernetes 1.14中引入了对Windows节点的支持，但是没有一种简单的方法可以将Windows节点加入集群。</p>
+<p>从Kubernetes 1.16开始，具有部分功能的Windows用户可以使用kubeadm join。它将缺少一些功能，例如kubeadm init或kubeadm join –control-plane。</p>
+<p>在1.16版本的Kubernetes新增功能中了解更多信息。</p>
+<h4 id="存储"><a href="#存储" class="headerlink" title="存储"></a>存储</h4><ol>
+<li>＃695跳过卷所有权更改</li>
+</ol>
+<p>维护阶段：Alpha<br>SIG-Group：storage</p>
+<p>在将卷绑定安装到容器内之前，其所有文件权限都将更改为提供的fsGroup值。这最终会导致非常大的卷上的缓慢过程，还会破坏一些对权限敏感的应用程序，例如数据库。</p>
+<p>已添加新的FSGroupChangePolicy字段以控制此行为。如果设置为始终，它将保持当前行为。但是，当设置为OnRootMismatch时，仅当顶级目录与预期的fsGroup值不匹配时，它才会更改卷权限。</p>
+<ol start="2">
+<li>＃1412不可变的Secrets和ConfigMap</li>
+</ol>
+<p>维护阶段：Alpha<br>SIG-Group：storage</p>
+<p>新的不可变字段已添加到Secrets和ConfigMaps中。设置为true时，将拒绝对资源密钥所做的任何更改。这样可以保护集群数据，避免意外或错误更新从而破坏应用程序。</p>
+<p>由于它们不变，因此Kubelet不需要定期检查其更新，这可以提高可伸缩性和性能。</p>
+<p>启用ImmutableEmphemeralVolumes功能门之后，您可以执行以下操作：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Secret</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="string">…</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="string">…</span></span><br><span class="line"><span class="attr">immutable:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>但是，一旦将资源标记为不可变，就无法还原此更改。您只能删除并重新创建密钥，并且需要重新创建使用已删除密钥的Pod。</p>
+<ol start="3">
+<li>＃1495通用数据填充器</li>
+</ol>
+<p>维护阶段：Alpha<br>SIG-Group：storage</p>
+<p>这项增强功能为用户创建预先填充的卷奠定了基础。例如，使用操作系统映像预填充用于虚拟机的磁盘，或启用数据备份和还原。</p>
+<p>为此，将取消对持久卷的DataSource字段的当前验证，从而允许将任意对象设置为值。有关如何填充卷的实现详细信息委托给专用控制器。</p>
+<ol start="4">
+<li>＃770</li>
+</ol>
+<p>维护阶段：GA<br>SIG-Group：storage</p>
+<p>这种内部优化将简化为不需要附加/分离操作的容器存储接口（CSI）驱动程序（例如NFS或临时机密卷）创建VolumeAttachment对象的操作。</p>
+<p>对于这些驱动程序，Kubernetes Attach/Detach控制器始终创建VolumeAttachment对象，并一直等到它们被报告为“已绑定”。对CSI卷插件进行了更改，以跳过此步骤。</p>
+<ol start="5">
+<li>＃351使用永久卷源的BlockVolume</li>
+</ol>
+<p>维护阶段：GA<br>SIG-Group：storage</p>
+<p>BlockVolume在Kubernetes 1.18中达到了常规可用性。您可以仅将volumeMode的值设置为block即可访问原始块设备。使用不带文件系统抽象的原始块设备的能力使Kubernetes可以为需要高I/O性能和低延迟的高性能应用程序（如数据库）提供更好的支持。</p>
+<p>在1.13版本的Kubernetes新增功能中了解更多信息。</p>
+<ol start="6">
+<li>＃565 CSI块存储支持</li>
+</ol>
+<p>维护阶段：GA<br>SIG-Group：storage</p>
+<p>使用不带文件系统抽象的原始块设备的能力使Kubernetes可以为需要高I/O性能和低延迟的应用程序（例如数据库）提供更好的支持。</p>
+<p>在1.13版本的Kubernetes新增功能中了解更多信息。</p>
+<ol start="7">
+<li>＃603在CSI调用中传递Pod信息</li>
+</ol>
+<p>维护阶段：GA<br>SIG-Group：storage</p>
+<p>CSI存储驱动程序可以选择接收关于在NodePublish请求中请求卷的Pod的信息，例如Pod名称和名称空间。</p>
+<p>CSI驱动程序可以使用此信息来授权或审核卷的使用，或生成针对Pod定制的卷内容。</p>
+<p>在1.14版本的Kubernetes新增功能中了解更多信息。</p>
+<ol start="8">
+<li>＃989扩展允许的PVC数据源</li>
+</ol>
+<p>维护阶段：GA<br>SIG-Group：storage</p>
+<p>使用此功能，可以“克隆”现有的持久卷。克隆会导致从现有卷中调配新的重复卷。</p>
+<p>在1.15版本的Kubernetes新增功能中阅读更多内容。</p>
+<hr>
+<h3 id="Kubernetes-1-18-其他更新"><a href="#Kubernetes-1-18-其他更新" class="headerlink" title="Kubernetes 1.18 其他更新"></a>Kubernetes 1.18 其他更新</h3><ol>
+<li>＃1441 kubectl调试</li>
+</ol>
+<p>维护阶段：Alpha<br>SIG-Group：功能组：cli</p>
+<p>添加了新的kubectl debug命令以扩展调试功能。</p>
+<p>此命令允许在正在运行的Pod中创建临时容器，使用修改后的PodSpec重新启动Pod，以及启动并附加到主机名称空间中的特权容器。</p>
+<ol start="2">
+<li>＃1020将kubectl软件包代码移至暂存</li>
+</ol>
+<p>维护阶段：GA<br>SIG-Group：功能组：cli</p>
+<p>kubectl代码的这种内部重组是将kubectl二进制文件移到其自己的存储库中的第一步。这有助于将kubectl与kubernetes代码库分离，并使树外项目更易于重用其代码。</p>
+<ol start="3">
+<li>＃1333禁用没有Beta REST API或功能</li>
+</ol>
+<p>维护阶段：Beta<br>SIG-Group：architecture</p>
+<p>此增强功能收集了所做的工作，以确保Kubernetes组件和Kubernetes一致性都不依赖于Beta REST API或功能。最终目标是确保各个发行版之间的一致性，因为启用非GA功能不需要使用非官方发行版（例如k3s，Rancher或Openshift）。</p>
+<ol start="4">
+<li>＃491 Kubectl Diff</li>
+</ol>
+<p>维护阶段：GA<br>SIG-Group：cli</p>
+<p>kubectl diff将为您预览kubectl将对您的集群进行哪些更改。尽管易于描述，但此功能对于群集操作员的日常工作确实非常方便。请注意，您需要在API服务器上启用dry run功能，此命令才能起作用。</p>
+<p>在1.13版本的Kubernetes新增功能中了解更多信息。</p>
+<ol start="4">
+<li>＃670支持vSphere Cloud Provider</li>
+</ol>
+<p>维护阶段：GA<br>SIG-Group：cloud-provider</p>
+<p>提供对vSphere云提供商的支持。这涉及到经过测试的云控制器管理器版本，该版本具有与kube-controller-manager奇偶校验的功能。</p>
+<p>在1.14版本的Kubernetes新增功能中了解更多信息。</p>
 <hr>
 <h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul>
-<li><a href="https://www.jb51.net/article/90255.htm" target="_blank" rel="noopener">锁相关概念</a></li>
+<li><a href="https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.18.md" target="_blank" rel="noopener">kubernetes 1.18</a></li>
+<li><a href="https://github.com/golang/go" target="_blank" rel="noopener">Golang</a></li>
 </ul>
 
       
@@ -572,7 +834,7 @@ jQuery.noConflict()(function ($) {
     <strong>本文作者： </strong>zouyee</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://ustack.io/2019-11-21-谈谈linux中flock、lockf与fcntl.html" title="谈谈linux中各式锁">https://ustack.io/2019-11-21-谈谈linux中flock、lockf与fcntl.html</a>
+    <a href="https://ustack.io/2020-03-25-Kubernetes 1.18 福履将之.html" title="Kubernetes 1.18 福履将之">https://ustack.io/2020-03-25-Kubernetes 1.18 福履将之.html</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -600,8 +862,8 @@ jQuery.noConflict()(function ($) {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019-11-21-分布式架构原理解析.html" rel="next" title="分布式架构原理解析">
-                <i class="fa fa-chevron-left"></i> 分布式架构原理解析
+              <a href="/2020-03-24-CNCF在中国 2019.html" rel="next" title="CNCF在中国 2020">
+                <i class="fa fa-chevron-left"></i> CNCF在中国 2020
               </a>
             
           </div>
@@ -609,10 +871,6 @@ jQuery.noConflict()(function ($) {
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019-11-21-Linux内存控制之超分.html" rel="prev" title="Linux内存控制之overcommit">
-                Linux内存控制之overcommit <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -922,7 +1180,7 @@ jQuery.noConflict()(function ($) {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、flock"><span class="nav-number">1.</span> <span class="nav-text">1、flock</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、lockf与fcntl"><span class="nav-number">2.</span> <span class="nav-text">2、lockf与fcntl</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#fcntl-lockf特性"><span class="nav-number">2.1.</span> <span class="nav-text">fcntl/lockf特性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#fcntl-lockf关联"><span class="nav-number">2.2.</span> <span class="nav-text">fcntl/lockf关联</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后续"><span class="nav-number">3.</span> <span class="nav-text">后续</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参考资料"><span class="nav-number">3.1.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、版本维护"><span class="nav-number">1.</span> <span class="nav-text">一、版本维护</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#维护周期"><span class="nav-number">1.1.</span> <span class="nav-text">维护周期</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、Kubernetes-1-18-主要变更"><span class="nav-number">2.</span> <span class="nav-text">二、Kubernetes 1.18 主要变更</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#核心变更"><span class="nav-number">2.1.</span> <span class="nav-text">核心变更</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#调度"><span class="nav-number">2.2.</span> <span class="nav-text">调度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Node"><span class="nav-number">2.3.</span> <span class="nav-text">Node</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#网路"><span class="nav-number">2.4.</span> <span class="nav-text">网路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#API相关"><span class="nav-number">2.5.</span> <span class="nav-text">API相关</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Windows变更"><span class="nav-number">2.6.</span> <span class="nav-text">Windows变更</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#存储"><span class="nav-number">2.7.</span> <span class="nav-text">存储</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kubernetes-1-18-其他更新"><span class="nav-number">3.</span> <span class="nav-text">Kubernetes 1.18 其他更新</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参考资料"><span class="nav-number">3.1.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
             
 
           </div>

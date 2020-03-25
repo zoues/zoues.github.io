@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.3.0',
+    sidebar: {"position":"right","display":"hide","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的Golang 源码剖析。 Golang 1.13.1已在9月26日正式发布，主要修复CVE-2019-16276,当然docker等相关组件也同时做了update 什么是interface，简单的说，interface是一组method的组合，下面这">
+<meta name="keywords" content="golang">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Golang漫谈之接口">
+<meta property="og:url" content="https://ustack.io/2019-12-02-Golang漫谈之接口.html">
+<meta property="og:site_name" content="Indagate">
+<meta property="og:description" content="除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的Golang 源码剖析。 Golang 1.13.1已在9月26日正式发布，主要修复CVE-2019-16276,当然docker等相关组件也同时做了update 什么是interface，简单的说，interface是一组method的组合，下面这">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://s2.ax1x.com/2019/12/01/QmkOoj.md.png">
+<meta property="og:updated_time" content="2019-12-01T13:14:29.137Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Golang漫谈之接口">
+<meta name="twitter:description" content="除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的Golang 源码剖析。 Golang 1.13.1已在9月26日正式发布，主要修复CVE-2019-16276,当然docker等相关组件也同时做了update 什么是interface，简单的说，interface是一组method的组合，下面这">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/12/01/QmkOoj.md.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Indagate" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://ustack.io/2019-12-02-Golang漫谈之接口.html">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Golang漫谈之接口 | Indagate</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  
+  <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.bootcss.com/jquery-migrate/1.4.1/jquery-migrate.min.js"></script>
+  <link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" id="stylesheet-css" href="/css/style.css" type="text/css" media="all">
+  <link rel="stylesheet" id="gr_classic_style-css" href="/css/classic.css" type="text/css" media="all">
+  <link rel="stylesheet" id="gr_options-css" href="/css/options.css" type="text/css" media="all">
+  <link rel="stylesheet" id="gr_style-css" href="/css/style1.css" type="text/css" media="all">
+  <link rel="stylesheet" id="contact-form-7-css" href="/css/styles.css" type="text/css" media="all">
+  <link rel="stylesheet" id="cff-css" href="/css/cff-style.css" type="text/css" media="all">
+  <link rel="stylesheet" id="cff-font-awesome-css" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css" media="all">
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="/js/Valine.min.js"></script>
+  
+ 
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN" style="opacity: 1;" class="home blog">
+
+  
+  
+    
+  
+<div class="preloader">
+	<div class="gr_preload_logo">
+    	<img src="/images/logo.png" alt="indagate">
+    </div>
+    <div class="gr_load_ring">
+    	<h2>LOADING</h2>
+    </div>
+</div>
+<div id="gr_box_search" class="gr_box_overlay">
+    <div class="gr_close_over"></div>
+    <div class="gr_box_holder">
+        <h3 class="gr_box_title">Let's search</h3>
+        <form role="search" method="get" action="/">
+            <input type="search" name="s" value placeholder="..." class="gr_search_input">
+            <button type="submit" value="Search" class="gr_search_submit">Search</button>
+        </form>
+        <button type="button" class="gr_close">Close</button>
+    </div>
+</div>
+<div id="gr_box_social" class="gr_box_overlay">
+    <div class="gr_close_over"></div>
+    <div class="gr_box_holder">
+        <h3 class="gr_box_title">Follow me</h3>
+        <div class="gr_box_share_holder">
+        <a href="http://github.com/zoues" target="_blank"><i class="fa fa-github"></i></a>                                                <a href="/atom.xml" target="_blank"><i class="fa fa-rss"></i></a>        </div>
+        <button type="button" class="gr_close">Close</button>
+    </div>
+</div>
+  <div class="gr_site_holder">
+    <header>
+            <div class="gr_header_background">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 col-xs-4">
+                            <div class="gr-search">
+                                <a href="#" title>search</a>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-4">
+                            <div class="gr-menu-top">
+                                <div class="gr_menu_holder" style="margin-left: -60px; width:120px">
+                                    <a href="#" title class="gr_menu_button">menu</a>
+                                    <div class="menu-main-menu-container">
+                                        <ul id="menu-main-menu" class="gr_header_menu center-block" style="display: none;">
+                                            <li id="menu-item-344" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-344">
+                                                <a href="/categories/" style="opacity: 1;">开发实践</a>
+                                            </li>
+                                            <li id="menu-item-344" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-344">
+                                                <a href="/categories/" style="opacity: 1;">行业动态</a>
+                                            </li>
+                                            <li id="menu-item-344" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-344">
+                                                <a href="/categories/" style="opacity: 1;">入门教程</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-4">
+                            <div class="gr-social">
+                                <a href="#" title class="gr_share_button">follow</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="gr-logo">
+                                <a href="/">
+                                    <img class="img-responsive" src="/images/logo.png" alt="Boroda">
+                                </a>
+                                <h2>My name is <span>Zouyee</span>. I’m a blogger based in SUZHOU.</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main row">
+         
+        <div class="main-inner">
+         
+            <div class="content-wrap">
+                
+                <div id="content" class="content gr_grid_container">
+                
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-12-02-Golang漫谈之接口.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">Golang漫谈之接口</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">12月 02 2019</span><span class="gr_separate">|</span>
+          
+                <a href="/categories/golang漫谈/" itemprop="url" rel="category tag"><span itemprop="name">golang漫谈</span></a>
+
+                
+                
+              
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
+        
+          
+          <h3 class="blog_title" itemprop="name headline">Golang漫谈之接口
+              
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：12月 02 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-12-02T20:40:08+08:00">12月 02 2019</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：12月 01 2019 21:14:29" itemprop="dateModified" datetime="2019-12-01T21:14:29+08:00">12月 01 2019</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/golang漫谈/" itemprop="url" rel="index"><span itemprop="name">golang漫谈</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019-12-02-Golang漫谈之接口.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-12-02-Golang漫谈之接口.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019-12-02-Golang漫谈之接口.html" class="leancloud_visitors" data-flag-title="Golang漫谈之接口">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span>℃</span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
+      
+      </div>
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
+    
+      
+        <div class="note info"><p>除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的<a href="github.com/qyuhen/book">Golang 源码剖析</a>。</p>
+<p><a href="https://github.com/golang/go/releases" target="_blank" rel="noopener">Golang 1.13.1</a>已在9月26日正式发布，主要修复<code>CVE-2019-16276</code>,当然docker等相关组件也同时做了update</p></div>
+<p>什么是interface，简单的说，interface是一组method的组合，下面这篇文章主要给大家深度解析了关于golang中的interface接口，该文章主要介绍，以下内容:</p>
+<ul>
+<li>接口介绍及范例</li>
+<li>接口详情</li>
+<li>接口与反射</li>
+<li>接口源码</li>
+</ul>
+<a id="more"></a>
+<hr>
+<h4 id="一、接口介绍及范例"><a href="#一、接口介绍及范例" class="headerlink" title="一、接口介绍及范例"></a>一、接口介绍及范例</h4><p>如果说gorountine和channel是支撑起Go语言的并发模型的基石，让Go语言在如今集群化与多核化的时代成为一道亮丽的风景，那么接口是Go语言整个类型系列的基石，让Go语言在基础编程哲学的探索上达到前所未有的高度。Go语言在编程哲学上是变革派，而不是改良派。这不是因为Go语言有gorountine和channel，而更重要的是因为Go语言的类型系统，更是因为Go语言的接口。Go语言的编程哲学因为有接口而趋于完美。C++,Java 使用”侵入式”接口，主要表现在实现类需要明确声明自己实现了某个接口。这种强制性的接口继承方式是面向对象编程思想发展过程中一个遭受相当多质疑的特性。Go语言采用的是“非侵入式接口”,Go语言的接口有其独到之处：只要类型T的公开方法完全满足接口I的要求，就可以把类型T的对象用在需要接口I的地方，所谓类型T的公开方法完全满足接口I的要求，也即是类型T实现了接口I所规定的一组成员。这种做法的学名叫做Structural Typing，有人也把它看作是一种静态的Duck Typing。</p>
+<p>在 Golang 中，interface 是一组 method 的集合，是 duck-type programming 的一种体现。不关心属性（数据），只关心行为（方法）。具体使用中你可以自定义自己的 struct，并提供特定的 interface 里面的 method 就可以把它当成 interface 来使用。下面是一种 interface 的典型用法，定义函数的时候参数定义成 interface，调用函数的时候就可以做到非常的灵活。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Reader <span class="keyword">interface</span> &#123;</span><br><span class="line"> Read(p []<span class="keyword">byte</span>) (n <span class="keyword">int</span>, err os.Error)</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="comment">// Writer 是包裹了基础 Write 方法的接口。</span></span><br><span class="line"><span class="keyword">type</span> Writer <span class="keyword">interface</span> &#123; </span><br><span class="line"> Write(p []<span class="keyword">byte</span>) (n <span class="keyword">int</span>, err os.Error)</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">var</span> r io.Reader</span><br><span class="line">r = os.Stdin</span><br><span class="line">r = bufio.NewReader(r)</span><br><span class="line">r = <span class="built_in">new</span>(bytes.Buffer)</span><br></pre></td></tr></table></figure>
+<p>有一个事情是一定要明确的，不论 r 保存了什么值，r 的类型总是 io.Reader ,Go 是静态类型，而 r 的静态类型是 io.Reader。接口类型的一个极端重要的例子是空接口interface{},它表示空的方法集合，由于任何值都有零个或者多个方法，所以任何值都可以满足它。也有人说 Go 的接口是动态类型的，不过这是一种误解。 它们是静态类型的：接口类型的变量总是有着相同的静态类型，这个值总是满足空接口，只是存储在接口变量中的值运行时可能被改变。对于所有这些都必须严谨的对待，因为反射和接口密切相关。</p>
+<h5 id="1-1、范型"><a href="#1-1、范型" class="headerlink" title="1.1、范型"></a>1.1、范型</h5><p>严格来说，在 Golang 中并不支持泛型编程。在 C++ 等高级语言中使用泛型编程非常的简单，所以泛型编程一直是 Golang 诟病最多的地方。但是使用 interface 我们可以实现泛型编程，我这里简单说一下，具体可以参考我前面给出来的那篇文章。比如我们现在要写一个泛型算法，形参定义采用 interface 就可以了，以标准库的 sort 为例。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> sort</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Interface <span class="keyword">interface</span> &#123;</span><br><span class="line">    <span class="comment">// Len is the number of elements in the collection.</span></span><br><span class="line">    Len() <span class="keyword">int</span></span><br><span class="line">    <span class="comment">// Less reports whether the element with</span></span><br><span class="line">    <span class="comment">// index i should sort before the element with index j.</span></span><br><span class="line">    Less(i, j <span class="keyword">int</span>) <span class="keyword">bool</span></span><br><span class="line">    <span class="comment">// Swap swaps the elements with indexes i and j.</span></span><br><span class="line">    Swap(i, j <span class="keyword">int</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Sort</span><span class="params">(data Interface)</span></span> &#123;</span><br><span class="line">    <span class="comment">// Switch to heapsort if depth of 2*ceil(lg(n+1)) is reached.</span></span><br><span class="line">    n := data.Len()</span><br><span class="line">    maxDepth := <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i := n; i &gt; <span class="number">0</span>; i &gt;&gt;= <span class="number">1</span> &#123;</span><br><span class="line">        maxDepth++</span><br><span class="line">    &#125;</span><br><span class="line">    maxDepth *= <span class="number">2</span></span><br><span class="line">    quickSort(data, <span class="number">0</span>, n, maxDepth)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Sort 函数的形参是一个 interface，包含了三个方法：Len()，Less(i,j int)，Swap(i, j int)。使用的时候不管数组的元素类型是什么类型（int, float, string…），只要我们实现了这三个方法就可以使用 Sort 函数，这样就实现了“泛型编程”。有一点比较麻烦的是，我们需要将数组自定义一下。下面是一个例子。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span> &#123;</span><br><span class="line">    Name <span class="keyword">string</span></span><br><span class="line">    Age  <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p Person)</span> <span class="title">String</span><span class="params">()</span> <span class="title">string</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> fmt.Sprintf(<span class="string">"%s: %d"</span>, p.Name, p.Age)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ByAge implements sort.Interface for []Person based on</span></span><br><span class="line"><span class="comment">// the Age field.</span></span><br><span class="line"><span class="keyword">type</span> ByAge []Person <span class="comment">//自定义</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(a ByAge)</span> <span class="title">Len</span><span class="params">()</span> <span class="title">int</span></span>           &#123; <span class="keyword">return</span> <span class="built_in">len</span>(a) &#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(a ByAge)</span> <span class="title">Swap</span><span class="params">(i, j <span class="keyword">int</span>)</span></span>      &#123; a[i], a[j] = a[j], a[i] &#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(a ByAge)</span> <span class="title">Less</span><span class="params">(i, j <span class="keyword">int</span>)</span> <span class="title">bool</span></span> &#123; <span class="keyword">return</span> a[i].Age &lt; a[j].Age &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    people := []Person&#123;</span><br><span class="line">        &#123;<span class="string">"Bob"</span>, <span class="number">31</span>&#125;,</span><br><span class="line">        &#123;<span class="string">"John"</span>, <span class="number">42</span>&#125;,</span><br><span class="line">        &#123;<span class="string">"Michael"</span>, <span class="number">17</span>&#125;,</span><br><span class="line">        &#123;<span class="string">"Jenny"</span>, <span class="number">26</span>&#125;,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    fmt.Println(people)</span><br><span class="line">    sort.Sort(ByAge(people))</span><br><span class="line">    fmt.Println(people)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在我们设计函数的时候，下面是一个比较好的准则。</p>
+<blockquote>
+<p>Return concrete types, receive interfaces as parameter. — Robustness Principle applied to Go</p>
+</blockquote>
+<p>话说这么说，但是当我们翻阅 Golang 源码的时候，有些函数的返回值也是 interface。</p>
+<h5 id="1-2、隐藏"><a href="#1-2、隐藏" class="headerlink" title="1.2、隐藏"></a>1.2、隐藏</h5><p>隐藏具体实现，这个很好理解。比如我设计一个函数给你返回一个 interface，那么你只能通过 interface 里面的方法来做一些操作，但是内部的具体实现是完全不知道的。Francesc 举了个 context 的例子。 context 最先由 google 提供，现在已经纳入了标准库，而且在原有 context 的基础上增加了：cancelCtx，timerCtx，valueCtx。语言的表达有时候略显苍白无力，看一下 context 包的代码吧。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">WithCancel</span><span class="params">(parent Context)</span> <span class="params">(ctx Context, cancel CancelFunc)</span></span> &#123;</span><br><span class="line">    c := newCancelCtx(parent)</span><br><span class="line">    propagateCancel(parent, &amp;c)</span><br><span class="line">    <span class="keyword">return</span> &amp;c, <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123; c.cancel(<span class="literal">true</span>, Canceled) &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>表明上 WithCancel 函数返回的还是一个 Context interface，但是这个 interface 的具体实现是 cancelCtx struct。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// newCancelCtx returns an initialized cancelCtx.</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">newCancelCtx</span><span class="params">(parent Context)</span> <span class="title">cancelCtx</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> cancelCtx&#123;</span><br><span class="line">        Context: parent,</span><br><span class="line">        done:    <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// A cancelCtx can be canceled. When canceled, it also cancels any children</span></span><br><span class="line"><span class="comment">// that implement canceler.</span></span><br><span class="line"><span class="keyword">type</span> cancelCtx <span class="keyword">struct</span> &#123;</span><br><span class="line">    Context     <span class="comment">//注意一下这个地方</span></span><br><span class="line"></span><br><span class="line">    done <span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125; <span class="comment">// closed by the first cancel call.</span></span><br><span class="line">    mu       sync.Mutex</span><br><span class="line">    children <span class="keyword">map</span>[canceler]<span class="keyword">struct</span>&#123;&#125; <span class="comment">// set to nil by the first cancel call</span></span><br><span class="line">    err      error                 <span class="comment">// set to non-nil by the first cancel call</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *cancelCtx)</span> <span class="title">Done</span><span class="params">()</span> &lt;-<span class="title">chan</span> <span class="title">struct</span></span>&#123;&#125; &#123;</span><br><span class="line">    <span class="keyword">return</span> c.done</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *cancelCtx)</span> <span class="title">Err</span><span class="params">()</span> <span class="title">error</span></span> &#123;</span><br><span class="line">    c.mu.Lock()</span><br><span class="line">    <span class="keyword">defer</span> c.mu.Unlock()</span><br><span class="line">    <span class="keyword">return</span> c.err</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *cancelCtx)</span> <span class="title">String</span><span class="params">()</span> <span class="title">string</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> fmt.Sprintf(<span class="string">"%v.WithCancel"</span>, c.Context)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>尽管内部实现上下面三个函数返回的具体 struct （都实现了 Context interface）不同，但是对于使用者来说是完全无感知的。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">WithCancel</span><span class="params">(parent Context)</span> <span class="params">(ctx Context, cancel CancelFunc)</span>    //返回 <span class="title">cancelCtx</span></span></span><br><span class="line"><span class="function"><span class="title">func</span> <span class="title">WithDeadline</span><span class="params">(parent Context, deadline time.Time)</span> <span class="params">(Context, CancelFunc)</span> //返回 <span class="title">timerCtx</span></span></span><br><span class="line"><span class="function"><span class="title">func</span> <span class="title">WithValue</span><span class="params">(parent Context, key, val <span class="keyword">interface</span>&#123;&#125;)</span> <span class="title">Context</span>    //返回 <span class="title">valueCtx</span></span></span><br></pre></td></tr></table></figure>
+<h5 id="1-3、hook"><a href="#1-3、hook" class="headerlink" title="1.3、hook"></a>1.3、hook</h5><p>通过 interface，我们可以通过类似这种方式实现 dynamic dispatch或者方便测试。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> header <span class="keyword">struct</span> &#123;</span><br><span class="line">    rt  http.RoundTripper</span><br><span class="line">    v   <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(h header)</span> <span class="title">RoundTrip</span><span class="params">(r *http.Request)</span> *<span class="title">http</span>.<span class="title">Response</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> k, v := <span class="keyword">range</span> h.v &#123;</span><br><span class="line">        r.Header.Set(k,v)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> h.rt.RoundTrip(r)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="二、接口详情"><a href="#二、接口详情" class="headerlink" title="二、接口详情"></a>二、接口详情</h4><p>在类型中有一个重要的类别就是接口类型，表达了固定的一个方法集合。一个接口变量可以存储任意实际值（非接口），只要这个值实现了接口的方法。interface在内存上实际由两个成员组成，如下图，tab指向虚表，data则指向实际引用的数据。虚表描绘了实际的类型信息及该接口所需要的方法集。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Stringer <span class="keyword">interface</span> &#123;</span><br><span class="line"> String() <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">type</span> Binary <span class="keyword">uint64</span></span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(i Binary)</span> <span class="title">String</span><span class="params">()</span> <span class="title">string</span></span> &#123;</span><br><span class="line"> <span class="keyword">return</span> strconv.FormatUint(i.Get(), <span class="number">2</span>)</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(i Binary)</span> <span class="title">Get</span><span class="params">()</span> <span class="title">uint64</span></span> &#123;</span><br><span class="line"> <span class="keyword">return</span> <span class="keyword">uint64</span>(i)</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line"> <span class="keyword">var</span> b Binary = <span class="number">32</span></span><br><span class="line"> s := Stringer(b)</span><br><span class="line"> fmt.Print(s.String())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://s2.ax1x.com/2019/12/01/QmkOoj.md.png" alt="接口"></p>
+<p>观察itable的结构，首先是描述type信息的一些元数据，然后是满足Stringger接口的函数指针列表（注意，这里不是实际类型Binary的函数指针集哦）。因此我们如果通过接口进行函数调用，实际的操作其实就是s.tab-&gt;fun<a href="s.data">0</a> 。我们来看golang的实现方式，同C++一样，golang也为每种类型创建了一个方法集，不同的是接口的虚表是在运行时专门生成的.例如，当例子中当首次遇见s := Stringer(b)这样的语句时，golang会生成Stringer接口对应于Binary类型的虚表，并将其缓存。</p>
+<p>首先我们很清楚go是没有严格意义上的继承的，go的接口不存在继承关系，只要实现了接口定义的方法都可以成为接口类型，这给go的虚表初始化带来很大的麻烦，到底有多少类型实现了这个接口，一个类型到底实现了多少接口这让编译器很confused。举个例子，某个类型有m个方法，某接口有n个方法，则很容易知道这种判定的时间复杂度为O(mXn)，不过可以使用预先排序的方式进行优化，实际的时间复杂度为O(m+n)这样看来其实还行那为什么要在运行时生成虚表呢，这不是会拖慢程序的运行速度吗，注意我们这里是某个类型，某个接口，是1对1的关系，如果有n个类型，n个接口呢，编译器难道要把之间所有的关系都理清吗？退一步说就算编译器任劳任怨把这事干了，可是你在写过程中你本来就不想实现那个接口，而你无意中给这个类型实现的方法中包含了某些接口的方法，你根本不需要这个接口(况且go的接口机制会导致很多这种无意义的接口实现)，你欺负编译器就行了，这也太欺负人了吧。如果我们放到运行时呢，我们只要在需要接口的去分析一下类型是否实现了接口的所有方法就行了很简单的一件事。</p>
+<h5 id="2-1、空接口"><a href="#2-1、空接口" class="headerlink" title="2.1、空接口"></a>2.1、空接口</h5><p>接口类型的一个极端重要的例子是空接口：interface{} ,它表示空的方法集合，由于任何值都有零个或者多个方法，所以任何值都可以满足它。 注意，[]T不能直接赋值给[]interface{}</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//t := []int&#123;1, 2, 3, 4&#125; wrong</span></span><br><span class="line"><span class="comment">//var s []interface&#123;&#125; = t</span></span><br><span class="line">t := []<span class="keyword">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125; <span class="comment">//right</span></span><br><span class="line">s := <span class="built_in">make</span>([]<span class="keyword">interface</span>&#123;&#125;, <span class="built_in">len</span>(t))</span><br><span class="line"><span class="keyword">for</span> i, v := <span class="keyword">range</span> t &#123;</span><br><span class="line"> s[i] = v</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">str, ok := value.(<span class="keyword">string</span>)</span><br><span class="line"><span class="keyword">if</span> ok &#123;</span><br><span class="line"> fmt.Printf(<span class="string">"string value is: %q\n"</span>, str)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line"> fmt.Printf(<span class="string">"value is not a string\n"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在Go语言中，我们可以使用type switch语句查询接口变量的真实数据类型，语法如下：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Stringer <span class="keyword">interface</span> &#123;</span><br><span class="line">  String() <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">var</span> value <span class="keyword">interface</span>&#123;&#125; <span class="comment">// Value provided by caller.</span></span><br><span class="line"><span class="keyword">switch</span> str := value.(<span class="keyword">type</span>) &#123;</span><br><span class="line"><span class="keyword">case</span> <span class="keyword">string</span>:</span><br><span class="line">  <span class="keyword">return</span> str <span class="comment">//type of str is string</span></span><br><span class="line"><span class="keyword">case</span> Stringer: <span class="comment">//type of str is Stringer</span></span><br><span class="line">  <span class="keyword">return</span> str.String()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>也可以使用“comma, ok”的习惯用法来安全地测试值是否为一个字符串：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">str, ok := value.(<span class="keyword">string</span>)</span><br><span class="line"><span class="keyword">if</span> ok &#123;</span><br><span class="line">  fmt.Printf(<span class="string">"string value is: %q\n"</span>, str)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  fmt.Printf(<span class="string">"value is not a string\n"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="2-2、接口赋值"><a href="#2-2、接口赋值" class="headerlink" title="2.2、接口赋值"></a>2.2、接口赋值</h5><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line">  </span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line">  </span><br><span class="line"><span class="keyword">type</span> LesssAdder <span class="keyword">interface</span> &#123;</span><br><span class="line">  Less(b Integer) <span class="keyword">bool</span></span><br><span class="line">  Add(b Integer)</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">type</span> Integer <span class="keyword">int</span></span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(a Integer)</span> <span class="title">Less</span><span class="params">(b Integer)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">  <span class="keyword">return</span> a &lt; b</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(a *Integer)</span> <span class="title">Add</span><span class="params">(b Integer)</span></span> &#123;</span><br><span class="line">  *a += b</span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">var</span> a Integer = <span class="number">1</span></span><br><span class="line">  <span class="keyword">var</span> b LesssAdder = &amp;a</span><br><span class="line">  fmt.Println(b)</span><br><span class="line">  </span><br><span class="line">  <span class="comment">//var c LesssAdder = a</span></span><br><span class="line">  <span class="comment">//Error:Integer does not implement LesssAdder  </span></span><br><span class="line">  <span class="comment">//(Add method has pointer receiver)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>go语言可以根据下面的函数:<br><code>func (a Integer) Less(b Integer) bool</code></p>
+<p>自动生成一个新的Less()方法:<br><code>func (a *Integer) Less(b Integer) bool</code></p>
+<p>这样，类型<em>Integer就既存在Less()方法，也存在Add()方法，满足LessAdder接口。 而根据<br>`func (a </em>Integer) Add(b Integer)`</p>
+<p>这个函数无法生成以下成员方法：</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span><span class="params">(a Integer)</span> <span class="title">Add</span><span class="params">(b Integer)</span></span> &#123;</span><br><span class="line">  （&amp;a).Add(b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为(&amp;a).Add()改变的只是函数参数a,对外部实际要操作的对象并无影响(值传递)，这不符合用户的预期。所以Go语言不会自动为其生成该函数。因此类型Integer只存在Less()方法，缺少Add()方法，不满足LessAddr接口。（可以这样去理解：指针类型的对象函数是可读可写的，非指针类型的对象函数是只读的）将一个接口赋值给另外一个接口 在Go语言中，只要两个接口拥有相同的方法列表(次序不同不要紧),那么它们就等同的，可以相互赋值。 如果A接口的方法列表时接口B的方法列表的子集，那么接口B可以赋值给接口A，但是反过来是不行的，无法通过编译。</p>
+<h5 id="2-3、接口查询"><a href="#2-3、接口查询" class="headerlink" title="2.3、接口查询"></a>2.3、接口查询</h5><p>接口查询是否成功，要在运行期才能够确定。他不像接口的赋值，编译器只需要通过静态类型检查即可判断赋值是否可行。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> file1 Writer = ...</span><br><span class="line"><span class="keyword">if</span> file5,ok := file1.(two.IStream);ok &#123;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个if语句检查file1接口指向的对象实例是否实现了two.IStream接口，如果实现了，则执行特定的代码。<br>在Go语言中，你可以询问它指向的对象是否是某个类型，比如，</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> file1 Writer = ...</span><br><span class="line"><span class="keyword">if</span> file6,ok := file1.(*File);ok &#123;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个if语句判断file1接口指向的对象实例是否是*File类型，如果是则执行特定的代码。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">slice := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">0</span>)</span><br><span class="line">slice = <span class="built_in">append</span>(slice, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> I <span class="keyword">interface</span>&#123;&#125; = slice</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> res, ok := I.([]<span class="keyword">int</span>)；ok &#123;</span><br><span class="line">  fmt.Println(res) <span class="comment">//[1 2 3]</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个if语句判断接口I所指向的对象是否是[]int类型，如果是的话输出切片中的元素。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Sort</span><span class="params">(array <span class="keyword">interface</span>&#123;&#125;, traveser Traveser)</span> <span class="title">error</span></span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> array == <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> errors.New(<span class="string">"nil pointer"</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">var</span> length <span class="keyword">int</span> <span class="comment">//数组的长度</span></span><br><span class="line">  <span class="keyword">switch</span> array.(<span class="keyword">type</span>) &#123;</span><br><span class="line">  <span class="keyword">case</span> []<span class="keyword">int</span>:</span><br><span class="line">    length = <span class="built_in">len</span>(array.([]<span class="keyword">int</span>))</span><br><span class="line">  <span class="keyword">case</span> []<span class="keyword">string</span>:</span><br><span class="line">    length = <span class="built_in">len</span>(array.([]<span class="keyword">string</span>))</span><br><span class="line">  <span class="keyword">case</span> []<span class="keyword">float32</span>:</span><br><span class="line">    length = <span class="built_in">len</span>(array.([]<span class="keyword">float32</span>))</span><br><span class="line"></span><br><span class="line">  <span class="keyword">default</span>:</span><br><span class="line">    <span class="keyword">return</span> errors.New(<span class="string">"error type"</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> length == <span class="number">0</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> errors.New(<span class="string">"len is zero."</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  traveser(array)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过使用.(type)方法可以利用switch来判断接口存储的类型。</p>
+<hr>
+<h4 id="三、接口与反射"><a href="#三、接口与反射" class="headerlink" title="三、接口与反射"></a>三、接口与反射</h4><hr>
+<h4 id="四、接口源码"><a href="#四、接口源码" class="headerlink" title="四、接口源码"></a>四、接口源码</h4><hr>
+<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul>
+<li><a href="https://zhuanlan.zhihu.com/p/27652856" target="_blank" rel="noopener">understanding-go-interface</a></li>
+</ul>
+
+      
+    </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+      <div class="qr_code_pc_inner">
+        <div class="qr_code_pc">
+    <img id="js_pc_qr_code_img" class="qr_code_pc_img" src="https://s2.ax1x.com/2019/09/22/upS79K.jpg" alt="zouyee wechat" style="width: 200px; max-width: 100%;">
+    <p>微信扫一扫<br>关注该公众号</p>
+</div>
+<script>
+jQuery.noConflict()(function ($) {
+    $(function () {
+		var offsetTop = $('#comments').offset().top - $(window).height();
+		
+		if (offsetTop <= 0) {
+			// load directly when there's no a scrollbar
+			console.log("....")
+		} else {
+			$(window).on('scroll', function () {
+				var scrollTop = document.documentElement.scrollTop;
+				var copyright = $('.post-copyright').offset().top;
+				
+				var imageH = $('.qr_code_pc').offset().top;
+				console.log("scrollTop", scrollTop)
+				console.log("copyright", copyright)
+				console.log("qr_code_pc", imageH)
+				if (scrollTop <= offsetTop) {
+					$('.qr_code_pc').css('position', 'absolute')
+					$('.qr_code_pc').css('top', 420)
+				}
+				if (scrollTop > 450 && copyright > scrollTop) {
+					$('.qr_code_pc').css('top', 20)
+					$('.qr_code_pc').css('position', 'fixed')
+				} else {
+					$('.qr_code_pc').css('position', 'absolute')
+				}
+			});
+		}
+	});
+
+})
+</script>
+
+      </div>
+      
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span style="padding-top: 5px;">打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="https://s2.ax1x.com/2019/09/22/uppS4P.jpg" alt="zouyee 微信支付">
+        
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>zouyee</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://ustack.io/2019-12-02-Golang漫谈之接口.html" title="Golang漫谈之接口">https://ustack.io/2019-12-02-Golang漫谈之接口.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/golang/" rel="tag"># golang</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019-12-02-Linux 线程通信之eventfd.html" rel="next" title="Linux线程通信之eventfd">
+                <i class="fa fa-chevron-left"></i> Linux线程通信之eventfd
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020-03-24-CNCF在中国 2019.html" rel="prev" title="CNCF在中国 2020">
+                CNCF在中国 2020 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+                </div>
+                
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+            </div>
+                
+                
+  
+
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/author.webp" alt="zouyee">
+            
+              <p class="site-author-name" itemprop="name">zouyee</p>
+              <p class="site-description motion-element" itemprop="description">Keep motivation for the world</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">36</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/zouyee" target="_blank" title="Twitter" rel="external nofollow"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.instagram.com/ustackq/" target="_blank" title="Instagram" rel="external nofollow"><i class="fa fa-fw fa-instagram"></i>Instagram</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/zouyee" target="_blank" title="GitHub" rel="external nofollow"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank" rel="external nofollow">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.zoues.com/" title="Zoues" target="_blank">Zoues</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、接口介绍及范例"><span class="nav-number">1.</span> <span class="nav-text">一、接口介绍及范例</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1、范型"><span class="nav-number">1.1.</span> <span class="nav-text">1.1、范型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2、隐藏"><span class="nav-number">1.2.</span> <span class="nav-text">1.2、隐藏</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-3、hook"><span class="nav-number">1.3.</span> <span class="nav-text">1.3、hook</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、接口详情"><span class="nav-number">2.</span> <span class="nav-text">二、接口详情</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1、空接口"><span class="nav-number">2.1.</span> <span class="nav-text">2.1、空接口</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2、接口赋值"><span class="nav-number">2.2.</span> <span class="nav-text">2.2、接口赋值</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3、接口查询"><span class="nav-number">2.3.</span> <span class="nav-text">2.3、接口查询</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、接口与反射"><span class="nav-number">3.</span> <span class="nav-text">三、接口与反射</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、接口源码"><span class="nav-number">4.</span> <span class="nav-text">四、接口源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+                
+        </div>
+        
+        
+    </main>
+
+
+    <div class="gr_footer_widget">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="gr_widget">
+                            <h6 class="gr_widget_title"><span>Serveless Repo</span></h6>
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item avatar" src="https://s2.ax1x.com/2019/09/22/uSzDzD.jpg" width="50" height="50" alt="@virtual-kubelet">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <p class="org-description" itemprop="description"></p><div>OCI-based implementation CRI</div><p></p>
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="https://cri-o.io" href="https://cri-o.io">https://cri-o.io</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item avatar" src="https://s2.ax1x.com/2019/09/22/uSzISS.jpg" width="50" height="50" alt="@openfaas">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <p class="org-description" itemprop="description"></p><div>Serverless Functions Made Simple</div><p></p>
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="https://www.openfaas.com" href="https://www.openfaas.com">https://www.openfaas.com</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item avatar" src="https://s2.ax1x.com/2019/09/22/uSzbes.jpg" width="50" height="50" alt="@virtual-kubelet">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <p class="org-description" itemprop="description"></p><div>Building serverless within Kubernetes</div><p></p>
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="https://virtual-kubelet.io" href="https://virtual-kubelet.io">https://virtual-kubelet.io</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item avatar" src="https://s2.ax1x.com/2019/09/22/uSzjYV.jpg" width="50" height="50" alt="@virtual-kubelet">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <p class="org-description" itemprop="description"></p><div>Manage modern serverless workloads</div><p></p>
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="https://knative.dev" href="https://knative.dev">https://knative.dev</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="gr_widget" style="line-height: 18px;">
+                            <h6 class="gr_widget_title"><span>Calendar</span></h6>
+                            <div id="calendar_wrap" class="calendar_wrap">
+                                <table id="wp-calendar">
+                                    <caption>July 2019</caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" title="Monday">M</th>
+                                            <th scope="col" title="Tuesday">T</th>
+                                            <th scope="col" title="Wednesday">W</th>
+                                            <th scope="col" title="Thursday">T</th>
+                                            <th scope="col" title="Friday">F</th>
+                                            <th scope="col" title="Saturday">S</th>
+                                            <th scope="col" title="Sunday">S</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3" id="prev"><a href="./wp/boroda/2015/05/">« May</a></td>
+                                            <td class="pad">&nbsp;</td>
+                                            <td colspan="3" id="next" class="pad">&nbsp;</td>
+                                        </tr>
+                                    </tfoot>
+
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="5" class="pad">&nbsp;</td>
+                                            <td>1</td>
+                                            <td>2</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>4</td>
+                                            <td>5</td>
+                                            <td>6</td>
+                                            <td>7</td>
+                                            <td>8</td>
+                                            <td>9</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10</td>
+                                            <td>11</td>
+                                            <td>12</td>
+                                            <td>13</td>
+                                            <td>14</td>
+                                            <td>15</td>
+                                            <td>16</td>
+                                        </tr>
+                                        <tr>
+                                            <td>17</td>
+                                            <td>18</td>
+                                            <td id="today">19</td>
+                                            <td>20</td>
+                                            <td>21</td>
+                                            <td>22</td>
+                                            <td>23</td>
+                                        </tr>
+                                        <tr>
+                                            <td>24</td>
+                                            <td>25</td>
+                                            <td>26</td>
+                                            <td>27</td>
+                                            <td>28</td>
+                                            <td>29</td>
+                                            <td>30</td>
+                                        </tr>
+                                        <tr>
+                                            <td>31</td>
+                                            <td class="pad" colspan="6">&nbsp;</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="gr_widget">
+                            <h6 class="gr_widget_title"><span>Dou Feed</span></h6>
+                            
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item douban" src="https://s2.ax1x.com/2019/09/22/upSEY6.jpg" width="50" height="50" alt="@virtual-kubelet">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="少年赫比" href="https://book.douban.com/subject/33408001/?icn=index-latestbook-subject">书名: 少年赫比</a>
+                                        </li>
+                                         <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <a rel="nofollow" itemprop="url" class="text-gray">出版年: 2019-5</a>
+                                        </li>
+                                         <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <a rel="nofollow" itemprop="url" class="text-gray">原作名: CITY BOY</a>
+                                        </li>
+                                         <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <a rel="nofollow" itemprop="url" class="text-gray">定价: 58.00元</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zouyee</span>
+
+  
+
+  
+</div>
+
+
+  
+
+
+
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" rel="external nofollow" href="https://github.com/theme-next/hexo-theme-next">NexT.Muse</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery.form/3.51/jquery.form.min.js"></script>
+  </div>
+    <script type="text/javascript" src="/js/custom.js"></script>
+    <script type="text/javascript" src="/js/menu.js"></script>
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="/js/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'jTOUB0OQ83CnjWySYgN5W1PV-gzGzoHsz',
+        appKey: '8upIEt85LzIaq3NWQbUbfWI8',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("Qg4Aol4dtKwpnLstsoOct5Ya-gzGzoHsz", "pRvygLtQ4atIrsbLXpXi9HXa");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text(counter.get('time'));
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+  <script type="text/javascript" src="https://cdn.bootcss.com/js-cookie/2.1.4/js.cookie.js"></script>
+  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=6.3.0"></script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

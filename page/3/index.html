@@ -301,6 +301,931 @@
   
   
   <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-11-21-Linux之hugepages原理概念.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">Linux hugepages原理概念</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">11月 21 2019</span><span class="gr_separate">|</span>
+          
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
+        
+          
+          <h3 class="blog_title" itemprop="name headline">
+                
+                <a class="blog_title_a" href="/2019-11-21-Linux之hugepages原理概念.html" itemprop="url">
+                  Linux hugepages原理概念
+                </a>
+              
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：11月 21 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-11-21T20:40:08+08:00">11月 21 2019</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：11月 23 2019 22:27:53" itemprop="dateModified" datetime="2019-11-23T22:27:53+08:00">11月 23 2019</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019-11-21-Linux之hugepages原理概念.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-11-21-Linux之hugepages原理概念.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
+      
+      </div>
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+    
+      
+        
+          <div class="note info"><p>接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。</p>
+<p> hugepage是在Linux2.6内核被引入的，主要提供4k的page和比较大的page的选择。</p></div>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019-11-21-Linux之hugepages原理概念.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-11-21-Linux内存控制之oom killer机制.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">Linux内存控制之oom killer机制</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">11月 21 2019</span><span class="gr_separate">|</span>
+          
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
+        
+          
+          <h3 class="blog_title" itemprop="name headline">
+                
+                <a class="blog_title_a" href="/2019-11-21-Linux内存控制之oom killer机制.html" itemprop="url">
+                  Linux内存控制之oom killer机制
+                </a>
+              
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：11月 21 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-11-21T20:40:08+08:00">11月 21 2019</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：11月 22 2019 23:36:30" itemprop="dateModified" datetime="2019-11-22T23:36:30+08:00">11月 22 2019</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019-11-21-Linux内存控制之oom killer机制.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-11-21-Linux内存控制之oom killer机制.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
+      
+      </div>
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+    
+      
+        
+          <div class="note info"><p>接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。</p>
+<p>kubelet组件涉及oom killer相关概念，在此先作学习铺垫。</p></div>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019-11-21-Linux内存控制之oom killer机制.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-11-21-Linux几个重要的内核配置.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">Linux几个重要的内核配置</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">11月 21 2019</span><span class="gr_separate">|</span>
+          
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
+        
+          
+          <h3 class="blog_title" itemprop="name headline">
+                
+                <a class="blog_title_a" href="/2019-11-21-Linux几个重要的内核配置.html" itemprop="url">
+                  Linux几个重要的内核配置
+                </a>
+              
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：11月 21 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-11-21T20:40:08+08:00">11月 21 2019</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：11月 23 2019 21:50:17" itemprop="dateModified" datetime="2019-11-23T21:50:17+08:00">11月 23 2019</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019-11-21-Linux几个重要的内核配置.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-11-21-Linux几个重要的内核配置.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
+      
+      </div>
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+    
+      
+        
+          <div class="note info"><p>接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。</p>
+<p>以下是在/etc/sysctl.conf文件中配置的几个重要内核参数，这几个参数的设置关系到系统性能。</p></div>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019-11-21-Linux几个重要的内核配置.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-11-21-Linux内存控制之超分.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">Linux内存控制之overcommit</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">11月 21 2019</span><span class="gr_separate">|</span>
+          
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
+        
+          
+          <h3 class="blog_title" itemprop="name headline">
+                
+                <a class="blog_title_a" href="/2019-11-21-Linux内存控制之超分.html" itemprop="url">
+                  Linux内存控制之overcommit
+                </a>
+              
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：11月 21 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-11-21T20:40:08+08:00">11月 21 2019</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：11月 23 2019 21:50:12" itemprop="dateModified" datetime="2019-11-23T21:50:12+08:00">11月 23 2019</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019-11-21-Linux内存控制之超分.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-11-21-Linux内存控制之超分.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
+      
+      </div>
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+    
+      
+        
+          <div class="note info"><p>接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。</p>
+<p>kubelet组件涉及内存分配相关概念，在此先作学习铺垫。</p></div>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019-11-21-Linux内存控制之超分.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-11-21-谈谈linux中flock、lockf与fcntl.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">谈谈linux中各式锁</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">11月 21 2019</span><span class="gr_separate">|</span>
+          
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
+        
+          
+          <h3 class="blog_title" itemprop="name headline">
+                
+                <a class="blog_title_a" href="/2019-11-21-谈谈linux中flock、lockf与fcntl.html" itemprop="url">
+                  谈谈linux中各式锁
+                </a>
+              
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：11月 21 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-11-21T20:40:08+08:00">11月 21 2019</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：11月 22 2019 22:39:19" itemprop="dateModified" datetime="2019-11-22T22:39:19+08:00">11月 22 2019</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019-11-21-谈谈linux中flock、lockf与fcntl.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-11-21-谈谈linux中flock、lockf与fcntl.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
+      
+      </div>
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+    
+      
+        
+          <div class="note info"><p>接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。</p>
+<p>首先flock和fcntl是系统调用，而lockf是库函数。lockf实际上是fcntl的封装，所以lockf和fcntl的底层实现是一样的，对文件加锁的效果也是一样的。后面分析不同点时大多数情况是将fcntl和lockf放在一起的。下面首先看每个函数的使用，从使用的方式和效果来看各个函数的区别。</p></div>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019-11-21-谈谈linux中flock、lockf与fcntl.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
     <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-11-21-分布式架构原理解析.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -427,1072 +1352,6 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2019-11-21-分布式架构原理解析.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-      
-
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer" stype="color:#5d3434">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-10-17-Golang漫谈之mod详解.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zouyee">
-      <meta itemprop="description" content="Keep motivation for the world">
-      <meta itemprop="image" content="/images/author.webp">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Indagate">
-    </span>
-
-    
-    <div class="head">
-        <div class="gr_up_title">
-          <span class="text-overflow-center">Golang漫谈之mod详解</span>
-        </div>
-        <div class="gr_blog_post_cat">
-          <span class="gr_ddate">10月 17 2019</span><span class="gr_separate">|</span>
-          
-                <a href="/categories/golang漫谈/" itemprop="url" rel="category tag"><span itemprop="name">golang漫谈</span></a>
-
-                
-                
-              
-            
-        </div>
-        <div class="gr_blog_post_title_holder">
-        
-          
-          <h3 class="blog_title" itemprop="name headline">
-                
-                <a class="blog_title_a" href="/2019-10-17-Golang漫谈之mod详解.html" itemprop="url">
-                  Golang漫谈之mod详解
-                </a>
-              
-            
-          </h3>
-          
-        </div>
-        <div class="gr_blog_post_cat" style="text-align: center;">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：10月 17 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-10-17T20:40:08+08:00">10月 17 2019</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：10月 18 2019 16:50:47" itemprop="dateModified" datetime="2019-10-18T16:50:47+08:00">10月 18 2019</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/golang漫谈/" itemprop="url" rel="index"><span itemprop="name">golang漫谈</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019-10-17-Golang漫谈之mod详解.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-10-17-Golang漫谈之mod详解.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-    </div>   
-    
-
-    
-    
-    
-    
-    <div class="gr_media">
-      <div class="gr_blog_post_featuder_holder text-center">
-      
-      </div>
-    </div>
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-    
-      
-        
-          <div class="note info"><p>除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的<a href="github.com/qyuhen/book">Golang 源码剖析</a>。</p>
-<p><a href="https://github.com/golang/go/releases" target="_blank" rel="noopener">Golang 1.13.1</a>已在9月26日正式发布，主要修复<code>CVE-2019-16276</code>,当然docker等相关组件也同时做了update</p></div>
-<p>Go modules是Golang官方在1.11版本推出的包管理工具，在此之前，周边社区提供多种包管理方案，在讨论此类方案之前，可以先回顾一个golang关于包管理的发展。该文章主要介绍，以下内容:</p>
-<ul>
-<li>mod简介及入门</li>
-<li>mod特性</li>
-<li>社区动向</li>
-</ul>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019-10-17-Golang漫谈之mod详解.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-      
-
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer" stype="color:#5d3434">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-10-04-Golang漫谈之channel妙法.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zouyee">
-      <meta itemprop="description" content="Keep motivation for the world">
-      <meta itemprop="image" content="/images/author.webp">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Indagate">
-    </span>
-
-    
-    <div class="head">
-        <div class="gr_up_title">
-          <span class="text-overflow-center">Golang漫谈之channel妙法</span>
-        </div>
-        <div class="gr_blog_post_cat">
-          <span class="gr_ddate">10月 04 2019</span><span class="gr_separate">|</span>
-          
-                <a href="/categories/golang漫谈/" itemprop="url" rel="category tag"><span itemprop="name">golang漫谈</span></a>
-
-                
-                
-              
-            
-        </div>
-        <div class="gr_blog_post_title_holder">
-        
-          
-          <h3 class="blog_title" itemprop="name headline">
-                
-                <a class="blog_title_a" href="/2019-10-04-Golang漫谈之channel妙法.html" itemprop="url">
-                  Golang漫谈之channel妙法
-                </a>
-              
-            
-          </h3>
-          
-        </div>
-        <div class="gr_blog_post_cat" style="text-align: center;">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：10月 04 2019 20:40:08 / 修改时间：20:48:21" itemprop="dateCreated datePublished" datetime="2019-10-04T20:40:08+08:00">10月 04 2019</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/golang漫谈/" itemprop="url" rel="index"><span itemprop="name">golang漫谈</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019-10-04-Golang漫谈之channel妙法.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-10-04-Golang漫谈之channel妙法.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-    </div>   
-    
-
-    
-    
-    
-    
-    <div class="gr_media">
-      <div class="gr_blog_post_featuder_holder text-center">
-      
-      </div>
-    </div>
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-    
-      
-        
-          <p><img src="https://s2.ax1x.com/2019/09/28/u1f2UU.md.jpg" alt></p>
-<div class="note info"><p>除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的<a href="github.com/qyuhen/book">Golang 源码剖析</a>。</p>
-<p><a href="https://github.com/golang/go/releases" target="_blank" rel="noopener">Golang 1.13.1</a>已在9月26日正式发布，主要修复<code>CVE-2019-16276</code>,当然docker等相关组件也同时做了update</p></div>
-<p>channel是Golang提供的goroutine间的通信方式，其为Golang并发模型CSP的关键，Golang鼓励用通讯实现数据共享，如果需要跨进程通信，建议使用分布式方案或者消息队列来解决。该文章主要介绍，以下内容:</p>
-<ul>
-<li>channel介绍及范例</li>
-<li>channel用法</li>
-<li>channel使用场景</li>
-<li>channel原理赏析</li>
-</ul>
-<p>下面在进入正题之前，简要介绍一下CSP模型：</p>
-<blockquote>
-<p>传统并发模型分为Actor模型与CSP模型，其中CSP全称为Communicating Sequential Processess，CSP模型有并发执行体(进程、线程、协程)，和消息通道组成，执行体之间通过消息通道进行通讯，CSP模型关注消息发送的载体，即消息管道，而Actor关注的是内部的状态，那么Golang中执行体对应的是goroutine，消息通道对应的是channel。</p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019-10-04-Golang漫谈之channel妙法.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-      
-
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer" stype="color:#5d3434">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-10-04-Golang漫谈之指针.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zouyee">
-      <meta itemprop="description" content="Keep motivation for the world">
-      <meta itemprop="image" content="/images/author.webp">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Indagate">
-    </span>
-
-    
-    <div class="head">
-        <div class="gr_up_title">
-          <span class="text-overflow-center">Golang漫谈之指针</span>
-        </div>
-        <div class="gr_blog_post_cat">
-          <span class="gr_ddate">10月 04 2019</span><span class="gr_separate">|</span>
-          
-                <a href="/categories/golang漫谈/" itemprop="url" rel="category tag"><span itemprop="name">golang漫谈</span></a>
-
-                
-                
-              
-            
-        </div>
-        <div class="gr_blog_post_title_holder">
-        
-          
-          <h3 class="blog_title" itemprop="name headline">
-                
-                <a class="blog_title_a" href="/2019-10-04-Golang漫谈之指针.html" itemprop="url">
-                  Golang漫谈之指针
-                </a>
-              
-            
-          </h3>
-          
-        </div>
-        <div class="gr_blog_post_cat" style="text-align: center;">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：10月 04 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-10-04T20:40:08+08:00">10月 04 2019</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：11月 22 2019 14:15:43" itemprop="dateModified" datetime="2019-11-22T14:15:43+08:00">11月 22 2019</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/golang漫谈/" itemprop="url" rel="index"><span itemprop="name">golang漫谈</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019-10-04-Golang漫谈之指针.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-10-04-Golang漫谈之指针.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-    </div>   
-    
-
-    
-    
-    
-    
-    <div class="gr_media">
-      <div class="gr_blog_post_featuder_holder text-center">
-      
-      </div>
-    </div>
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-    
-      
-        
-          <p><img src="https://s2.ax1x.com/2019/09/28/u1f2UU.md.jpg" alt></p>
-<div class="note info"><p>除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的<a href="github.com/qyuhen/book">Golang 源码剖析</a>。</p>
-<p><a href="https://github.com/golang/go/releases" target="_blank" rel="noopener">Golang 1.13.1</a>已在9月26日正式发布，主要修复<code>CVE-2019-16276</code>,当然docker等相关组件也同时做了update</p></div>
-<p>channel是Golang提供的goroutine间的通信方式，其为Golang并发模型CSP的关键，Golang鼓励用通讯实现数据共享，如果需要跨进程通信，建议使用分布式方案或者消息队列来解决。该文章主要介绍，以下内容:</p>
-<ul>
-<li>channel介绍及范例</li>
-<li>channel用法</li>
-<li>channel使用场景</li>
-<li>channel原理赏析</li>
-</ul>
-<p>下面在进入正题之前，简要介绍一下CSP模型：</p>
-<blockquote>
-<p>传统并发模型分为Actor模型与CSP模型，其中CSP全称为Communicating Sequential Processess，CSP模型有并发执行体(进程、线程、协程)，和消息通道组成，执行体之间通过消息通道进行通讯，CSP模型关注消息发送的载体，即消息管道，而Actor关注的是内部的状态，那么Golang中执行体对应的是goroutine，消息通道对应的是channel。</p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019-10-04-Golang漫谈之指针.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-      
-
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer" stype="color:#5d3434">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-10-04-Golang漫谈之切片.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zouyee">
-      <meta itemprop="description" content="Keep motivation for the world">
-      <meta itemprop="image" content="/images/author.webp">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Indagate">
-    </span>
-
-    
-    <div class="head">
-        <div class="gr_up_title">
-          <span class="text-overflow-center">Golang漫谈之切片</span>
-        </div>
-        <div class="gr_blog_post_cat">
-          <span class="gr_ddate">10月 04 2019</span><span class="gr_separate">|</span>
-          
-                <a href="/categories/golang漫谈/" itemprop="url" rel="category tag"><span itemprop="name">golang漫谈</span></a>
-
-                
-                
-              
-            
-        </div>
-        <div class="gr_blog_post_title_holder">
-        
-          
-          <h3 class="blog_title" itemprop="name headline">
-                
-                <a class="blog_title_a" href="/2019-10-04-Golang漫谈之切片.html" itemprop="url">
-                  Golang漫谈之切片
-                </a>
-              
-            
-          </h3>
-          
-        </div>
-        <div class="gr_blog_post_cat" style="text-align: center;">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：10月 04 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-10-04T20:40:08+08:00">10月 04 2019</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：11月 26 2019 10:08:34" itemprop="dateModified" datetime="2019-11-26T10:08:34+08:00">11月 26 2019</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/golang漫谈/" itemprop="url" rel="index"><span itemprop="name">golang漫谈</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019-10-04-Golang漫谈之切片.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-10-04-Golang漫谈之切片.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-    </div>   
-    
-
-    
-    
-    
-    
-    <div class="gr_media">
-      <div class="gr_blog_post_featuder_holder text-center">
-      
-      </div>
-    </div>
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-    
-      
-        
-          <div class="note info"><p>除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的<a href="github.com/qyuhen/book">Golang 源码剖析</a>。</p>
-<p>切片是 Go 中的一种基本的数据结构，使用这种结构可以用来管理数据集合。切片的设计想法是由动态数组概念而来，为了开发者可以更加方便的使一个数据结构可以自动增加和减少。但是切片本身并不是动态数据或者数组指针。切片常见的操作有 reslice、append、copy。与此同时，切片还具有可索引，可迭代的优秀特性。</p></div>
-<p>切片的底层是数组，它自己本身非常小，可以理解为对底层数组的抽象。因为机遇数组实现，所以它的底层的内存是连续非配的，效率非常高，还可以通过索引获得数据，可以迭代以及垃圾回收优化的好处。切片对象非常小，是因为它是只有3个字段的数据结构：一个是指向底层数组的指针，一个是切片的长度，一个是切片的容量。这3个字段，就是Go语言操作底层数组的元数据，有了它们，我们就可以任意的操作切片了。我们在本文中有以下内容:</p>
-<ul>
-<li>切片介绍</li>
-<li>切片用法</li>
-<li>切片原理</li>
-</ul>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019-10-04-Golang漫谈之切片.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-      
-
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer" stype="color:#5d3434">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-10-04-Golang漫谈之接口.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zouyee">
-      <meta itemprop="description" content="Keep motivation for the world">
-      <meta itemprop="image" content="/images/author.webp">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Indagate">
-    </span>
-
-    
-    <div class="head">
-        <div class="gr_up_title">
-          <span class="text-overflow-center">Golang漫谈之接口</span>
-        </div>
-        <div class="gr_blog_post_cat">
-          <span class="gr_ddate">10月 04 2019</span><span class="gr_separate">|</span>
-          
-                <a href="/categories/golang漫谈/" itemprop="url" rel="category tag"><span itemprop="name">golang漫谈</span></a>
-
-                
-                
-              
-            
-        </div>
-        <div class="gr_blog_post_title_holder">
-        
-          
-          <h3 class="blog_title" itemprop="name headline">
-                
-                <a class="blog_title_a" href="/2019-10-04-Golang漫谈之接口.html" itemprop="url">
-                  Golang漫谈之接口
-                </a>
-              
-            
-          </h3>
-          
-        </div>
-        <div class="gr_blog_post_cat" style="text-align: center;">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：10月 04 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-10-04T20:40:08+08:00">10月 04 2019</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：11月 22 2019 14:15:18" itemprop="dateModified" datetime="2019-11-22T14:15:18+08:00">11月 22 2019</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/golang漫谈/" itemprop="url" rel="index"><span itemprop="name">golang漫谈</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019-10-04-Golang漫谈之接口.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-10-04-Golang漫谈之接口.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-    </div>   
-    
-
-    
-    
-    
-    
-    <div class="gr_media">
-      <div class="gr_blog_post_featuder_holder text-center">
-      
-      </div>
-    </div>
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-    
-      
-        
-          <p><img src="https://s2.ax1x.com/2019/09/28/u1f2UU.md.jpg" alt></p>
-<div class="note info"><p>除了《Kubernetes GO》系列之外，对于golang相关知识，同时准备了《Golang 漫谈》以增雅趣，不足之处，万望海涵，在此特别感谢雨痕的<a href="github.com/qyuhen/book">Golang 源码剖析</a>。</p>
-<p><a href="https://github.com/golang/go/releases" target="_blank" rel="noopener">Golang 1.13.1</a>已在9月26日正式发布，主要修复<code>CVE-2019-16276</code>,当然docker等相关组件也同时做了update</p></div>
-<p>channel是Golang提供的goroutine间的通信方式，其为Golang并发模型CSP的关键，Golang鼓励用通讯实现数据共享，如果需要跨进程通信，建议使用分布式方案或者消息队列来解决。该文章主要介绍，以下内容:</p>
-<ul>
-<li>channel介绍及范例</li>
-<li>channel用法</li>
-<li>channel使用场景</li>
-<li>channel原理赏析</li>
-</ul>
-<p>下面在进入正题之前，简要介绍一下CSP模型：</p>
-<blockquote>
-<p>传统并发模型分为Actor模型与CSP模型，其中CSP全称为Communicating Sequential Processess，CSP模型有并发执行体(进程、线程、协程)，和消息通道组成，执行体之间通过消息通道进行通讯，CSP模型关注消息发送的载体，即消息管道，而Actor关注的是内部的状态，那么Golang中执行体对应的是goroutine，消息通道对应的是channel。</p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019-10-04-Golang漫谈之接口.html#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1847,7 +1706,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
   <span class="with-love" id="animate">
     <i class="fa fa-heart"></i>
   </span>
