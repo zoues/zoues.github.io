@@ -105,16 +105,18 @@
 
 
 
-  <meta name="description" content="Keep motivation for the world">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Indagate">
-<meta property="og:url" content="https://ustack.io/archives/2015/10/index.html">
+  <meta name="description" content="Kubernetes中的Ingress API对外提供简单而功能强劲的方法来管理与kubernetes集群内工作负载通信的入网流量。 在Kubernetes 1.18版本中，我们对Ingress API进行了以下3项重大改进：  新增pathType字段，可以指定应该匹配哪种Ingress路径 新增IngressClass资源，可以指定控制器应如何实现Ingress 支持主机名的通配符">
+<meta name="keywords" content="kubernetes,cloudnative">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes 1.18之Ingress API优化">
+<meta property="og:url" content="https://ustack.io/2020-03-25-Kubernetes 1.18之Ingress API优化.html">
 <meta property="og:site_name" content="Indagate">
-<meta property="og:description" content="Keep motivation for the world">
+<meta property="og:description" content="Kubernetes中的Ingress API对外提供简单而功能强劲的方法来管理与kubernetes集群内工作负载通信的入网流量。 在Kubernetes 1.18版本中，我们对Ingress API进行了以下3项重大改进：  新增pathType字段，可以指定应该匹配哪种Ingress路径 新增IngressClass资源，可以指定控制器应如何实现Ingress 支持主机名的通配符">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-04-09T02:42:00.833Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Indagate">
-<meta name="twitter:description" content="Keep motivation for the world">
+<meta name="twitter:title" content="Kubernetes 1.18之Ingress API优化">
+<meta name="twitter:description" content="Kubernetes中的Ingress API对外提供简单而功能强劲的方法来管理与kubernetes集群内工作负载通信的入网流量。 在Kubernetes 1.18版本中，我们对Ingress API进行了以下3项重大改进：  新增pathType字段，可以指定应该匹配哪种Ingress路径 新增IngressClass资源，可以指定控制器应如何实现Ingress 支持主机名的通配符">
 
 
 
@@ -123,7 +125,7 @@
 
 
 
-  <link rel="canonical" href="https://ustack.io/archives/2015/10/">
+  <link rel="canonical" href="https://ustack.io/2020-03-25-Kubernetes 1.18之Ingress API优化.html">
 
 
 
@@ -133,7 +135,7 @@
   };
 </script>
 
-  <title>归档 | Indagate</title>
+  <title>Kubernetes 1.18之Ingress API优化 | Indagate</title>
   
 
 
@@ -285,77 +287,364 @@
                 <div id="content" class="content gr_grid_container">
                 
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
 
-      
-      <span class="archive-page-counter">
-        
-        
-         
-        
-        还行! 目前共计 38 篇日志。 继续努力。
-      </span>
-      
+  
 
-      
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2020-03-25-Kubernetes 1.18之Ingress API优化.html">
 
-        
-        
-        
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
 
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">Kubernetes 1.18之Ingress API优化</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">3月 25 2020</span><span class="gr_separate">|</span>
+          
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
         
           
-          <div class="collection-title">
-            <h2 class="archive-year" id="archive-year-2015">2015</h2>
-          </div>
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2015-10-21-为NexT主题添加文章阅读量统计功能.html" itemprop="url">
+          <h3 class="blog_title" itemprop="name headline">Kubernetes 1.18之Ingress API优化
               
-                <span itemprop="name">为NexT主题添加文章阅读量统计功能</span>
-              
-            </a>
-        
-      </h3>
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2015-10-21T21:57:00+08:00" content="10月 21 2015">
-          10-21
-        </time>
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：3月 25 2020 20:40:08" itemprop="dateCreated datePublished" datetime="2020-03-25T20:40:08+08:00">3月 25 2020</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：4月 09 2020 10:42:00" itemprop="dateModified" datetime="2020-04-09T10:42:00+08:00">4月 09 2020</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020-03-25-Kubernetes 1.18之Ingress API优化.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020-03-25-Kubernetes 1.18之Ingress API优化.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020-03-25-Kubernetes 1.18之Ingress API优化.html" class="leancloud_visitors" data-flag-title="Kubernetes 1.18之Ingress API优化">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span>℃</span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
+      
       </div>
-
-    </header>
-  </article>
-
-
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
+    
+      
+        <div class="note info"><p>Kubernetes中的Ingress API对外提供简单而功能强劲的方法来管理与kubernetes集群内工作负载通信的入网流量。 在Kubernetes 1.18版本中，我们对Ingress API进行了以下3项重大改进：</p>
+<ul>
+<li>新增pathType字段，可以指定应该匹配哪种Ingress路径</li>
+<li>新增IngressClass资源，可以指定控制器应如何实现Ingress</li>
+<li>支持主机名的通配符</li>
+</ul></div>
+<a id="more"></a>
+<h2 id="路径匹配"><a href="#路径匹配" class="headerlink" title="路径匹配"></a>路径匹配</h2><p>新增的pathType字段，可以指定应该匹配哪种Ingress路径。 当前支持三种类型：</p>
+<ul>
+<li>ImplementationSpecific（默认）: 使用此路径类型，匹配方式取决于实现IngressClass的控制器</li>
+<li>完全匹配: 与URL完全匹配且区分大小写</li>
+<li>前缀: 以/分隔的URL路径前缀进行匹配。 匹配区分大小写，并且在逐个路径的基础上进行匹配</li>
+</ul>
+<h3 id="Ingress配置增强"><a href="#Ingress配置增强" class="headerlink" title="Ingress配置增强"></a>Ingress配置增强</h3><p>Ingress资源在设计时秉承简易性设计准则，从而提供了一组简易字段以满足绝大多数应用场景。 但随着时间的推移，以及使用场景的拓宽，开始依赖各种的自定义注释来进行进一步的配置。 因此新的Ingress资源提供了一种替换注释的方案。</p>
+<p>在Ingress规范中添加了一个新的ingressClassName字段，该字段用于决定应用于该Ingress的具体IngressClass。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.k8s.io/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">IngressClass</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">external-lb</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  controller:</span> <span class="string">example.com/ingress-controller</span></span><br><span class="line"><span class="attr">  parameters:</span></span><br><span class="line"><span class="attr">    apiGroup:</span> <span class="string">k8s.example.com/v1alpha</span></span><br><span class="line"><span class="attr">    kind:</span> <span class="string">IngressParameters</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">external-lb</span></span><br></pre></td></tr></table></figure>
+<h3 id="弃用Ingress注释"><a href="#弃用Ingress注释" class="headerlink" title="弃用Ingress注释"></a>弃用Ingress注释</h3><p>在Kubernetes 1.18发布（即添加IngressClass资源）之前，通常会在Ingress上使用kubernetes.io/ingress.class注释来指定某类Ingress。尽管从未正式定义此注释，但Ingress控制器已广泛支持此注释，现在正式弃用该字段。</p>
+<h3 id="设置默认的IngressClass"><a href="#设置默认的IngressClass" class="headerlink" title="设置默认的IngressClass"></a>设置默认的IngressClass</h3><p>可以在集群中将特定的IngressClass标记为默认值。在IngressClass资源上将注释<code>ingressclass.kubernetes.io/is-default-class</code>设置为true，就能够确保为未指定ingressClassName的新Ingress关联此默认IngressClass。</p>
+<h2 id="支持主机名通配符"><a href="#支持主机名通配符" class="headerlink" title="支持主机名通配符"></a>支持主机名通配符</h2><p>许多Ingress提供程序都支持通配符主机名匹配，例如<code>* .foo.com</code>和<code>app1.foo.com</code>匹配，但是直到现在，规范都假定主机的FQDN完全匹配。当前，主机可以是精确匹配项（例如<code>foo.bar.com</code>）或通配符（例如<code>* .foo.com</code>）。精确匹配要求http主机头与主机设置匹配。通配符匹配要求http主机标头等于通配符规则的后缀。</p>
+<table>
+<thead>
+<tr>
+<th>Host</th>
+<th>Host header</th>
+<th>Match</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>*.foo.com</td>
+<td>*.foo.com</td>
+<td>Matches based on shared suffix</td>
+</tr>
+<tr>
+<td>*.foo.com</td>
+<td>*.foo.com</td>
+<td>No match, wildcard only covers a single DNS label</td>
+</tr>
+<tr>
+<td>*.foo.com</td>
+<td>foo.com</td>
+<td>No match, wildcard only covers a single DNS label</td>
+</tr>
+</tbody>
+</table>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>这些新的Ingress功能可实现更多可配置性。 下面是一个同时使用pathType，ingressClassName和主机名通配符的Ingress示例：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.k8s.io/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Ingress</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">example-ingress</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  ingressClassName:</span> <span class="string">external-lb</span></span><br><span class="line"><span class="attr">  rules:</span></span><br><span class="line"><span class="attr">  - host:</span> <span class="string">*.example.com</span></span><br><span class="line"><span class="attr">    http:</span></span><br><span class="line"><span class="attr">      paths:</span></span><br><span class="line"><span class="attr">      - path:</span> <span class="string">/example</span></span><br><span class="line"><span class="attr">        pathType:</span> <span class="string">Prefix</span></span><br><span class="line"><span class="attr">        backend:</span></span><br><span class="line"><span class="attr">          serviceName:</span> <span class="string">example-service</span></span><br><span class="line"><span class="attr">          servicePort:</span> <span class="number">80</span></span><br></pre></td></tr></table></figure>
+<h3 id="Ingress-Controller支持"><a href="#Ingress-Controller支持" class="headerlink" title="Ingress Controller支持"></a>Ingress Controller支持</h3><p>由于这些功能是Kubernetes 1.18中的新增特性，因此每个Ingress控制器都需要一些时间来开发以完成对这些新功能的支持。首选查看Ingress控制器的相关文档，以了解它们何时将支持此新功能。</p>
+<h2 id="后续展望"><a href="#后续展望" class="headerlink" title="后续展望"></a>后续展望</h2><p>在Kubernetes 1.19版本发布时，Ingress API有望从Beta变为GA。它将继续为用户管理Kubernetes工作负载的入网流量提供一种简单的方法。该API在保持简单和轻巧特性的同时希望为更复杂的用户场景提供更灵活的配置方案。</p>
+<p>目前正在开发一套高度可配置的API，这些API在未来将成为Ingress的可选方案。这些API被称为新的“Service APIs”。当然其无意替代任何现有的API，而只是为复杂的用例提供了一种更灵活的配置方案。有关更多信息，请查看GitHub上的Service APIs。</p>
+<p>原文链接：<a href="https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/" target="_blank" rel="noopener">Improvements to the Ingress API in Kubernetes 1.18</a></p>
 
       
-
     </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+      <div class="qr_code_pc_inner">
+        <div class="qr_code_pc">
+    <img id="js_pc_qr_code_img" class="qr_code_pc_img" src="https://s2.ax1x.com/2019/09/22/upS79K.jpg" alt="zouyee wechat" style="width: 200px; max-width: 100%;">
+    <p>微信扫一扫<br>关注该公众号</p>
+</div>
+<script>
+jQuery.noConflict()(function ($) {
+    $(function () {
+		var offsetTop = $('#comments').offset().top - $(window).height();
+		
+		if (offsetTop <= 0) {
+			// load directly when there's no a scrollbar
+			console.log("....")
+		} else {
+			$(window).on('scroll', function () {
+				var scrollTop = document.documentElement.scrollTop;
+				var copyright = $('.post-copyright').offset().top;
+				
+				var imageH = $('.qr_code_pc').offset().top;
+				console.log("scrollTop", scrollTop)
+				console.log("copyright", copyright)
+				console.log("qr_code_pc", imageH)
+				if (scrollTop <= offsetTop) {
+					$('.qr_code_pc').css('position', 'absolute')
+					$('.qr_code_pc').css('top', 420)
+				}
+				if (scrollTop > 450 && copyright > scrollTop) {
+					$('.qr_code_pc').css('top', 20)
+					$('.qr_code_pc').css('position', 'fixed')
+				} else {
+					$('.qr_code_pc').css('position', 'absolute')
+				}
+			});
+		}
+	});
+
+})
+</script>
+
+      </div>
+      
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span style="padding-top: 5px;">打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="https://s2.ax1x.com/2019/09/22/uppS4P.jpg" alt="zouyee 微信支付">
+        
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>zouyee</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://ustack.io/2020-03-25-Kubernetes 1.18之Ingress API优化.html" title="Kubernetes 1.18之Ingress API优化">https://ustack.io/2020-03-25-Kubernetes 1.18之Ingress API优化.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+          
+            <a href="/tags/cloudnative/" rel="tag"># cloudnative</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020-03-24-CNCF在中国 2019.html" rel="next" title="CNCF在中国 2020">
+                <i class="fa fa-chevron-left"></i> CNCF在中国 2020
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020-03-25-Kubernetes 1.18 福履将之.html" rel="prev" title="Kubernetes 1.18 福履将之">
+                Kubernetes 1.18 福履将之 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
                 </div>
                 
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
 
             </div>
                 
@@ -379,8 +668,15 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -619,6 +915,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#路径匹配"><span class="nav-number">1.</span> <span class="nav-text">路径匹配</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Ingress配置增强"><span class="nav-number">1.1.</span> <span class="nav-text">Ingress配置增强</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#弃用Ingress注释"><span class="nav-number">1.2.</span> <span class="nav-text">弃用Ingress注释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置默认的IngressClass"><span class="nav-number">1.3.</span> <span class="nav-text">设置默认的IngressClass</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#支持主机名通配符"><span class="nav-number">2.</span> <span class="nav-text">支持主机名通配符</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#示例"><span class="nav-number">2.1.</span> <span class="nav-text">示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ingress-Controller支持"><span class="nav-number">2.2.</span> <span class="nav-text">Ingress Controller支持</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后续展望"><span class="nav-number">3.</span> <span class="nav-text">后续展望</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -920,6 +1232,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
 
   
 
