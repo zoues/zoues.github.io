@@ -105,21 +105,25 @@
 
 
 
-  <meta name="description" content="如何为代码选择开源许可证，这是一个问题。 世界上的开源许可证，大概有上百种。很少有人搞得清楚它们的区别。千言万语，比不上一张图：">
-<meta name="keywords" content="笔记">
+  <meta name="description" content="&amp;lt;&amp;lt;Kubernetes进阶&amp;gt;&amp;gt;系列将kubernetes系统的设计理念进行深入梳理与分享。在这篇文章中我会主要介绍CPU相关的一些重要概念和技术，以此作为后续对于kubelet组件相关分析的铺垫。">
+<meta name="keywords" content="Linux,kubernetes,cloudnative">
 <meta property="og:type" content="article">
-<meta property="og:title" content="常见的开源许可证">
-<meta property="og:url" content="https://ustack.io/2015-06-30-常见的开源许可证区别.html">
+<meta property="og:title" content="Linux hugepages原理概念">
+<meta property="og:url" content="https://ustack.io/2020-04-20-Kubernetes进阶之NT技术小解.html">
 <meta property="og:site_name" content="Indagate">
-<meta property="og:description" content="如何为代码选择开源许可证，这是一个问题。 世界上的开源许可证，大概有上百种。很少有人搞得清楚它们的区别。千言万语，比不上一张图：">
+<meta property="og:description" content="&amp;lt;&amp;lt;Kubernetes进阶&amp;gt;&amp;gt;系列将kubernetes系统的设计理念进行深入梳理与分享。在这篇文章中我会主要介绍CPU相关的一些重要概念和技术，以此作为后续对于kubelet组件相关分析的铺垫。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/blog/image/jpg/1135650364a1ffda02o.jpg">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/blog/image/jpg/11356503627da387f0o.jpg">
-<meta property="og:updated_time" content="2019-05-16T22:56:27.000Z">
+<meta property="og:image" content="https://s1.ax1x.com/2020/04/20/J1gtsK.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/04/20/J1cvxP.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/04/20/J1gVx0.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/04/20/J1gmrT.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/04/20/J1gMa4.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/04/20/J1g3GR.md.png">
+<meta property="og:updated_time" content="2020-04-20T13:35:55.790Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="常见的开源许可证">
-<meta name="twitter:description" content="如何为代码选择开源许可证，这是一个问题。 世界上的开源许可证，大概有上百种。很少有人搞得清楚它们的区别。千言万语，比不上一张图：">
-<meta name="twitter:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/blog/image/jpg/1135650364a1ffda02o.jpg">
+<meta name="twitter:title" content="Linux hugepages原理概念">
+<meta name="twitter:description" content="&amp;lt;&amp;lt;Kubernetes进阶&amp;gt;&amp;gt;系列将kubernetes系统的设计理念进行深入梳理与分享。在这篇文章中我会主要介绍CPU相关的一些重要概念和技术，以此作为后续对于kubelet组件相关分析的铺垫。">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/04/20/J1gtsK.md.png">
 
 
 
@@ -128,7 +132,7 @@
 
 
 
-  <link rel="canonical" href="https://ustack.io/2015-06-30-常见的开源许可证区别.html">
+  <link rel="canonical" href="https://ustack.io/2020-04-20-Kubernetes进阶之NT技术小解.html">
 
 
 
@@ -138,7 +142,7 @@
   };
 </script>
 
-  <title>常见的开源许可证 | Indagate</title>
+  <title>Linux hugepages原理概念 | Indagate</title>
   
 
 
@@ -306,7 +310,7 @@
   
   
   <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2015-06-30-常见的开源许可证区别.html">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2020-04-20-Kubernetes进阶之NT技术小解.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zouyee">
@@ -321,22 +325,19 @@
     
     <div class="head">
         <div class="gr_up_title">
-          <span class="text-overflow-center">常见的开源许可证</span>
+          <span class="text-overflow-center">Linux hugepages原理概念</span>
         </div>
         <div class="gr_blog_post_cat">
-          <span class="gr_ddate">6月 30 2015</span><span class="gr_separate">|</span>
+          <span class="gr_ddate">4月 20 2020</span><span class="gr_separate">|</span>
           
-                <a href="/categories/Notes/" itemprop="url" rel="category tag"><span itemprop="name">Notes</span></a>
-
-                
-                
-              
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
             
         </div>
         <div class="gr_blog_post_title_holder">
         
           
-          <h3 class="blog_title" itemprop="name headline">常见的开源许可证
+          <h3 class="blog_title" itemprop="name headline">Linux hugepages原理概念
               
             
           </h3>
@@ -361,46 +362,16 @@
                 
               
 
-              <time title="创建时间：6月 30 2015 15:18:41" itemprop="dateCreated datePublished" datetime="2015-06-30T15:18:41+08:00">6月 30 2015</time>
+              <time title="创建时间：4月 20 2020 20:40:08 / 修改时间：21:35:55" itemprop="dateCreated datePublished" datetime="2020-04-20T20:40:08+08:00">4月 20 2020</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
               
             
           </span>
 
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a></span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -410,8 +381,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2015-06-30-常见的开源许可证区别.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015-06-30-常见的开源许可证区别.html" itemprop="commentCount"></span>
+                <a href="/2020-04-20-Kubernetes进阶之NT技术小解.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020-04-20-Kubernetes进阶之NT技术小解.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -419,7 +390,7 @@
 
           
           
-             <span id="/2015-06-30-常见的开源许可证区别.html" class="leancloud_visitors" data-flag-title="常见的开源许可证">
+             <span id="/2020-04-20-Kubernetes进阶之NT技术小解.html" class="leancloud_visitors" data-flag-title="Linux hugepages原理概念">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -455,172 +426,53 @@
     <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
     
       
-        <p>如何为代码选择开源许可证，这是一个问题。</p>
-<p>世界上的开源许可证，大概有上百种。很少有人搞得清楚它们的区别。千言万语，比不上一张图：</p>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/blog/image/jpg/1135650364a1ffda02o.jpg" class="full-image"></p>
+        <p><img src="https://s1.ax1x.com/2020/04/20/J1gtsK.md.png" alt></p>
+<div class="note info"><p>&lt;&lt;Kubernetes进阶&gt;&gt;系列将kubernetes系统的设计理念进行深入梳理与分享。<br>在这篇文章中我会主要介绍CPU相关的一些重要概念和技术，以此作为后续对于kubelet组件相关分析的铺垫。</p></div>
 <a id="more"></a>
-<p>以下是常见的六种开源协议：</p>
+<hr>
+<h3 id="1、引言"><a href="#1、引言" class="headerlink" title="1、引言"></a>1、引言</h3><h4 id="中央处理器（Central-processing-unit）"><a href="#中央处理器（Central-processing-unit）" class="headerlink" title="中央处理器（Central processing unit）"></a>中央处理器（Central processing unit）</h4><p>在我们了解其它概念之前，我们应该首先了解一下什么是CPU，它是做什么的，它的主要组件以及相应的作用都是什么？<br>简单点说，CPU其实就是计算机内部的一个电子电路。根据一些具体的指令它可以执行基本的运算，逻辑，控制和IO操作等。<br>CPU的主要组件包括：</p>
 <ul>
-<li><h2 id="GPL-License"><a href="#GPL-License" class="headerlink" title="GPL License"></a><a href="http://www.gnu.org/licenses/gpl.html" target="_blank" rel="noopener">GPL License</a></h2></li>
+<li>算术逻辑单元（ALU is short for ‘arithmetic logic unit’），它主要执行一些算术和逻辑操作</li>
+<li>处理器寄存器（processor registers），它主要的作用是给ALU提供操作数并存储ALU操作的结果</li>
+<li>控制器（control unit），通过协调ALU，寄存器和其它组件之间的操作，从主存中取得并执行相应的指令。</li>
 </ul>
-<blockquote>
-<p>GPL协议的主要内容是只要在一个软件中使用(“使用”指类库引用，修改后的代码或者衍生代码)GPL 协议的产品，则该软件产品必须也采用GPL协议，既必须也是开源和免费。这就是所谓的”传染性”。GPL协议的产品作为一个单独的产品使用没有任何问题，还可以享受免费的优势。</p>
-</blockquote>
-<blockquote>
-<p><strong>由于GPL严格要求使用了GPL类库的软件产品必须使用GPL协议，对于使用GPL协议的开源代码，商业软件或者对代码有保密要求的部门就不适合集成/采用作为类库和二次开发的基础。</strong></p>
-</blockquote>
+<p>当今大多数地CPU都是微处理器，即它们被包含在单个集成电路芯片（integrated circuit chip）中。一个包含CPU的集成电路可能也包含内存，<br>外围接口和其它的一些计算机组件。这样的集成设备叫做微控制器（microcontrollers）或者芯片上的系统（SoC）。一些计算机采用多核处理器，<br>即单个芯片中包含2个或更多的CPU（也被叫做“cores”）; 在这种情况下，单个芯片有时也被称作”sockets”.</p>
+<p>下图表示的是CPU与主存和IO之间的交互。</p>
+<p><img src="https://s1.ax1x.com/2020/04/20/J1cvxP.md.png" alt="CPU与主存和IO之间的交互"></p>
+<h4 id="多个CPU"><a href="#多个CPU" class="headerlink" title="多个CPU"></a>多个CPU</h4><p>贯穿这个数字计算机的历史，我们一直以来的目标就是想要计算机可以做更多的事情，并且做的更快。因此在hyper-threading 和 multi-core CPUs<br>出现之前，人们想到通过增加CPU的数量来增加计算机的计算机能力和速度，但是这样的方法并没有在个人PC中得到普及，我们只会在一些超级计算机或者一<br>些服务器上会看到这个多个CPU的计算机。因为多个CPU会需要主板有多个CPU socket - 多个CPU被插入到不同的socket中。同时主板也需要额外的硬件<br>去连接这些CPU socket到RAM和一些其它的资源。如果CPU之间需要彼此通信，多个CPU的系统会有很大地开销。</p>
+<h4 id="Hyper-Threading"><a href="#Hyper-Threading" class="headerlink" title="Hyper-Threading"></a>Hyper-Threading</h4><p>由于多个CPU上面存在的缺点，因此它并没有进入普通大众的电脑中，因此消费者电脑的计算始终没有达到并行的状态，电脑的速度也一直没有加快。直到多核<br>处理器和Hyper-Threading技术的出现，才改变了这一点。Hyper-threading这个概念是Intel提出的，这家伟大的公司想把计算机并行计算的能力带入到<br>个人PC中，它第一次进入大众PC的产品是2002年的Pentium 4 HT，最初的这款处理器仅有单个CPU核心，因此它一次只能做一件事情。但是Hyper-threading<br>技术的出现弥补了这个不足。</p>
+<p>Hyperthreading 有时叫做 simultaneous multi-threading，它可以使我们的单核CPU执行多个控制流程。这个技术会涉及到备份一些CPU硬件的一些信息，<br>比如程序计数器和寄存器文件等，而对于比如执行浮点运算的单元它只有一个备份，可以被共享。一个传统的处理器在线程之间切换大约需要20000时钟周期，而一个<br>具有Hyperthreading技术的处理器只需要1个时钟周期，因此这大大减小了线程之间切换的成本。hyperthreading技术的关键点就是：当我们在处理器中执行代<br>码时，很多时候处理器并不会使用到全部的计算能力，部分计算能力会处于空闲状态，而hyperthreading技术会更大程度地“压榨”处理器。举个例子，如果一个线<br>程必须要等到一些数据加载到缓存中以后才能继续执行，此时CPU可以切换到另一个线程去执行，而不用去处于空闲状态，等待当前线程的IO执行完毕。</p>
+<p>Hyper-threading 使操作系统认为处理器的核心数是实际核心数的2倍，因此如果有4个核心的处理器，操作系统会认为处理器有8个核心。这项技术通常会对程序<br>有一个性能的提升，通常提升的范围大约在15%-30%之间，对于一些程序来说它的性能甚至会小于20%, 其实性能是否提升这完全取决于具体的程序。比如，这2个逻<br>辑核心都需要用到处理器的同一个组件，那么一个线程必须要等待。因此，Hyper-threading只是一种“欺骗”手段，对于一些程序来说，它可以更有效地利用CPU的<br>计算能力，但是它的性能远没有真正有2个核心的处理器性能好，因此它不能替代真正有2个核心的处理器。但是同样都是2核的处理器，一个有hyper-threading技<br>术而另一个没有，那么有这项技术的处理器在大部分情况下都要比没有的好。</p>
+<h4 id="多核CPU"><a href="#多核CPU" class="headerlink" title="多核CPU"></a>多核CPU</h4><p>相比于多个处理器而言，多核处理器把多个CPU（核心）集成到单个集成电路芯片（integrated circuit chip）中，因此主板的单个socket也可以适应这样的<br>CPU，不需要去更更改一些硬件结构。一个双核的CPU有2个中央处理单元，因此不像上面我介绍的hyper-threading技术那样，操作系统看到的只是一种假象，这<br>回操作系统看到的是真正的2个核心，所以2个不同的进程可以分别在不同的核心中同时执行，这大大加快了系统的速度。由于2个核心都在一个芯片上，因此它们之间<br>的通信也要更快，系统也会有更小地延迟。</p>
+<p>下图展示了一个Intel Core i7处理器的一个组织结构，这个微处理器芯片中有4个CPU核，每个核中都有它自己的L1和L2缓存。</p>
+<p><img src="https://s1.ax1x.com/2020/04/20/J1gVx0.md.png" alt="Intel Core i7处理器的一个组织结构"></p>
+<hr>
+<h3 id="超线程技术"><a href="#超线程技术" class="headerlink" title="超线程技术"></a>超线程技术</h3><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>在操作系统中，有多线程（multi-threading）的概念，这很好理解，因为线程是进程最小的调度单位，一个进程至少包含一个线程。本文将介绍CPU特有的超线程<br>技术。简单来说就是，多线程比较软，超线程比较硬，二者本质上都是虚拟化。</p>
+<p>超线程(hyper-threading)其实就是同时多线程(simultaneous multi-theading),是一项允许一个CPU执行多个控制流的技术。它的原理很简单，就是把一<br>颗CPU当成两颗来用，将一颗具有超线程功能的物理CPU变成两颗逻辑CPU，而逻辑CPU对操作系统来说，跟物理CPU并没有什么区别。因此，操作系统会把工作线程分<br>派给这两颗（逻辑）CPU上去执行，让（多个或单个）应用程序的多个线程，能够同时在同一颗CPU上被执行。注意：两颗逻辑CPU共享单颗物理CPU的所有执行资源。<br>因此，我们可以认为，超线程技术就是对CPU的虚拟化。</p>
+<p>超线程技术是同时多线程技术的一种实现形式，由Intel公司提出，而该技术背后的概念则是Sun公司的专利。Sun公司虽然倒下了，但它永远是一个伟大的公司。</p>
+<p>纵观计算机的历史，有两个需求是驱动计算机科技进步的持续动力。<br>    第一，人类想让计算机做得更多；<br>    第二，人类想让计算机跑得更快。<br>从这个意义上讲，那些把工程师当做机器的资本家或资本家豢养的打手在榨取程序员的剩余价值的时候，就是不断地追求上述两个需求。超线程技术的发明，就是基于<br>这样的考虑，不榨干处理器的最后一滴油决不罢休。</p>
+<p><img src="https://s1.ax1x.com/2020/04/20/J1gmrT.md.png" alt="CPU"></p>
+<p>常规的CPU需要大约两万个时钟周期做不同线程间的切换，而超线程的CPU可以在单个时钟周期的基础上决定要执行哪一个线程。这使得CPU能够更好地利用它的处理<br>资源。例如：假设一个线程必须等到某些数据被装入到cache中，那么CPU就可以继续去执行另一个线程。</p>
+<p><img src="https://s1.ax1x.com/2020/04/20/J1gMa4.md.png" alt="NT"></p>
+<p>超线程允许单个处理器在同一时刻并行地抓取和执行两个独立的代码流。那么超线程是如何工作的？见下图。</p>
+<p><img src="https://s1.ax1x.com/2020/04/20/J1g3GR.md.png" alt="nt工作"></p>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><p>实现超线程技术的前提:</p>
 <ul>
-<li><h2 id="BSD-License"><a href="#BSD-License" class="headerlink" title="BSD License"></a><a href="https://en.wikipedia.org/wiki/BSD_licenses" target="_blank" rel="noopener">BSD License</a></h2></li>
+<li>需要CPU支持</li>
+<li>需要主板芯片组支持</li>
+<li>需要BIOS支持</li>
+<li>需要操作系统支持</li>
+<li>需要应用软件支持</li>
 </ul>
-<blockquote>
-<p>BSD开源协议是一个给于使用者很大自由的协议。基本上使用者可以”为所欲为”,可以自由的使用，修改源代码，也可以将修改后的代码作为开源或者专有软件再发布。</p>
-</blockquote>
-<blockquote>
-<p>但”为所欲为”的前提当你发布使用了BSD协议的代码，或则以BSD协议代码为基础做二次开发自己的产品时，需要满足三个条件：</p>
-</blockquote>
-<blockquote>
-<ul>
-<li>如果再发布的产品中包含源代码，则在源代码中必须带有原来代码中的BSD协议。</li>
-<li>如果再发布的只是二进制类库/软件，则需要在类库/软件的文档和版权声明中包含原来代码中的BSD协议。</li>
-<li>不可以用开源代码的作者/机构名字和原来产品的名字做市场推广。</li>
+<p>由此可见，超线程技术虽然很酷，但需要方方面面的支持，否则就玩不转。 类似地，如果想最大可能地榨取程序员的剩余价值的话，给程序员提供实现超线程运行的软<br>硬件环境也是必须地，否则一味地让他们拼体力(加班)实在不是个好办法，因为人毕竟不是机器，人只有需要休息好了才可能有创造力，疲惫的人们大多时候是在瞎折<br>腾，往往事倍功半。</p>
+<p>超线程(hyper-threading)本质上就是CPU支持的同时多线程(simultaneous multi-threading)技术，简单理解就是对CPU的虚拟化，一颗物理CPU可以被操<br>作系统当做多颗CPU来使用。</p>
+<hr>
+<h3 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h3><p>后续将介绍1.18版本后的kubelet关于CPU的管理技术方案。</p>
+<hr>
+<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul>
+<li><a href="https://en.wikipedia.org/wiki/Central_processing_unit" target="_blank" rel="noopener">Central processing unit</a></li>
+<li><a href="http://www.howtogeek.com/194756/cpu-basics-multiple-cpus-cores-and-hyper-threading-explained/" target="_blank" rel="noopener">hyper threadingexplained</a></li>
 </ul>
-</blockquote>
-<blockquote>
-<p><strong>BSD 代码鼓励代码共享，但需要尊重代码作者的著作权。BSD由于允许使用者修改和重新发布代码，也允许使用或在BSD代码上开发商业软件发布和销售，因此是对商业集成很友好的协议。而很多的公司企业在选用开源产品的时候都首选BSD协议，因为可以完全控制这些第三方的代码，在必要的时候可以修改或者二次开发。</strong></p>
-</blockquote>
-<ul>
-<li><h2 id="MIT-License"><a href="#MIT-License" class="headerlink" title="MIT License"></a><a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank" rel="noopener">MIT License</a></h2></li>
-</ul>
-<blockquote>
-<p>在所有常用的开源许可证中，MIT许可证最为简短，可能也最为广泛。它的条款非常松散，比起大部分其它许可证来说更加宽松。它的基本前提如下：</p>
-</blockquote>
-<blockquote>
-<ul>
-<li>该许可免费授予任何获得本软件及相关文档（合称为“软件包”）的人，许可其无限制地应用软件，包括不受限地使用、拷贝、修改、合并、出版、分发、再授权、和/或出售软件的拷贝。被许可者获取软件包提供的权利须基于以下条件：</li>
-</ul>
-</blockquote>
-<blockquote>
-<p><strong>以上版权声明和本许可声明必须包含在软件包的全部拷贝或实质性部分中。</strong></p>
-</blockquote>
-<blockquote>
-<ul>
-<li>你可以任意使用、拷贝和修改软件。没人能够限制你将软件用于任何项目、以你喜欢的格式拷贝软件任意多次、或以任何方式收费。</li>
-<li>你可以免费分发软件或者出售软件，你分发软件的方式不受限制。</li>
-<li>唯一的限制是软件必须附带许可协议。</li>
-</ul>
-</blockquote>
-<blockquote>
-<p>MIT许可证是限制最少的许可证，它基本上是说，只要附带许可证，任何人都可以利用该许可证授权的软件做任何想做的事。</p>
-</blockquote>
-<ul>
-<li><h2 id="Creative-Commons"><a href="#Creative-Commons" class="headerlink" title="Creative Commons"></a><a href="http://creativecommons.org/" target="_blank" rel="noopener">Creative Commons</a></h2></li>
-</ul>
-<blockquote>
-<p>知识共享（Creative Commons，简称CC）许可证并非完全的开源许可证，但设计类项目也常常使用。有各种不同的CC许可证可供使用，每种授予特定的权利。一个CC许可证包含四个基本部分，每部分即可单独生效，又可联合使用。简述如下：</p>
-</blockquote>
-<blockquote>
-<ul>
-<li>署名</li>
-</ul>
-</blockquote>
-<blockquote>
-<p><em>必须按照作者指定的方式对作品进行署名。除此之外，作品可被复制、分发、拷贝以及以其它方式使用</em></p>
-</blockquote>
-<blockquote>
-<ul>
-<li>相同方式共享</li>
-</ul>
-</blockquote>
-<blockquote>
-<ul>
-<li>只能基于相同的CC许可证对作品进行修改、分发等。*</li>
-</ul>
-</blockquote>
-<blockquote>
-<ul>
-<li>非商业性</li>
-</ul>
-</blockquote>
-<blockquote>
-<p><em>作品可被修改、分发等，但不得以商业为目的进行。关于什么构成商业行为，许可证条款并未提供清晰的定义，因此你可能需要在自己的项目里给予澄清。比如说，有人认为“非商业”只是简单地意味着你不能出售作品，也有人认为你不能把作品放到一个带广告的网站上，还有人认为只有当牟利发生时才能称为“商业”。</em></p>
-</blockquote>
-<blockquote>
-<ul>
-<li>禁止衍生</li>
-</ul>
-</blockquote>
-<blockquote>
-<p><em>你可以拷贝和分发授权作品，但你不得以任何方式修改、或基于原作进行创作。</em></p>
-</blockquote>
-<blockquote>
-<p><strong>如前所述，CC许可证的各个部分可以联合使用。最为严格的许可证为“署名-非商业-禁止衍生”许可证，即你可以自由分享作品，但不得修改或收费，同时你必须按照作者指定的方式为作品署名。这对那些一方面希望发布作品，另一方面又希望多多少少保留对作品使用方式的控制权的作者来说，颇为不错。限制最少的CC许可证是“署名”许可证，即只要按照作者指定的方式为作品署名，就可以用作品做任何事。</strong></p>
-</blockquote>
-<ul>
-<li><h2 id="Apache-License"><a href="#Apache-License" class="headerlink" title="Apache License"></a><a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener">Apache License</a></h2></li>
-</ul>
-<blockquote>
-<p>Apache许可证（2.0版）授予用户大量权利，这些权利适用于版权和专利权。由于有的许可证只适用于版权、不适用于专利权，Apache许可证的这一灵活性使其成为专利开发者的首选。</p>
-</blockquote>
-<blockquote>
-<p>Apache许可证特点：</p>
-<ul>
-<li>权利的永久性</li>
-</ul>
-</blockquote>
-<blockquote>
-<p><em>一旦许可证被授予，你就可以无限期使用。</em></p>
-</blockquote>
-<blockquote>
-<ul>
-<li>权利的世界性</li>
-</ul>
-</blockquote>
-<blockquote>
-<p><em>如果许可证在某一国授予，那么它同时也授予给其它所有国家。例如，如果你在美国，而原始许可证在印度颁发，那么，你在许可证授权下使用代码并无限制。</em></p>
-</blockquote>
-<blockquote>
-<ul>
-<li>获取权利的免费性</li>
-</ul>
-</blockquote>
-<blockquote>
-<p><em>你不用预先支付任何使用费，也不用为每次使用或基于其它方式而付费。</em></p>
-</blockquote>
-<blockquote>
-<ul>
-<li>权利的非排他性</li>
-</ul>
-</blockquote>
-<blockquote>
-<p><em>你能使用经授权的软件，任何其他人也能使用。</em></p>
-</blockquote>
-<blockquote>
-<ul>
-<li>权利的不可撤回性</li>
-</ul>
-</blockquote>
-<blockquote>
-<p><em>权利一旦授予，无人能撤回。换句话说，你无需担心将来的某个时候，当你创造出授权代码的优秀衍生产品时，有人会跳出来说：“抱歉，你再也不能使用这些代码了” （许可证有条款指出，如果你就许可证授权下的任何内容起诉他人，你的许可证授权即告终结。但这仅仅适用于有专利的软件，并且只要你不起诉软件相关的任何人，你就不必担心）.</em></p>
-</blockquote>
-<blockquote>
-<p><strong>Apache许可证对分发代码也有特殊要求，主要是有关给予代码作者以适当荣誉，以及保持许可证的一致性。</strong></p>
-</blockquote>
-<ul>
-<li><h2 id="LGPL-License"><a href="#LGPL-License" class="headerlink" title="LGPL License"></a><a href="http://www.gnu.org/copyleft/lesser.html" target="_blank" rel="noopener">LGPL License</a></h2></li>
-</ul>
-<blockquote>
-<p>LGPL允许商业软件通过类库引用(link)方式使用LGPL类库而不需要开源商业软件的代码。这使得采用LGPL协议的开源代码可以被商业软件作为类库引用并发布和销售。</p>
-</blockquote>
-<blockquote>
-<p>但是如果修改LGPL协议的代码或者衍生，则所有修改的代码，涉及修改部分的额外代码和衍生的代码都必须采用LGPL协议。因此LGPL协议的开源代码很适合作为第三方类库被商业软件引用，但不适合希望以LGPL协议代码为基础，通过修改和衍生的方式做二次开发的商业软件采用。</p>
-</blockquote>
-<blockquote>
-<p><strong>GPL/LGPL都保障原作者的知识产权，避免有人利用开源代码复制并开发类似的产品</strong></p>
-</blockquote>
-<p>不难看出，即便是在这六种许可协议中作出选择，也是比较困难的。</p>
-<p><a href="http://paulmillr.com/posts/simple-description-of-popular-software-licenses/" target="_blank" rel="noopener">乌克兰程序员Paul Bagwell</a>，画了一张分析图，说明应该怎么选择。这是我见过的最简单的讲解，只用两分钟，你就能搞清楚这六种许可证之间的最大区别。</p>
-<p>以下为汉化版本，感谢<a href="http://blog.csdn.net/wadefelix/article/details/6384317" target="_blank" rel="noopener">wadefelix</a>的制作：</p>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/blog/image/jpg/11356503627da387f0o.jpg" class="full-image"></p>
 
       
     </div>
@@ -712,7 +564,7 @@ jQuery.noConflict()(function ($) {
     <strong>本文作者： </strong>zouyee</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://ustack.io/2015-06-30-常见的开源许可证区别.html" title="常见的开源许可证">https://ustack.io/2015-06-30-常见的开源许可证区别.html</a>
+    <a href="https://ustack.io/2020-04-20-Kubernetes进阶之NT技术小解.html" title="Linux hugepages原理概念">https://ustack.io/2020-04-20-Kubernetes进阶之NT技术小解.html</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -725,7 +577,11 @@ jQuery.noConflict()(function ($) {
       
         <div class="post-tags">
           
-            <a href="/tags/笔记/" rel="tag"># 笔记</a>
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+          
+            <a href="/tags/cloudnative/" rel="tag"># cloudnative</a>
           
         </div>
       
@@ -738,8 +594,8 @@ jQuery.noConflict()(function ($) {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015-04-29-欢迎光临我的博客.html" rel="next" title="欢迎">
-                <i class="fa fa-chevron-left"></i> 欢迎
+              <a href="/2020-04-10-servicemesh平台大观.html" rel="next" title="solo开源Service Mesh Hub">
+                <i class="fa fa-chevron-left"></i> solo开源Service Mesh Hub
               </a>
             
           </div>
@@ -747,10 +603,6 @@ jQuery.noConflict()(function ($) {
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015-07-06-自动备份Hexo博客源文件.html" rel="prev" title="自动备份Hexo博客源文件">
-                自动备份Hexo博客源文件 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -1062,7 +914,7 @@ jQuery.noConflict()(function ($) {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GPL-License"><span class="nav-number">1.</span> <span class="nav-text">GPL License</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BSD-License"><span class="nav-number">2.</span> <span class="nav-text">BSD License</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MIT-License"><span class="nav-number">3.</span> <span class="nav-text">MIT License</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Creative-Commons"><span class="nav-number">4.</span> <span class="nav-text">Creative Commons</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Apache-License"><span class="nav-number">5.</span> <span class="nav-text">Apache License</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LGPL-License"><span class="nav-number">6.</span> <span class="nav-text">LGPL License</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、引言"><span class="nav-number">1.</span> <span class="nav-text">1、引言</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#中央处理器（Central-processing-unit）"><span class="nav-number">1.1.</span> <span class="nav-text">中央处理器（Central processing unit）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多个CPU"><span class="nav-number">1.2.</span> <span class="nav-text">多个CPU</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hyper-Threading"><span class="nav-number">1.3.</span> <span class="nav-text">Hyper-Threading</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多核CPU"><span class="nav-number">1.4.</span> <span class="nav-text">多核CPU</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#超线程技术"><span class="nav-number">2.</span> <span class="nav-text">超线程技术</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简介"><span class="nav-number">2.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实现"><span class="nav-number">2.2.</span> <span class="nav-text">实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后续"><span class="nav-number">3.</span> <span class="nav-text">后续</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参考资料"><span class="nav-number">3.1.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
             
 
           </div>
