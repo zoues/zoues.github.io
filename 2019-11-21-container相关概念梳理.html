@@ -105,22 +105,22 @@
 
 
 
-  <meta name="description" content="接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。 在使用k8s时，经常会遇到docker、oci、runc、containerd、oci-o、cri、kata等概念。本文对相关名词和其之间的联系进行一下梳理和总结，以">
+  <meta name="description" content="在使用k8s时，经常会遇到docker、oci、runc、containerd、oci-o、cri、kata等概念。本文对相关名词和其之间的联系进行一下梳理和总结，以此作为后续对于kubelet相关分析的铺垫。">
 <meta name="keywords" content="kubernetes,linux,cloudnative">
 <meta property="og:type" content="article">
 <meta property="og:title" content="容器那些事">
 <meta property="og:url" content="https://ustack.io/2019-11-21-container相关概念梳理.html">
 <meta property="og:site_name" content="Indagate">
-<meta property="og:description" content="接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。 在使用k8s时，经常会遇到docker、oci、runc、containerd、oci-o、cri、kata等概念。本文对相关名词和其之间的联系进行一下梳理和总结，以">
+<meta property="og:description" content="在使用k8s时，经常会遇到docker、oci、runc、containerd、oci-o、cri、kata等概念。本文对相关名词和其之间的联系进行一下梳理和总结，以此作为后续对于kubelet相关分析的铺垫。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://s2.ax1x.com/2019/11/22/MTc92D.jpg">
 <meta property="og:image" content="https://s2.ax1x.com/2019/11/22/MTc1qs.jpg">
 <meta property="og:image" content="https://s2.ax1x.com/2019/11/22/MTgdtP.jpg">
 <meta property="og:image" content="https://s2.ax1x.com/2019/11/22/MTWv90.md.png">
-<meta property="og:updated_time" content="2019-11-22T14:13:17.226Z">
+<meta property="og:updated_time" content="2020-04-20T13:39:25.520Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="容器那些事">
-<meta name="twitter:description" content="接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。 在使用k8s时，经常会遇到docker、oci、runc、containerd、oci-o、cri、kata等概念。本文对相关名词和其之间的联系进行一下梳理和总结，以">
+<meta name="twitter:description" content="在使用k8s时，经常会遇到docker、oci、runc、containerd、oci-o、cri、kata等概念。本文对相关名词和其之间的联系进行一下梳理和总结，以此作为后续对于kubelet相关分析的铺垫。">
 <meta name="twitter:image" content="https://s2.ax1x.com/2019/11/22/MTc92D.jpg">
 
 
@@ -377,7 +377,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：11月 22 2019 22:13:17" itemprop="dateModified" datetime="2019-11-22T22:13:17+08:00">11月 22 2019</time>
+                <time title="修改时间：4月 20 2020 21:39:25" itemprop="dateModified" datetime="2020-04-20T21:39:25+08:00">4月 20 2020</time>
               
             
           </span>
@@ -436,13 +436,10 @@
     <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
     
       
-        <div class="note info"><p>接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。</p>
-<p>在使用k8s时，经常会遇到docker、oci、runc、containerd、oci-o、cri、kata等概念。本文对相关名词和其之间的联系进行一下梳理和总结，以此作为后续对于kubelet相关分析的铺垫。</p></div>
+        <div class="note info"><p>在使用k8s时，经常会遇到docker、oci、runc、containerd、oci-o、cri、kata等概念。本文对相关名词和其之间的联系进行一下梳理和总结，以此作为后续<br>对于kubelet相关分析的铺垫。</p></div>
 <a id="more"></a>
 <hr>
-<h3 id="容器相关"><a href="#容器相关" class="headerlink" title="容器相关"></a>容器相关</h3><h4 id="container与docker"><a href="#container与docker" class="headerlink" title="container与docker"></a>container与docker</h4><blockquote>
-<p>container的概念早于docker，其源于LXC技术，当然在此需要感谢docker社区对于容器技术的贡献，因为docker的出现，container的概念深入人心，容器的特性类似sandbox，进程受到资源的限制，并且彼此间隔离，当然容器区别与虚拟机的技术，主要区别在于内核的是否共享，上述的论断可能不太精确，因此后期如gvisor技术，其通过隔离层实现系统调用。通俗来说容器技术主要指资源限制的cgroup、用于隔离的namespace以及共享内核。</p>
-</blockquote>
+<h3 id="容器相关"><a href="#容器相关" class="headerlink" title="容器相关"></a>容器相关</h3><h4 id="container与docker"><a href="#container与docker" class="headerlink" title="container与docker"></a>container与docker</h4><p>container的概念早于docker，其源于LXC技术，当然在此需要感谢docker社区对于容器技术的贡献，因为docker的出现，container的概念深入人心，容器<br>的特性类似sandbox，进程受到资源的限制，并且彼此间隔离，当然容器区别与虚拟机的技术，主要区别在于内核的是否共享，上述的论断可能不太精确，因此后期如<br>gvisor技术，其通过隔离层实现系统调用。通俗来说容器技术主要指资源限制的cgroup、用于隔离的namespace以及共享内核。</p>
 <p>11月13日，Mirantis收购Docker的消息引爆开源届。</p>
 <h4 id="OCI标准"><a href="#OCI标准" class="headerlink" title="OCI标准"></a>OCI标准</h4><p>Open Container Initiative，也就是常说的OCI，是由多家公司共同成立的项目，并由linux基金会进行管理，致力于container runtime的标准的制定和runc的开发等工作。<br>所谓container runtime，主要负责的是容器的生命周期的管理。oci的runtime spec标准中对于容器的状态描述，以及对于容器的创建、删除、查看等操作进行了定义。<br>其中<code>runc</code>，是对于OCI标准的一个参考实现，是一个可以用于创建和运行容器的CLI(command-line interface)工具。runc直接与容器所依赖的cgroup/linux kernel等进行交互，负责为容器配置cgroup/namespace等启动容器所需的环境，创建启动容器的相关进程。</p>
 <p>为了兼容oci标准，docker也做了架构调整。将容器运行时相关的程序从docker daemon剥离出来，形成了containerd。Containerd向docker提供运行容器的API，二者通过grpc进行交互。containerd最后会通过runc来实际运行容器。</p>
