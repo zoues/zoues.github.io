@@ -105,16 +105,21 @@
 
 
 
-  <meta name="description" content="Keep motivation for the world">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Indagate">
-<meta property="og:url" content="https://ustack.io/archives/2017/index.html">
+  <meta name="description" content="gRPC小组正在努力扩展当前的gRPCLB功能。其不再使用自定义负载均衡协议，而是采用基于Envoy xDS API的xDS协议。这将允许与支持xDS API的开源控制平面（例如Istio Pilot，go-control-plane和java-control-plane）进行交互。其他优化如下所示：  更加灵活和先进的负载均衡策略配置功能 基于LRS（负载报告服务）的负载报告功能等  客户端侧">
+<meta name="keywords" content="cloudnative,grpc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xDS标准引入gRPC生态">
+<meta property="og:url" content="https://ustack.io/2020-05-06-xDS标准引入GRPC生态.html">
 <meta property="og:site_name" content="Indagate">
-<meta property="og:description" content="Keep motivation for the world">
+<meta property="og:description" content="gRPC小组正在努力扩展当前的gRPCLB功能。其不再使用自定义负载均衡协议，而是采用基于Envoy xDS API的xDS协议。这将允许与支持xDS API的开源控制平面（例如Istio Pilot，go-control-plane和java-control-plane）进行交互。其他优化如下所示：  更加灵活和先进的负载均衡策略配置功能 基于LRS（负载报告服务）的负载报告功能等  客户端侧">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://s1.ax1x.com/2020/05/06/YAWtkd.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/05/06/YAWl6K.md.png">
+<meta property="og:updated_time" content="2020-05-06T12:45:25.753Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Indagate">
-<meta name="twitter:description" content="Keep motivation for the world">
+<meta name="twitter:title" content="xDS标准引入gRPC生态">
+<meta name="twitter:description" content="gRPC小组正在努力扩展当前的gRPCLB功能。其不再使用自定义负载均衡协议，而是采用基于Envoy xDS API的xDS协议。这将允许与支持xDS API的开源控制平面（例如Istio Pilot，go-control-plane和java-control-plane）进行交互。其他优化如下所示：  更加灵活和先进的负载均衡策略配置功能 基于LRS（负载报告服务）的负载报告功能等  客户端侧">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/05/06/YAWtkd.md.png">
 
 
 
@@ -123,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="https://ustack.io/archives/2017/">
+  <link rel="canonical" href="https://ustack.io/2020-05-06-xDS标准引入GRPC生态.html">
 
 
 
@@ -133,7 +138,7 @@
   };
 </script>
 
-  <title>归档 | Indagate</title>
+  <title>xDS标准引入gRPC生态 | Indagate</title>
   
 
 
@@ -285,77 +290,359 @@
                 <div id="content" class="content gr_grid_container">
                 
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
 
-      
-      <span class="archive-page-counter">
-        
-        
-         
-        
-        还行! 目前共计 41 篇日志。 继续努力。
-      </span>
-      
+  
 
-      
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2020-05-06-xDS标准引入GRPC生态.html">
 
-        
-        
-        
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
 
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">xDS标准引入gRPC生态</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">5月 06 2020</span><span class="gr_separate">|</span>
+          
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
         
           
-          <div class="collection-title">
-            <h2 class="archive-year" id="archive-year-2017">2017</h2>
-          </div>
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017-07-11-Docker非Root用户运行.html" itemprop="url">
+          <h3 class="blog_title" itemprop="name headline">xDS标准引入gRPC生态
               
-                <span itemprop="name">Docker非Root运行</span>
-              
-            </a>
-        
-      </h3>
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2017-07-11T10:56:01+08:00" content="7月 11 2017">
-          07-11
-        </time>
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：5月 06 2020 20:40:08 / 修改时间：20:45:25" itemprop="dateCreated datePublished" datetime="2020-05-06T20:40:08+08:00">5月 06 2020</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020-05-06-xDS标准引入GRPC生态.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020-05-06-xDS标准引入GRPC生态.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020-05-06-xDS标准引入GRPC生态.html" class="leancloud_visitors" data-flag-title="xDS标准引入gRPC生态">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span>℃</span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
+      
       </div>
-
-    </header>
-  </article>
-
-
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
+    
+      
+        <p><img src="https://s1.ax1x.com/2020/05/06/YAWtkd.md.png" alt></p>
+<div class="note info"><p>gRPC小组正在努力扩展当前的gRPCLB功能。其不再使用自定义负载均衡协议，而是采用基于Envoy xDS API的xDS协议。这将允许与支持xDS API的开源控制<br>平面（例如Istio Pilot，go-control-plane和java-control-plane）进行交互。其他优化如下所示：</p>
+<ul>
+<li>更加灵活和先进的负载均衡策略配置功能</li>
+<li>基于LRS（负载报告服务）的负载报告功能等</li>
+</ul></div>
+<p>客户端侧实现的xDS负载均衡插件与当前的gRPCLB协议不兼容。因此，我们可以认为当前的gRPCLB实现已被废弃。我们正在积极致力于新协议的推进。预计在接下来的几<br>个季度中会看到更多的进展，其中包括有关新设计的gRFC。下述将介绍gRPC关于负载均衡的设计。<br><a id="more"></a></p>
+<hr>
+<h3 id="一、需求背景"><a href="#一、需求背景" class="headerlink" title="一、需求背景"></a>一、需求背景</h3><blockquote>
+<p>值得注意的是，gRPC中的负载均衡是在每个调用而不是每个连接的基础上进行的。 换句话说，即使所有请求都来自单个客户端，我们仍然希望在所有服务器之间实现负载均衡。</p>
+</blockquote>
+<h4 id="负载均衡方案"><a href="#负载均衡方案" class="headerlink" title="负载均衡方案"></a>负载均衡方案</h4><p>在介绍gRPC之前，我们将探讨一些常用的方法来实现负载平衡。</p>
+<ol>
+<li>代理模式</li>
+</ol>
+<p>该方案使用代理来提供稳定可靠的客户端，其可以将负载报告上报给负载均衡系统。 代理通常需要更多资源以维持运行，因为它们需要保存RPC请求和响应的临时副本。<br>此模型还增加了RPC的延迟。</p>
+<blockquote>
+<p>在高并发应用场景下（例如存储），代理模型效率比较低下。</p>
+</blockquote>
+<ol start="2">
+<li>客户端动态均衡</li>
+</ol>
+<p>该方案将大多的负载均衡逻辑放置在客户端侧。例如，客户端可能包含许多用于服务器的负载均衡策略（如Round Robin，Random等）。<br>在该方案中，服务器列表将由名称解析系统（如DNS等解析），或者由外部负载均衡器等静态配置，无论如何，客户端负责从列表中选择首选服务器。</p>
+<p>这种方案的缺点之一是以多种语言/版本的客户端维护负载均衡策略。这些策略可能相当复杂。一些算法还需要客户端与服务器之间的通信，因此，除了<br>RPC用于用户请求之外，客户端可能变得更加厚重，以满足获取运行状况或加载信息等需求。</p>
+<blockquote>
+<p>这将使客户端的代码复杂化：新的设计需要隐藏多层负载均衡的复杂性，而将其以简单的服务器列表反馈给客户端。</p>
+</blockquote>
+<ol start="3">
+<li>外部负载均衡服务</li>
+</ol>
+<p>客户端负载均衡代码保持简洁且可移植，实现选择服务器的通用算法（如Round Robin等）。复杂的负载均衡算法由外部负载均衡器提供。客户端依靠<br>外部负载均衡器提供负载均衡配置以及客户端应向其发送请求的服务器列表。均衡器根据需要更新服务器列表，并且负责处理服务器不可用或运行故障等问题。负载均<br>衡器将做出最终研判，并通知客户端。负载均衡器可以与后端服务器通信以收集负载和健康等信息。</p>
+<hr>
+<h3 id="二、要求"><a href="#二、要求" class="headerlink" title="二、要求"></a>二、要求</h3><h4 id="简洁的API和客户端"><a href="#简洁的API和客户端" class="headerlink" title="简洁的API和客户端"></a>简洁的API和客户端</h4><p>gRPC客户端的负载均衡代码必须保持简洁且可移植性。客户端应仅包含用于选择服务器的简单算法（如Round Robin等）。对于复杂算法，客户端应依靠负载均衡器来提供<br>以及客户端应向其发送请求的服务器列表。均衡器将根据需要更新服务器列表，并且负责处理服务器不可用或运行故障等问题。负载均衡器将做出最终研判，并通知客户。<br>负载均衡器可以与后端服务器通信以收集负载和健康等信息。</p>
+<h4 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h4><p>负载均衡器可能与实际的服务器后端分离，并且负载均衡器的安全风险仅局限于负载均衡组件。换句话说，与没有负载均衡功能的相比，受到攻击的负载均衡器<br>应该不能让客户端取信（可能是恶意的）后端服务器。</p>
+<hr>
+<h3 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h3><p>gRPC中负载均衡的主要机制是外部负载均衡，其中外部负载均衡器为客户端提供服务器的最新列表。</p>
+<p>gRPC客户端支持用于操作内置负载均衡策略的API。 其中只有少数支持（如grpclb策略，该策略支持外部负载均衡），但是不鼓励用户通过添加<br>更多代码来扩展gRPC。 而是，推荐用户在外部负载均衡器中实现新的负载均衡策略。</p>
+<h4 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h4><blockquote>
+<p>在域名解析和与服务器的连接之间，负载均衡策略适配gRPC客户端工作流。 运作方式如下：</p>
+</blockquote>
+<p><img src="https://s1.ax1x.com/2020/05/06/YAWl6K.md.png" alt></p>
+<p>1.在启动时，gRPC客户端发出域名解析请求，解析服务器名称。该名称将解析为一个或多个IP地址，每个都将指示它是服务器地址还是一个负载均衡器地址及<br>一个服务配置（标明使用的客户端负载均衡策略，如round_robin或grpclb等）。</p>
+<p>2.负载均衡策略</p>
+<blockquote>
+<p>注意：如果解析程序返回的地址中的任何一个是负载均衡器地址，那么客户端将使用<code>grpclb</code>策略，无论服务配置请求什么负载均衡策略。<br>否则，客户端将使用请求的负载均衡策略进行服务配置。如果未请求负载平衡策略通过服务配置，客户端将使用策略选择第一个可用的服务器地址。</p>
+</blockquote>
+<p>3.负载均衡策略为每个服务器实例创建了一个子通道</p>
+<ul>
+<li>对于所有策略（grpclb除外），这意味着解析器返回的每个地址都有一个子通道。 请注意，这些策略会忽略解析器返回的任何均衡器地址。</li>
+<li>对于<code>grpclb</code>策略，工作流程如下：<ol>
+<li>该策略在解析器返回的均衡器地址间开辟一个流通道。它需要均衡器提供服务器地址以用于客户端最初发起请求。<br>注意：在<code>grpclb</code>策略中，在负载均衡策略启动时，如果没有均衡器可以正常通信，那么返回的非负载均衡器地址可以作为后备选项。<br>2.负载均衡器将客户端定向到的gRPC服务器，gRPC服务器根据负载均衡器的配置，可以向其上报负载等信息。<br>3.负载均衡器将服务器列表返回到gRPC<code>grpclb</code>策略的客户端，然后，<code>grpclb</code>策略将为列表中的每个服务器建立子通道。</li>
+</ol>
+</li>
+</ul>
+<p>4.对于每个发送的RPC，负载均衡策略决定RPC应该发送到的哪个子通道（哪个服务器）。</p>
+<ul>
+<li>对于<code>grpclb</code>策略，客户端将把请求发送到服务器。如果服务器列表为空，则呼叫阻塞，直到出现非空。</li>
+</ul>
+<hr>
+<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul>
+<li><a href="https://github.com/grpc/grpc/blob/618a3f561d4a93f263cca23abad086ed8f4d5e86/doc/load-balancing.md" target="_blank" rel="noopener">load balancing</a></li>
+</ul>
 
       
-
     </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+      <div class="qr_code_pc_inner">
+        <div class="qr_code_pc">
+    <img id="js_pc_qr_code_img" class="qr_code_pc_img" src="https://s2.ax1x.com/2019/09/22/upS79K.jpg" alt="zouyee wechat" style="width: 200px; max-width: 100%;">
+    <p>微信扫一扫<br>关注该公众号</p>
+</div>
+<script>
+jQuery.noConflict()(function ($) {
+    $(function () {
+		var offsetTop = $('#comments').offset().top - $(window).height();
+		
+		if (offsetTop <= 0) {
+			// load directly when there's no a scrollbar
+			console.log("....")
+		} else {
+			$(window).on('scroll', function () {
+				var scrollTop = document.documentElement.scrollTop;
+				var copyright = $('.post-copyright').offset().top;
+				
+				var imageH = $('.qr_code_pc').offset().top;
+				console.log("scrollTop", scrollTop)
+				console.log("copyright", copyright)
+				console.log("qr_code_pc", imageH)
+				if (scrollTop <= offsetTop) {
+					$('.qr_code_pc').css('position', 'absolute')
+					$('.qr_code_pc').css('top', 420)
+				}
+				if (scrollTop > 450 && copyright > scrollTop) {
+					$('.qr_code_pc').css('top', 20)
+					$('.qr_code_pc').css('position', 'fixed')
+				} else {
+					$('.qr_code_pc').css('position', 'absolute')
+				}
+			});
+		}
+	});
+
+})
+</script>
+
+      </div>
+      
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span style="padding-top: 5px;">打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="https://s2.ax1x.com/2019/09/22/uppS4P.jpg" alt="zouyee 微信支付">
+        
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>zouyee</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://ustack.io/2020-05-06-xDS标准引入GRPC生态.html" title="xDS标准引入gRPC生态">https://ustack.io/2020-05-06-xDS标准引入GRPC生态.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/cloudnative/" rel="tag"># cloudnative</a>
+          
+            <a href="/tags/grpc/" rel="tag"># grpc</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020-04-20-Kubernetes进阶之NT技术小解.html" rel="next" title="Kubernetes进阶之NT技术小解">
+                <i class="fa fa-chevron-left"></i> Kubernetes进阶之NT技术小解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
                 </div>
                 
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
 
             </div>
                 
@@ -379,8 +666,15 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -621,6 +915,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、需求背景"><span class="nav-number">1.</span> <span class="nav-text">一、需求背景</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#负载均衡方案"><span class="nav-number">1.1.</span> <span class="nav-text">负载均衡方案</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、要求"><span class="nav-number">2.</span> <span class="nav-text">二、要求</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简洁的API和客户端"><span class="nav-number">2.1.</span> <span class="nav-text">简洁的API和客户端</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安全"><span class="nav-number">2.2.</span> <span class="nav-text">安全</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#架构"><span class="nav-number">3.</span> <span class="nav-text">架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#工作流程"><span class="nav-number">3.1.</span> <span class="nav-text">工作流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考资料"><span class="nav-number">3.2.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -922,6 +1232,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
 
   
 

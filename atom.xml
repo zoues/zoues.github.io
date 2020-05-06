@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://ustack.io/"/>
-  <updated>2020-04-20T13:41:53.742Z</updated>
+  <updated>2020-05-06T12:45:25.753Z</updated>
   <id>https://ustack.io/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>xDS标准引入gRPC生态</title>
+    <link href="https://ustack.io/2020-05-06-xDS%E6%A0%87%E5%87%86%E5%BC%95%E5%85%A5GRPC%E7%94%9F%E6%80%81.html"/>
+    <id>https://ustack.io/2020-05-06-xDS标准引入GRPC生态.html</id>
+    <published>2020-05-06T12:40:08.000Z</published>
+    <updated>2020-05-06T12:45:25.753Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="https://s1.ax1x.com/2020/05/06/YAWtkd.md.png" alt></p><div class="note info"><p>gRPC小组正在努力扩展当前的gRPCLB功能。其不再使用自定义负载均衡协议，而是采用基于Envoy xDS API的xDS协议。这将允许与支持xDS API的开源控制<br>平面（例如Istio Pilot，go-control-plane和java-control-plane）进行交互。其他优化如下所示：</p><ul><li>更加灵活和先进的负载均衡策略配置功能</li><li>基于LRS（负载报告服务）的负载报告功能等</li></ul></div><p>客户端侧实现的xDS负载均衡插件与当前的gRPCLB协议不兼容。因此，我们可以认为当前的gRPCLB实现已被废弃。我们正在积极致力于新协议的推进。预计在接下来的几<br>个季度中会看到更多的进展，其中包括有关新设计的gRFC。下述将介绍gRPC关于负载均衡的设计。<br><a id="more"></a></p><hr><h3 id="一、需求背景"><a href="#一、需求背景" class="headerlink" title="一、需求背景"></a>一、需求背景</h3><blockquote><p>值得注意的是，gRPC中的负载均衡是在每个调用而不是每个连接的基础上进行的。 换句话说，即使所有请求都来自单个客户端，我们仍然希望在所有服务器之间实现负载均衡。</p></blockquote><h4 id="负载均衡方案"><a href="#负载均衡方案" class="headerlink" title="负载均衡方案"></a>负载均衡方案</h4><p>在介绍gRPC之前，我们将探讨一些常用的方法来实现负载平衡。</p><ol><li>代理模式</li></ol><p>该方案使用代理来提供稳定可靠的客户端，其可以将负载报告上报给负载均衡系统。 代理通常需要更多资源以维持运行，因为它们需要保存RPC请求和响应的临时副本。<br>此模型还增加了RPC的延迟。</p><blockquote><p>在高并发应用场景下（例如存储），代理模型效率比较低下。</p></blockquote><ol start="2"><li>客户端动态均衡</li></ol><p>该方案将大多的负载均衡逻辑放置在客户端侧。例如，客户端可能包含许多用于服务器的负载均衡策略（如Round Robin，Random等）。<br>在该方案中，服务器列表将由名称解析系统（如DNS等解析），或者由外部负载均衡器等静态配置，无论如何，客户端负责从列表中选择首选服务器。</p><p>这种方案的缺点之一是以多种语言/版本的客户端维护负载均衡策略。这些策略可能相当复杂。一些算法还需要客户端与服务器之间的通信，因此，除了<br>RPC用于用户请求之外，客户端可能变得更加厚重，以满足获取运行状况或加载信息等需求。</p><blockquote><p>这将使客户端的代码复杂化：新的设计需要隐藏多层负载均衡的复杂性，而将其以简单的服务器列表反馈给客户端。</p></blockquote><ol start="3"><li>外部负载均衡服务</li></ol><p>客户端负载均衡代码保持简洁且可移植，实现选择服务器的通用算法（如Round Robin等）。复杂的负载均衡算法由外部负载均衡器提供。客户端依靠<br>外部负载均衡器提供负载均衡配置以及客户端应向其发送请求的服务器列表。均衡器根据需要更新服务器列表，并且负责处理服务器不可用或运行故障等问题。负载均<br>衡器将做出最终研判，并通知客户端。负载均衡器可以与后端服务器通信以收集负载和健康等信息。</p><hr><h3 id="二、要求"><a href="#二、要求" class="headerlink" title="二、要求"></a>二、要求</h3><h4 id="简洁的API和客户端"><a href="#简洁的API和客户端" class="headerlink" title="简洁的API和客户端"></a>简洁的API和客户端</h4><p>gRPC客户端的负载均衡代码必须保持简洁且可移植性。客户端应仅包含用于选择服务器的简单算法（如Round Robin等）。对于复杂算法，客户端应依靠负载均衡器来提供<br>以及客户端应向其发送请求的服务器列表。均衡器将根据需要更新服务器列表，并且负责处理服务器不可用或运行故障等问题。负载均衡器将做出最终研判，并通知客户。<br>负载均衡器可以与后端服务器通信以收集负载和健康等信息。</p><h4 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h4><p>负载均衡器可能与实际的服务器后端分离，并且负载均衡器的安全风险仅局限于负载均衡组件。换句话说，与没有负载均衡功能的相比，受到攻击的负载均衡器<br>应该不能让客户端取信（可能是恶意的）后端服务器。</p><hr><h3 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h3><p>gRPC中负载均衡的主要机制是外部负载均衡，其中外部负载均衡器为客户端提供服务器的最新列表。</p><p>gRPC客户端支持用于操作内置负载均衡策略的API。 其中只有少数支持（如grpclb策略，该策略支持外部负载均衡），但是不鼓励用户通过添加<br>更多代码来扩展gRPC。 而是，推荐用户在外部负载均衡器中实现新的负载均衡策略。</p><h4 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h4><blockquote><p>在域名解析和与服务器的连接之间，负载均衡策略适配gRPC客户端工作流。 运作方式如下：</p></blockquote><p><img src="https://s1.ax1x.com/2020/05/06/YAWl6K.md.png" alt></p><p>1.在启动时，gRPC客户端发出域名解析请求，解析服务器名称。该名称将解析为一个或多个IP地址，每个都将指示它是服务器地址还是一个负载均衡器地址及<br>一个服务配置（标明使用的客户端负载均衡策略，如round_robin或grpclb等）。</p><p>2.负载均衡策略</p><blockquote><p>注意：如果解析程序返回的地址中的任何一个是负载均衡器地址，那么客户端将使用<code>grpclb</code>策略，无论服务配置请求什么负载均衡策略。<br>否则，客户端将使用请求的负载均衡策略进行服务配置。如果未请求负载平衡策略通过服务配置，客户端将使用策略选择第一个可用的服务器地址。</p></blockquote><p>3.负载均衡策略为每个服务器实例创建了一个子通道</p><ul><li>对于所有策略（grpclb除外），这意味着解析器返回的每个地址都有一个子通道。 请注意，这些策略会忽略解析器返回的任何均衡器地址。</li><li>对于<code>grpclb</code>策略，工作流程如下：<ol><li>该策略在解析器返回的均衡器地址间开辟一个流通道。它需要均衡器提供服务器地址以用于客户端最初发起请求。<br>注意：在<code>grpclb</code>策略中，在负载均衡策略启动时，如果没有均衡器可以正常通信，那么返回的非负载均衡器地址可以作为后备选项。<br>2.负载均衡器将客户端定向到的gRPC服务器，gRPC服务器根据负载均衡器的配置，可以向其上报负载等信息。<br>3.负载均衡器将服务器列表返回到gRPC<code>grpclb</code>策略的客户端，然后，<code>grpclb</code>策略将为列表中的每个服务器建立子通道。</li></ol></li></ul><p>4.对于每个发送的RPC，负载均衡策略决定RPC应该发送到的哪个子通道（哪个服务器）。</p><ul><li>对于<code>grpclb</code>策略，客户端将把请求发送到服务器。如果服务器列表为空，则呼叫阻塞，直到出现非空。</li></ul><hr><h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul><li><a href="https://github.com/grpc/grpc/blob/618a3f561d4a93f263cca23abad086ed8f4d5e86/doc/load-balancing.md" target="_blank" rel="noopener">load balancing</a></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;https://s1.ax1x.com/2020/05/06/YAWtkd.md.png&quot; alt&gt;&lt;/p&gt;
+&lt;div class=&quot;note info&quot;&gt;&lt;p&gt;gRPC小组正在努力扩展当前的gRPCLB功能。其不再使用自定义负载均衡协议，而是采用基于Envoy xDS API的xDS协议。这将允许与支持xDS API的开源控制&lt;br&gt;平面（例如Istio Pilot，go-control-plane和java-control-plane）进行交互。其他优化如下所示：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;更加灵活和先进的负载均衡策略配置功能&lt;/li&gt;
+&lt;li&gt;基于LRS（负载报告服务）的负载报告功能等&lt;/li&gt;
+&lt;/ul&gt;&lt;/div&gt;
+&lt;p&gt;客户端侧实现的xDS负载均衡插件与当前的gRPCLB协议不兼容。因此，我们可以认为当前的gRPCLB实现已被废弃。我们正在积极致力于新协议的推进。预计在接下来的几&lt;br&gt;个季度中会看到更多的进展，其中包括有关新设计的gRFC。下述将介绍gRPC关于负载均衡的设计。&lt;br&gt;
+    
+    </summary>
+    
+    
+      <category term="cloudnative" scheme="https://ustack.io/tags/cloudnative/"/>
+    
+      <category term="grpc" scheme="https://ustack.io/tags/grpc/"/>
+    
+  </entry>
   
   <entry>
     <title>Kubernetes进阶之NT技术小解</title>
@@ -496,29 +524,6 @@
     
     
       <category term="Linux" scheme="https://ustack.io/tags/Linux/"/>
-    
-      <category term="kubernetes" scheme="https://ustack.io/tags/kubernetes/"/>
-    
-      <category term="cloudnative" scheme="https://ustack.io/tags/cloudnative/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Linux内存控制之overcommit</title>
-    <link href="https://ustack.io/2019-11-21-Linux%E5%86%85%E5%AD%98%E6%8E%A7%E5%88%B6%E4%B9%8B%E8%B6%85%E5%88%86.html"/>
-    <id>https://ustack.io/2019-11-21-Linux内存控制之超分.html</id>
-    <published>2019-11-21T12:40:08.000Z</published>
-    <updated>2019-11-23T13:50:12.730Z</updated>
-    
-    <content type="html"><![CDATA[<div class="note info"><p>接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。</p><p>kubelet组件涉及内存分配相关概念，在此先作学习铺垫。</p></div><a id="more"></a><hr><h3 id="1、介绍"><a href="#1、介绍" class="headerlink" title="1、介绍"></a>1、介绍</h3><p>Memory Overcommit的意思是操作系统承诺给进程的内存大小超过了实际可用的内存。一个保守的操作系统不会允许memory overcommit，有多少就分配多少，再申请就没有了，这其实有些浪费内存，因为进程实际使用到的内存往往比申请的内存要少，比如某个进程malloc()了200MB内存，但实际上只用到了100MB，按照UNIX/Linux的算法，物理内存页的分配发生在使用的瞬间，而不是在申请的瞬间，也就是说未用到的100MB内存根本就没有分配，这100MB内存就闲置了。下面这个概念很重要，是理解memory overcommit的关键：commit(或overcommit)针对的是内存申请，内存申请不等于内存分配，内存只在实际用到的时候才分配。</p><p>Linux是允许memory overcommit的，只要你来申请内存我就给你，寄希望于进程实际上用不到那么多内存，但万一用到那么多了呢？那就会发生类似“银行挤兑”的危机，现金(内存)不足了。Linux设计了一个OOM killer机制(OOM = out-of-memory)来处理这种危机：挑选一个进程出来杀死，以腾出部分内存，如果还不够就继续杀…也可通过设置内核参数 vm.panic_on_oom 使得发生OOM时自动重启系统。这都是有风险的机制，重启有可能造成业务中断，杀死进程也有可能导致业务中断，我自己的这个小网站就碰到过这种问题，参见前文。所以Linux 2.6之后允许通过内核参数 vm.overcommit_memory 禁止memory overcommit。</p><p>内核参数 vm.overcommit_memory 接受三种取值：</p><ul><li>Heuristic overcommit handling. 这是缺省值，它允许overcommit，但过于明目张胆的overcommit会被拒绝，比如malloc一次性申请的内存大小就超过了系统总内存。Heuristic的意思是“试探式的”，内核利用某种算法（对该算法的详细解释请看文末）猜测你的内存申请是否合理，它认为不合理就会拒绝overcommit。</li><li>Always overcommit. 允许overcommit，对内存申请来者不拒。</li><li>Don’t overcommit. 禁止overcommit。</li></ul><p>关于禁止overcommit (vm.overcommit_memory=2) ，需要知道的是，怎样才算是overcommit呢？kernel设有一个阈值，申请的内存总数超过这个阈值就算overcommit，在/proc/meminfo中可以看到这个阈值的大小：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># grep -i commit /proc/meminfo</span></span><br><span class="line">CommitLimit:     5967744 kB</span><br><span class="line">Committed_AS:    5363236 kB</span><br></pre></td></tr></table></figure><p>CommitLimit 就是overcommit的阈值，申请的内存总数超过CommitLimit的话就算是overcommit。<br>这个阈值是如何计算出来的呢？它既不是物理内存的大小，也不是free memory的大小，它是通过内核参数vm.overcommit_ratio或vm.overcommit_kbytes间接设置的，公式如下：<br><code>CommitLimit = (Physical RAM * vm.overcommit_ratio / 100) + Swap</code></p><blockquote><p>vm.overcommit_ratio 是内核参数，缺省值是50，表示物理内存的50%。如果你不想使用比率，也可以直接指定内存的字节数大小，通过另一个内核参数 vm.overcommit_kbytes 即可；<br>如果使用了huge pages，那么需要从物理内存中减去，公式变成：<br>CommitLimit = ([total RAM] – [total huge TLB RAM]) * vm.overcommit_ratio / 100 + swap<br>参见<a href="https://access.redhat.com/solutions/665023" target="_blank" rel="noopener">链接</a></p></blockquote><p>/proc/meminfo中的 Committed_AS 表示所有进程已经申请的内存总大小，（注意是已经申请的，不是已经分配的），如果 Committed_AS 超过 CommitLimit 就表示发生了 overcommit，超出越多表示 overcommit 越严重。Committed_AS 的含义换一种说法就是，如果要绝对保证不发生OOM (out of memory) 需要多少物理内存。</p><p>“sar -r”是查看内存使用状况的常用工具，它的输出结果中有两个与overcommit有关，kbcommit 和 %commit：<br>kbcommit对应/proc/meminfo中的 Committed_AS；<br>%commit的计算公式并没有采用 CommitLimit作分母，而是Committed_AS/(MemTotal+SwapTotal)，意思是<em>内存申请</em>占<em>物理内存与交换区之和</em>的百分比。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sar -r</span><br><span class="line">05:00:01 PM kbmemfree kbmemused  %memused kbbuffers  kbcached  kbcommit   %commit  kbactive   kbinact   kbdirty</span><br><span class="line">05:10:01 PM    160576   3648460     95.78         0   1846212   4939368     62.74   1390292   1854880</span><br></pre></td></tr></table></figure><h3 id="2、Heuristic-overcommit算法"><a href="#2、Heuristic-overcommit算法" class="headerlink" title="2、Heuristic overcommit算法"></a>2、Heuristic overcommit算法</h3><p>内核参数 vm.overcommit_memory 的值0，1，2，其中heuristic overcommit对应的是OVERCOMMIT_GUESS：</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> OVERCOMMIT_GUESS                0</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> OVERCOMMIT_ALWAYS               1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> OVERCOMMIT_NEVER                2</span></span><br></pre></td></tr></table></figure><p>Heuristic overcommit算法在以下函数中实现，基本上可以这么理解：<br>单次申请的内存大小不能超过 【free memory + free swap + pagecache的大小 + SLAB中可回收的部分】，否则本次申请就会失败。</p><hr><h3 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h3><p>该文为kubelet相关内容的铺垫，涉及到kubelet对于oom killer的使用。</p><hr><h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul><li><a href="http://linuxperf.com/?p=102" target="_blank" rel="noopener">overcommit</a></li><li><a href="https://www.kernel.org/doc/Documentation/vm/overcommit-accounting" target="_blank" rel="noopener">kernel</a></li></ul>]]></content>
-    
-    <summary type="html">
-    
-      &lt;div class=&quot;note info&quot;&gt;&lt;p&gt;接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。&lt;/p&gt;
-&lt;p&gt;kubelet组件涉及内存分配相关概念，在此先作学习铺垫。&lt;/p&gt;&lt;/div&gt;
-    
-    </summary>
-    
     
       <category term="kubernetes" scheme="https://ustack.io/tags/kubernetes/"/>
     
