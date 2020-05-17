@@ -105,30 +105,20 @@
 
 
 
-  <meta name="description" content="前言 由于最近在折腾Android项目，需要用到一些与服务器交互、以及数据存储的相关功能，然后发现了LeanCloud这家服务提供商,使用下来还感觉还挺靠谱的(请给我广告费)。正好发现他们服务提供了JavaScript SDK，于是就想着尝试着实现Hexo博客文章的浏览数统计功能，之前虽然在使用不蒜子，但是不蒜子不能够在主页展示文章阅读量啊！对于博主这种有强迫症又想装X的人来说果断不能忍啊！ 修改">
-<meta name="keywords" content="Hexo">
+  <meta name="description" content="Serverless正在迅猛发展：根据2019度CNCF调查报告，目前有41％的受访者正在使用serverless技术，另有20％的受访者计划在未来12至18个月内使用serverless技术。 serverless技术允许云化应用程序开发团队将代码交付给serverless服务商-以减少开销成本，提高可伸缩性并简化DevOps周期。">
+<meta name="keywords" content="cloudnative,serverless">
 <meta property="og:type" content="article">
-<meta property="og:title" content="为NexT主题添加文章阅读量统计功能">
-<meta property="og:url" content="https://ustack.io/2015-10-21-为NexT主题添加文章阅读量统计功能.html">
+<meta property="og:title" content="Serverless标准化夯实应用基础架构的未来">
+<meta property="og:url" content="https://ustack.io/2020-05-16-Serverless标准化夯实应用基础架构的未来.html">
 <meta property="og:site_name" content="Indagate">
-<meta property="og:description" content="前言 由于最近在折腾Android项目，需要用到一些与服务器交互、以及数据存储的相关功能，然后发现了LeanCloud这家服务提供商,使用下来还感觉还挺靠谱的(请给我广告费)。正好发现他们服务提供了JavaScript SDK，于是就想着尝试着实现Hexo博客文章的浏览数统计功能，之前虽然在使用不蒜子，但是不蒜子不能够在主页展示文章阅读量啊！对于博主这种有强迫症又想装X的人来说果断不能忍啊！ 修改">
+<meta property="og:description" content="Serverless正在迅猛发展：根据2019度CNCF调查报告，目前有41％的受访者正在使用serverless技术，另有20％的受访者计划在未来12至18个月内使用serverless技术。 serverless技术允许云化应用程序开发团队将代码交付给serverless服务商-以减少开销成本，提高可伸缩性并简化DevOps周期。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/open_consoloe.png">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/create_app.png">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/creating_app.png">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/create_class.png">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/creating_class.png">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/open_app_key.png">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/opened_app_key.png">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/background.png">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/open_safe_center.png">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/bind_domain.png">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/broswer_403.png">
-<meta property="og:updated_time" content="2019-05-16T22:56:27.000Z">
+<meta property="og:image" content="https://s1.ax1x.com/2020/05/16/Yc4JUK.jpg">
+<meta property="og:updated_time" content="2020-05-17T01:46:00.962Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="为NexT主题添加文章阅读量统计功能">
-<meta name="twitter:description" content="前言 由于最近在折腾Android项目，需要用到一些与服务器交互、以及数据存储的相关功能，然后发现了LeanCloud这家服务提供商,使用下来还感觉还挺靠谱的(请给我广告费)。正好发现他们服务提供了JavaScript SDK，于是就想着尝试着实现Hexo博客文章的浏览数统计功能，之前虽然在使用不蒜子，但是不蒜子不能够在主页展示文章阅读量啊！对于博主这种有强迫症又想装X的人来说果断不能忍啊！ 修改">
-<meta name="twitter:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/open_consoloe.png">
+<meta name="twitter:title" content="Serverless标准化夯实应用基础架构的未来">
+<meta name="twitter:description" content="Serverless正在迅猛发展：根据2019度CNCF调查报告，目前有41％的受访者正在使用serverless技术，另有20％的受访者计划在未来12至18个月内使用serverless技术。 serverless技术允许云化应用程序开发团队将代码交付给serverless服务商-以减少开销成本，提高可伸缩性并简化DevOps周期。">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/05/16/Yc4JUK.jpg">
 
 
 
@@ -137,7 +127,7 @@
 
 
 
-  <link rel="canonical" href="https://ustack.io/2015-10-21-为NexT主题添加文章阅读量统计功能.html">
+  <link rel="canonical" href="https://ustack.io/2020-05-16-Serverless标准化夯实应用基础架构的未来.html">
 
 
 
@@ -147,7 +137,7 @@
   };
 </script>
 
-  <title>为NexT主题添加文章阅读量统计功能 | Indagate</title>
+  <title>Serverless标准化夯实应用基础架构的未来 | Indagate</title>
   
 
 
@@ -315,7 +305,7 @@
   
   
   <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2015-10-21-为NexT主题添加文章阅读量统计功能.html">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2020-05-16-Serverless标准化夯实应用基础架构的未来.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zouyee">
@@ -330,22 +320,19 @@
     
     <div class="head">
         <div class="gr_up_title">
-          <span class="text-overflow-center">为NexT主题添加文章阅读量统计功能</span>
+          <span class="text-overflow-center">Serverless标准化夯实应用基础架构的未来</span>
         </div>
         <div class="gr_blog_post_cat">
-          <span class="gr_ddate">10月 21 2015</span><span class="gr_separate">|</span>
+          <span class="gr_ddate">5月 16 2020</span><span class="gr_separate">|</span>
           
-                <a href="/categories/Hexo/" itemprop="url" rel="category tag"><span itemprop="name">Hexo</span></a>
-
-                
-                
-              
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
             
         </div>
         <div class="gr_blog_post_title_holder">
         
           
-          <h3 class="blog_title" itemprop="name headline">为NexT主题添加文章阅读量统计功能
+          <h3 class="blog_title" itemprop="name headline">Serverless标准化夯实应用基础架构的未来
               
             
           </h3>
@@ -370,7 +357,7 @@
                 
               
 
-              <time title="创建时间：10月 21 2015 21:57:00" itemprop="dateCreated datePublished" datetime="2015-10-21T21:57:00+08:00">10月 21 2015</time>
+              <time title="创建时间：5月 16 2020 21:40:08" itemprop="dateCreated datePublished" datetime="2020-05-16T21:40:08+08:00">5月 16 2020</time>
             
 
             
@@ -387,29 +374,11 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
+                <time title="修改时间：5月 17 2020 09:46:00" itemprop="dateModified" datetime="2020-05-17T09:46:00+08:00">5月 17 2020</time>
               
             
           </span>
 
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a></span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -419,8 +388,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2015-10-21-为NexT主题添加文章阅读量统计功能.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015-10-21-为NexT主题添加文章阅读量统计功能.html" itemprop="commentCount"></span>
+                <a href="/2020-05-16-Serverless标准化夯实应用基础架构的未来.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020-05-16-Serverless标准化夯实应用基础架构的未来.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -428,7 +397,7 @@
 
           
           
-             <span id="/2015-10-21-为NexT主题添加文章阅读量统计功能.html" class="leancloud_visitors" data-flag-title="为NexT主题添加文章阅读量统计功能">
+             <span id="/2020-05-16-Serverless标准化夯实应用基础架构的未来.html" class="leancloud_visitors" data-flag-title="Serverless标准化夯实应用基础架构的未来">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -464,74 +433,36 @@
     <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
     
       
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><hr>
-<p>由于最近在折腾Android项目，需要用到一些与服务器交互、以及数据存储的相关功能，然后发现了<a href="https://leancloud.cn" target="_blank" rel="noopener">LeanCloud</a>这家服务提供商,使用下来还感觉还挺靠谱的(请给我广告费)。正好发现他们服务提供了<a href="https://leancloud.cn/docs/js_guide.html" target="_blank" rel="noopener">JavaScript SDK</a>，于是就想着尝试着实现Hexo博客文章的浏览数统计功能，之前虽然在使用不蒜子，但是不蒜子不能够在主页展示文章阅读量啊！对于博主这种有强迫症又想装X的人来说果断不能忍啊！</p>
-<h3 id="修改NexT主题模版"><a href="#修改NexT主题模版" class="headerlink" title="修改NexT主题模版"></a><del>修改NexT主题模版</del></h3><p><del>本方法理论上对Hexo博客通用，由于博主使用的是NexT主题，所以当然针对NexT来说咯。</del><strong><font color="red">NexT主题目前已经合并这个Feature，因此如果你使用的是NexT主题，可以直接使用不用修改主题模版而直接在<code>_config.yml</code>中配置即可，请直接跳转查看<a href="#%E9%85%8D%E7%BD%AELeanCloud">配置LeanCloud</a></font></strong></p>
+        <p><img src="https://s1.ax1x.com/2020/05/16/Yc4JUK.jpg" alt></p>
+<div class="note info"><p>Serverless正在迅猛发展：根据2019度CNCF调查报告，目前有41％的受访者正在使用serverless技术，另有20％的受访者计<br>划在未来12至18个月内使用serverless技术。 serverless技术允许云化应用程序开发团队将代码交付给serverless服务商-以减少<br>开销成本，提高可伸缩性并简化DevOps周期。</p></div>
 <a id="more"></a>
-<h4 id="修改-config-yml文件"><a href="#修改-config-yml文件" class="headerlink" title="修改_config.yml文件"></a><del>修改<code>_config.yml</code>文件</del></h4><p><del>打开NexT主题的根目录下的<code>_config.yml</code>文件，在任意位置添加以下内容：</del></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">leancloud_visitors:</span><br><span class="line">  enable: <span class="literal">true</span></span><br><span class="line">  app_id: #&lt;AppID&gt;</span><br><span class="line">  app_key: #&lt;AppKEY&gt;</span><br></pre></td></tr></table></figure>
-<h4 id="添加lean-analytics-swig文件"><a href="#添加lean-analytics-swig文件" class="headerlink" title="添加lean-analytics.swig文件"></a><del>添加<code>lean-analytics.swig</code>文件</del></h4><p><del>在主题的<code>layout\_scripts</code>路径下，新建一个<code>lean-analytics.swig</code>文件，并向里面添加以下内容</del></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- custom analytics part create by xiamo --&gt;</span><br><span class="line">&lt;script src=<span class="string">"https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"</span>&gt;&lt;/script&gt;</span><br><span class="line">&lt;script&gt;AV.initialize(<span class="string">"&#123;&#123;theme.leancloud_visitors.app_id&#125;&#125;"</span>, <span class="string">"&#123;&#123;theme.leancloud_visitors.app_key&#125;&#125;"</span>);&lt;/script&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">showTime</span>(<span class="params">Counter</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> query = <span class="keyword">new</span> AV.Query(Counter);</span><br><span class="line">	$(<span class="string">".leancloud_visitors"</span>).each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="keyword">var</span> url = $(<span class="keyword">this</span>).attr(<span class="string">"id"</span>).trim();</span><br><span class="line">		query.equalTo(<span class="string">"url"</span>, url);</span><br><span class="line">		query.find(&#123;</span><br><span class="line">			success: <span class="function"><span class="keyword">function</span>(<span class="params">results</span>) </span>&#123;</span><br><span class="line">				<span class="keyword">if</span> (results.length == <span class="number">0</span>) &#123;</span><br><span class="line">					<span class="keyword">var</span> content = $(<span class="built_in">document</span>.getElementById(url)).text() + <span class="string">': 0'</span>;</span><br><span class="line">					$(<span class="built_in">document</span>.getElementById(url)).text(content);</span><br><span class="line">					<span class="keyword">return</span>;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; results.length; i++) &#123;</span><br><span class="line">					<span class="keyword">var</span> object = results[i];</span><br><span class="line">					<span class="keyword">var</span> content = $(<span class="built_in">document</span>.getElementById(url)).text() + <span class="string">': '</span> + object.get(<span class="string">'time'</span>);</span><br><span class="line">					$(<span class="built_in">document</span>.getElementById(url)).text(content);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;,</span><br><span class="line">			error: <span class="function"><span class="keyword">function</span>(<span class="params">object, error</span>) </span>&#123;</span><br><span class="line">				<span class="built_in">console</span>.log(<span class="string">"Error: "</span> + error.code + <span class="string">" "</span> + error.message);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;);</span><br><span class="line"></span><br><span class="line">	&#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addCount</span>(<span class="params">Counter</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> Counter = AV.Object.extend(<span class="string">"Counter"</span>);</span><br><span class="line">	url = $(<span class="string">".leancloud_visitors"</span>).attr(<span class="string">'id'</span>).trim();</span><br><span class="line">	title = $(<span class="string">".leancloud_visitors"</span>).attr(<span class="string">'data-flag-title'</span>).trim();</span><br><span class="line">	<span class="keyword">var</span> query = <span class="keyword">new</span> AV.Query(Counter);</span><br><span class="line">	query.equalTo(<span class="string">"url"</span>, url);</span><br><span class="line">	query.find(&#123;</span><br><span class="line">		success: <span class="function"><span class="keyword">function</span>(<span class="params">results</span>) </span>&#123;</span><br><span class="line">			<span class="keyword">if</span> (results.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">				<span class="keyword">var</span> counter = results[<span class="number">0</span>];</span><br><span class="line">				counter.fetchWhenSave(<span class="literal">true</span>);</span><br><span class="line">				counter.increment(<span class="string">"time"</span>);</span><br><span class="line">				counter.save(<span class="literal">null</span>, &#123;</span><br><span class="line">					success: <span class="function"><span class="keyword">function</span>(<span class="params">counter</span>) </span>&#123;</span><br><span class="line">						<span class="keyword">var</span> content = $(<span class="built_in">document</span>.getElementById(url)).text() + <span class="string">': '</span> + counter.get(<span class="string">'time'</span>);</span><br><span class="line">						$(<span class="built_in">document</span>.getElementById(url)).text(content);</span><br><span class="line">					&#125;,</span><br><span class="line">					error: <span class="function"><span class="keyword">function</span>(<span class="params">counter, error</span>) </span>&#123;</span><br><span class="line">						<span class="built_in">console</span>.log(<span class="string">'Failed to save Visitor num, with error message: '</span> + error.message);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;);</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="keyword">var</span> newcounter = <span class="keyword">new</span> Counter();</span><br><span class="line">				newcounter.set(<span class="string">"title"</span>, title);</span><br><span class="line">				newcounter.set(<span class="string">"url"</span>, url);</span><br><span class="line">				newcounter.set(<span class="string">"time"</span>, <span class="number">1</span>);</span><br><span class="line">				newcounter.save(<span class="literal">null</span>, &#123;</span><br><span class="line">					success: <span class="function"><span class="keyword">function</span>(<span class="params">newcounter</span>) </span>&#123;</span><br><span class="line">					    <span class="built_in">console</span>.log(<span class="string">"newcounter.get('time')="</span>+newcounter.get(<span class="string">'time'</span>));</span><br><span class="line">						<span class="keyword">var</span> content = $(<span class="built_in">document</span>.getElementById(url)).text() + <span class="string">': '</span> + newcounter.get(<span class="string">'time'</span>);</span><br><span class="line">						$(<span class="built_in">document</span>.getElementById(url)).text(content);</span><br><span class="line">					&#125;,</span><br><span class="line">					error: <span class="function"><span class="keyword">function</span>(<span class="params">newcounter, error</span>) </span>&#123;</span><br><span class="line">						<span class="built_in">console</span>.log(<span class="string">'Failed to create'</span>);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;,</span><br><span class="line">		error: <span class="function"><span class="keyword">function</span>(<span class="params">error</span>) </span>&#123;</span><br><span class="line">			<span class="built_in">console</span>.log(<span class="string">'Error:'</span> + error.code + <span class="string">" "</span> + error.message);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;</span><br><span class="line">$(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> Counter = AV.Object.extend(<span class="string">"Counter"</span>);</span><br><span class="line">	<span class="keyword">if</span> ($(<span class="string">'.leancloud_visitors'</span>).length == <span class="number">1</span>) &#123;</span><br><span class="line">		addCount(Counter);</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> ($(<span class="string">'.post-title-link'</span>).length &gt; <span class="number">1</span>) &#123;</span><br><span class="line">		showTime(Counter);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
-<h4 id="修改post-swig文件"><a href="#修改post-swig文件" class="headerlink" title="修改post.swig文件"></a><del>修改<code>post.swig</code>文件</del></h4><p><del>在主题的<code>layout\_macro</code>路径下，打开<code>post.swig</code>文件，找到以下内容（大概88行）：</del></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;% if not is_index and theme.facebook_sdk.enable and theme.facebook_sdk.like_button %&#125;</span><br><span class="line">  &amp;nbsp; | &amp;nbsp;</span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"fb-like"</span> <span class="attr">data-layout</span>=<span class="string">"button_count"</span> <span class="attr">data-share</span>=<span class="string">"true"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
-<p><del>在其后面添加如下内容：</del></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;% if theme.leancloud_visitors.enable %&#125;</span><br><span class="line">		  	 <span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"&#123;&#123; url_for(post.path) &#125;&#125;"</span><span class="attr">class</span>=<span class="string">"leancloud_visitors"</span>  <span class="attr">data-flag-title</span>=<span class="string">"&#123;&#123; post.title &#125;&#125;"</span>&gt;</span></span><br><span class="line">            &amp;nbsp; | &amp;nbsp; &#123;&#123;__('post.visitors')&#125;&#125;</span><br><span class="line">            <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">		  &#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
-<p><del>添加完毕之后，文件内容像这个样子：</del></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">      &#123;% if not is_index and theme.facebook_sdk.enable and theme.facebook_sdk.like_button %&#125;</span><br><span class="line">        &amp;nbsp; | &amp;nbsp;</span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"fb-like"</span> <span class="attr">data-layout</span>=<span class="string">"button_count"</span> <span class="attr">data-share</span>=<span class="string">"true"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">      &#123;% endif %&#125;</span><br><span class="line">&#123;% if theme.leancloud_visitors.enable %&#125;</span><br><span class="line">	 <span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"&#123;&#123; url_for(post.path) &#125;&#125;"</span><span class="attr">class</span>=<span class="string">"leancloud_visitors"</span>  <span class="attr">data-flag-title</span>=<span class="string">"&#123;&#123; post.title &#125;&#125;"</span>&gt;</span></span><br><span class="line">        &amp;nbsp; | &amp;nbsp; &#123;&#123;__('post.visitors')&#125;&#125;</span><br><span class="line">        <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">&#123;% endif %&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">header</span>&gt;</span></span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="修改layout-swig文件"><a href="#修改layout-swig文件" class="headerlink" title="修改layout.swig文件"></a><del>修改<code>layout.swig</code>文件</del></h4><p><del>在NexT根目录的<code>layout</code>路径下，打开 <code>_layout.swig</code>文件，在<code>&lt;/body&gt;</code>上方添加如下内容：</del><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% if theme.leancloud_visitors.enable %&#125;</span><br><span class="line">  	 &#123;% include '_scripts/lean-analytics.swig' %&#125;</span><br><span class="line">  &#123;%  endif %&#125;</span><br></pre></td></tr></table></figure></p>
-<p><del>添加完成之后，文件内容像这个样子：</del></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;# LazyLoad #&#125;</span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"&#123;&#123; url_for(theme.js) &#125;&#125;/lazyload.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">    $(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">      $(<span class="string">"#posts"</span>).find(<span class="string">'img'</span>).lazyload(&#123;</span></span><br><span class="line"><span class="javascript">        placeholder: <span class="string">"&#123;&#123; url_for(theme.images) &#125;&#125;/loading.gif"</span>,</span></span><br><span class="line"><span class="javascript">        effect: <span class="string">"fadeIn"</span></span></span><br><span class="line"><span class="undefined">      &#125;);</span></span><br><span class="line"><span class="undefined">    &#125;);</span></span><br><span class="line"><span class="undefined">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  &#123;% if theme.leancloud_visitors.enable %&#125;</span><br><span class="line">  	 &#123;% include '_scripts/lean-analytics.swig' %&#125;</span><br><span class="line">  &#123;%  endif %&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h4 id="修改zh-Hans-yml文件"><a href="#修改zh-Hans-yml文件" class="headerlink" title="修改zh-Hans.yml文件"></a><del>修改<code>zh-Hans.yml</code>文件</del></h4><p><del>在NexT目录的<code>languages</code>路径下的<code>zh-Hans.yml</code>文件，在<code>post:</code>结点下添加<code>visitors: 阅读次数</code>，像这个样子：</del><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">post:</span><br><span class="line">  posted: 发表于</span><br><span class="line">  visitors: 阅读次数</span><br><span class="line">  updated: 更新于</span><br><span class="line">  in: 分类于</span><br><span class="line">  read_more: 阅读全文</span><br><span class="line">  untitled: 未命名</span><br><span class="line">  toc_empty: 此文章未包含目录</span><br></pre></td></tr></table></figure></p>
-<p><del><strong> 如果你使用的是其它NexT的语言，请相应的添加该字段即可。</strong></del></p>
-<p><del>至此NexT的修改工作就完成了，但是现在还是不能够使用文章阅读量这个统计功能的。这个功能依赖于<a href="https://leancloud.cn/" target="_blank" rel="noopener">LeanCloud</a>提供后端数据存取，因此我们需要注册一个<a href="https://leancloud.cn/login.html#/signup" target="_blank" rel="noopener">LeanCloud帐号</a>才能继续使用这个功能，<strong><a href="https://leancloud.cn/login.html#/signup" target="_blank" rel="noopener">点我快速注册</a>.</strong></del></p>
 <hr>
-<h3 id="配置LeanCloud"><a href="#配置LeanCloud" class="headerlink" title="配置LeanCloud"></a>配置<a href="https://leancloud.cn" target="_blank" rel="noopener">LeanCloud</a></h3><p>在注册完成LeanCloud帐号并验证邮箱之后，我们就可以登录我们的LeanCloud帐号，进行一番配置之后拿到<code>AppID</code>以及<code>AppKey</code>这两个参数即可正常使用文章阅读量统计的功能了。</p>
-<h4 id="创建应用"><a href="#创建应用" class="headerlink" title="创建应用"></a>创建应用</h4><ul>
-<li>我们新建一个应用来专门进行博客的访问统计的数据操作。首先，打开控制台，如下图所示：</li>
+<h3 id="一、Serverless标准"><a href="#一、Serverless标准" class="headerlink" title="一、Serverless标准"></a>一、Serverless标准</h3><blockquote>
+<p>Serverless已经被认为是应用程序基础架构的下一个发展阶段，但目前仍然有一些障碍需要克服，特别是标准化工作。</p>
+</blockquote>
+<p>长期以来，推进标准化一直是统一计算领域的重要方式。 正如当初的Mesos、Kubernetes以及Swarm的容器编排之争，在争夺霸主地位的过程中，因为Kubernetes<br>致力于标准化的引进，从而异军突起，后发制人，一举赢得容器编排之争，正是因为秉持标准化的理念，Kubernetes得到越来越多的人员的加入，从社区的维护到使用<br>者的参与，再到CNCF的壮大。更久远的事例，就是浏览器之争，因为2001年成功说服Internet Explorer，Netscape和其他浏览器采用World Wide Web<br>Consortium建立的标准。 结果就是今天我们知道和喜欢的互联网：一个开放，协作且通用的平台，可以在线连接世界各地的人们，从而使Web开<br>发人员的生活变得更加轻松。</p>
+<p>如今，serverless的生态系统仍然呈现零散状态，就像早期的互联网一样。 在AWS Lambda，Microsoft Azure Functions，Google Cloud Functions<br>和众多其他平台之间，许多serverless功能都是专有的，这使得将应用程序从一个平台迁移到另一个平台成为一项难题。 平台之间缺乏可移植性和互操作性，<br>这阻碍了serverless的应用，开发人员担心业务与云服务商过于耦合。</p>
+<p>在serverless市场较初期的情况下，如果能够降低业务与服务的耦合下，那么在将来存在更好的选择情况下，开发人员就不会陷入选择serverless提供商的困境。<br>而且，随着新冠病毒给经济造成的不可弥补的伤害，serverless市场有望为快速整合做好准备，这使得云服务商具备跨平台迁移serverless应用程序的能力比以往<br>任何时候都更为重要。</p>
+<p>缺乏serverless标准化同时也带来了安全挑战。尽管serverless可以通过减少服务器管理来简化运维等成本，但是由于开发人员无法看到他们在无服务器平台上运行<br>的工作负载。这意味着无法察觉诸如数据泄露，配置错误，过度的访问权限等安全威胁。当然，可以让开发人员通过serverless提供商提供的API来观察可能的安全威胁。<br>但是没有标准化的serverless框架，在整个serverless生态系统中就不会存在标准化的安全工具或最佳实践。</p>
+<p>庆幸的是，标准化工作正在推进。位于云原生世界中心的CNCF，已经意识到了”标准化的紧迫性，并指出需要高质量的文档，最佳实践，更重要的是工具和实用程序。通常，<br>有必要将不同的参与者聚集在同一个屋檐下，以通过协作来推动创新”。本着协作的精神，CNCF将serverless平台提供商和第三方库开发人员召集到serverless工<br>作组中，以推进标准化。</p>
+<hr>
+<h3 id="二、CloudEvent试水"><a href="#二、CloudEvent试水" class="headerlink" title="二、CloudEvent试水"></a>二、CloudEvent试水</h3><p>serverless工作组的早期推出的CloudEvents标准，它用于事件描述的标准化。serverless工作组经过两年的工作，于2019年10月发布了1.0版。<br>CloudEvents为Go，JavaScript，Java，C＃，Ruby和Python等语言提供了标准化的SDK，可用于构建事件路由器，跟踪系统和其他工具，从而简化跨平台和环境<br>的事件数据交付。</p>
+<p>Kubernetes已经成为另一个有预期未来的解决方案。容器生态系统已经围绕Kubernetes进行了整合，使其成为统一serverless生态系统的理想平台。在2018年，<br>由Google领导、与Pivotal，IBM，Red Hat和SAP合作推出了Knative开源框架，其用于在Kubernetes之上运行serverless应用程序组件。<br>该平台提供以构建，部署，扩展和运行serverless工作负载的所有API。</p>
+<p>除了互操作性和可移植性之外，Knative还具有安全性优势。 Knative允许您使用已经为Kubernetes开发的安全工具，其中安全策略更加成熟。借助Knative，<br>您可以通过将安全代理嵌入Kubernetes中的serverless工作负载来实现更丰富的可扩展性，而无需使用serverless平台提供的基础架构插件。如果您的团队已经在<br>Kubernetes安全性上进行了投资，则这些安全性投资可以扩展到serverless安全性。</p>
+<p>Knative是否能够成为serverless标准化的赢家还有待观察。截至3月，Knative的采用率达到17％，这意味着其成熟度和增长空间仍然很大。 Knative本身建立在<br>Kubeless的基础上，Kubeless是先前围绕Kubernetes标准化serverless的前期尝试。但是，有迹象表明，谷歌已经在Knative的基础上构建了其下一代，完全托管的<br>无服务器平台Cloud Run，这表明其他早期的serverless平台可能会加速效仿。</p>
+<p>Serverless使开发人员可以心无旁骛的专注于在其代码中构建功能，而不是管理运行这些功能的服务器。从繁重而又至关重要的运维责任中解放出来的有可能为<br>应用程序开发人员释放更多的创新热情和业务价值，但是缺乏标准化的风险会分散serverless生态系统。随着标准化的发展，开源协作的力量便推动了创新。</p>
+<hr>
+<h3 id="三、何为CloudEvent"><a href="#三、何为CloudEvent" class="headerlink" title="三、何为CloudEvent"></a>三、何为CloudEvent</h3><h4 id="历史"><a href="#历史" class="headerlink" title="历史"></a>历史</h4><p>CNCF的Serverless工作组最初是由CNCF技术监督委员会创建的，旨在调查serverless技术并为该领域中与CNCF相关的活动提出一些可能的下一步建议。 建议<br>之一是研究创建通用事件格式，以帮助云提供商之间功能的可移植性以及事件流处理的互操作性。 最终，创建了CloudEvents规范。</p>
+<h4 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h4><p>起初，制定CloudEvents标准是serverless工作组的一部分工作内容的，而当规范达到其v0.1里程碑时，TOC批准将其作为CNCF一个全新的独立沙箱项目。</p>
+<p>CloudEvents通常用于分布式系统中，以实现服务在开发过程中的解耦，并完成独立部署，并且以后以此连接新的应用程序。</p>
+<p>CloudEvents规范的目标是定义事件系统的互操作性，该系统允许服务生成或使用事件，其中包括独立开发和部署生产者和使用者。生产者可以在消费者收听之前生成<br>事件，并且消费者可以进行相关订阅操作。需要注意的是，此工作产生的规范集中于事件格式的互操作性以及在各种协议（例如HTTP）上发送事件格式的显示方式。<br>规范不关注事件产生者或事件消费者的处理模型。</p>
+<p>CloudEvents的核心是定义了一组元数据，称为属性，以及有关在系统之间传输的事件和这些元数据应如何出现在消息中。该元数据是将请求路由到适当组件并促进该组件<br>对事件进行适当处理所需的最少信息集。尽管这可能意味着事件本身的某些应用程序数据可能会作为CloudEvent属性集的一部分，但这也是为了正确传递和处理消息<br>而进行的必要操作。相反，不打算用于此目的的数据应放在事件（数据）本身。</p>
+<p>此外，假定协议层将消息传递到目标系统所需的元数据完全由协议处理，那么就没有必要包含在CloudEvents属性中。</p>
+<p>除了这些属性的定义之外，还将规范如何以不同的格式（例如JSON）和协议（例如HTTP，AMQP，Kafka）来序列化事件。</p>
+<p>某些协议本身支持将多个事件批处理到单个API调用中。为了帮助实现互操作性，应由协议决定是否实现批处理以及如何实现批处理。</p>
+<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul>
+<li><a href="https://thenewstack.io/serverless-needs-standards-to-be-the-future-of-application-infrastructure/" target="_blank" rel="noopener">the-future-of-application-infrastructure</a></li>
 </ul>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/open_consoloe.png" alt title="打开控制台"></p>
-<ul>
-<li>在出现的界面点击<code>创建应用</code>：</li>
-</ul>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/create_app.png" alt title="创建应用"></p>
-<ul>
-<li>在接下来的页面，新建的应用名称我们可以随意输入，即便是输入的不满意我们后续也是可以更改的:</li>
-</ul>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/creating_app.png" alt title="创建的新应用名称"></p>
-<ul>
-<li>这里为了演示的方便，我新创建一个取名为test的应用。创建完成之后我们点击新创建的应用的名字来进行该应用的参数配置：</li>
-</ul>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/create_class.png" alt title="打开应用参数配置界面"></p>
-<ul>
-<li>在应用的数据配置界面，左侧下划线开头的都是系统预定义好的表，为了便于区分我们新建一张表来保存我们的数据。点击左侧右上角的齿轮图标，新建Class：<br> 在弹出的选项中选择<code>创建Class</code>来新建Class用来专门保存我们博客的文章访问量等数据:<br> 点击<code>创建Class</code>之后，<del>理论上来说名字可以随意取名，只要你交互代码做相应的更改即可</del>，但是为了保证我们前面对NexT主题的修改兼容，此处的<strong><font color="green">新建Class名字必须为<font color="red"><code>Counter</code></font></font></strong>:</li>
-</ul>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/creating_class.png" alt title="权限配置"></p>
-<ul>
-<li>由于LeanCloud升级了默认的ACL权限，如果你想避免后续因为权限的问题导致次数统计显示不正常，建议在此处选择<code>无限制</code>。</li>
-</ul>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/open_app_key.png" alt title="打开应用设置"></p>
-<p>创建完成之后，左侧数据栏应该会多出一栏名为<code>Counter</code>的栏目，这个时候我们点击顶部的设置，切换到test应用的操作界面:<br>在弹出的界面中，选择左侧的<code>应用Key</code>选项，即可发现我们创建应用的<code>AppID</code>以及<code>AppKey</code>，有了它，我们就有权限能够通过主题中配置好的Javascript代码与这个应用的Counter表进行数据存取操作了:</p>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/opened_app_key.png" alt title="获取Appid、Appkey"></p>
-<p>复制<code>AppID</code>以及<code>AppKey</code>并在NexT主题的<code>_config.yml</code>文件中我们相应的位置填入即可，正确配置之后文件内容像这个样子:</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">leancloud_visitors:</span><br><span class="line">  enable: true</span><br><span class="line">  app_id: joaeuuc4hsqudUUwx4gIvGF6-gzGzoHsz</span><br><span class="line">  app_key: E9UJsJpw1omCHuS22PdSpKoh</span><br></pre></td></tr></table></figure>
-<p>这个时候重新生成部署Hexo博客，应该就可以正常使用文章阅读量统计的功能了。需要特别说明的是：记录文章访问量的唯一标识符是文章的<code>发布日期</code>以及<code>文章的标题</code>，因此请确保这两个数值组合的唯一性，如果你更改了这两个数值，会造成文章阅读数值的清零重计。</p>
-<h3 id="后台管理"><a href="#后台管理" class="headerlink" title="后台管理"></a>后台管理</h3><p>当你配置部分完成之后，初始的文章统计量显示为0，但是这个时候我们LeanCloud对应的应用的<code>Counter</code>表中并没有相应的记录，只是单纯的显示为0而已，当博客文章在配置好阅读量统计服务之后第一次打开时，便会自动向服务器发送数据来创建一条数据，该数据会被记录在对应的应用的<code>Counter</code>表中。</p>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/background.png" alt title="后台管理"></p>
-<p>我们可以修改其中的<code>time</code>字段的数值来达到修改某一篇文章的访问量的目的（博客文章访问量快递提升人气的装逼利器）。双击具体的数值，修改之后回车即可保存。</p>
-<ul>
-<li><code>url</code>字段被当作唯一<code>ID</code>来使用，因此如果你不知道带来的后果的话请不要修改。</li>
-<li><code>title</code>字段显示的是博客文章的标题，用于后台管理的时候区分文章之用，没有什么实际作用。</li>
-<li>其他字段皆为自动生成，具体作用请查阅LeanCloud官方文档，如果你不知道有什么作用请不要随意修改。</li>
-</ul>
-<h3 id="Web安全"><a href="#Web安全" class="headerlink" title="Web安全"></a>Web安全</h3><p>因为AppID以及AppKey是暴露在外的，因此如果一些别用用心之人知道了之后用于其它目的是得不偿失的，为了确保只用于我们自己的博客，建议开启Web安全选项，这样就只能通过我们自己的域名才有权访问后台的数据了，可以进一步提升安全性。</p>
-<p>选择应用的设置的<code>安全中心</code>选项卡:</p>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/open_safe_center.png" alt title="进入安全中心"></p>
-<p>在<code>Web 安全域名</code>中填入我们自己的博客域名，来确保数据调用的安全:</p>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/bind_domain.png" alt title="锁定域名"></p>
-<p>如果你不知道怎么填写安全域名而或者填写完成之后发现博客文章访问量显示不正常，打开浏览器调试模式，发现如下图的输出:</p>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/broswer_403.png" alt title="Web安全域名填写错误"></p>
-<p>这说明你的安全域名填写错误，导致服务器拒绝了数据交互的请求，你可以更改为正确的安全域名或者你不知道如何修改请在本博文中留言或者放弃设置Web安全域名。</p>
-<p>Enjoy it！</p>
 
       
     </div>
@@ -623,7 +554,7 @@ jQuery.noConflict()(function ($) {
     <strong>本文作者： </strong>zouyee</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://ustack.io/2015-10-21-为NexT主题添加文章阅读量统计功能.html" title="为NexT主题添加文章阅读量统计功能">https://ustack.io/2015-10-21-为NexT主题添加文章阅读量统计功能.html</a>
+    <a href="https://ustack.io/2020-05-16-Serverless标准化夯实应用基础架构的未来.html" title="Serverless标准化夯实应用基础架构的未来">https://ustack.io/2020-05-16-Serverless标准化夯实应用基础架构的未来.html</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -636,7 +567,9 @@ jQuery.noConflict()(function ($) {
       
         <div class="post-tags">
           
-            <a href="/tags/Hexo/" rel="tag"># Hexo</a>
+            <a href="/tags/cloudnative/" rel="tag"># cloudnative</a>
+          
+            <a href="/tags/serverless/" rel="tag"># serverless</a>
           
         </div>
       
@@ -649,8 +582,8 @@ jQuery.noConflict()(function ($) {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015-07-06-自动备份Hexo博客源文件.html" rel="next" title="自动备份Hexo博客源文件">
-                <i class="fa fa-chevron-left"></i> 自动备份Hexo博客源文件
+              <a href="/2020-05-06-xDS标准引入GRPC生态.html" rel="next" title="xDS标准引入gRPC生态">
+                <i class="fa fa-chevron-left"></i> xDS标准引入gRPC生态
               </a>
             
           </div>
@@ -658,10 +591,6 @@ jQuery.noConflict()(function ($) {
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016-10-26-基于LeanCloud、Telegram实现多说评论推送.html" rel="prev" title="基于LeanCloud、Telegram实现多说评论推送">
-                基于LeanCloud、Telegram实现多说评论推送 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -975,7 +904,7 @@ jQuery.noConflict()(function ($) {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改NexT主题模版"><span class="nav-number">2.</span> <span class="nav-text">修改NexT主题模版</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#修改-config-yml文件"><span class="nav-number">2.1.</span> <span class="nav-text">修改_config.yml文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加lean-analytics-swig文件"><span class="nav-number">2.2.</span> <span class="nav-text">添加lean-analytics.swig文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改post-swig文件"><span class="nav-number">2.3.</span> <span class="nav-text">修改post.swig文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改layout-swig文件"><span class="nav-number">2.4.</span> <span class="nav-text">修改layout.swig文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改zh-Hans-yml文件"><span class="nav-number">2.5.</span> <span class="nav-text">修改zh-Hans.yml文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置LeanCloud"><span class="nav-number">3.</span> <span class="nav-text">配置LeanCloud</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建应用"><span class="nav-number">3.1.</span> <span class="nav-text">创建应用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后台管理"><span class="nav-number">4.</span> <span class="nav-text">后台管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Web安全"><span class="nav-number">5.</span> <span class="nav-text">Web安全</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、Serverless标准"><span class="nav-number">1.</span> <span class="nav-text">一、Serverless标准</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、CloudEvent试水"><span class="nav-number">2.</span> <span class="nav-text">二、CloudEvent试水</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、何为CloudEvent"><span class="nav-number">3.</span> <span class="nav-text">三、何为CloudEvent</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#历史"><span class="nav-number">3.1.</span> <span class="nav-text">历史</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#目标"><span class="nav-number">3.2.</span> <span class="nav-text">目标</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考资料"><span class="nav-number">3.3.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
             
 
           </div>

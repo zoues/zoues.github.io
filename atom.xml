@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://ustack.io/"/>
-  <updated>2020-05-06T12:45:25.753Z</updated>
+  <updated>2020-05-17T01:46:00.962Z</updated>
   <id>https://ustack.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Serverless标准化夯实应用基础架构的未来</title>
+    <link href="https://ustack.io/2020-05-16-Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5.html"/>
+    <id>https://ustack.io/2020-05-16-Serverless标准化夯实应用基础架构的未来.html</id>
+    <published>2020-05-16T13:40:08.000Z</published>
+    <updated>2020-05-17T01:46:00.962Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="https://s1.ax1x.com/2020/05/16/Yc4JUK.jpg" alt></p><div class="note info"><p>Serverless正在迅猛发展：根据2019度CNCF调查报告，目前有41％的受访者正在使用serverless技术，另有20％的受访者计<br>划在未来12至18个月内使用serverless技术。 serverless技术允许云化应用程序开发团队将代码交付给serverless服务商-以减少<br>开销成本，提高可伸缩性并简化DevOps周期。</p></div><a id="more"></a><hr><h3 id="一、Serverless标准"><a href="#一、Serverless标准" class="headerlink" title="一、Serverless标准"></a>一、Serverless标准</h3><blockquote><p>Serverless已经被认为是应用程序基础架构的下一个发展阶段，但目前仍然有一些障碍需要克服，特别是标准化工作。</p></blockquote><p>长期以来，推进标准化一直是统一计算领域的重要方式。 正如当初的Mesos、Kubernetes以及Swarm的容器编排之争，在争夺霸主地位的过程中，因为Kubernetes<br>致力于标准化的引进，从而异军突起，后发制人，一举赢得容器编排之争，正是因为秉持标准化的理念，Kubernetes得到越来越多的人员的加入，从社区的维护到使用<br>者的参与，再到CNCF的壮大。更久远的事例，就是浏览器之争，因为2001年成功说服Internet Explorer，Netscape和其他浏览器采用World Wide Web<br>Consortium建立的标准。 结果就是今天我们知道和喜欢的互联网：一个开放，协作且通用的平台，可以在线连接世界各地的人们，从而使Web开<br>发人员的生活变得更加轻松。</p><p>如今，serverless的生态系统仍然呈现零散状态，就像早期的互联网一样。 在AWS Lambda，Microsoft Azure Functions，Google Cloud Functions<br>和众多其他平台之间，许多serverless功能都是专有的，这使得将应用程序从一个平台迁移到另一个平台成为一项难题。 平台之间缺乏可移植性和互操作性，<br>这阻碍了serverless的应用，开发人员担心业务与云服务商过于耦合。</p><p>在serverless市场较初期的情况下，如果能够降低业务与服务的耦合下，那么在将来存在更好的选择情况下，开发人员就不会陷入选择serverless提供商的困境。<br>而且，随着新冠病毒给经济造成的不可弥补的伤害，serverless市场有望为快速整合做好准备，这使得云服务商具备跨平台迁移serverless应用程序的能力比以往<br>任何时候都更为重要。</p><p>缺乏serverless标准化同时也带来了安全挑战。尽管serverless可以通过减少服务器管理来简化运维等成本，但是由于开发人员无法看到他们在无服务器平台上运行<br>的工作负载。这意味着无法察觉诸如数据泄露，配置错误，过度的访问权限等安全威胁。当然，可以让开发人员通过serverless提供商提供的API来观察可能的安全威胁。<br>但是没有标准化的serverless框架，在整个serverless生态系统中就不会存在标准化的安全工具或最佳实践。</p><p>庆幸的是，标准化工作正在推进。位于云原生世界中心的CNCF，已经意识到了”标准化的紧迫性，并指出需要高质量的文档，最佳实践，更重要的是工具和实用程序。通常，<br>有必要将不同的参与者聚集在同一个屋檐下，以通过协作来推动创新”。本着协作的精神，CNCF将serverless平台提供商和第三方库开发人员召集到serverless工<br>作组中，以推进标准化。</p><hr><h3 id="二、CloudEvent试水"><a href="#二、CloudEvent试水" class="headerlink" title="二、CloudEvent试水"></a>二、CloudEvent试水</h3><p>serverless工作组的早期推出的CloudEvents标准，它用于事件描述的标准化。serverless工作组经过两年的工作，于2019年10月发布了1.0版。<br>CloudEvents为Go，JavaScript，Java，C＃，Ruby和Python等语言提供了标准化的SDK，可用于构建事件路由器，跟踪系统和其他工具，从而简化跨平台和环境<br>的事件数据交付。</p><p>Kubernetes已经成为另一个有预期未来的解决方案。容器生态系统已经围绕Kubernetes进行了整合，使其成为统一serverless生态系统的理想平台。在2018年，<br>由Google领导、与Pivotal，IBM，Red Hat和SAP合作推出了Knative开源框架，其用于在Kubernetes之上运行serverless应用程序组件。<br>该平台提供以构建，部署，扩展和运行serverless工作负载的所有API。</p><p>除了互操作性和可移植性之外，Knative还具有安全性优势。 Knative允许您使用已经为Kubernetes开发的安全工具，其中安全策略更加成熟。借助Knative，<br>您可以通过将安全代理嵌入Kubernetes中的serverless工作负载来实现更丰富的可扩展性，而无需使用serverless平台提供的基础架构插件。如果您的团队已经在<br>Kubernetes安全性上进行了投资，则这些安全性投资可以扩展到serverless安全性。</p><p>Knative是否能够成为serverless标准化的赢家还有待观察。截至3月，Knative的采用率达到17％，这意味着其成熟度和增长空间仍然很大。 Knative本身建立在<br>Kubeless的基础上，Kubeless是先前围绕Kubernetes标准化serverless的前期尝试。但是，有迹象表明，谷歌已经在Knative的基础上构建了其下一代，完全托管的<br>无服务器平台Cloud Run，这表明其他早期的serverless平台可能会加速效仿。</p><p>Serverless使开发人员可以心无旁骛的专注于在其代码中构建功能，而不是管理运行这些功能的服务器。从繁重而又至关重要的运维责任中解放出来的有可能为<br>应用程序开发人员释放更多的创新热情和业务价值，但是缺乏标准化的风险会分散serverless生态系统。随着标准化的发展，开源协作的力量便推动了创新。</p><hr><h3 id="三、何为CloudEvent"><a href="#三、何为CloudEvent" class="headerlink" title="三、何为CloudEvent"></a>三、何为CloudEvent</h3><h4 id="历史"><a href="#历史" class="headerlink" title="历史"></a>历史</h4><p>CNCF的Serverless工作组最初是由CNCF技术监督委员会创建的，旨在调查serverless技术并为该领域中与CNCF相关的活动提出一些可能的下一步建议。 建议<br>之一是研究创建通用事件格式，以帮助云提供商之间功能的可移植性以及事件流处理的互操作性。 最终，创建了CloudEvents规范。</p><h4 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h4><p>起初，制定CloudEvents标准是serverless工作组的一部分工作内容的，而当规范达到其v0.1里程碑时，TOC批准将其作为CNCF一个全新的独立沙箱项目。</p><p>CloudEvents通常用于分布式系统中，以实现服务在开发过程中的解耦，并完成独立部署，并且以后以此连接新的应用程序。</p><p>CloudEvents规范的目标是定义事件系统的互操作性，该系统允许服务生成或使用事件，其中包括独立开发和部署生产者和使用者。生产者可以在消费者收听之前生成<br>事件，并且消费者可以进行相关订阅操作。需要注意的是，此工作产生的规范集中于事件格式的互操作性以及在各种协议（例如HTTP）上发送事件格式的显示方式。<br>规范不关注事件产生者或事件消费者的处理模型。</p><p>CloudEvents的核心是定义了一组元数据，称为属性，以及有关在系统之间传输的事件和这些元数据应如何出现在消息中。该元数据是将请求路由到适当组件并促进该组件<br>对事件进行适当处理所需的最少信息集。尽管这可能意味着事件本身的某些应用程序数据可能会作为CloudEvent属性集的一部分，但这也是为了正确传递和处理消息<br>而进行的必要操作。相反，不打算用于此目的的数据应放在事件（数据）本身。</p><p>此外，假定协议层将消息传递到目标系统所需的元数据完全由协议处理，那么就没有必要包含在CloudEvents属性中。</p><p>除了这些属性的定义之外，还将规范如何以不同的格式（例如JSON）和协议（例如HTTP，AMQP，Kafka）来序列化事件。</p><p>某些协议本身支持将多个事件批处理到单个API调用中。为了帮助实现互操作性，应由协议决定是否实现批处理以及如何实现批处理。</p><h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul><li><a href="https://thenewstack.io/serverless-needs-standards-to-be-the-future-of-application-infrastructure/" target="_blank" rel="noopener">the-future-of-application-infrastructure</a></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;https://s1.ax1x.com/2020/05/16/Yc4JUK.jpg&quot; alt&gt;&lt;/p&gt;
+&lt;div class=&quot;note info&quot;&gt;&lt;p&gt;Serverless正在迅猛发展：根据2019度CNCF调查报告，目前有41％的受访者正在使用serverless技术，另有20％的受访者计&lt;br&gt;划在未来12至18个月内使用serverless技术。 serverless技术允许云化应用程序开发团队将代码交付给serverless服务商-以减少&lt;br&gt;开销成本，提高可伸缩性并简化DevOps周期。&lt;/p&gt;&lt;/div&gt;
+    
+    </summary>
+    
+    
+      <category term="cloudnative" scheme="https://ustack.io/tags/cloudnative/"/>
+    
+      <category term="serverless" scheme="https://ustack.io/tags/serverless/"/>
+    
+  </entry>
   
   <entry>
     <title>xDS标准引入gRPC生态</title>
@@ -106,6 +129,29 @@
       &lt;p&gt;&lt;img src=&quot;https://s1.ax1x.com/2020/04/09/G4EVSK.md.png&quot; alt=&quot;趋势&quot;&gt;&lt;/p&gt;
 &lt;div class=&quot;note info&quot;&gt;&lt;p&gt;当前大多数公司在运营应用产品时，无论是选择公有云还是自建的数据中心，都会面临服务器数量预估、存储容量规划和数据库的选型等问题。同时需要在基础设施之上部署依赖软件，以运行应用程序。当前是否存在一种简单的架构模型能够满足我们这种应用场景？当然，这个架构已经存在许久，它就是今天软件架构世界中很热门的一个话题——Serverless。&lt;/p&gt;
 &lt;p&gt;值得关注的是，在最近的几年里，微服务逐渐成为了一种新潮且实用的架构方案。微服务从2014年开始流行，如下图所示：&lt;/p&gt;&lt;/div&gt;
+    
+    </summary>
+    
+    
+      <category term="cloudnative" scheme="https://ustack.io/tags/cloudnative/"/>
+    
+      <category term="serverless" scheme="https://ustack.io/tags/serverless/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>五分钟初识Gloo</title>
+    <link href="https://ustack.io/2020-04-09-%E4%BA%94%E5%88%86%E9%92%9F%E5%88%9D%E8%AF%86Gloo.html"/>
+    <id>https://ustack.io/2020-04-09-五分钟初识Gloo.html</id>
+    <published>2020-04-09T12:40:08.000Z</published>
+    <updated>2020-05-17T10:06:11.283Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="https://s1.ax1x.com/2020/05/17/Ygqhod.md.png" alt="架构"></p><div class="note info"><p>Gloo是一种基于Kubernetes原生设计的功能丰富的Ingress Controller，致力于成为下一代API网关标杆产品。 Gloo在函数级路由等方面表现优异；对旧式应<br>用、微服务和serverless提供支持； 它具备高效的发现能力，且功能多样； 并与领先的开源项目（如Envoy、KNative等）紧密集成。 Gloo的独特设计旨在支持<br>异构应用程序，与多种技术，体系结构，协议和云中共存。</p></div><a id="more"></a><hr><h3 id="一、何为Gloo"><a href="#一、何为Gloo" class="headerlink" title="一、何为Gloo"></a>一、何为Gloo</h3><ul><li><p>*Kubernetes ingress controller**: 当部署在Kubernetes上时，Gloo可以充当功能丰富的入口控制器，并且当部署到AWS EKS等公共云时，可以简化路由功能。</p></li><li><p><strong>异构应用</strong>: Gloo创建的应用程序路由到实现为微服务，无服务器功能和旧式应用程序的后端。 此功能可以帮助用户逐渐从旧代码迁移到微服务、无服务器架构。<br>用户在保持其原有代码逻辑前提下，使用云原生技术添加新功能； 组织中的不同团队可以选择不同架构及其他场景。</p></li><li><p><strong>服务网格Ingress</strong>: 服务网格技术解决了跨云网络的服务到服务通信问题。 可以使用服务网格解决诸如服务标识，七层网络遥测信息收集，服务弹性，服务之<br>间的流量路由以及策略执行（例如配额，速率限制等）之类的问题。 为了使服务网格正常运行，它需要一种使流量进入网格的方法。 将流量从边缘传输到集群内部的<br>问题与服务到服务的问题有所不同。 前端网关应当提供缓存，安全性和流量管理，Oauth和最终用户身份验证/授权，用户速率限制，Web应用程序防火墙等。 Gloo<br>解决了以上问题，兼容所有服务网格技术，包括Istio，Linkerd，Consul Connect和AWS App Mesh。</p></li></ul><hr><h3 id="二、Gloo特色"><a href="#二、Gloo特色" class="headerlink" title="二、Gloo特色"></a>二、Gloo特色</h3><ul><li><p><strong>功能级路由允许集成旧版应用程序，微服务和无服务器</strong>：Gloo可以路由<br>直接向<em>functions</em>请求，可以是：无服务器功能调用（例如Lambda，Google Cloud Function，OpenFaaS函数等）；<br>微服务或旧服务上的API调用（例如REST API调用，OpenAPI操作，XML / SOAP请求等）；<br>或发布到邮件队列（例如，NATS，AMQP等）。 这种独特的功能使Gloo成为唯一的API网关<br>支持混合应用程序，以及不将用户绑定到特定范例的唯一应用程序。</p></li><li><p><strong>Gloo包含经过审查的开源项目，以提供广泛的功能</strong>：Gloo通过与顶级开源项目（包括gRPC，GraphQL，OpenTracing，NATS等）集成来支持高质量功能。<br>Gloo的体系结构允许在将来流行的开源项目出现时快速集成它们。</p></li><li><p><strong>全自动发现使用户可以快速移动</strong>：Gloo在启动时会创建所有可用目的地的目录，并不断对其进行更新。 这使开发人员无需承担“记账”的责任，并确保新功能<br>在准备就绪后立即可用。 Gloo跨IaaS，PaaS和FaaS提供程序以及Swagger，gRPC和GraphQL发现。</p></li><li><p><strong>Gloo与用户环境紧密集成</strong>：通过Gloo，用户可以自由选择自己喜欢的调度工具（例如K8S，Nomad，OpenShift等），持久性（K8s，Consul等）和安全性<br>（K8s, Vault）。</p></li></ul><h4 id="路由特性"><a href="#路由特性" class="headerlink" title="路由特性"></a>路由特性</h4><ul><li><p><strong>动态负载均衡</strong>:跨多个上游服务负载均衡流量。</p></li><li><p><strong>健康检查</strong>: 主动和被动监视上游服务。</p></li><li><p><strong>OpenTracing标准</strong>: 使用支持良好的OpenTracing标准监视请求。</p></li><li><p><strong>监控</strong>: 支持Prometheus、Statsd方式监控。</p></li><li><p><strong>SSL</strong>: 高度可定制的选项，用于向上游服务添加SSL加密，并完全支持SNI。</p></li><li><p><strong>转换</strong>: 添加，删除或处理HTTP请求和响应。</p></li></ul><h4 id="通用特性"><a href="#通用特性" class="headerlink" title="通用特性"></a>通用特性</h4><p>Gloo可以轻松应对管理入口流量进入应用程序架构（不单单是Kubernetes）的挑战。在Kubernetes，AWS Lambda，VM，Terraform，EC2，Consul<br>等架构/平台中运行时，可以动态发现后端服务。Gloo同时也被选为KNative项目的首选ingress项目，其主要有以下特性。</p><ul><li>解决云原生和混合云的挑战：微服务使应用程序的API更加复杂。 Gloo实现了API网关模式，通过实现管理平面来提升业务的可操作性。</li><li>构建Envoy代理：Gloo是Envoy Proxy的控制平面，使开发人员和操作员可以通过以声明性格式的xDS gRPC API动态更新Envoy配置。</li><li>服务网格的基石：Gloo将服务网格功能添加到集群入口。 Gloo允许您以迭代的方式渐进式使用高级功能，并与诸如Flagger的系统进<br>行金丝雀自动化发布，同时以本地化方式插入服务网格实现（如Istio，Linkerd或Consul）。</li><li>针对应用程序的集成：Gloo可以将请求直接路由到Function、微服务或遗留服务上的API，或发布到消息队列。这种独特的功能使Gloo成为支持混合应用程序的唯一<br>API网关，而不会将用户束缚于特定的技术方案。</li><li>强大的社区特性：Gloo通过与顶级开源项目（如gRPC，GraphQL，OpenTracing，NATS等）集成来支持高级别功能。 Gloo的技术架构允许在未来流行的开源项目<br>出现时快速集成。</li><li>全自动发现能力：Gloo动态发现能力，跨IaaS，PaaS和FaaS</li><li>与现有工具集成：使用Gloo，用户可以自由选择自己喜欢的调度工具（例如K8S，Nomad，OpenShift等），持久化（K8S，Consul等）和安全特性（K8，Vault）。</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;https://s1.ax1x.com/2020/05/17/Ygqhod.md.png&quot; alt=&quot;架构&quot;&gt;&lt;/p&gt;
+&lt;div class=&quot;note info&quot;&gt;&lt;p&gt;Gloo是一种基于Kubernetes原生设计的功能丰富的Ingress Controller，致力于成为下一代API网关标杆产品。 Gloo在函数级路由等方面表现优异；对旧式应&lt;br&gt;用、微服务和serverless提供支持； 它具备高效的发现能力，且功能多样； 并与领先的开源项目（如Envoy、KNative等）紧密集成。 Gloo的独特设计旨在支持&lt;br&gt;异构应用程序，与多种技术，体系结构，协议和云中共存。&lt;/p&gt;&lt;/div&gt;
     
     </summary>
     
@@ -471,54 +517,6 @@
     
       &lt;div class=&quot;note info&quot;&gt;&lt;p&gt;接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。&lt;/p&gt;
 &lt;p&gt; hugepage是在Linux2.6内核被引入的，主要提供4k的page和比较大的page的选择。&lt;/p&gt;&lt;/div&gt;
-    
-    </summary>
-    
-    
-      <category term="Linux" scheme="https://ustack.io/tags/Linux/"/>
-    
-      <category term="kubernetes" scheme="https://ustack.io/tags/kubernetes/"/>
-    
-      <category term="cloudnative" scheme="https://ustack.io/tags/cloudnative/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Linux内存控制之oom killer机制</title>
-    <link href="https://ustack.io/2019-11-21-Linux%E5%86%85%E5%AD%98%E6%8E%A7%E5%88%B6%E4%B9%8Boom%20killer%E6%9C%BA%E5%88%B6.html"/>
-    <id>https://ustack.io/2019-11-21-Linux内存控制之oom killer机制.html</id>
-    <published>2019-11-21T12:40:08.000Z</published>
-    <updated>2019-11-22T15:36:30.366Z</updated>
-    
-    <content type="html"><![CDATA[<div class="note info"><p>接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。</p><p>kubelet组件涉及oom killer相关概念，在此先作学习铺垫。</p></div><a id="more"></a><hr><h3 id="1、介绍"><a href="#1、介绍" class="headerlink" title="1、介绍"></a>1、介绍</h3><p>OOM就是out of memory的缩写，虽然linux kernel有很多的内存管理技巧（从cache中回收、swap out等）来满足各种应用空间的vm内存需求，但是，当你的系统配置不合理，让一匹小马拉大车的时候，linux kernel会运行非常缓慢并且在某个时间点分配page frame的时候遇到内存耗尽、无法分配的状况。应对这种状况首先应该是系统管理员，他需要首先给系统增加内存，不过对于kernel而言，当面对OOM的时候，要根据OOM参数来进行相应的处理。oom kiiler会在内存紧张的时候，会依次kill内存占用较高的进程，发送Sig15(SIGTERM)或Sig9(SIGKILL)，取决于内核版本(可见uname -a，&gt;= 2.6.32只会发送<a href="https://elixir.free-electrons.com/linux/v2.6.18/source/mm/oom_kill.c" target="_blank" rel="noopener">sigkill</a>，并在/var/log/message中进行记录。里面会记录一些如pid，process name，cpu mask，trace等信息，通过监控可以发现类似问题。</p><p><strong><strong>初探</strong></strong></p><p>一个简单分配heap memroy的代码片段(big_mm.c)：</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> block (1024L*1024L*MB)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MB 64L</span></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">long</span> total = <span class="number">0L</span>;</span><br><span class="line"><span class="keyword">for</span>(;;) &#123;</span><br><span class="line">  <span class="comment">// malloc big block memory and ZERO it !!</span></span><br><span class="line">  <span class="keyword">char</span>* mm = (<span class="keyword">char</span>*) <span class="built_in">malloc</span>(block);</span><br><span class="line">  usleep(<span class="number">100000</span>);</span><br><span class="line">  <span class="keyword">if</span> (<span class="literal">NULL</span> == mm)</span><br><span class="line">    <span class="keyword">continue</span>;</span><br><span class="line">    bzero(mm,block);</span><br><span class="line">    total += MB;</span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stdout</span>,<span class="string">"alloc %lum mem\n"</span>,total);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>这里有2个地方需要注意：</p><p>1、malloc是分配虚拟地址空间，如果不memset或者bzero，那么就不会触发physical allocate，不会映射物理地址，所以这里用bzero填充<br><br><br>2、每次申请的block大小比较有讲究，Linux内核分为LowMemroy和HighMemroy，LowMemory为内存紧张资源，LowMemroy有个阀值，通过free -lm和<br>/proc/sys/vm/lowmem_reserve_ratio来查看当前low大小和阀值low大小。低于阀值时候才会触发oom killer，所以这里block的分配小雨默认的256M，否则如果每次申请512M(大于128M)，malloc可能会被底层的brk这个syscall阻塞住，内核触发page cache回写或slab回收。</p><p>测试：<code>gcc big_mm.c -o big_mm ; ./big_mm &amp; ./big_mm &amp; ./big_mm &amp;</code></p><h3 id="2、oom-killer机制分析"><a href="#2、oom-killer机制分析" class="headerlink" title="2、oom killer机制分析"></a>2、oom killer机制分析</h3><h4 id="2-1-参数"><a href="#2-1-参数" class="headerlink" title="2.1 参数"></a>2.1 参数</h4><p><strong><strong>panic_on_oom</strong></strong></p><p>当kernel遇到OOM的时候，可以有两种选择：<br>（1）产生kernel panic<br><br><br>（2）积极面对人生，选择一个或者几个最“适合”的进程，启动OOM killer，干掉那些选中的进程，释放内存，让系统勇敢的活下去。</p><p>panic_on_oom这个参数就是控制遇到OOM的时候，系统如何反应的。当该参数等于0的时候，表示选择积极面对人生，启动OOM killer。当该参数等于2的时候，表示无论是哪一种情况，都强制进入kernel panic。panic_on_oom等于其他值的时候，表示要区分具体的情况，对于某些情况可以panic，有些情况启动OOM killer。kernel的代码中，enum oom_constraint 就是一个进一步描述OOM状态的参数。系统遇到OOM总是有各种各样的情况的，kernel中定义如下：</p><p>（1）CONSTRAINT_CPUSET。cpusets是kernel中的一种机制，通过该机制可以把一组cpu和memory node资源分配给特定的一组进程。这时候，如果出现OOM，仅仅说明该进程能分配memory的那个node出现状况了，整个系统有很多的memory node，其他的node可能有充足的memory资源。</p><p>（2）CONSTRAINT_MEMORY_POLICY。memory policy是NUMA系统中如何控制分配各个memory node资源的策略模块。用户空间程序（NUMA-aware的程序）可以通过memory policy的API，针对整个系统、针对一个特定的进程，针对一个特定进程的特定的VMA来制定策略。产生了OOM也有可能是因为附加了memory policy的约束导致的，在这种情况下，如果导致整个系统panic似乎有点不太合适吧。</p><p>（3）CONSTRAINT_MEMCG。MEMCG就是memory control group，Cgroup中的memory子系统就是控制系统memory资源分配的控制器，通俗的将就是把一组进程的内存使用限定在一个范围内。当这一组的内存使用超过上限就会OOM，在这种情况下的OOM就是CONSTRAINT_MEMCG类型的OOM。</p><p><strong><strong>oom_adj、oom_score_adj和oom_score</strong></strong></p><p>准确的说这几个参数都是和具体进程相关的，因此它们位于/proc/xxx/目录下（xxx是进程ID）。假设我们选择在出现OOM状况的时候杀死进程，那么一个很自然的问题就浮现出来：到底干掉哪一个呢？内核的算法倒是非常简单，那就是打分（oom_score，注意，该参数是read only的），找到分数最高的就OK了。那么怎么来算分数呢？<br>我们触发了oom killer的机制，那么oom killer是计算出选择哪个进程kill呢？我们先来看一下kernel提供给用户态的/proc下的一些参数：</p><p>(1）对某一个task进行打分（oom_score）主要有两部分组成，一部分是系统打分，主要是根据该task的内存使用情况。另外一部分是用户打分，也就是oom_score_adj了，该task的实际得分需要综合考虑两方面的打分。如果用户将该task的 oom_score_adj设定成OOM_SCORE_ADJ_MIN（-1000）的话，那么实际上就是禁止了OOM killer杀死该进程。<br><br><br>(2）这里返回了0也就是告知OOM killer，该进程是“good process”，不要干掉它。后面我们可以看到，实际计算分数的时候最低分是1分。<br><br><br>(3）前面说过了，系统打分就是看物理内存消耗量，主要是三部分，RSS部分，swap file或者swap device上占用的内存情况以及页表占用的内存情况。<br><br><br>(4）root进程有3%的内存使用特权，因此这里要减去那些内存使用量。<br><br><br>(5）用户可以调整oom_score，具体如何操作呢？oom_score_adj的取值范围是-1000～1000，0表示用户不调整oom_score，负值表示要在实际打分值上减去一个折扣，正值表示要惩罚该task，也就是增加该进程的oom_score。在实际操作中，需要根据本次内存分配时候可分配内存来计算（如果没有内存分配约束，那么就是系统中的所有可用内存，如果系统支持cpuset，那么这里的可分配内存就是该cpuset的实际额度值）。oom_badness函数有一个传入参数totalpages，该参数就是当时的可分配的内存上限值。实际的分数值（points）要根据oom_score_adj进行调整，例如如果oom_score_adj设定-500，那么表示实际分数要打五折（基数是totalpages），也就是说该任务实际使用的内存要减去可分配的内存上限值的一半。</p><p>了解了oom_score_adj和oom_score之后，应该是尘埃落定了，oom_adj是一个旧的接口参数，其功能类似oom_score_adj，为了兼容，目前仍然保留这个参数，当操作这个参数的时候，kernel实际上是会换算成oom_score_adj。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/proc/[pid]/oom_adj <span class="comment">#该pid进程被oom killer杀掉的权重，介于 [-17,15]之间，越高的权重，意味着更可能被oom killer选中，-17表示禁止被kill掉。</span></span><br><span class="line">/proc/[pid]/oom_score <span class="comment">#当前该pid进程的被kill的分数，越高的分数意味着越可能被kill，这个数值是根据oom_adj运算后的结果，是oom_killer的主要参考。</span></span><br></pre></td></tr></table></figure><p>sysctl 下有2个可配置选项：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vm.panic_on_oom = 0       <span class="comment">#内存不够时内核是否直接panic</span></span><br><span class="line">vm.oom_kill_allocating_task = 1      <span class="comment">#oom-killer是否选择当前正在申请内存的进程进行kill</span></span><br></pre></td></tr></table></figure><hr><h3 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h3><p>该文为kubelet相关内容的铺垫，涉及到kubelet对于oom killer的使用。</p><hr><h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul><li><a href="http://linux-mm.org/OOM_Killer" target="_blank" rel="noopener">oom</a></li></ul>]]></content>
-    
-    <summary type="html">
-    
-      &lt;div class=&quot;note info&quot;&gt;&lt;p&gt;接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。&lt;/p&gt;
-&lt;p&gt;kubelet组件涉及oom killer相关概念，在此先作学习铺垫。&lt;/p&gt;&lt;/div&gt;
-    
-    </summary>
-    
-    
-      <category term="kubernetes" scheme="https://ustack.io/tags/kubernetes/"/>
-    
-      <category term="cloudnative" scheme="https://ustack.io/tags/cloudnative/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Linux几个重要的内核配置</title>
-    <link href="https://ustack.io/2019-11-21-Linux%E5%87%A0%E4%B8%AA%E9%87%8D%E8%A6%81%E7%9A%84%E5%86%85%E6%A0%B8%E9%85%8D%E7%BD%AE.html"/>
-    <id>https://ustack.io/2019-11-21-Linux几个重要的内核配置.html</id>
-    <published>2019-11-21T12:40:08.000Z</published>
-    <updated>2019-11-23T13:50:17.539Z</updated>
-    
-    <content type="html"><![CDATA[<div class="note info"><p>接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。</p><p>以下是在/etc/sysctl.conf文件中配置的几个重要内核参数，这几个参数的设置关系到系统性能。</p></div><a id="more"></a><hr><h3 id="1、net-ipv4-tcp-syncookies"><a href="#1、net-ipv4-tcp-syncookies" class="headerlink" title="1、net.ipv4.tcp_syncookies"></a>1、net.ipv4.tcp_syncookies</h3><blockquote><p>此参数应该设置为1，防止SYN Flood</p></blockquote><p>处在SYN_RECV的TCP连接称为半连接，存储在SYN队列。大量SYN_RECV会导致队列溢出，后续请求将被内核直接丢弃，也就是SYN Flood攻击。开启syncookies后，当SYN队列满了后，TCP会通过原地址端口，目的地址端口和时间戳打造一个特别的Sequence Number(又叫cookie发回去，如果是攻击者则不会有响应，如果是正常连接则把这个SYNCookie发回来，然后服务器端可以通过cookie建立连接(即使不在SYN队列)。</p><h3 id="2、net-ipv4-tcp-fin-timeout"><a href="#2、net-ipv4-tcp-fin-timeout" class="headerlink" title="2、net.ipv4.tcp_fin_timeout"></a>2、net.ipv4.tcp_fin_timeout</h3><blockquote><p>此参数默认值60</p></blockquote><p>TCP保持在FIN_WAIT2状态的时间，超时后直接处于CLOSED，所以降低tcp_fin_timeout有助于减少TIME_WAIT数量。注意：虽然shutdown(SHUD_WR)也会处于FIN_WAIT2状态，但超时并不起作用。</p><h3 id="3、net-ipv4-tcp-tw-recycle"><a href="#3、net-ipv4-tcp-tw-recycle" class="headerlink" title="3、net.ipv4.tcp_tw_recycle"></a>3、net.ipv4.tcp_tw_recycle</h3><blockquote><p>此参数默认值0，打开快速TIME_WAIT socket回收</p></blockquote><p>如果tcp_timestamps开启的话，会缓存每个连接的最新时间戳，如果后续请求时间戳小于缓存的时间戳，即视为无效，相应的包被丢弃。所以如果是在NAT(Network Address Translation)网络下，就可能出现数据包丢弃的现象，会导致大量的TCP连接建立错误。</p><h3 id="4、net-ipv4-tcp-tw-resue"><a href="#4、net-ipv4-tcp-tw-resue" class="headerlink" title="4、net.ipv4.tcp_tw_resue"></a>4、net.ipv4.tcp_tw_resue</h3><blockquote><p>此参数默认值0，是否重用TIME_WAIT状态的socket用于新的连接</p></blockquote><p>这个选项要比net.ipv4.tcp_tw_recycle安全，从协议的角度看，复用是安全的。复用条件:</p><ul><li>net.ipv4.tcp_timestamps选项必须打开(客户端也必须打开) ；</li><li>重用TIME_WAIT的条件是收到最后一个包后超过1秒；</li></ul><h3 id="5、net-ipv4-tcp-keepalive-time-1200"><a href="#5、net-ipv4-tcp-keepalive-time-1200" class="headerlink" title="5、net.ipv4.tcp_keepalive_time = 1200"></a>5、net.ipv4.tcp_keepalive_time = 1200</h3><blockquote><p>此参数表示TCP发送keepalive探测消息的间隔时间（秒）</p></blockquote><p>用于确认TCP连接是否有效。当keepalive起用的时候，TCP发送keepalive消息的频度。缺省是2小时，可改为20分钟。</p><hr><h3 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h3><p>该文为linux相关内容的网络优化，后续推出CNI相关内容。</p><hr><h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul><li><a href="http://linuxperf.com/?p=102" target="_blank" rel="noopener">overcommit</a></li><li><a href="https://www.kernel.org/doc/Documentation/vm/overcommit-accounting" target="_blank" rel="noopener">kernel</a></li></ul>]]></content>
-    
-    <summary type="html">
-    
-      &lt;div class=&quot;note info&quot;&gt;&lt;p&gt;接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。&lt;/p&gt;
-&lt;p&gt;以下是在/etc/sysctl.conf文件中配置的几个重要内核参数，这几个参数的设置关系到系统性能。&lt;/p&gt;&lt;/div&gt;
     
     </summary>
     

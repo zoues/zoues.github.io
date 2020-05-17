@@ -105,30 +105,20 @@
 
 
 
-  <meta name="description" content="前言 由于最近在折腾Android项目，需要用到一些与服务器交互、以及数据存储的相关功能，然后发现了LeanCloud这家服务提供商,使用下来还感觉还挺靠谱的(请给我广告费)。正好发现他们服务提供了JavaScript SDK，于是就想着尝试着实现Hexo博客文章的浏览数统计功能，之前虽然在使用不蒜子，但是不蒜子不能够在主页展示文章阅读量啊！对于博主这种有强迫症又想装X的人来说果断不能忍啊！ 修改">
-<meta name="keywords" content="Hexo">
+  <meta name="description" content="Gloo是一种基于Kubernetes原生设计的功能丰富的Ingress Controller，致力于成为下一代API网关标杆产品。 Gloo在函数级路由等方面表现优异；对旧式应用、微服务和serverless提供支持； 它具备高效的发现能力，且功能多样； 并与领先的开源项目（如Envoy、KNative等）紧密集成。 Gloo的独特设计旨在支持异构应用程序，与多种技术，体系结构，协议和云中共存">
+<meta name="keywords" content="cloudnative,serverless">
 <meta property="og:type" content="article">
-<meta property="og:title" content="为NexT主题添加文章阅读量统计功能">
-<meta property="og:url" content="https://ustack.io/2015-10-21-为NexT主题添加文章阅读量统计功能.html">
+<meta property="og:title" content="五分钟初识Gloo">
+<meta property="og:url" content="https://ustack.io/2020-04-09-五分钟初识Gloo.html">
 <meta property="og:site_name" content="Indagate">
-<meta property="og:description" content="前言 由于最近在折腾Android项目，需要用到一些与服务器交互、以及数据存储的相关功能，然后发现了LeanCloud这家服务提供商,使用下来还感觉还挺靠谱的(请给我广告费)。正好发现他们服务提供了JavaScript SDK，于是就想着尝试着实现Hexo博客文章的浏览数统计功能，之前虽然在使用不蒜子，但是不蒜子不能够在主页展示文章阅读量啊！对于博主这种有强迫症又想装X的人来说果断不能忍啊！ 修改">
+<meta property="og:description" content="Gloo是一种基于Kubernetes原生设计的功能丰富的Ingress Controller，致力于成为下一代API网关标杆产品。 Gloo在函数级路由等方面表现优异；对旧式应用、微服务和serverless提供支持； 它具备高效的发现能力，且功能多样； 并与领先的开源项目（如Envoy、KNative等）紧密集成。 Gloo的独特设计旨在支持异构应用程序，与多种技术，体系结构，协议和云中共存">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/open_consoloe.png">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/create_app.png">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/creating_app.png">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/create_class.png">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/creating_class.png">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/open_app_key.png">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/opened_app_key.png">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/background.png">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/open_safe_center.png">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/bind_domain.png">
-<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/broswer_403.png">
-<meta property="og:updated_time" content="2019-05-16T22:56:27.000Z">
+<meta property="og:image" content="https://s1.ax1x.com/2020/05/17/Ygqhod.md.png">
+<meta property="og:updated_time" content="2020-05-17T10:06:11.283Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="为NexT主题添加文章阅读量统计功能">
-<meta name="twitter:description" content="前言 由于最近在折腾Android项目，需要用到一些与服务器交互、以及数据存储的相关功能，然后发现了LeanCloud这家服务提供商,使用下来还感觉还挺靠谱的(请给我广告费)。正好发现他们服务提供了JavaScript SDK，于是就想着尝试着实现Hexo博客文章的浏览数统计功能，之前虽然在使用不蒜子，但是不蒜子不能够在主页展示文章阅读量啊！对于博主这种有强迫症又想装X的人来说果断不能忍啊！ 修改">
-<meta name="twitter:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/open_consoloe.png">
+<meta name="twitter:title" content="五分钟初识Gloo">
+<meta name="twitter:description" content="Gloo是一种基于Kubernetes原生设计的功能丰富的Ingress Controller，致力于成为下一代API网关标杆产品。 Gloo在函数级路由等方面表现优异；对旧式应用、微服务和serverless提供支持； 它具备高效的发现能力，且功能多样； 并与领先的开源项目（如Envoy、KNative等）紧密集成。 Gloo的独特设计旨在支持异构应用程序，与多种技术，体系结构，协议和云中共存">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/05/17/Ygqhod.md.png">
 
 
 
@@ -137,7 +127,7 @@
 
 
 
-  <link rel="canonical" href="https://ustack.io/2015-10-21-为NexT主题添加文章阅读量统计功能.html">
+  <link rel="canonical" href="https://ustack.io/2020-04-09-五分钟初识Gloo.html">
 
 
 
@@ -147,7 +137,7 @@
   };
 </script>
 
-  <title>为NexT主题添加文章阅读量统计功能 | Indagate</title>
+  <title>五分钟初识Gloo | Indagate</title>
   
 
 
@@ -315,7 +305,7 @@
   
   
   <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2015-10-21-为NexT主题添加文章阅读量统计功能.html">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2020-04-09-五分钟初识Gloo.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zouyee">
@@ -330,22 +320,19 @@
     
     <div class="head">
         <div class="gr_up_title">
-          <span class="text-overflow-center">为NexT主题添加文章阅读量统计功能</span>
+          <span class="text-overflow-center">五分钟初识Gloo</span>
         </div>
         <div class="gr_blog_post_cat">
-          <span class="gr_ddate">10月 21 2015</span><span class="gr_separate">|</span>
+          <span class="gr_ddate">4月 09 2020</span><span class="gr_separate">|</span>
           
-                <a href="/categories/Hexo/" itemprop="url" rel="category tag"><span itemprop="name">Hexo</span></a>
-
-                
-                
-              
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
             
         </div>
         <div class="gr_blog_post_title_holder">
         
           
-          <h3 class="blog_title" itemprop="name headline">为NexT主题添加文章阅读量统计功能
+          <h3 class="blog_title" itemprop="name headline">五分钟初识Gloo
               
             
           </h3>
@@ -370,7 +357,7 @@
                 
               
 
-              <time title="创建时间：10月 21 2015 21:57:00" itemprop="dateCreated datePublished" datetime="2015-10-21T21:57:00+08:00">10月 21 2015</time>
+              <time title="创建时间：4月 09 2020 20:40:08" itemprop="dateCreated datePublished" datetime="2020-04-09T20:40:08+08:00">4月 09 2020</time>
             
 
             
@@ -387,29 +374,11 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
+                <time title="修改时间：5月 17 2020 18:06:11" itemprop="dateModified" datetime="2020-05-17T18:06:11+08:00">5月 17 2020</time>
               
             
           </span>
 
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a></span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -419,8 +388,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2015-10-21-为NexT主题添加文章阅读量统计功能.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015-10-21-为NexT主题添加文章阅读量统计功能.html" itemprop="commentCount"></span>
+                <a href="/2020-04-09-五分钟初识Gloo.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020-04-09-五分钟初识Gloo.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -428,7 +397,7 @@
 
           
           
-             <span id="/2015-10-21-为NexT主题添加文章阅读量统计功能.html" class="leancloud_visitors" data-flag-title="为NexT主题添加文章阅读量统计功能">
+             <span id="/2020-04-09-五分钟初识Gloo.html" class="leancloud_visitors" data-flag-title="五分钟初识Gloo">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -464,74 +433,53 @@
     <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
     
       
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><hr>
-<p>由于最近在折腾Android项目，需要用到一些与服务器交互、以及数据存储的相关功能，然后发现了<a href="https://leancloud.cn" target="_blank" rel="noopener">LeanCloud</a>这家服务提供商,使用下来还感觉还挺靠谱的(请给我广告费)。正好发现他们服务提供了<a href="https://leancloud.cn/docs/js_guide.html" target="_blank" rel="noopener">JavaScript SDK</a>，于是就想着尝试着实现Hexo博客文章的浏览数统计功能，之前虽然在使用不蒜子，但是不蒜子不能够在主页展示文章阅读量啊！对于博主这种有强迫症又想装X的人来说果断不能忍啊！</p>
-<h3 id="修改NexT主题模版"><a href="#修改NexT主题模版" class="headerlink" title="修改NexT主题模版"></a><del>修改NexT主题模版</del></h3><p><del>本方法理论上对Hexo博客通用，由于博主使用的是NexT主题，所以当然针对NexT来说咯。</del><strong><font color="red">NexT主题目前已经合并这个Feature，因此如果你使用的是NexT主题，可以直接使用不用修改主题模版而直接在<code>_config.yml</code>中配置即可，请直接跳转查看<a href="#%E9%85%8D%E7%BD%AELeanCloud">配置LeanCloud</a></font></strong></p>
+        <p><img src="https://s1.ax1x.com/2020/05/17/Ygqhod.md.png" alt="架构"></p>
+<div class="note info"><p>Gloo是一种基于Kubernetes原生设计的功能丰富的Ingress Controller，致力于成为下一代API网关标杆产品。 Gloo在函数级路由等方面表现优异；对旧式应<br>用、微服务和serverless提供支持； 它具备高效的发现能力，且功能多样； 并与领先的开源项目（如Envoy、KNative等）紧密集成。 Gloo的独特设计旨在支持<br>异构应用程序，与多种技术，体系结构，协议和云中共存。</p></div>
 <a id="more"></a>
-<h4 id="修改-config-yml文件"><a href="#修改-config-yml文件" class="headerlink" title="修改_config.yml文件"></a><del>修改<code>_config.yml</code>文件</del></h4><p><del>打开NexT主题的根目录下的<code>_config.yml</code>文件，在任意位置添加以下内容：</del></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">leancloud_visitors:</span><br><span class="line">  enable: <span class="literal">true</span></span><br><span class="line">  app_id: #&lt;AppID&gt;</span><br><span class="line">  app_key: #&lt;AppKEY&gt;</span><br></pre></td></tr></table></figure>
-<h4 id="添加lean-analytics-swig文件"><a href="#添加lean-analytics-swig文件" class="headerlink" title="添加lean-analytics.swig文件"></a><del>添加<code>lean-analytics.swig</code>文件</del></h4><p><del>在主题的<code>layout\_scripts</code>路径下，新建一个<code>lean-analytics.swig</code>文件，并向里面添加以下内容</del></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- custom analytics part create by xiamo --&gt;</span><br><span class="line">&lt;script src=<span class="string">"https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"</span>&gt;&lt;/script&gt;</span><br><span class="line">&lt;script&gt;AV.initialize(<span class="string">"&#123;&#123;theme.leancloud_visitors.app_id&#125;&#125;"</span>, <span class="string">"&#123;&#123;theme.leancloud_visitors.app_key&#125;&#125;"</span>);&lt;/script&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">showTime</span>(<span class="params">Counter</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> query = <span class="keyword">new</span> AV.Query(Counter);</span><br><span class="line">	$(<span class="string">".leancloud_visitors"</span>).each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="keyword">var</span> url = $(<span class="keyword">this</span>).attr(<span class="string">"id"</span>).trim();</span><br><span class="line">		query.equalTo(<span class="string">"url"</span>, url);</span><br><span class="line">		query.find(&#123;</span><br><span class="line">			success: <span class="function"><span class="keyword">function</span>(<span class="params">results</span>) </span>&#123;</span><br><span class="line">				<span class="keyword">if</span> (results.length == <span class="number">0</span>) &#123;</span><br><span class="line">					<span class="keyword">var</span> content = $(<span class="built_in">document</span>.getElementById(url)).text() + <span class="string">': 0'</span>;</span><br><span class="line">					$(<span class="built_in">document</span>.getElementById(url)).text(content);</span><br><span class="line">					<span class="keyword">return</span>;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; results.length; i++) &#123;</span><br><span class="line">					<span class="keyword">var</span> object = results[i];</span><br><span class="line">					<span class="keyword">var</span> content = $(<span class="built_in">document</span>.getElementById(url)).text() + <span class="string">': '</span> + object.get(<span class="string">'time'</span>);</span><br><span class="line">					$(<span class="built_in">document</span>.getElementById(url)).text(content);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;,</span><br><span class="line">			error: <span class="function"><span class="keyword">function</span>(<span class="params">object, error</span>) </span>&#123;</span><br><span class="line">				<span class="built_in">console</span>.log(<span class="string">"Error: "</span> + error.code + <span class="string">" "</span> + error.message);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;);</span><br><span class="line"></span><br><span class="line">	&#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addCount</span>(<span class="params">Counter</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> Counter = AV.Object.extend(<span class="string">"Counter"</span>);</span><br><span class="line">	url = $(<span class="string">".leancloud_visitors"</span>).attr(<span class="string">'id'</span>).trim();</span><br><span class="line">	title = $(<span class="string">".leancloud_visitors"</span>).attr(<span class="string">'data-flag-title'</span>).trim();</span><br><span class="line">	<span class="keyword">var</span> query = <span class="keyword">new</span> AV.Query(Counter);</span><br><span class="line">	query.equalTo(<span class="string">"url"</span>, url);</span><br><span class="line">	query.find(&#123;</span><br><span class="line">		success: <span class="function"><span class="keyword">function</span>(<span class="params">results</span>) </span>&#123;</span><br><span class="line">			<span class="keyword">if</span> (results.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">				<span class="keyword">var</span> counter = results[<span class="number">0</span>];</span><br><span class="line">				counter.fetchWhenSave(<span class="literal">true</span>);</span><br><span class="line">				counter.increment(<span class="string">"time"</span>);</span><br><span class="line">				counter.save(<span class="literal">null</span>, &#123;</span><br><span class="line">					success: <span class="function"><span class="keyword">function</span>(<span class="params">counter</span>) </span>&#123;</span><br><span class="line">						<span class="keyword">var</span> content = $(<span class="built_in">document</span>.getElementById(url)).text() + <span class="string">': '</span> + counter.get(<span class="string">'time'</span>);</span><br><span class="line">						$(<span class="built_in">document</span>.getElementById(url)).text(content);</span><br><span class="line">					&#125;,</span><br><span class="line">					error: <span class="function"><span class="keyword">function</span>(<span class="params">counter, error</span>) </span>&#123;</span><br><span class="line">						<span class="built_in">console</span>.log(<span class="string">'Failed to save Visitor num, with error message: '</span> + error.message);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;);</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="keyword">var</span> newcounter = <span class="keyword">new</span> Counter();</span><br><span class="line">				newcounter.set(<span class="string">"title"</span>, title);</span><br><span class="line">				newcounter.set(<span class="string">"url"</span>, url);</span><br><span class="line">				newcounter.set(<span class="string">"time"</span>, <span class="number">1</span>);</span><br><span class="line">				newcounter.save(<span class="literal">null</span>, &#123;</span><br><span class="line">					success: <span class="function"><span class="keyword">function</span>(<span class="params">newcounter</span>) </span>&#123;</span><br><span class="line">					    <span class="built_in">console</span>.log(<span class="string">"newcounter.get('time')="</span>+newcounter.get(<span class="string">'time'</span>));</span><br><span class="line">						<span class="keyword">var</span> content = $(<span class="built_in">document</span>.getElementById(url)).text() + <span class="string">': '</span> + newcounter.get(<span class="string">'time'</span>);</span><br><span class="line">						$(<span class="built_in">document</span>.getElementById(url)).text(content);</span><br><span class="line">					&#125;,</span><br><span class="line">					error: <span class="function"><span class="keyword">function</span>(<span class="params">newcounter, error</span>) </span>&#123;</span><br><span class="line">						<span class="built_in">console</span>.log(<span class="string">'Failed to create'</span>);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;,</span><br><span class="line">		error: <span class="function"><span class="keyword">function</span>(<span class="params">error</span>) </span>&#123;</span><br><span class="line">			<span class="built_in">console</span>.log(<span class="string">'Error:'</span> + error.code + <span class="string">" "</span> + error.message);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;</span><br><span class="line">$(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> Counter = AV.Object.extend(<span class="string">"Counter"</span>);</span><br><span class="line">	<span class="keyword">if</span> ($(<span class="string">'.leancloud_visitors'</span>).length == <span class="number">1</span>) &#123;</span><br><span class="line">		addCount(Counter);</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> ($(<span class="string">'.post-title-link'</span>).length &gt; <span class="number">1</span>) &#123;</span><br><span class="line">		showTime(Counter);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
-<h4 id="修改post-swig文件"><a href="#修改post-swig文件" class="headerlink" title="修改post.swig文件"></a><del>修改<code>post.swig</code>文件</del></h4><p><del>在主题的<code>layout\_macro</code>路径下，打开<code>post.swig</code>文件，找到以下内容（大概88行）：</del></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;% if not is_index and theme.facebook_sdk.enable and theme.facebook_sdk.like_button %&#125;</span><br><span class="line">  &amp;nbsp; | &amp;nbsp;</span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"fb-like"</span> <span class="attr">data-layout</span>=<span class="string">"button_count"</span> <span class="attr">data-share</span>=<span class="string">"true"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
-<p><del>在其后面添加如下内容：</del></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;% if theme.leancloud_visitors.enable %&#125;</span><br><span class="line">		  	 <span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"&#123;&#123; url_for(post.path) &#125;&#125;"</span><span class="attr">class</span>=<span class="string">"leancloud_visitors"</span>  <span class="attr">data-flag-title</span>=<span class="string">"&#123;&#123; post.title &#125;&#125;"</span>&gt;</span></span><br><span class="line">            &amp;nbsp; | &amp;nbsp; &#123;&#123;__('post.visitors')&#125;&#125;</span><br><span class="line">            <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">		  &#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
-<p><del>添加完毕之后，文件内容像这个样子：</del></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">      &#123;% if not is_index and theme.facebook_sdk.enable and theme.facebook_sdk.like_button %&#125;</span><br><span class="line">        &amp;nbsp; | &amp;nbsp;</span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"fb-like"</span> <span class="attr">data-layout</span>=<span class="string">"button_count"</span> <span class="attr">data-share</span>=<span class="string">"true"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">      &#123;% endif %&#125;</span><br><span class="line">&#123;% if theme.leancloud_visitors.enable %&#125;</span><br><span class="line">	 <span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"&#123;&#123; url_for(post.path) &#125;&#125;"</span><span class="attr">class</span>=<span class="string">"leancloud_visitors"</span>  <span class="attr">data-flag-title</span>=<span class="string">"&#123;&#123; post.title &#125;&#125;"</span>&gt;</span></span><br><span class="line">        &amp;nbsp; | &amp;nbsp; &#123;&#123;__('post.visitors')&#125;&#125;</span><br><span class="line">        <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">&#123;% endif %&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">header</span>&gt;</span></span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="修改layout-swig文件"><a href="#修改layout-swig文件" class="headerlink" title="修改layout.swig文件"></a><del>修改<code>layout.swig</code>文件</del></h4><p><del>在NexT根目录的<code>layout</code>路径下，打开 <code>_layout.swig</code>文件，在<code>&lt;/body&gt;</code>上方添加如下内容：</del><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% if theme.leancloud_visitors.enable %&#125;</span><br><span class="line">  	 &#123;% include '_scripts/lean-analytics.swig' %&#125;</span><br><span class="line">  &#123;%  endif %&#125;</span><br></pre></td></tr></table></figure></p>
-<p><del>添加完成之后，文件内容像这个样子：</del></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;# LazyLoad #&#125;</span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"&#123;&#123; url_for(theme.js) &#125;&#125;/lazyload.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">    $(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">      $(<span class="string">"#posts"</span>).find(<span class="string">'img'</span>).lazyload(&#123;</span></span><br><span class="line"><span class="javascript">        placeholder: <span class="string">"&#123;&#123; url_for(theme.images) &#125;&#125;/loading.gif"</span>,</span></span><br><span class="line"><span class="javascript">        effect: <span class="string">"fadeIn"</span></span></span><br><span class="line"><span class="undefined">      &#125;);</span></span><br><span class="line"><span class="undefined">    &#125;);</span></span><br><span class="line"><span class="undefined">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  &#123;% if theme.leancloud_visitors.enable %&#125;</span><br><span class="line">  	 &#123;% include '_scripts/lean-analytics.swig' %&#125;</span><br><span class="line">  &#123;%  endif %&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h4 id="修改zh-Hans-yml文件"><a href="#修改zh-Hans-yml文件" class="headerlink" title="修改zh-Hans.yml文件"></a><del>修改<code>zh-Hans.yml</code>文件</del></h4><p><del>在NexT目录的<code>languages</code>路径下的<code>zh-Hans.yml</code>文件，在<code>post:</code>结点下添加<code>visitors: 阅读次数</code>，像这个样子：</del><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">post:</span><br><span class="line">  posted: 发表于</span><br><span class="line">  visitors: 阅读次数</span><br><span class="line">  updated: 更新于</span><br><span class="line">  in: 分类于</span><br><span class="line">  read_more: 阅读全文</span><br><span class="line">  untitled: 未命名</span><br><span class="line">  toc_empty: 此文章未包含目录</span><br></pre></td></tr></table></figure></p>
-<p><del><strong> 如果你使用的是其它NexT的语言，请相应的添加该字段即可。</strong></del></p>
-<p><del>至此NexT的修改工作就完成了，但是现在还是不能够使用文章阅读量这个统计功能的。这个功能依赖于<a href="https://leancloud.cn/" target="_blank" rel="noopener">LeanCloud</a>提供后端数据存取，因此我们需要注册一个<a href="https://leancloud.cn/login.html#/signup" target="_blank" rel="noopener">LeanCloud帐号</a>才能继续使用这个功能，<strong><a href="https://leancloud.cn/login.html#/signup" target="_blank" rel="noopener">点我快速注册</a>.</strong></del></p>
 <hr>
-<h3 id="配置LeanCloud"><a href="#配置LeanCloud" class="headerlink" title="配置LeanCloud"></a>配置<a href="https://leancloud.cn" target="_blank" rel="noopener">LeanCloud</a></h3><p>在注册完成LeanCloud帐号并验证邮箱之后，我们就可以登录我们的LeanCloud帐号，进行一番配置之后拿到<code>AppID</code>以及<code>AppKey</code>这两个参数即可正常使用文章阅读量统计的功能了。</p>
-<h4 id="创建应用"><a href="#创建应用" class="headerlink" title="创建应用"></a>创建应用</h4><ul>
-<li>我们新建一个应用来专门进行博客的访问统计的数据操作。首先，打开控制台，如下图所示：</li>
+<h3 id="一、何为Gloo"><a href="#一、何为Gloo" class="headerlink" title="一、何为Gloo"></a>一、何为Gloo</h3><ul>
+<li><p>*Kubernetes ingress controller**: 当部署在Kubernetes上时，Gloo可以充当功能丰富的入口控制器，并且当部署到AWS EKS等公共云时，可以简化路由功能。</p>
+</li>
+<li><p><strong>异构应用</strong>: Gloo创建的应用程序路由到实现为微服务，无服务器功能和旧式应用程序的后端。 此功能可以帮助用户逐渐从旧代码迁移到微服务、无服务器架构。<br>用户在保持其原有代码逻辑前提下，使用云原生技术添加新功能； 组织中的不同团队可以选择不同架构及其他场景。</p>
+</li>
+<li><p><strong>服务网格Ingress</strong>: 服务网格技术解决了跨云网络的服务到服务通信问题。 可以使用服务网格解决诸如服务标识，七层网络遥测信息收集，服务弹性，服务之<br>间的流量路由以及策略执行（例如配额，速率限制等）之类的问题。 为了使服务网格正常运行，它需要一种使流量进入网格的方法。 将流量从边缘传输到集群内部的<br>问题与服务到服务的问题有所不同。 前端网关应当提供缓存，安全性和流量管理，Oauth和最终用户身份验证/授权，用户速率限制，Web应用程序防火墙等。 Gloo<br>解决了以上问题，兼容所有服务网格技术，包括Istio，Linkerd，Consul Connect和AWS App Mesh。</p>
+</li>
 </ul>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/open_consoloe.png" alt title="打开控制台"></p>
+<hr>
+<h3 id="二、Gloo特色"><a href="#二、Gloo特色" class="headerlink" title="二、Gloo特色"></a>二、Gloo特色</h3><ul>
+<li><p><strong>功能级路由允许集成旧版应用程序，微服务和无服务器</strong>：Gloo可以路由<br>直接向<em>functions</em>请求，可以是：无服务器功能调用（例如Lambda，Google Cloud Function，OpenFaaS函数等）；<br>微服务或旧服务上的API调用（例如REST API调用，OpenAPI操作，XML / SOAP请求等）；<br>或发布到邮件队列（例如，NATS，AMQP等）。 这种独特的功能使Gloo成为唯一的API网关<br>支持混合应用程序，以及不将用户绑定到特定范例的唯一应用程序。</p>
+</li>
+<li><p><strong>Gloo包含经过审查的开源项目，以提供广泛的功能</strong>：Gloo通过与顶级开源项目（包括gRPC，GraphQL，OpenTracing，NATS等）集成来支持高质量功能。<br>Gloo的体系结构允许在将来流行的开源项目出现时快速集成它们。</p>
+</li>
+<li><p><strong>全自动发现使用户可以快速移动</strong>：Gloo在启动时会创建所有可用目的地的目录，并不断对其进行更新。 这使开发人员无需承担“记账”的责任，并确保新功能<br>在准备就绪后立即可用。 Gloo跨IaaS，PaaS和FaaS提供程序以及Swagger，gRPC和GraphQL发现。</p>
+</li>
+<li><p><strong>Gloo与用户环境紧密集成</strong>：通过Gloo，用户可以自由选择自己喜欢的调度工具（例如K8S，Nomad，OpenShift等），持久性（K8s，Consul等）和安全性<br>（K8s, Vault）。</p>
+</li>
+</ul>
+<h4 id="路由特性"><a href="#路由特性" class="headerlink" title="路由特性"></a>路由特性</h4><ul>
+<li><p><strong>动态负载均衡</strong>:跨多个上游服务负载均衡流量。</p>
+</li>
+<li><p><strong>健康检查</strong>: 主动和被动监视上游服务。</p>
+</li>
+<li><p><strong>OpenTracing标准</strong>: 使用支持良好的OpenTracing标准监视请求。</p>
+</li>
+<li><p><strong>监控</strong>: 支持Prometheus、Statsd方式监控。</p>
+</li>
+<li><p><strong>SSL</strong>: 高度可定制的选项，用于向上游服务添加SSL加密，并完全支持SNI。</p>
+</li>
+<li><p><strong>转换</strong>: 添加，删除或处理HTTP请求和响应。</p>
+</li>
+</ul>
+<h4 id="通用特性"><a href="#通用特性" class="headerlink" title="通用特性"></a>通用特性</h4><p>Gloo可以轻松应对管理入口流量进入应用程序架构（不单单是Kubernetes）的挑战。在Kubernetes，AWS Lambda，VM，Terraform，EC2，Consul<br>等架构/平台中运行时，可以动态发现后端服务。Gloo同时也被选为KNative项目的首选ingress项目，其主要有以下特性。</p>
 <ul>
-<li>在出现的界面点击<code>创建应用</code>：</li>
+<li>解决云原生和混合云的挑战：微服务使应用程序的API更加复杂。 Gloo实现了API网关模式，通过实现管理平面来提升业务的可操作性。</li>
+<li>构建Envoy代理：Gloo是Envoy Proxy的控制平面，使开发人员和操作员可以通过以声明性格式的xDS gRPC API动态更新Envoy配置。</li>
+<li>服务网格的基石：Gloo将服务网格功能添加到集群入口。 Gloo允许您以迭代的方式渐进式使用高级功能，并与诸如Flagger的系统进<br>行金丝雀自动化发布，同时以本地化方式插入服务网格实现（如Istio，Linkerd或Consul）。</li>
+<li>针对应用程序的集成：Gloo可以将请求直接路由到Function、微服务或遗留服务上的API，或发布到消息队列。这种独特的功能使Gloo成为支持混合应用程序的唯一<br>API网关，而不会将用户束缚于特定的技术方案。</li>
+<li>强大的社区特性：Gloo通过与顶级开源项目（如gRPC，GraphQL，OpenTracing，NATS等）集成来支持高级别功能。 Gloo的技术架构允许在未来流行的开源项目<br>出现时快速集成。</li>
+<li>全自动发现能力：Gloo动态发现能力，跨IaaS，PaaS和FaaS</li>
+<li>与现有工具集成：使用Gloo，用户可以自由选择自己喜欢的调度工具（例如K8S，Nomad，OpenShift等），持久化（K8S，Consul等）和安全特性（K8，Vault）。</li>
 </ul>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/create_app.png" alt title="创建应用"></p>
-<ul>
-<li>在接下来的页面，新建的应用名称我们可以随意输入，即便是输入的不满意我们后续也是可以更改的:</li>
-</ul>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/creating_app.png" alt title="创建的新应用名称"></p>
-<ul>
-<li>这里为了演示的方便，我新创建一个取名为test的应用。创建完成之后我们点击新创建的应用的名字来进行该应用的参数配置：</li>
-</ul>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/create_class.png" alt title="打开应用参数配置界面"></p>
-<ul>
-<li>在应用的数据配置界面，左侧下划线开头的都是系统预定义好的表，为了便于区分我们新建一张表来保存我们的数据。点击左侧右上角的齿轮图标，新建Class：<br> 在弹出的选项中选择<code>创建Class</code>来新建Class用来专门保存我们博客的文章访问量等数据:<br> 点击<code>创建Class</code>之后，<del>理论上来说名字可以随意取名，只要你交互代码做相应的更改即可</del>，但是为了保证我们前面对NexT主题的修改兼容，此处的<strong><font color="green">新建Class名字必须为<font color="red"><code>Counter</code></font></font></strong>:</li>
-</ul>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/creating_class.png" alt title="权限配置"></p>
-<ul>
-<li>由于LeanCloud升级了默认的ACL权限，如果你想避免后续因为权限的问题导致次数统计显示不正常，建议在此处选择<code>无限制</code>。</li>
-</ul>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/open_app_key.png" alt title="打开应用设置"></p>
-<p>创建完成之后，左侧数据栏应该会多出一栏名为<code>Counter</code>的栏目，这个时候我们点击顶部的设置，切换到test应用的操作界面:<br>在弹出的界面中，选择左侧的<code>应用Key</code>选项，即可发现我们创建应用的<code>AppID</code>以及<code>AppKey</code>，有了它，我们就有权限能够通过主题中配置好的Javascript代码与这个应用的Counter表进行数据存取操作了:</p>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/opened_app_key.png" alt title="获取Appid、Appkey"></p>
-<p>复制<code>AppID</code>以及<code>AppKey</code>并在NexT主题的<code>_config.yml</code>文件中我们相应的位置填入即可，正确配置之后文件内容像这个样子:</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">leancloud_visitors:</span><br><span class="line">  enable: true</span><br><span class="line">  app_id: joaeuuc4hsqudUUwx4gIvGF6-gzGzoHsz</span><br><span class="line">  app_key: E9UJsJpw1omCHuS22PdSpKoh</span><br></pre></td></tr></table></figure>
-<p>这个时候重新生成部署Hexo博客，应该就可以正常使用文章阅读量统计的功能了。需要特别说明的是：记录文章访问量的唯一标识符是文章的<code>发布日期</code>以及<code>文章的标题</code>，因此请确保这两个数值组合的唯一性，如果你更改了这两个数值，会造成文章阅读数值的清零重计。</p>
-<h3 id="后台管理"><a href="#后台管理" class="headerlink" title="后台管理"></a>后台管理</h3><p>当你配置部分完成之后，初始的文章统计量显示为0，但是这个时候我们LeanCloud对应的应用的<code>Counter</code>表中并没有相应的记录，只是单纯的显示为0而已，当博客文章在配置好阅读量统计服务之后第一次打开时，便会自动向服务器发送数据来创建一条数据，该数据会被记录在对应的应用的<code>Counter</code>表中。</p>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/background.png" alt title="后台管理"></p>
-<p>我们可以修改其中的<code>time</code>字段的数值来达到修改某一篇文章的访问量的目的（博客文章访问量快递提升人气的装逼利器）。双击具体的数值，修改之后回车即可保存。</p>
-<ul>
-<li><code>url</code>字段被当作唯一<code>ID</code>来使用，因此如果你不知道带来的后果的话请不要修改。</li>
-<li><code>title</code>字段显示的是博客文章的标题，用于后台管理的时候区分文章之用，没有什么实际作用。</li>
-<li>其他字段皆为自动生成，具体作用请查阅LeanCloud官方文档，如果你不知道有什么作用请不要随意修改。</li>
-</ul>
-<h3 id="Web安全"><a href="#Web安全" class="headerlink" title="Web安全"></a>Web安全</h3><p>因为AppID以及AppKey是暴露在外的，因此如果一些别用用心之人知道了之后用于其它目的是得不偿失的，为了确保只用于我们自己的博客，建议开启Web安全选项，这样就只能通过我们自己的域名才有权访问后台的数据了，可以进一步提升安全性。</p>
-<p>选择应用的设置的<code>安全中心</code>选项卡:</p>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/open_safe_center.png" alt title="进入安全中心"></p>
-<p>在<code>Web 安全域名</code>中填入我们自己的博客域名，来确保数据调用的安全:</p>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/bind_domain.png" alt title="锁定域名"></p>
-<p>如果你不知道怎么填写安全域名而或者填写完成之后发现博客文章访问量显示不正常，打开浏览器调试模式，发现如下图的输出:</p>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/static/images/leancloud-page-anlysis/broswer_403.png" alt title="Web安全域名填写错误"></p>
-<p>这说明你的安全域名填写错误，导致服务器拒绝了数据交互的请求，你可以更改为正确的安全域名或者你不知道如何修改请在本博文中留言或者放弃设置Web安全域名。</p>
-<p>Enjoy it！</p>
 
       
     </div>
@@ -623,7 +571,7 @@ jQuery.noConflict()(function ($) {
     <strong>本文作者： </strong>zouyee</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://ustack.io/2015-10-21-为NexT主题添加文章阅读量统计功能.html" title="为NexT主题添加文章阅读量统计功能">https://ustack.io/2015-10-21-为NexT主题添加文章阅读量统计功能.html</a>
+    <a href="https://ustack.io/2020-04-09-五分钟初识Gloo.html" title="五分钟初识Gloo">https://ustack.io/2020-04-09-五分钟初识Gloo.html</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -636,7 +584,9 @@ jQuery.noConflict()(function ($) {
       
         <div class="post-tags">
           
-            <a href="/tags/Hexo/" rel="tag"># Hexo</a>
+            <a href="/tags/cloudnative/" rel="tag"># cloudnative</a>
+          
+            <a href="/tags/serverless/" rel="tag"># serverless</a>
           
         </div>
       
@@ -649,8 +599,8 @@ jQuery.noConflict()(function ($) {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015-07-06-自动备份Hexo博客源文件.html" rel="next" title="自动备份Hexo博客源文件">
-                <i class="fa fa-chevron-left"></i> 自动备份Hexo博客源文件
+              <a href="/2020-03-25-Kubernetes 1.18 福履将之.html" rel="next" title="Kubernetes 1.18 福履将之">
+                <i class="fa fa-chevron-left"></i> Kubernetes 1.18 福履将之
               </a>
             
           </div>
@@ -659,8 +609,8 @@ jQuery.noConflict()(function ($) {
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016-10-26-基于LeanCloud、Telegram实现多说评论推送.html" rel="prev" title="基于LeanCloud、Telegram实现多说评论推送">
-                基于LeanCloud、Telegram实现多说评论推送 <i class="fa fa-chevron-right"></i>
+              <a href="/2020-04-09-Serverless当打之年.html" rel="prev" title="Serverless当打之年">
+                Serverless当打之年 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -975,7 +925,7 @@ jQuery.noConflict()(function ($) {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改NexT主题模版"><span class="nav-number">2.</span> <span class="nav-text">修改NexT主题模版</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#修改-config-yml文件"><span class="nav-number">2.1.</span> <span class="nav-text">修改_config.yml文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加lean-analytics-swig文件"><span class="nav-number">2.2.</span> <span class="nav-text">添加lean-analytics.swig文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改post-swig文件"><span class="nav-number">2.3.</span> <span class="nav-text">修改post.swig文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改layout-swig文件"><span class="nav-number">2.4.</span> <span class="nav-text">修改layout.swig文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改zh-Hans-yml文件"><span class="nav-number">2.5.</span> <span class="nav-text">修改zh-Hans.yml文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置LeanCloud"><span class="nav-number">3.</span> <span class="nav-text">配置LeanCloud</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建应用"><span class="nav-number">3.1.</span> <span class="nav-text">创建应用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后台管理"><span class="nav-number">4.</span> <span class="nav-text">后台管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Web安全"><span class="nav-number">5.</span> <span class="nav-text">Web安全</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、何为Gloo"><span class="nav-number">1.</span> <span class="nav-text">一、何为Gloo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、Gloo特色"><span class="nav-number">2.</span> <span class="nav-text">二、Gloo特色</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#路由特性"><span class="nav-number">2.1.</span> <span class="nav-text">路由特性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通用特性"><span class="nav-number">2.2.</span> <span class="nav-text">通用特性</span></a></li></ol></li></ol></div>
             
 
           </div>
