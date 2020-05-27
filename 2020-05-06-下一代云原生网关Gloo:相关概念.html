@@ -105,16 +105,22 @@
 
 
 
-  <meta name="description" content="Keep motivation for the world">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Indagate">
-<meta property="og:url" content="https://ustack.io/tags/Telegram/index.html">
+  <meta name="description" content="Gloo聚合后端服务并为客户端提供端到端的功能转换，从而允许与后端API分离。客户端向在Gloo上定义的路由发出请求或发出事件。 这些路由通过Gloo的配置（由Gloo的API的客户端提供）在上游服务起作用。 Gloo在客户端定义的路由和后端功能之间执行必要的转换，能够通过其可扩展的插件接口支持各种上游功能。">
+<meta name="keywords" content="cloudnative,serverless">
+<meta property="og:type" content="article">
+<meta property="og:title" content="下一代云原生网关Gloo之架构赏析">
+<meta property="og:url" content="https://ustack.io/2020-05-06-下一代云原生网关Gloo:相关概念.html">
 <meta property="og:site_name" content="Indagate">
-<meta property="og:description" content="Keep motivation for the world">
+<meta property="og:description" content="Gloo聚合后端服务并为客户端提供端到端的功能转换，从而允许与后端API分离。客户端向在Gloo上定义的路由发出请求或发出事件。 这些路由通过Gloo的配置（由Gloo的API的客户端提供）在上游服务起作用。 Gloo在客户端定义的路由和后端功能之间执行必要的转换，能够通过其可扩展的插件接口支持各种上游功能。">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://s1.ax1x.com/2020/05/21/YqsrWR.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/05/21/YqsrWR.md.png">
+<meta property="og:image" content="https://ustack.io/discovery_architecture.png">
+<meta property="og:updated_time" content="2020-05-21T13:25:30.795Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Indagate">
-<meta name="twitter:description" content="Keep motivation for the world">
+<meta name="twitter:title" content="下一代云原生网关Gloo之架构赏析">
+<meta name="twitter:description" content="Gloo聚合后端服务并为客户端提供端到端的功能转换，从而允许与后端API分离。客户端向在Gloo上定义的路由发出请求或发出事件。 这些路由通过Gloo的配置（由Gloo的API的客户端提供）在上游服务起作用。 Gloo在客户端定义的路由和后端功能之间执行必要的转换，能够通过其可扩展的插件接口支持各种上游功能。">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/05/21/YqsrWR.md.png">
 
 
 
@@ -123,7 +129,7 @@
 
 
 
-  <link rel="canonical" href="https://ustack.io/tags/Telegram/">
+  <link rel="canonical" href="https://ustack.io/2020-05-06-下一代云原生网关Gloo:相关概念.html">
 
 
 
@@ -133,7 +139,7 @@
   };
 </script>
 
-  <title>标签: Telegram | Indagate</title>
+  <title>下一代云原生网关Gloo之架构赏析 | Indagate</title>
   
 
 
@@ -285,56 +291,348 @@
                 <div id="content" class="content gr_grid_container">
                 
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h2>Telegram<small>标签</small>
-        </h2>
-      </div>
+  
 
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2020-05-06-下一代云原生网关Gloo:相关概念.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">下一代云原生网关Gloo之架构赏析</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">5月 06 2020</span><span class="gr_separate">|</span>
+          
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
+        
+          
+          <h3 class="blog_title" itemprop="name headline">下一代云原生网关Gloo之架构赏析
+              
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：5月 06 2020 20:40:08" itemprop="dateCreated datePublished" datetime="2020-05-06T20:40:08+08:00">5月 06 2020</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：5月 21 2020 21:25:30" itemprop="dateModified" datetime="2020-05-21T21:25:30+08:00">5月 21 2020</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020-05-06-下一代云原生网关Gloo:相关概念.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020-05-06-下一代云原生网关Gloo:相关概念.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020-05-06-下一代云原生网关Gloo:相关概念.html" class="leancloud_visitors" data-flag-title="下一代云原生网关Gloo之架构赏析">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span>℃</span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
       
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2016-10-26-基于LeanCloud、Telegram实现多说评论推送.html" itemprop="url">
-              
-                <span itemprop="name">基于LeanCloud、Telegram实现多说评论推送</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2016-10-26T00:19:53+08:00" content="10月 26 2016">
-          10-26
-        </time>
       </div>
-
-    </header>
-  </article>
-
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
+    
+      
+        <p><img src="https://s1.ax1x.com/2020/05/21/YqsrWR.md.png" alt></p>
+<div class="note info"><p>Gloo聚合后端服务并为客户端提供端到端的功能转换，从而允许与后端API分离。客户端向在Gloo上定义的路由发出请求或<a href="https://github.com/solo-io/gloo-sdk-go" target="_blank" rel="noopener">发出事件</a>。 这些路由<br>通过Gloo的配置（由Gloo的API的客户端提供）在上游服务起作用。</p></div>
+<p>Gloo在客户端定义的路由和后端功能之间执行必要的转换，能够<br>通过其可扩展的<a href="https://github.com/solo-io/gloo/blob/master/projects/gloo/pkg/plugins/plugin_interface.go" target="_blank" rel="noopener">插件接口</a>支持各种上游功能。<br><a id="more"></a></p>
+<p>Gloo在所有功能上均提供一流的API管理功能:</p>
+<ul>
+<li>超时</li>
+<li>指标和追踪</li>
+<li>健康检查</li>
+<li>重试</li>
+<li>高级负载平衡</li>
+<li>具有SNI支持的TLS终止</li>
+<li>HTTP标头修改</li>
+</ul>
+<hr>
+<h3 id="一、Gloo组件"><a href="#一、Gloo组件" class="headerlink" title="一、Gloo组件"></a>一、Gloo组件</h3><blockquote>
+<p>从最基本的意义上讲，Gloo是转换引擎，Envoy xDS服务器为Envoy提供高级配置（包括Gloo的自定义Envoy过滤器）。 Gloo遵循基于事件的体系结构，监视各<br>种配置源以进行更新，并立即通过v2 版本的gRPC接口更新Envoy配置。</p>
+</blockquote>
+<p><img src="https://s1.ax1x.com/2020/05/21/YqsrWR.md.png" alt="架构图"></p>
+<h4 id="Config-Watcher"><a href="#Config-Watcher" class="headerlink" title="Config Watcher"></a>Config Watcher</h4><p>在介绍gRPC之前，我们将探讨一些常用的方法来实现负载平衡。</p>
+<h4 id="Secret-Watcher"><a href="#Secret-Watcher" class="headerlink" title="Secret Watcher"></a>Secret Watcher</h4><h4 id="Endpoint-Discovery"><a href="#Endpoint-Discovery" class="headerlink" title="Endpoint Discovery"></a>Endpoint Discovery</h4><h4 id="Translator"><a href="#Translator" class="headerlink" title="Translator"></a>Translator</h4><h4 id="Reporter"><a href="#Reporter" class="headerlink" title="Reporter"></a>Reporter</h4><h4 id="xDS-Server"><a href="#xDS-Server" class="headerlink" title="xDS Server"></a>xDS Server</h4><hr>
+<h3 id="二、Discovery架构"><a href="#二、Discovery架构" class="headerlink" title="二、Discovery架构"></a>二、Discovery架构</h3><p>一组可选的发现服务支持Gloo，它们会自动发现和配置Gloo上游和功能，简化了用户和自助服务的路由。</p>
+<p><img src="../discovery_architecture.png" alt="Discovery架构" title="Discovery Architecture"></p>
+<p>发现服务充当自动化的Gloo客户端，自动使用上游和功能填充存储层以便于用户轻松路由。 发现是可选的，但是启用后，它将尝试发现可用上游和功能。</p>
+<p>当前支持平台:</p>
+<ul>
+<li>Kubernetes Service-Based Upstream Discovery</li>
+<li>AWS Lambda-Based Function Discovery</li>
+<li>Google Cloud Function-Based Function Discovery</li>
+<li>OpenAPI-Based Function Discovery</li>
+<li>Istio-Based Route Rule Discovery (Experimental)</li>
+</ul>
+<hr>
+<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul>
+<li><a href="https://docs.solo.io/gloo/latest/introduction/architecture/" target="_blank" rel="noopener">architecture</a></li>
+</ul>
 
       
     </div>
 
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+      <div class="qr_code_pc_inner">
+        <div class="qr_code_pc">
+    <img id="js_pc_qr_code_img" class="qr_code_pc_img" src="https://s2.ax1x.com/2019/09/22/upS79K.jpg" alt="zouyee wechat" style="width: 200px; max-width: 100%;">
+    <p>微信扫一扫<br>关注该公众号</p>
+</div>
+<script>
+jQuery.noConflict()(function ($) {
+    $(function () {
+		var offsetTop = $('#comments').offset().top - $(window).height();
+		
+		if (offsetTop <= 0) {
+			// load directly when there's no a scrollbar
+			console.log("....")
+		} else {
+			$(window).on('scroll', function () {
+				var scrollTop = document.documentElement.scrollTop;
+				var copyright = $('.post-copyright').offset().top;
+				
+				var imageH = $('.qr_code_pc').offset().top;
+				console.log("scrollTop", scrollTop)
+				console.log("copyright", copyright)
+				console.log("qr_code_pc", imageH)
+				if (scrollTop <= offsetTop) {
+					$('.qr_code_pc').css('position', 'absolute')
+					$('.qr_code_pc').css('top', 420)
+				}
+				if (scrollTop > 450 && copyright > scrollTop) {
+					$('.qr_code_pc').css('top', 20)
+					$('.qr_code_pc').css('position', 'fixed')
+				} else {
+					$('.qr_code_pc').css('position', 'absolute')
+				}
+			});
+		}
+	});
+
+})
+</script>
+
+      </div>
+      
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span style="padding-top: 5px;">打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="https://s2.ax1x.com/2019/09/22/uppS4P.jpg" alt="zouyee 微信支付">
+        
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>zouyee</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://ustack.io/2020-05-06-下一代云原生网关Gloo:相关概念.html" title="下一代云原生网关Gloo之架构赏析">https://ustack.io/2020-05-06-下一代云原生网关Gloo:相关概念.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/cloudnative/" rel="tag"># cloudnative</a>
+          
+            <a href="/tags/serverless/" rel="tag"># serverless</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020-04-20-Kubernetes进阶之NT技术小解.html" rel="next" title="Kubernetes进阶之NT技术小解">
+                <i class="fa fa-chevron-left"></i> Kubernetes进阶之NT技术小解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020-05-06-xDS标准引入GRPC生态.html" rel="prev" title="xDS标准引入gRPC生态">
+                xDS标准引入gRPC生态 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
                 </div>
                 
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
 
             </div>
                 
@@ -358,8 +656,15 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -600,6 +905,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、Gloo组件"><span class="nav-number">1.</span> <span class="nav-text">一、Gloo组件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Config-Watcher"><span class="nav-number">1.1.</span> <span class="nav-text">Config Watcher</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Secret-Watcher"><span class="nav-number">1.2.</span> <span class="nav-text">Secret Watcher</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Endpoint-Discovery"><span class="nav-number">1.3.</span> <span class="nav-text">Endpoint Discovery</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Translator"><span class="nav-number">1.4.</span> <span class="nav-text">Translator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Reporter"><span class="nav-number">1.5.</span> <span class="nav-text">Reporter</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#xDS-Server"><span class="nav-number">1.6.</span> <span class="nav-text">xDS Server</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、Discovery架构"><span class="nav-number">2.</span> <span class="nav-text">二、Discovery架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参考资料"><span class="nav-number">2.1.</span> <span class="nav-text">参考资料</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -901,6 +1222,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
 
   
 
