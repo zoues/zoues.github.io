@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.3.0',
+    sidebar: {"position":"right","display":"hide","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="CloudEvents是一种以通用方式描述事件数据的规范。CloudEvents旨在简化跨服务，平台及其他方面的事件声明和发送。CloudEvents　最初由　CNCFSeverless 工作组提出。CloudEvents 的 HTTP 协议绑定定义了如何将事件映射到 HTTP 1.1 请求和响应消息。">
+<meta name="keywords" content="cloudnative,serverless">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CloudEvents核心规范之二">
+<meta property="og:url" content="https://ustack.io/2020-06-16-CloudEvents核心规范之二.html">
+<meta property="og:site_name" content="Indagate">
+<meta property="og:description" content="CloudEvents是一种以通用方式描述事件数据的规范。CloudEvents旨在简化跨服务，平台及其他方面的事件声明和发送。CloudEvents　最初由　CNCFSeverless 工作组提出。CloudEvents 的 HTTP 协议绑定定义了如何将事件映射到 HTTP 1.1 请求和响应消息。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://s1.ax1x.com/2020/05/16/Yc4JUK.jpg">
+<meta property="og:updated_time" content="2020-06-07T03:03:05.884Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CloudEvents核心规范之二">
+<meta name="twitter:description" content="CloudEvents是一种以通用方式描述事件数据的规范。CloudEvents旨在简化跨服务，平台及其他方面的事件声明和发送。CloudEvents　最初由　CNCFSeverless 工作组提出。CloudEvents 的 HTTP 协议绑定定义了如何将事件映射到 HTTP 1.1 请求和响应消息。">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/05/16/Yc4JUK.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Indagate" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://ustack.io/2020-06-16-CloudEvents核心规范之二.html">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>CloudEvents核心规范之二 | Indagate</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  
+  <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.bootcss.com/jquery-migrate/1.4.1/jquery-migrate.min.js"></script>
+  <link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" id="stylesheet-css" href="/css/style.css" type="text/css" media="all">
+  <link rel="stylesheet" id="gr_classic_style-css" href="/css/classic.css" type="text/css" media="all">
+  <link rel="stylesheet" id="gr_options-css" href="/css/options.css" type="text/css" media="all">
+  <link rel="stylesheet" id="gr_style-css" href="/css/style1.css" type="text/css" media="all">
+  <link rel="stylesheet" id="contact-form-7-css" href="/css/styles.css" type="text/css" media="all">
+  <link rel="stylesheet" id="cff-css" href="/css/cff-style.css" type="text/css" media="all">
+  <link rel="stylesheet" id="cff-font-awesome-css" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css" media="all">
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="/js/Valine.min.js"></script>
+  
+ 
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN" style="opacity: 1;" class="home blog">
+
+  
+  
+    
+  
+<div class="preloader">
+	<div class="gr_preload_logo">
+    	<img src="/images/logo.png" alt="indagate">
+    </div>
+    <div class="gr_load_ring">
+    	<h2>LOADING</h2>
+    </div>
+</div>
+<div id="gr_box_search" class="gr_box_overlay">
+    <div class="gr_close_over"></div>
+    <div class="gr_box_holder">
+        <h3 class="gr_box_title">Let's search</h3>
+        <form role="search" method="get" action="/">
+            <input type="search" name="s" value placeholder="..." class="gr_search_input">
+            <button type="submit" value="Search" class="gr_search_submit">Search</button>
+        </form>
+        <button type="button" class="gr_close">Close</button>
+    </div>
+</div>
+<div id="gr_box_social" class="gr_box_overlay">
+    <div class="gr_close_over"></div>
+    <div class="gr_box_holder">
+        <h3 class="gr_box_title">Follow me</h3>
+        <div class="gr_box_share_holder">
+        <a href="http://github.com/zoues" target="_blank"><i class="fa fa-github"></i></a>                                                <a href="/atom.xml" target="_blank"><i class="fa fa-rss"></i></a>        </div>
+        <button type="button" class="gr_close">Close</button>
+    </div>
+</div>
+  <div class="gr_site_holder">
+    <header>
+            <div class="gr_header_background">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 col-xs-4">
+                            <div class="gr-search">
+                                <a href="#" title>search</a>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-4">
+                            <div class="gr-menu-top">
+                                <div class="gr_menu_holder" style="margin-left: -60px; width:120px">
+                                    <a href="#" title class="gr_menu_button">menu</a>
+                                    <div class="menu-main-menu-container">
+                                        <ul id="menu-main-menu" class="gr_header_menu center-block" style="display: none;">
+                                            <li id="menu-item-344" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-344">
+                                                <a href="/categories/" style="opacity: 1;">开发实践</a>
+                                            </li>
+                                            <li id="menu-item-344" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-344">
+                                                <a href="/categories/" style="opacity: 1;">行业动态</a>
+                                            </li>
+                                            <li id="menu-item-344" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-344">
+                                                <a href="/categories/" style="opacity: 1;">入门教程</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-4">
+                            <div class="gr-social">
+                                <a href="#" title class="gr_share_button">follow</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="gr-logo">
+                                <a href="/">
+                                    <img class="img-responsive" src="/images/logo.png" alt="Boroda">
+                                </a>
+                                <h2>My name is <span>Zouyee</span>. I’m a blogger based in SUZHOU.</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main row">
+         
+        <div class="main-inner">
+         
+            <div class="content-wrap">
+                
+                <div id="content" class="content gr_grid_container">
+                
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2020-06-16-CloudEvents核心规范之二.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">CloudEvents核心规范之二</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">6月 16 2020</span><span class="gr_separate">|</span>
+          
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
+        
+          
+          <h3 class="blog_title" itemprop="name headline">CloudEvents核心规范之二
+              
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：6月 16 2020 21:40:08" itemprop="dateCreated datePublished" datetime="2020-06-16T21:40:08+08:00">6月 16 2020</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：6月 07 2020 11:03:05" itemprop="dateModified" datetime="2020-06-07T11:03:05+08:00">6月 07 2020</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020-06-16-CloudEvents核心规范之二.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020-06-16-CloudEvents核心规范之二.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020-06-16-CloudEvents核心规范之二.html" class="leancloud_visitors" data-flag-title="CloudEvents核心规范之二">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span>℃</span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
+      
+      </div>
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
+    
+      
+        <p><img src="https://s1.ax1x.com/2020/05/16/Yc4JUK.jpg" alt></p>
+<div class="note info"><p>CloudEvents是一种以通用方式描述事件数据的规范。CloudEvents旨在简化跨服务，平台及其他方面的事件声明和发送。CloudEvents　最初由　CNCF<br>Severless 工作组提出。CloudEvents 的 HTTP 协议绑定定义了如何将事件映射到 HTTP 1.1 请求和响应消息。</p></div>
+<a id="more"></a>
+<hr>
+<h2 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h2><p>CloudEvents是事件的结构和元数据描述的标准化且与协议无关的定义。该规范定义了如何在HTTP 1.1请求和响应消息中使用CloudEvents规范中定义的元素。</p>
+<h3 id="与HTTP的关系"><a href="#与HTTP的关系" class="headerlink" title="与HTTP的关系"></a>与HTTP的关系</h3><p>本规范没有规定约束特定HTTP方法的使用或处理规则，也没有约束用于传输或请求事件的HTTP目标资源。</p>
+<p>事件可以通过所有支持有效载荷体传输的标准或应用程序定义的HTTP请求方法来传输。事件也可以在HTTP响应中以及与允许有效载荷体传输的所有HTTP状态码一起传输。</p>
+<p>这里所有显示HTTP方法、HTTP目标URI和HTTP状态码的例子都是非规范性的说明。</p>
+<p>本规范也同样适用于与 HTTP 1.1语义兼容的 HTTP/2（RFC7540）。</p>
+<blockquote>
+<p>也适用于HTTP/2</p>
+</blockquote>
+<h3 id="内容模式"><a href="#内容模式" class="headerlink" title="内容模式"></a>内容模式</h3><p>本规范定义了传输事件的三种内容模式：二进制（binary）、结构化（structured）和批量（batched）。每个符合规范的实现都应该支持二进制（binary）和结</p>
+<p>构化（structured）模式。</p>
+<ul>
+<li>在二进制内容模式下，事件 data 的值被放置到HTTP请求或响应的主体（body）中，并在HTTP Content-Type header中以 datacontenttype属性的值声明其</li>
+</ul>
+<p>媒体类型；所有其他事件属性都被映射到HTTP头。</p>
+<ul>
+<li><p>在结构化内容模式下，事件元数据属性和事件数据被放置到HTTP请求或响应body中，使用事件格式。</p>
+</li>
+<li><p>在批量内容模式中，多个事件使用支持批量的事件格式，分批放入单个HTTP请求或响应body中。</p>
+</li>
+</ul>
+<h3 id="事件格式"><a href="#事件格式" class="headerlink" title="事件格式"></a>事件格式</h3><p>与结构化内容模式一起使用的事件格式，定义了事件如何以特定的数据格式表达。本规范的所有实现必须支持非批处理的JSON事件格式，但也可以支持任何其他格式，包括专有格式。</p>
+<p>事件格式可以额外定义事件批处理的表达方式。这些格式可以与批处理内容模式一起使用。</p>
+<h3 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h3><p>本规范没有为HTTP引入任何新的安全特性，也没有规定要使用特定的现有特性。本规范同样适用于TLS上的HTTP。</p>
+<hr>
+<h2 id="二、CloudEvents-属性的使用"><a href="#二、CloudEvents-属性的使用" class="headerlink" title="二、CloudEvents 属性的使用"></a>二、CloudEvents 属性的使用</h2><p>本规范没有进一步定义任何核心 CloudEvents 事件属性。</p>
+<p>此映射是为了防止变化（包括事件属性的添加和删除），并适应供应商对事件元数据的扩展。</p>
+<h3 id="datacontententtype-属性"><a href="#datacontententtype-属性" class="headerlink" title="datacontententtype 属性"></a>datacontententtype 属性</h3><p>datacontententtype属性被认为包含一个符合RFC2046的媒体类型表达式。</p>
+<h3 id="data"><a href="#data" class="headerlink" title="data"></a>data</h3><p>data 被假定为包含由 datacontenttype 属性声明的不透明的应用数据。</p>
+<p>应用程序可以自由地以其选择的任何内存中的表示方式来保存信息，但是由于该值是按照本规范中的定义被转接到HTTP中的，因此假设 data 的值是以字节序列的形式</p>
+<p>提供的。</p>
+<p>例如，如果声明的 datacontenttype 为 application/json;charset=utf-8，则期望 data 值以 UTF-8 编码的JSON文本形式提供给HTTP。</p>
+<hr>
+<h2 id="三、HTTP消息映射"><a href="#三、HTTP消息映射" class="headerlink" title="三、HTTP消息映射"></a>三、HTTP消息映射</h2><p>HTTP请求和响应消息的事件绑定是相同的。</p>
+<p>内容模式是由事件的发送方选择的，发送方可以是请求方或响应方。可能允许使用特定模式请求事件的手势可能是由应用程序定义的，但这里没有定义。除非被邀约，</p>
+<p>否则不能使用批量模式，而且手势应该允许接收方选择最大的批处理量。</p>
+<p>事件的接收方可以通过检查 Content-Type header 的值来区分这三种模式。如果该值前缀为 CloudEvents 媒体类型 application/cloudevents，表示使</p>
+<p>用已知的事件格式，则接收方使用结构化模式。如果该值前缀为 application/cloudevents-batch，则接收器使用批处理模式。否则，则默认为二进制模式。</p>
+<blockquote>
+<p>默认是使用二进制模式</p>
+</blockquote>
+<p>如果接收器检测到 CloudEvents 媒体类型，但它无法处理的事件格式（例如 application/cloudevents+avro），它仍然可以将事件作为二进制模式处理，并</p>
+<p>将其转发到另一方。</p>
+<h3 id="二进制内容模式"><a href="#二进制内容模式" class="headerlink" title="二进制内容模式"></a>二进制内容模式</h3><p>二进制的内容模式可以容纳任何形状的事件数据，并允许高效传输，无需转码。</p>
+<p><strong><em>HTTP Content Type</em></strong></p>
+<p>对于二进制模式，HTTP Content-Type header值对应于（必须从 CloudEvents datacontenttype 属性中填充或写入）CloudEvents datacontenttype </p>
+<p>属性。请注意 ce-datacontenttype HTTP 标头不能也存在于消息中。</p>
+<p><strong><em>事件数据编码</em></strong></p>
+<p>data 字节序列作为HTTP报文Body。</p>
+<p><strong><em>Metadata headers</em></strong></p>
+<p>所有其他 CloudEvents 属性（包括扩展）必须单独映射到不同的 HTTP 消息头，并从不同的 HTTP 消息头中映射。</p>
+<p>定义了自己属性的 CloudEvents 扩展可以为这些属性定义二级映射到 HTTP 头，特别是当特定属性需要与 HTTP 特性或其他有明确 HTTP 头绑定的规范保持一致</p>
+<p>时。请注意，这些属性还必须作为带有 ce 前缀的 HTTP 标头出现在 HTTP 报文中，如 HTTP 标头名称中所述。</p>
+<p><strong><em>HTTP Header Names</em></strong></p>
+<p>除注明的情况外，所有 CloudEvents 上下文属性（包括扩展）都必须映射到与属性名称相同但前缀为 ce 的 HTTP header中。</p>
+<p>示例:</p>
+<ul>
+<li><code>time</code> maps to <code>ce-time</code></li>
+<li><code>id</code> maps to <code>ce-id</code></li>
+<li><code>specversion</code> maps to <code>ce-specversion</code></li>
+</ul>
+<blockquote>
+<p>根据HTTP规范，header name是不区分大小写的</p>
+</blockquote>
+<p><strong><em>HTTP header值</em></strong></p>
+<p>每个 HTTP header的值由相应属性类型的标准字符串表示法构建。</p>
+<p>某些 CloudEvents 元数据属性可包含任意 UTF-8 字符串内容，HTTP 标头必须仅使用 US-ASCII 字符集中的可打印字符，并由 CRLF 序列终止，标头值周围</p>
+<p>有可选的空白。中描述的 header 编码规则之前，必须按照RFC3986，第2.4节中描述的百分比编码，对字符串值进行百分比编码。</p>
+<p>将 HTTP 报文解码为 CloudEvent 时，必须反向应用这些规则 – RFC7230 第 3.2.6 节对 ASCII 字符串进行解码，然后按照 RFC3986 第 2.4 节中的描</p>
+<p>述进行单轮百分比解码，以生成有效的 UTF-8 字符串。(注意，应用百分比解码的次数不正确可能导致报文损坏或安全问题)。</p>
+<p><strong><em>Examples</em></strong></p>
+<p>这个例子显示了带有HTTP POST请求的事件与的二进制模式映射：</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">POST /someresource HTTP/1.1</span><br><span class="line">Host: webhook.example.com</span><br><span class="line">ce-specversion: 1.0</span><br><span class="line">ce-type: com.example.someevent</span><br><span class="line">ce-time: 2018-04-05T03:56:24Z</span><br><span class="line">ce-id: 1234-1234-1234</span><br><span class="line">ce-source: /mycontext/subcontext</span><br><span class="line">    .... further attributes ...</span><br><span class="line">Content-Type: application/json; charset=utf-8</span><br><span class="line">Content-Length: nnnn</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    ... application data ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个例子显示了包含事件的响应：</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">ce-specversion: 1.0</span><br><span class="line">ce-type: com.example.someevent</span><br><span class="line">ce-time: 2018-04-05T03:56:24Z</span><br><span class="line">ce-id: 1234-1234-1234</span><br><span class="line">ce-source: /mycontext/subcontext</span><br><span class="line">    .... further attributes ...</span><br><span class="line">Content-Type: application/json; charset=utf-8</span><br><span class="line">Content-Length: nnnn</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    ... application data ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><em>结构化内容模式</em></strong><br>结构化的内容模式将事件元数据和数据保持在有效载荷中，使得同一事件可以在多个路由跳转、多协议之间简单转发。</p>
+<h3 id="HTTP内容类型"><a href="#HTTP内容类型" class="headerlink" title="HTTP内容类型"></a>HTTP内容类型</h3><p>HTTP内容类型头必须设置为事件格式的媒体类型。</p>
+<blockquote>
+<p>JSON 格式的示例。</p>
+</blockquote>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Content-Type: application/cloudevents+json; charset=UTF-8</span><br></pre></td></tr></table></figure>
+<h3 id="事件数据编码"><a href="#事件数据编码" class="headerlink" title="事件数据编码"></a>事件数据编码</h3><p>所选择的事件格式定义了所有属性和数据的表示方式。</p>
+<p>然后按照事件格式规范对事件元数据和数据进行渲染，最后得到的数据成为HTTP报文body。</p>
+<h3 id="metadata-header"><a href="#metadata-header" class="headerlink" title="metadata header"></a>metadata header</h3><p>实现可以包含与二进制模式定义的相同的 HTTP 标头。</p>
+<p>所有 CloudEvents 元数据属性都必须映射到有效载荷（Payload）中，即使它们也已经映射到 HTTP header中了。</p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>这个例子显示了一个JSON事件格式编码的事件，用PUT请求发送：</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">PUT /myresource HTTP/1.1</span><br><span class="line">Host: webhook.example.com</span><br><span class="line">Content-Type: application/cloudevents+json; charset=utf-8</span><br><span class="line">Content-Length: nnnn</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    "specversion" : "1.0",</span><br><span class="line">    "type" : "com.example.someevent",</span><br><span class="line"></span><br><span class="line">    ... further attributes omitted ...</span><br><span class="line"></span><br><span class="line">    "data" : &#123;</span><br><span class="line">        ... application data ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个例子显示了一个响应中返回的JSON编码的事件：</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Content-Type: application/cloudevents+json; charset=utf-8</span><br><span class="line">Content-Length: nnnn</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    "specversion" : "1.0",</span><br><span class="line">    "type" : "com.example.someevent",</span><br><span class="line"></span><br><span class="line">    ... further attributes omitted ...</span><br><span class="line"></span><br><span class="line">    "data" : &#123;</span><br><span class="line">        ... application data ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="批量内容模式"><a href="#批量内容模式" class="headerlink" title="批量内容模式"></a>批量内容模式</h3><p>在批量内容模式下，多个事件被批量到一个HTTP请求或响应体中。选择的事件格式必须定义如何表示一个批次。基于JSON格式（任何兼容的实现都必须支持JSON格式），</p>
+<p>JSON Batch格式是一种支持批处理的事件格式。</p>
+<p><strong><em>HTTP 内容类型</em></strong></p>
+<p>HTTP Content-Type头必须设置为事件格式的媒体类型。</p>
+<p>JSON Batch 格式的示例。</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Content-Type: application/cloudevents-batch+json; charset=UTF-8</span><br></pre></td></tr></table></figure>
+<p><strong><em>事件数据编码</em></strong></p>
+<p>所选的事件格式定义了一批事件和所有事件属性和数据的表示方式。</p>
+<p>然后根据事件格式规范对事件批进行渲染，结果数据将成为HTTP消息主体。</p>
+<p>该批事件可以是空的。所有批处理的 CloudEvents 必须具有相同的 specversion 属性。其他属性可能不同，包括 datacontententtype 属性。</p>
+<p><strong><em>示例</em></strong></p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">PUT /myresource HTTP/1.1</span><br><span class="line">Host: webhook.example.com</span><br><span class="line">Content-Type: application/cloudevents-batch+json; charset=utf-8</span><br><span class="line">Content-Length: nnnn</span><br><span class="line"></span><br><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        "specversion" : "1.0",</span><br><span class="line">        "type" : "com.example.someevent",</span><br><span class="line"></span><br><span class="line">        ... further attributes omitted ...</span><br><span class="line"></span><br><span class="line">        "data" : &#123;</span><br><span class="line">            ... application data ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        "specversion" : "1.0",</span><br><span class="line">        "type" : "com.example.someotherevent",</span><br><span class="line"></span><br><span class="line">        ... further attributes omitted ...</span><br><span class="line"></span><br><span class="line">        "data" : &#123;</span><br><span class="line">            ... application data ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>返回</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Content-Type: application/cloudevents-batch+json; charset=utf-8</span><br><span class="line">Content-Length: nnnn</span><br><span class="line"></span><br><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        "specversion" : "1.0",</span><br><span class="line">        "type" : "com.example.someevent",</span><br><span class="line"></span><br><span class="line">        ... further attributes omitted ...</span><br><span class="line"></span><br><span class="line">        "data" : &#123;</span><br><span class="line">            ... application data ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        "specversion" : "1.0",</span><br><span class="line">        "type" : "com.example.someotherevent",</span><br><span class="line"></span><br><span class="line">        ... further attributes omitted ...</span><br><span class="line"></span><br><span class="line">        "data" : &#123;</span><br><span class="line">            ... application data ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="四、json事件格式"><a href="#四、json事件格式" class="headerlink" title="四、json事件格式"></a>四、json事件格式</h2><h3 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h3><p>本节定义了 CloudEvents 属性如何映射到 JSON。本规范没有明确映射每个属性，但提供了一个通用映射模型，该模型适用于所有当前和未来的 CloudEvents </p>
+<p>属性（包括扩展）。</p>
+<p>为明确起见，扩展属性使用与规范定义的属性相同的规则进行序列化。这包括其语法和在 JSON 对象中的位置。特别是，扩展作为顶层 JSON 属性放置。扩展必须被</p>
+<p>序列化为顶层JSON属性。</p>
+<p><strong><em>Type System Mapping</em></strong></p>
+<p>扩展规范可以为其定义的属性值定义二次映射规则，但必须包括之前定义的主映射。</p>
+<p>例如，属性值可能是在 CloudEvents 以外的标准中定义的数据结构，具有正式的 JSON 映射，如果不保留原始格式，可能会有翻译错误或信息丢失的风险。</p>
+<p>定义了 JSON 次要映射规则的扩展规范，以及对该规范的任何修订，都必须为提交或修订时属于 CloudEvents 核心的所有其他事件格式定义明确的映射规则。</p>
+<p>如果需要，例如在解码地图时，CloudEvents 类型可以通过使用映射表中的规则进行推理来确定，其中唯一潜在的模糊 JSON 数据类型是字符串。当满足映射规则时，</p>
+<p>该值与相应的 CloudEvents 类型兼容。</p>
+<h3 id="Envelope"><a href="#Envelope" class="headerlink" title="Envelope"></a>Envelope</h3><p>每个 CloudEvents 事件可以完全表示为一个 JSON 对象。</p>
+<p>这种表示方式必须使用媒体类型 application/cloudevents+json。</p>
+<p>给定事件中的所有 REQUIRED 和所有未省略的 OPTIONAL 属性必须成为 JSON 对象的成员，相应的 JSON 对象成员名称与属性名称相匹配，并且成员的类型和值</p>
+<p>使用类型系统映射。</p>
+<p><strong><em>对 “data”的处理</em></strong></p>
+<p>在采取行动之前，JSON序列化器必须首先确定数据内容的运行时数据类型。</p>
+<p>如果实现确定数据类型为二进制，则必须将值表示为包含Base64编码的二进制值的JSON字符串表达式，并使用成员名data_base64将其存储在JSON对象中。</p>
+<p>对于任何其他类型，实现必须将数据值转换为JSON值，并使用成员名data_base64来存储在JSON对象中。</p>
+<p>由此可见，在 JSON 序列化的 CloudEvent 中，数据和 data_base64 成员的使用是相互排斥的。</p>
+<p>当从 JSON 中解串化 CloudEvents 时，data_base64 成员的存在清楚地表明该值是 Base64 编码的二进制数据，序列化器必须将其解码为二进制的运行时数据</p>
+<p>类型。当数据成员存在时，它将使用默认的JSON类型映射来解码，用于使用的运行时。</p>
+<p>与属性不同的是，根据类型系统映射，值类型被限制为字符串，而产生的数据成员JSON值是不受限制的，可以包含任何有效的JSON。</p>
+<hr>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://www.bookstack.cn/read/serverless-handbook/core-function-code.md" target="_blank" rel="noopener">function</a></li>
+</ul>
+
+      
+    </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+      <div class="qr_code_pc_inner">
+        <div class="qr_code_pc">
+    <img id="js_pc_qr_code_img" class="qr_code_pc_img" src="https://s2.ax1x.com/2019/09/22/upS79K.jpg" alt="zouyee wechat" style="width: 200px; max-width: 100%;">
+    <p>微信扫一扫<br>关注该公众号</p>
+</div>
+<script>
+jQuery.noConflict()(function ($) {
+    $(function () {
+		var offsetTop = $('#comments').offset().top - $(window).height();
+		
+		if (offsetTop <= 0) {
+			// load directly when there's no a scrollbar
+			console.log("....")
+		} else {
+			$(window).on('scroll', function () {
+				var scrollTop = document.documentElement.scrollTop;
+				var copyright = $('.post-copyright').offset().top;
+				
+				var imageH = $('.qr_code_pc').offset().top;
+				console.log("scrollTop", scrollTop)
+				console.log("copyright", copyright)
+				console.log("qr_code_pc", imageH)
+				if (scrollTop <= offsetTop) {
+					$('.qr_code_pc').css('position', 'absolute')
+					$('.qr_code_pc').css('top', 420)
+				}
+				if (scrollTop > 450 && copyright > scrollTop) {
+					$('.qr_code_pc').css('top', 20)
+					$('.qr_code_pc').css('position', 'fixed')
+				} else {
+					$('.qr_code_pc').css('position', 'absolute')
+				}
+			});
+		}
+	});
+
+})
+</script>
+
+      </div>
+      
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span style="padding-top: 5px;">打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="https://s2.ax1x.com/2019/09/22/uppS4P.jpg" alt="zouyee 微信支付">
+        
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>zouyee</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://ustack.io/2020-06-16-CloudEvents核心规范之二.html" title="CloudEvents核心规范之二">https://ustack.io/2020-06-16-CloudEvents核心规范之二.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/cloudnative/" rel="tag"># cloudnative</a>
+          
+            <a href="/tags/serverless/" rel="tag"># serverless</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020-06-15-CloudEvents核心规范之一.html" rel="next" title="CloudEvents核心规范之一">
+                <i class="fa fa-chevron-left"></i> CloudEvents核心规范之一
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020-06-17-CloudEvents核心规范之三.html" rel="prev" title="CloudEvents核心规范之三">
+                CloudEvents核心规范之三 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+                </div>
+                
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+            </div>
+                
+                
+  
+
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/author.webp" alt="zouyee">
+            
+              <p class="site-author-name" itemprop="name">zouyee</p>
+              <p class="site-description motion-element" itemprop="description">Keep motivation for the world</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">56</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/zouyee" target="_blank" title="Twitter" rel="external nofollow"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.instagram.com/ustackq/" target="_blank" title="Instagram" rel="external nofollow"><i class="fa fa-fw fa-instagram"></i>Instagram</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/zouyee" target="_blank" title="GitHub" rel="external nofollow"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank" rel="external nofollow">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.zoues.com/" title="Zoues" target="_blank">Zoues</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、简介"><span class="nav-number">1.</span> <span class="nav-text">一、简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#与HTTP的关系"><span class="nav-number">1.1.</span> <span class="nav-text">与HTTP的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内容模式"><span class="nav-number">1.2.</span> <span class="nav-text">内容模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件格式"><span class="nav-number">1.3.</span> <span class="nav-text">事件格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安全"><span class="nav-number">1.4.</span> <span class="nav-text">安全</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、CloudEvents-属性的使用"><span class="nav-number">2.</span> <span class="nav-text">二、CloudEvents 属性的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#datacontententtype-属性"><span class="nav-number">2.1.</span> <span class="nav-text">datacontententtype 属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#data"><span class="nav-number">2.2.</span> <span class="nav-text">data</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、HTTP消息映射"><span class="nav-number">3.</span> <span class="nav-text">三、HTTP消息映射</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#二进制内容模式"><span class="nav-number">3.1.</span> <span class="nav-text">二进制内容模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP内容类型"><span class="nav-number">3.2.</span> <span class="nav-text">HTTP内容类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件数据编码"><span class="nav-number">3.3.</span> <span class="nav-text">事件数据编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#metadata-header"><span class="nav-number">3.4.</span> <span class="nav-text">metadata header</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#示例"><span class="nav-number">3.5.</span> <span class="nav-text">示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#批量内容模式"><span class="nav-number">3.6.</span> <span class="nav-text">批量内容模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、json事件格式"><span class="nav-number">4.</span> <span class="nav-text">四、json事件格式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#属性"><span class="nav-number">4.1.</span> <span class="nav-text">属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Envelope"><span class="nav-number">4.2.</span> <span class="nav-text">Envelope</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+                
+        </div>
+        
+        
+    </main>
+
+
+    <div class="gr_footer_widget">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="gr_widget">
+                            <h6 class="gr_widget_title"><span>Serveless Repo</span></h6>
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item avatar" src="https://s2.ax1x.com/2019/09/22/uSzDzD.jpg" width="50" height="50" alt="@virtual-kubelet">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <p class="org-description" itemprop="description"></p><div>OCI-based implementation CRI</div><p></p>
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="https://cri-o.io" href="https://cri-o.io">https://cri-o.io</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item avatar" src="https://s2.ax1x.com/2019/09/22/uSzISS.jpg" width="50" height="50" alt="@openfaas">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <p class="org-description" itemprop="description"></p><div>Serverless Functions Made Simple</div><p></p>
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="https://www.openfaas.com" href="https://www.openfaas.com">https://www.openfaas.com</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item avatar" src="https://s2.ax1x.com/2019/09/22/uSzbes.jpg" width="50" height="50" alt="@virtual-kubelet">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <p class="org-description" itemprop="description"></p><div>Building serverless within Kubernetes</div><p></p>
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="https://virtual-kubelet.io" href="https://virtual-kubelet.io">https://virtual-kubelet.io</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item avatar" src="https://s2.ax1x.com/2019/09/22/uSzjYV.jpg" width="50" height="50" alt="@virtual-kubelet">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <p class="org-description" itemprop="description"></p><div>Manage modern serverless workloads</div><p></p>
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="https://knative.dev" href="https://knative.dev">https://knative.dev</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="gr_widget" style="line-height: 18px;">
+                            <h6 class="gr_widget_title"><span>Calendar</span></h6>
+                            <div id="calendar_wrap" class="calendar_wrap">
+                                <table id="wp-calendar">
+                                    <caption>July 2019</caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" title="Monday">M</th>
+                                            <th scope="col" title="Tuesday">T</th>
+                                            <th scope="col" title="Wednesday">W</th>
+                                            <th scope="col" title="Thursday">T</th>
+                                            <th scope="col" title="Friday">F</th>
+                                            <th scope="col" title="Saturday">S</th>
+                                            <th scope="col" title="Sunday">S</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3" id="prev"><a href="./wp/boroda/2015/05/">« May</a></td>
+                                            <td class="pad">&nbsp;</td>
+                                            <td colspan="3" id="next" class="pad">&nbsp;</td>
+                                        </tr>
+                                    </tfoot>
+
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="5" class="pad">&nbsp;</td>
+                                            <td>1</td>
+                                            <td>2</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>4</td>
+                                            <td>5</td>
+                                            <td>6</td>
+                                            <td>7</td>
+                                            <td>8</td>
+                                            <td>9</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10</td>
+                                            <td>11</td>
+                                            <td>12</td>
+                                            <td>13</td>
+                                            <td>14</td>
+                                            <td>15</td>
+                                            <td>16</td>
+                                        </tr>
+                                        <tr>
+                                            <td>17</td>
+                                            <td>18</td>
+                                            <td id="today">19</td>
+                                            <td>20</td>
+                                            <td>21</td>
+                                            <td>22</td>
+                                            <td>23</td>
+                                        </tr>
+                                        <tr>
+                                            <td>24</td>
+                                            <td>25</td>
+                                            <td>26</td>
+                                            <td>27</td>
+                                            <td>28</td>
+                                            <td>29</td>
+                                            <td>30</td>
+                                        </tr>
+                                        <tr>
+                                            <td>31</td>
+                                            <td class="pad" colspan="6">&nbsp;</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="gr_widget">
+                            <h6 class="gr_widget_title"><span>Dou Feed</span></h6>
+                            
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item douban" src="https://s2.ax1x.com/2019/09/22/upSEY6.jpg" width="50" height="50" alt="@virtual-kubelet">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="少年赫比" href="https://book.douban.com/subject/33408001/?icn=index-latestbook-subject">书名: 少年赫比</a>
+                                        </li>
+                                         <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <a rel="nofollow" itemprop="url" class="text-gray">出版年: 2019-5</a>
+                                        </li>
+                                         <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <a rel="nofollow" itemprop="url" class="text-gray">原作名: CITY BOY</a>
+                                        </li>
+                                         <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <a rel="nofollow" itemprop="url" class="text-gray">定价: 58.00元</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zouyee</span>
+
+  
+
+  
+</div>
+
+
+  
+
+
+
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" rel="external nofollow" href="https://github.com/theme-next/hexo-theme-next">NexT.Muse</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery.form/3.51/jquery.form.min.js"></script>
+  </div>
+    <script type="text/javascript" src="/js/custom.js"></script>
+    <script type="text/javascript" src="/js/menu.js"></script>
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="/js/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'jTOUB0OQ83CnjWySYgN5W1PV-gzGzoHsz',
+        appKey: '8upIEt85LzIaq3NWQbUbfWI8',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("Qg4Aol4dtKwpnLstsoOct5Ya-gzGzoHsz", "pRvygLtQ4atIrsbLXpXi9HXa");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text(counter.get('time'));
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+  <script type="text/javascript" src="https://cdn.bootcss.com/js-cookie/2.1.4/js.cookie.js"></script>
+  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=6.3.0"></script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

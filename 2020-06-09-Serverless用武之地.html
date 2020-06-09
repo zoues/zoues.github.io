@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.3.0',
+    sidebar: {"position":"right","display":"hide","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Serverless是指构建和运行不需要服务器管理的应用程序的概念。它描述了一种更细粒度的部署模型，应用程序包含一个或多个函数，代码上传到平台，然后执行，通过响应当前的确切需求进行扩缩和计费。Serverless并不意味着我们不再使用服务器来托管和运行代码，这也并不是意味着不再需要运维工程师。它指的是serverless计算服务的消费者不再需要花费时间来进行服务器配置，维护，更新，扩展和容量规划">
+<meta name="keywords" content="cloudnative,serverless">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Serverless用武之地">
+<meta property="og:url" content="https://ustack.io/2020-06-09-Serverless用武之地.html">
+<meta property="og:site_name" content="Indagate">
+<meta property="og:description" content="Serverless是指构建和运行不需要服务器管理的应用程序的概念。它描述了一种更细粒度的部署模型，应用程序包含一个或多个函数，代码上传到平台，然后执行，通过响应当前的确切需求进行扩缩和计费。Serverless并不意味着我们不再使用服务器来托管和运行代码，这也并不是意味着不再需要运维工程师。它指的是serverless计算服务的消费者不再需要花费时间来进行服务器配置，维护，更新，扩展和容量规划">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://s1.ax1x.com/2020/06/09/tI1qTP.md.png">
+<meta property="og:updated_time" content="2020-06-09T14:15:40.492Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Serverless用武之地">
+<meta name="twitter:description" content="Serverless是指构建和运行不需要服务器管理的应用程序的概念。它描述了一种更细粒度的部署模型，应用程序包含一个或多个函数，代码上传到平台，然后执行，通过响应当前的确切需求进行扩缩和计费。Serverless并不意味着我们不再使用服务器来托管和运行代码，这也并不是意味着不再需要运维工程师。它指的是serverless计算服务的消费者不再需要花费时间来进行服务器配置，维护，更新，扩展和容量规划">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/06/09/tI1qTP.md.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Indagate" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://ustack.io/2020-06-09-Serverless用武之地.html">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Serverless用武之地 | Indagate</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  
+  <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.bootcss.com/jquery-migrate/1.4.1/jquery-migrate.min.js"></script>
+  <link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" id="stylesheet-css" href="/css/style.css" type="text/css" media="all">
+  <link rel="stylesheet" id="gr_classic_style-css" href="/css/classic.css" type="text/css" media="all">
+  <link rel="stylesheet" id="gr_options-css" href="/css/options.css" type="text/css" media="all">
+  <link rel="stylesheet" id="gr_style-css" href="/css/style1.css" type="text/css" media="all">
+  <link rel="stylesheet" id="contact-form-7-css" href="/css/styles.css" type="text/css" media="all">
+  <link rel="stylesheet" id="cff-css" href="/css/cff-style.css" type="text/css" media="all">
+  <link rel="stylesheet" id="cff-font-awesome-css" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css" media="all">
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="/js/Valine.min.js"></script>
+  
+ 
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN" style="opacity: 1;" class="home blog">
+
+  
+  
+    
+  
+<div class="preloader">
+	<div class="gr_preload_logo">
+    	<img src="/images/logo.png" alt="indagate">
+    </div>
+    <div class="gr_load_ring">
+    	<h2>LOADING</h2>
+    </div>
+</div>
+<div id="gr_box_search" class="gr_box_overlay">
+    <div class="gr_close_over"></div>
+    <div class="gr_box_holder">
+        <h3 class="gr_box_title">Let's search</h3>
+        <form role="search" method="get" action="/">
+            <input type="search" name="s" value placeholder="..." class="gr_search_input">
+            <button type="submit" value="Search" class="gr_search_submit">Search</button>
+        </form>
+        <button type="button" class="gr_close">Close</button>
+    </div>
+</div>
+<div id="gr_box_social" class="gr_box_overlay">
+    <div class="gr_close_over"></div>
+    <div class="gr_box_holder">
+        <h3 class="gr_box_title">Follow me</h3>
+        <div class="gr_box_share_holder">
+        <a href="http://github.com/zoues" target="_blank"><i class="fa fa-github"></i></a>                                                <a href="/atom.xml" target="_blank"><i class="fa fa-rss"></i></a>        </div>
+        <button type="button" class="gr_close">Close</button>
+    </div>
+</div>
+  <div class="gr_site_holder">
+    <header>
+            <div class="gr_header_background">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 col-xs-4">
+                            <div class="gr-search">
+                                <a href="#" title>search</a>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-4">
+                            <div class="gr-menu-top">
+                                <div class="gr_menu_holder" style="margin-left: -60px; width:120px">
+                                    <a href="#" title class="gr_menu_button">menu</a>
+                                    <div class="menu-main-menu-container">
+                                        <ul id="menu-main-menu" class="gr_header_menu center-block" style="display: none;">
+                                            <li id="menu-item-344" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-344">
+                                                <a href="/categories/" style="opacity: 1;">开发实践</a>
+                                            </li>
+                                            <li id="menu-item-344" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-344">
+                                                <a href="/categories/" style="opacity: 1;">行业动态</a>
+                                            </li>
+                                            <li id="menu-item-344" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-344">
+                                                <a href="/categories/" style="opacity: 1;">入门教程</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-4">
+                            <div class="gr-social">
+                                <a href="#" title class="gr_share_button">follow</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="gr-logo">
+                                <a href="/">
+                                    <img class="img-responsive" src="/images/logo.png" alt="Boroda">
+                                </a>
+                                <h2>My name is <span>Zouyee</span>. I’m a blogger based in SUZHOU.</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main row">
+         
+        <div class="main-inner">
+         
+            <div class="content-wrap">
+                
+                <div id="content" class="content gr_grid_container">
+                
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2020-06-09-Serverless用武之地.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">Serverless用武之地</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">6月 09 2020</span><span class="gr_separate">|</span>
+          
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
+        
+          
+          <h3 class="blog_title" itemprop="name headline">Serverless用武之地
+              
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：6月 09 2020 20:40:08 / 修改时间：22:15:40" itemprop="dateCreated datePublished" datetime="2020-06-09T20:40:08+08:00">6月 09 2020</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020-06-09-Serverless用武之地.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020-06-09-Serverless用武之地.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020-06-09-Serverless用武之地.html" class="leancloud_visitors" data-flag-title="Serverless用武之地">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span>℃</span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
+      
+      </div>
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
+    
+      
+        <p><img src="https://s1.ax1x.com/2020/06/09/tI1qTP.md.png" alt="趋势"></p>
+<div class="note info"><p>Serverless是指构建和运行不需要服务器管理的应用程序的概念。它描述了一种更细粒度的部署模型，应用程序包含一个或多个函数，代码上传到平台，然后执行，通过响应当前的确切需求进行扩缩和计费。Serverless并不意味着我们不再使用服务器来托管和运行代码，这也并不是意味着不再需要运维工程师。它指的是serverless计算服务的消费者不再需要花费时间来进行服务器配置，维护，更新，扩展和容量规划，所有这些任务和功能都由serverless平台处理，并完全将开发人员从运维业务中剥离出来。因此，开发人员只需要专注于编写应用程序的业务逻辑，而运维工程师能够将业务重点更多的放到关键性业务任务上。</p></div>
+<a id="more"></a>
+<hr>
+<h3 id="一、初识Serverless"><a href="#一、初识Serverless" class="headerlink" title="一、初识Serverless"></a>一、初识Serverless</h3><p>虽然按需或“花多少用多少”模式的概念可追溯到2006年一个名为Zimki的平台，但serverless一词的第一次使用是2012年来自Iron.io的IronWorker产品，一个基于容器的调度平台。</p>
+<p>至此，公共云和私有云都出现了更多serverless解决方案，首先是BaaS产品，例如2011年的Parse和2012年的Firebase（分别由Facebook和谷歌收购）。2014年11月，AWS推出Lambda，2016年初在Bluemix上宣布了IBM OpenWhisk on Bluemix（现在是IBM Cloud Functions，其核心开源项目成为Apache OpenWhisk），Google Cloud Functions和Microsoft Azure Functions。华为Function Stage于2017年推出。在此之间，还有许多serverless框架宣布开源。每个框架（公共和私有）都具有独特的语言运行时和服务集，用于处理事件和数据。而在Serverless应用中，根据他们的功能，又可以进一步切分成不同的Serverless函数。</p>
+<hr>
+<h3 id="二、Serverless使用场景"><a href="#二、Serverless使用场景" class="headerlink" title="二、Serverless使用场景"></a>二、Serverless使用场景</h3><p>虽然serverless计算广泛使用，但它仍然相对较新。通常，当工作负载符合以下情况时，可优选serverless架构方案：</p>
+<ul>
+<li>异步，并发，易于并行的独立的工作单元</li>
+<li>偶发的需求，在扩展要求方面存在巨大的偶发性</li>
+<li>无状态，短暂的应用场景，对冷启动时间没有重大限制</li>
+<li>在业务需求变更方面具有高度灵活性，需要加快开发迭代的速度</li>
+</ul>
+<p>例如，对于常见的基于HTTP的应用程序，在自动扩展和更细粒度的成本模型方面有明显的优势。也就是说，使用serverless平台可能会有以下一些方面的考量。 例如，如果函数的实例数下降到零，则在一段不活动时间后函数启动可能会导致性能业务下降。因此，选择是否采用serverless架构需要考量该计算模型的弊端。</p>
+<p>不适合IaaS，PaaS或CaaS解决方案的以非HTTP为中心和无弹性需求的工作负载同样可以利用serverless架构的按需付费。其中一些工作负载包括：</p>
+<ul>
+<li>以响应数据库更改（insert, update, trigger, delete）的执行逻辑</li>
+<li>对IoT传感器输入消息（例如MQTT消息）执行分析</li>
+<li>流处理（分析或修改动态数据）</li>
+<li>管理单次提取，转换和加载的作业，这些作业需要在短时间内进行大量处理（ETL）</li>
+<li>通过聊天机器人界面提供认知计算（异步，但有关联）</li>
+<li>调度执行时间很短的任务，例如cron或批处理样式调用</li>
+<li>服务于机器学习和AI模型（检索一个或多个数据元素，如表格，NLP或图像，并与预先学习的数据模型匹配，以识别文本，面孔，异常等）</li>
+<li>持续集成pipeline，按需为构建作业提供资源，而不是保留构建从属主机池等待作业分派</li>
+</ul>
+<p>这些场景中的每一个都显示了serverless架构如何解决技术问题，即Iaas，PaaS或CaaS效率低下或无法实现。这些例子是：</p>
+<ul>
+<li>在没有按需模型的情况下，有效解决了一个全新的问题</li>
+<li>更有效地解决了传统的云问题（性能，成本）</li>
+<li>显示“大”的维度，无论是处理的数据大小还是处理的请求</li>
+<li>通过低错误率的自动缩放（向上和向下）来显示弹性</li>
+<li>以前所未有的速度（从天到小时）为市场带来了解决方案</li>
+</ul>
+<h4 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h4><p>一个常见的用例，也是最早具体化的用例之一，是响应新文件上传执行一些转换过程的函数。 例如，如果将图像上载到诸如Amazon S3的对象存储服务，则该事件触发函数，用于创建图像的缩略图版本并将其存储回另一个对象存储桶或Database-as-a-Service。 这是一个相当原子化，可并行化的计算任务示例，该计算任务不经常运行并根据需求进行伸缩。</p>
+<ul>
+<li>使用serverless function构建了一个概念验证，使用光学字符识别来处理移动支票存款。 这种类型的工作量变化很大，发薪日的处理需求 - 每两周一次 -<br>可能比支付期的大部分空闲时间大几倍。</li>
+<li>通过将 每个视频帧通过图像识别服务 来自动分类电影，以提取演员，情感和对象; 或处理灾区的无人机镜头以估计损坏的程度。</li>
+</ul>
+<p><strong><em>数据库事件触发</em></strong></p>
+<p>在此场景中，当从数据库插入，修改或删除数据时调用function。在这种情况下，它的功能类似于传统的SQL触发器，几乎就像是与主同步流并行的副作用或动作。其结果是执行一个异步逻辑，可以修改同一个数据库中的某些内容（例如记录到审计表），或者依次调用外部服务（例如发送电子邮件）或更新其他数据库，例如 DB CDC（更改数据捕获）用例的情况。 由于业务需要和处理变更的服务分布的原因，这些用例的频率以及对原子性和一致性的需要可能不同。</p>
+<ul>
+<li>审核对数据库的更改，或确保它们满足特定质量或分析标准以进行可接受的更改</li>
+<li>在输入数据时或之后不久自动将数据翻译为其他语言</li>
+</ul>
+<p><strong><em>IoT消息</em></strong></p>
+<p>随着连接到网络的自主设备的爆炸式增加，额外的流量体积庞大，并且使用比HTTP更轻量级的协议。 高效的云服务必须能够快速响应消息并扩展以响应其扩散或突然涌入的消息。Serverless功能可以有效地管理和过滤来自IoT设备的MQTT消息。 它们既可以弹性扩展，也可以屏蔽负载下游的其他服务。</p>
+<ul>
+<li>GreenQ的卫生用例（垃圾互联网），根据垃圾箱的相对饱满度来优化卡车取件路线。</li>
+<li>在物联网设备（如AWS Greengrass）上使用serverless来收集本地传感器数据，对其进行规范化，与触发器进行比较，并将事件推送到聚合单元/云。</li>
+</ul>
+<p><strong><em>实时流处理</em></strong></p>
+<p>另一种非事务性，非请求/响应类型的工作负载是在可能无限的消息流中处理数据。 函数可以连接到消息源，而消息必须从事件流中读取和处理。 鉴于高性能，高弹性和计算密集型处理工作负载，这对于serverless而言非常重要。 在许多情况下，流处理需要将数据与一组上下文对象（在NoSQL或in-mem DB中）进行比较，或者将数据从流聚合并存储到对象或数据库系统中。</p>
+<p>例子包括：</p>
+<ul>
+<li>Mike Roberts有一个很好的 Java/AWS Kinesis 示例 ，可以有效地处理数十亿条消息。</li>
+<li>SnapChat 在Google AppEngine上使用serverless 处理邮件。</li>
+</ul>
+<h4 id="批任务"><a href="#批任务" class="headerlink" title="批任务"></a>批任务</h4><p><strong><em>批处理作业或计划任务</em></strong></p>
+<p>每天只需几分钟就能以异步方式进行强大的并行计算，IO或网络访问的作业非常适合serverless。作业可以在以弹性方式运行时有效地消费他们所需的资源，并且在不被使用的当天剩余时间内不会产生资源成本。</p>
+<ul>
+<li>计划任务可以是每晚运行的备份作业。</li>
+<li>并行发送许多电子邮件的作业会扩展function实例。</li>
+</ul>
+<p><strong><em>持续集成管道</em></strong></p>
+<p>传统的CI管道包括一个构建从属主机池，它们处于空闲等待以便分派作业。Serverless是一种很好的模式，可以消除对预配置主机的需求并降低成本。构建作业由新代码提交或PR合并触发。 调用function来运行构建和测试用例，仅在所需的时间内执行，并且在未使用时不会产生成本。这降低了成本，并可通过自动扩展来减少瓶颈以满足需求。</p>
+<h4 id="业务逻辑"><a href="#业务逻辑" class="headerlink" title="业务逻辑"></a>业务逻辑</h4><p>当与管理和协调function一起部署时，在业务流程中执行一系列步骤的微服务工作负载的编排是serverless计算的另一个好用例。执行特定业务逻辑的function（例如订单请求和批准，股票交易处理等）可以与有状态管理器一起安排和协调。来自客户端门户的事件请求可以由这样的协调function提供服务，并传递给适当的serverless function。</p>
+<p>例子包括：</p>
+<p>交易台，处理股票市场交易并处理客户的交易订单和确认。协调器使用状态图管理交易。初始状态接受来自客户端门户的交易请求，并将请求传递给微服务function以解析请求并验证客户端。随后的状态根据买入或卖出交易指导工作流，验证基金余额，股票代码等，并向客户发送确认。在从客户端接收到确认请求事件时，后续状态调用管理交易执行的function，更新账户，并通知客户完成交易。</p>
+<p><strong><em>聊天机器人</em></strong></p>
+<p>与人类交互不一定需要毫秒级别的响应时间，并且在许多方面，稍微延迟让回复人类的机器人对话感觉更自然。因此，等待从冷启动加载function的初始等待时间可能是可接受的。当添加到Facebook，WhatsApp或Slack等流行的社交网络时，机器人可能还需要具有极高的可扩展性，因此在PaaS或IaaS模型中预先设置一个永远在线的守护程序，以预测突然或高峰需求，可能不会有作为serverless方法的高效或成本效益。</p>
+<ul>
+<li>支持和销售机器人插入到大型社交媒体服务，如Facebook或其他高流量网站。</li>
+<li>消息应用程序Wuu使用Google Cloud Functions使用户能够创建和共享在数小时或数秒内消失的内容。</li>
+</ul>
+<p><strong><em>移动后端</em></strong></p>
+<p>使用serverless进行移动后端任务也很有吸引力。它允许开发人员在BaaS API之上构建REST API后端工作负载，因此他们可以花时间优化移动应用程序，而不是扩展后端。 例子包括：优化视频游戏的图形，而不是在游戏成为病毒式打击时投资服务器; 或者对于需要快速迭代以发现产品/市场适合性，或者上市时间至关重要的消费者业务应用程序。另一个示例是批量通知用户或程序其他异步任务以获得离线优先体验。</p>
+<p>例子包括：</p>
+<ul>
+<li>需要少量服务器端逻辑的移动应用程序; 开发人员可以将精力集中在原生代码开发上。</li>
+<li>使用已配置的安全策略（例如Firebase身份验证/规则或Amazon Cognito）通过事件触发的serverless计算使用直接从移动设备访问BaaS的移动应用程序。</li>
+<li>“Throwaway”或短期使用的移动应用程序，例如大型会议的调度应用程序，在会议前后的周末几乎没有需求，但需要极大的扩展和收缩; 在周一和周二早上的活动过<br>程中根据时间表查看要求，然后在午夜时分回到主题演讲。</li>
+</ul>
+<p><strong><em>HTTP REST API和Web应用程序</em></strong></p>
+<p>传统的请求/响应工作负载仍然非常适合serverless，无论工作负载是静态网站还是使用JavaScript或Python等编程语言按需生成响应。即使它们可能会为第一个用户带来启动成本，但在其他计算模型中存在这种延迟的先例，例如将JavaServer Page初始编译为servlet，或者启动新的JVM来处理额外的负载。好处是单个REST调用（例如，微服务中的GET，POST，UPDATE和DELETE 4端点中的每一个）可以独立扩展并单独计费，即使它们共享公共数据后端。</p>
+<p>例子包括：</p>
+<ul>
+<li>移植到serverless架构的澳大利亚人口普查显示了开发速度，成本改进和自动扩展。</li>
+<li>“如何通过无服务器将我的AWS账单削减90％。”</li>
+<li>AutoDesk示例：“成本只占传统云方法的一小部分（约1％）。”</li>
+<li>在线编码/教育（考试，测试等）在事件驱动的环境中运行训练代码，并基于与该训练的结果和预期结果的比较向用户提供反馈。Serverless平台根据需要运行应答<br>检查并根据需要进行扩展，仅在代码运行的时间内需要付费。</li>
+</ul>
+<p><strong><em>AI应用</em></strong></p>
+<p>算法工程师训练好模型后需要把模型变成服务，Serverless计算无需运维和弹性伸缩的特性，可以助力AI工程师快速构建弹性高可用的AI应用。 </p>
+
+      
+    </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+      <div class="qr_code_pc_inner">
+        <div class="qr_code_pc">
+    <img id="js_pc_qr_code_img" class="qr_code_pc_img" src="https://s2.ax1x.com/2019/09/22/upS79K.jpg" alt="zouyee wechat" style="width: 200px; max-width: 100%;">
+    <p>微信扫一扫<br>关注该公众号</p>
+</div>
+<script>
+jQuery.noConflict()(function ($) {
+    $(function () {
+		var offsetTop = $('#comments').offset().top - $(window).height();
+		
+		if (offsetTop <= 0) {
+			// load directly when there's no a scrollbar
+			console.log("....")
+		} else {
+			$(window).on('scroll', function () {
+				var scrollTop = document.documentElement.scrollTop;
+				var copyright = $('.post-copyright').offset().top;
+				
+				var imageH = $('.qr_code_pc').offset().top;
+				console.log("scrollTop", scrollTop)
+				console.log("copyright", copyright)
+				console.log("qr_code_pc", imageH)
+				if (scrollTop <= offsetTop) {
+					$('.qr_code_pc').css('position', 'absolute')
+					$('.qr_code_pc').css('top', 420)
+				}
+				if (scrollTop > 450 && copyright > scrollTop) {
+					$('.qr_code_pc').css('top', 20)
+					$('.qr_code_pc').css('position', 'fixed')
+				} else {
+					$('.qr_code_pc').css('position', 'absolute')
+				}
+			});
+		}
+	});
+
+})
+</script>
+
+      </div>
+      
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span style="padding-top: 5px;">打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="https://s2.ax1x.com/2019/09/22/uppS4P.jpg" alt="zouyee 微信支付">
+        
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>zouyee</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://ustack.io/2020-06-09-Serverless用武之地.html" title="Serverless用武之地">https://ustack.io/2020-06-09-Serverless用武之地.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/cloudnative/" rel="tag"># cloudnative</a>
+          
+            <a href="/tags/serverless/" rel="tag"># serverless</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020-06-07-Serverless生命周期.html" rel="next" title="Serverless生命周期">
+                <i class="fa fa-chevron-left"></i> Serverless生命周期
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020-06-09-Serverless典型场景.html" rel="prev" title="Serverless典型应用">
+                Serverless典型应用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+                </div>
+                
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+            </div>
+                
+                
+  
+
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/author.webp" alt="zouyee">
+            
+              <p class="site-author-name" itemprop="name">zouyee</p>
+              <p class="site-description motion-element" itemprop="description">Keep motivation for the world</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">56</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/zouyee" target="_blank" title="Twitter" rel="external nofollow"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.instagram.com/ustackq/" target="_blank" title="Instagram" rel="external nofollow"><i class="fa fa-fw fa-instagram"></i>Instagram</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/zouyee" target="_blank" title="GitHub" rel="external nofollow"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank" rel="external nofollow">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.zoues.com/" title="Zoues" target="_blank">Zoues</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、初识Serverless"><span class="nav-number">1.</span> <span class="nav-text">一、初识Serverless</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、Serverless使用场景"><span class="nav-number">2.</span> <span class="nav-text">二、Serverless使用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数据处理"><span class="nav-number">2.1.</span> <span class="nav-text">数据处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#批任务"><span class="nav-number">2.2.</span> <span class="nav-text">批任务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#业务逻辑"><span class="nav-number">2.3.</span> <span class="nav-text">业务逻辑</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+                
+        </div>
+        
+        
+    </main>
+
+
+    <div class="gr_footer_widget">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="gr_widget">
+                            <h6 class="gr_widget_title"><span>Serveless Repo</span></h6>
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item avatar" src="https://s2.ax1x.com/2019/09/22/uSzDzD.jpg" width="50" height="50" alt="@virtual-kubelet">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <p class="org-description" itemprop="description"></p><div>OCI-based implementation CRI</div><p></p>
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="https://cri-o.io" href="https://cri-o.io">https://cri-o.io</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item avatar" src="https://s2.ax1x.com/2019/09/22/uSzISS.jpg" width="50" height="50" alt="@openfaas">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <p class="org-description" itemprop="description"></p><div>Serverless Functions Made Simple</div><p></p>
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="https://www.openfaas.com" href="https://www.openfaas.com">https://www.openfaas.com</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item avatar" src="https://s2.ax1x.com/2019/09/22/uSzbes.jpg" width="50" height="50" alt="@virtual-kubelet">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <p class="org-description" itemprop="description"></p><div>Building serverless within Kubernetes</div><p></p>
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="https://virtual-kubelet.io" href="https://virtual-kubelet.io">https://virtual-kubelet.io</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item avatar" src="https://s2.ax1x.com/2019/09/22/uSzjYV.jpg" width="50" height="50" alt="@virtual-kubelet">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <p class="org-description" itemprop="description"></p><div>Manage modern serverless workloads</div><p></p>
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="https://knative.dev" href="https://knative.dev">https://knative.dev</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="gr_widget" style="line-height: 18px;">
+                            <h6 class="gr_widget_title"><span>Calendar</span></h6>
+                            <div id="calendar_wrap" class="calendar_wrap">
+                                <table id="wp-calendar">
+                                    <caption>July 2019</caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" title="Monday">M</th>
+                                            <th scope="col" title="Tuesday">T</th>
+                                            <th scope="col" title="Wednesday">W</th>
+                                            <th scope="col" title="Thursday">T</th>
+                                            <th scope="col" title="Friday">F</th>
+                                            <th scope="col" title="Saturday">S</th>
+                                            <th scope="col" title="Sunday">S</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3" id="prev"><a href="./wp/boroda/2015/05/">« May</a></td>
+                                            <td class="pad">&nbsp;</td>
+                                            <td colspan="3" id="next" class="pad">&nbsp;</td>
+                                        </tr>
+                                    </tfoot>
+
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="5" class="pad">&nbsp;</td>
+                                            <td>1</td>
+                                            <td>2</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>4</td>
+                                            <td>5</td>
+                                            <td>6</td>
+                                            <td>7</td>
+                                            <td>8</td>
+                                            <td>9</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10</td>
+                                            <td>11</td>
+                                            <td>12</td>
+                                            <td>13</td>
+                                            <td>14</td>
+                                            <td>15</td>
+                                            <td>16</td>
+                                        </tr>
+                                        <tr>
+                                            <td>17</td>
+                                            <td>18</td>
+                                            <td id="today">19</td>
+                                            <td>20</td>
+                                            <td>21</td>
+                                            <td>22</td>
+                                            <td>23</td>
+                                        </tr>
+                                        <tr>
+                                            <td>24</td>
+                                            <td>25</td>
+                                            <td>26</td>
+                                            <td>27</td>
+                                            <td>28</td>
+                                            <td>29</td>
+                                            <td>30</td>
+                                        </tr>
+                                        <tr>
+                                            <td>31</td>
+                                            <td class="pad" colspan="6">&nbsp;</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="gr_widget">
+                            <h6 class="gr_widget_title"><span>Dou Feed</span></h6>
+                            
+
+                            <div class="gr_tweet TableObject org-header-wrapper mb-4">
+                                <img id="github" itemprop="image" class="TableObject-item douban" src="https://s2.ax1x.com/2019/09/22/upSEY6.jpg" width="50" height="50" alt="@virtual-kubelet">
+                                <div class="TableObject-item TableObject-item--primary">
+                                    <ul class="org-header-meta has-location has-blog has-email">
+                                        <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <svg class="octicon octicon-link" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"/></svg>
+                                            <a rel="nofollow" itemprop="url" class="text-gray" title="少年赫比" href="https://book.douban.com/subject/33408001/?icn=index-latestbook-subject">书名: 少年赫比</a>
+                                        </li>
+                                         <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <a rel="nofollow" itemprop="url" class="text-gray">出版年: 2019-5</a>
+                                        </li>
+                                         <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <a rel="nofollow" itemprop="url" class="text-gray">原作名: CITY BOY</a>
+                                        </li>
+                                         <li class="meta-item v-align-middle" style="padding: 0px 0px;">
+                                            <a rel="nofollow" itemprop="url" class="text-gray">定价: 58.00元</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zouyee</span>
+
+  
+
+  
+</div>
+
+
+  
+
+
+
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" rel="external nofollow" href="https://github.com/theme-next/hexo-theme-next">NexT.Muse</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery.form/3.51/jquery.form.min.js"></script>
+  </div>
+    <script type="text/javascript" src="/js/custom.js"></script>
+    <script type="text/javascript" src="/js/menu.js"></script>
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="/js/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'jTOUB0OQ83CnjWySYgN5W1PV-gzGzoHsz',
+        appKey: '8upIEt85LzIaq3NWQbUbfWI8',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("Qg4Aol4dtKwpnLstsoOct5Ya-gzGzoHsz", "pRvygLtQ4atIrsbLXpXi9HXa");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text(counter.get('time'));
+            
+            counter.save(null, {
+              success: function(counter) {
+                
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            
+              var newcounter = new Counter();
+              /* Set ACL */
+              var acl = new AV.ACL();
+              acl.setPublicReadAccess(true);
+              acl.setPublicWriteAccess(true);
+              newcounter.setACL(acl);
+              /* End Set ACL */
+              newcounter.set("title", title);
+              newcounter.set("url", url);
+              newcounter.set("time", 1);
+              newcounter.save(null, {
+                success: function(newcounter) {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+                },
+                error: function(newcounter, error) {
+                  console.log('Failed to create');
+                }
+              });
+            
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+  <script type="text/javascript" src="https://cdn.bootcss.com/js-cookie/2.1.4/js.cookie.js"></script>
+  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=6.3.0"></script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
