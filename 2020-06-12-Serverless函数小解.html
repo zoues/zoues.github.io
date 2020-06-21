@@ -105,20 +105,20 @@
 
 
 
-  <meta name="description" content="本文介绍当前serverless框架的函数概念，Serverless 框架还允许用户 watch 代码存储库中的更改（例如，使 Webhook），并在每次提交时自动构建函数镜 像/二进制文件。函数代码、依赖项和/或二进制文件可以驻留在外部存储库（例如 S3 对象存储桶或 Git 存储库）中，或由用户直接提供。如果代码在外部存储库 中，则用户需要指定路径和凭据。函数可能依赖于外部库或二进制文件，这">
+  <meta name="description" content="本文介绍当前serverless框架的函数概念，Serverless框架还允许用户监视代码存储库中的更改（例如代码触发器等），并在每次提交时自动构建函数镜像。函数代码、依赖项和/或二进制文件可以驻留在外部存储库（例如S3对象存储桶或Git存储库）中，或由用户直接提供。如果代码在外部存储库中，则用户需要指定路径和接入凭证。函数可能依赖于外部库或二进制文件，这些需要由用户提供，包括描述其构建过程的方">
 <meta name="keywords" content="cloudnative,serverless">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Serverless函数小解">
 <meta property="og:url" content="https://ustack.io/2020-06-12-Serverless函数小解.html">
 <meta property="og:site_name" content="Indagate">
-<meta property="og:description" content="本文介绍当前serverless框架的函数概念，Serverless 框架还允许用户 watch 代码存储库中的更改（例如，使 Webhook），并在每次提交时自动构建函数镜 像/二进制文件。函数代码、依赖项和/或二进制文件可以驻留在外部存储库（例如 S3 对象存储桶或 Git 存储库）中，或由用户直接提供。如果代码在外部存储库 中，则用户需要指定路径和凭据。函数可能依赖于外部库或二进制文件，这">
+<meta property="og:description" content="本文介绍当前serverless框架的函数概念，Serverless框架还允许用户监视代码存储库中的更改（例如代码触发器等），并在每次提交时自动构建函数镜像。函数代码、依赖项和/或二进制文件可以驻留在外部存储库（例如S3对象存储桶或Git存储库）中，或由用户直接提供。如果代码在外部存储库中，则用户需要指定路径和接入凭证。函数可能依赖于外部库或二进制文件，这些需要由用户提供，包括描述其构建过程的方">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://imgchr.com/i/tdXXgP">
-<meta property="og:updated_time" content="2020-06-04T13:25:00.788Z">
+<meta property="og:image" content="https://s1.ax1x.com/2020/06/21/N8MiqS.md.png">
+<meta property="og:updated_time" content="2020-06-21T12:55:23.176Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Serverless函数小解">
-<meta name="twitter:description" content="本文介绍当前serverless框架的函数概念，Serverless 框架还允许用户 watch 代码存储库中的更改（例如，使 Webhook），并在每次提交时自动构建函数镜 像/二进制文件。函数代码、依赖项和/或二进制文件可以驻留在外部存储库（例如 S3 对象存储桶或 Git 存储库）中，或由用户直接提供。如果代码在外部存储库 中，则用户需要指定路径和凭据。函数可能依赖于外部库或二进制文件，这">
-<meta name="twitter:image" content="https://imgchr.com/i/tdXXgP">
+<meta name="twitter:description" content="本文介绍当前serverless框架的函数概念，Serverless框架还允许用户监视代码存储库中的更改（例如代码触发器等），并在每次提交时自动构建函数镜像。函数代码、依赖项和/或二进制文件可以驻留在外部存储库（例如S3对象存储桶或Git存储库）中，或由用户直接提供。如果代码在外部存储库中，则用户需要指定路径和接入凭证。函数可能依赖于外部库或二进制文件，这些需要由用户提供，包括描述其构建过程的方">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/06/21/N8MiqS.md.png">
 
 
 
@@ -374,7 +374,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：6月 04 2020 21:25:00" itemprop="dateModified" datetime="2020-06-04T21:25:00+08:00">6月 04 2020</time>
+                <time title="修改时间：6月 21 2020 20:55:23" itemprop="dateModified" datetime="2020-06-21T20:55:23+08:00">6月 21 2020</time>
               
             
           </span>
@@ -433,43 +433,38 @@
     <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
     
       
-        <p><img src="https://imgchr.com/i/tdXXgP" alt></p>
-<div class="note info"><p>本文介绍当前serverless框架的函数概念，Serverless 框架还允许用户 watch 代码存储库中的更改（例如，使 Webhook），并在每次提交时自动构建函数镜</p>
-<p>像/二进制文件。函数代码、依赖项和/或二进制文件可以驻留在外部存储库（例如 S3 对象存储桶或 Git 存储库）中，或由用户直接提供。如果代码在外部存储库</p>
-<p>中，则用户需要指定路径和凭据。函数可能依赖于外部库或二进制文件，这些需要由用户提供，包括描述其构建过程的方式（例如，使用 Dockerfile、Zip）。</p>
-<p>另外，可以通过一些二进制打包（例如 OCI 镜像）将函数提供给框架。</p></div>
+        <p><img src="https://s1.ax1x.com/2020/06/21/N8MiqS.md.png" alt></p>
+<div class="note info"><p>本文介绍当前serverless框架的函数概念，Serverless框架还允许用户监视代码存储库中的更改（例如代码触发器等），并在每次提交时自动构建函数镜像。函数代码、依赖项和/或二进制文件可以驻留在外部存储库（例如S3对象存储桶或Git存储库）中，或由用户直接提供。如果代码在外部存储库中，则用户需要指定路径和接入凭证。函数可能依赖于外部库或二进制文件，这些需要由用户提供，包括描述其构建过程的方式（例如，使用 Dockerfile、Zip等）。另外，可以通过一些二进制打包（例如OCI镜像）将函数提供给框架。</p></div>
 <a id="more"></a>
-<p>让我们介绍一下serverless函数概念。</p>
+<p>接下来让我们介绍一下serverless函数概念。</p>
 <hr>
-<h2 id="一、函数定义"><a href="#一、函数定义" class="headerlink" title="一、函数定义"></a>一、函数定义</h2><p>函数代码、依赖项和/或二进制文件可以驻留在外部存储库（例如 S3 对象存储桶或 Git 存储库）中，或由用户直接提供。如果代码在外部存储库中，则用户需要指定路径和凭据。</p>
-<p>Serverless 框架还允许用户 watch 代码存储库中的更改（例如，使 Webhook），并在每次提交时自动构建函数镜像/二进制文件。</p>
-<p>函数可能依赖于外部库或二进制文件，这些需要由用户提供，包括描述其构建过程的方式（例如，使用 Dockerfile、Zip）。</p>
-<p>另外，可以通过一些二进制打包（例如 OCI 镜像）将函数提供给框架。</p>
-<h3 id="函数定义"><a href="#函数定义" class="headerlink" title="函数定义"></a>函数定义</h3><p>Serverless 函数定义可能包含以下规范和元数据，该函数定义是特定于版本的：</p>
+<h4 id="一、函数定义"><a href="#一、函数定义" class="headerlink" title="一、函数定义"></a>一、函数定义</h4><p>函数代码、依赖项或二进制文件可以驻留在外部存储库（例如S3对象存储桶或Git存储库）中，或由用户直接提供。如果代码在外部存储库中，则用户需要指定路径和凭据。Serverless 框架还允许用户 watch 代码存储库中的更改（例如，使 Webhook），并在每次提交时自动构建函数镜像/二进制文件。函数可能依赖于外部库或二进制文件，这些需要由用户提供，包括描述其构建过程的方式（例如，使用 Dockerfile、Zip）。另外，可以通过一些二进制打包（例如OCI镜像）将函数提供给框架。</p>
+<h5 id="函数定义"><a href="#函数定义" class="headerlink" title="函数定义"></a>函数定义</h5><p>Serverless 函数定义可能包含以下规范和元数据，该函数定义：</p>
 <ul>
-<li>唯一 ID</li>
+<li>唯一ID</li>
 <li>名称</li>
 <li>说明</li>
-<li>Label（或 tag）</li>
-<li>版本ID（和/或版本别名）</li>
+<li>Label（或tag）</li>
+<li>版本ID/或版本别名</li>
 <li>版本创建时间</li>
 <li>上次修改时间（函数定义）</li>
 <li>函数处理程序</li>
 <li>运行时语言</li>
 <li>代码 + 依赖关系或代码路径和凭据</li>
 <li>环境变量</li>
-<li>执行角色和 secret</li>
+<li>执行角色和密钥</li>
 <li>资源（所需的 CPU、内存）</li>
-<li>执行超时</li>
+<li>执行超时处理</li>
 <li>日志记录失败（Dead Letter Queue，）</li>
 <li>网络策略/VPC</li>
 <li>数据绑定</li>
+<li>网关接入等</li>
 </ul>
 <blockquote>
 <p>Dead Letter Queue<br>中文译作“死信队列”，在消息队列中，死信队列是一种服务实现，用于存储满足以下一个或多个条件的消息： 发送到不存在的队列的消息。 超出队列长度限制。 超<br>出了邮件长度限制。 消息被另一个队列交换拒绝。 消息达到阈值读取计数器编号，因为它没有被消耗。有时这被称为“退出队列”。 存储这些消息的死信队列允许<br>开发人员查找常见模式和潜在的软件问题。</p>
 </blockquote>
 <hr>
-<h2 id="二、元数据"><a href="#二、元数据" class="headerlink" title="二、元数据"></a>二、元数据</h2><p>函数框架可能包括以下函数元数据：</p>
+<h4 id="二、元数据"><a href="#二、元数据" class="headerlink" title="二、元数据"></a>二、元数据</h4><p>函数框架可能包括以下函数元数据：</p>
 <ul>
 <li>版本：每个函数版本应具有唯一的标识符，此外，可以使用一个或多个别名（例如“latest”、“production”、“beta”）来标记版本。API 网关和事件源会将流<br>量/事件路由到特定的函数版本。</li>
 <li>环境变量：用户可以指定在运行时将提供给函数的环境变量。环境变量也可以从机密和加密的内容派生，也可以从平台变量派生（例如，像Kubernetes EnvVar定<br>义）。环境变量使开发人员能够控制函数行为和参数，而无需修改代码和/或重建函数，从而获得更好的开发人员体验和函数重用。</li>
@@ -481,10 +476,10 @@
 <li>执行语义：指定应如何执行函数（例如，每个事件至少执行一次，最多执行一次，恰好一次）。</li>
 </ul>
 <hr>
-<h2 id="三、数据绑定"><a href="#三、数据绑定" class="headerlink" title="三、数据绑定"></a>三、数据绑定</h2><p>某些 Serverless 框架允许用户指定函数使用的输入/输出数据资源，这使开发变得更简单，性能更高（在执行期间保留数据连接，可以预取数据等）以及更好的安全<br>性（数据资源凭据是上下文的一部分，而不是代码）。</p>
+<h4 id="三、数据绑定"><a href="#三、数据绑定" class="headerlink" title="三、数据绑定"></a>三、数据绑定</h4><p>某些 Serverless 框架允许用户指定函数使用的输入/输出数据资源，这使开发变得更简单，性能更高（在执行期间保留数据连接，可以预取数据等）以及更好的安全<br>性（数据资源凭据是上下文的一部分，而不是代码）。</p>
 <p>绑定数据可以采用文件、对象、记录、消息等形式，函数说明可以包括一组数据绑定定义，每个定义都指定数据资源、其凭证和使用参数。数据绑定可以引用事件数据<br>（例如，DB 键是从事件 “username” 字段派生的）</p>
 <hr>
-<h2 id="四、函数输入"><a href="#四、函数输入" class="headerlink" title="四、函数输入"></a>四、函数输入</h2><p>函数输入包括事件数据和元数据，并且可以包括上下文对象。</p>
+<h4 id="四、函数输入"><a href="#四、函数输入" class="headerlink" title="四、函数输入"></a>四、函数输入</h4><p>函数输入包括事件数据和元数据，并且可以包括上下文对象。</p>
 <p><strong><em>事件数据和元数据</em></strong></p>
 <p>事件详细信息应传递给函数处理程序，不同的事件可能具有不同的元数据，因此希望函数能够确定事件的类型并轻松解析公共和特定于事件的元数据。</p>
 <p>可能需要将事件类与实现分离，例如：不管流存储是 Kafka 还是 Kinesis，处理消息流的函数都可以运行。在这两种情况下，它将接收消息正文和事件元数据，消</p>
@@ -516,8 +511,7 @@
 <p>一些实现将 JSON 视为将事件信息传递给函数的机制。对于高速函数（例如，流处理）或低能耗设备（IoT），这可能会增加大量的序列化/反序列化开销。在这些情况</p>
 <p>下，可能值得考虑使用本地语言结构或其他序列化机制。</p>
 <hr>
-<h2 id="五、函数上下文"><a href="#五、函数上下文" class="headerlink" title="五、函数上下文"></a>五、函数上下文</h2><p>调用函数时，框架可能希望提供对跨多个函数调用的平台资源或常规属性的访问，而不是将所有静态数据放入事件中或强制该函数在每次调用时初始化平台服务。</p>
-<p>上下文（Context）可以是一组输入属性、环境变量或全局变量。有的实现将这三者结合使用。</p>
+<h4 id="五、函数上下文"><a href="#五、函数上下文" class="headerlink" title="五、函数上下文"></a>五、函数上下文</h4><p>调用函数时，框架可能希望提供对跨多个函数调用的平台资源或常规属性的访问，而不是将所有静态数据放入事件中或强制该函数在每次调用时初始化平台服务。上下文（Context）可以是一组输入属性、环境变量或全局变量。有的实现将这三者结合使用。</p>
 <p>上下文示例：</p>
 <ul>
 <li>函数名称、版本、ARN</li>
@@ -530,11 +524,9 @@
 <li>日志</li>
 <li>数据绑定</li>
 </ul>
-<p>有的实现初始化日志对象（例如， AWS 中的全局变量或 Azure 中的部分上下文），用户可以使用平台集成的工具查看日志来跟踪函数执行。除了传统的日志记录，</p>
-<p>未来的实现可能会将计数器/监控和跟踪活动抽象为平台上下文的一部分，以进一步提高函数的可用性。</p>
-<p>数据绑定是函数上下文的一部分，平台根据用户配置启动与外部数据资源的连接，并且这些连接可以在多个函数调用之间重用。</p>
+<p>有的实现初始化日志对象（例如， AWS 中的全局变量或 Azure 中的部分上下文），用户可以使用平台集成的工具查看日志来跟踪函数执行。除了传统的日志记录，未来的实现可能会将计数器/监控和跟踪活动抽象为平台上下文的一部分，以进一步提高函数的可用性。数据绑定是函数上下文的一部分，平台根据用户配置启动与外部数据资源的连接，并且这些连接可以在多个函数调用之间重用。</p>
 <hr>
-<h2 id="五、函数输出"><a href="#五、函数输出" class="headerlink" title="五、函数输出"></a>五、函数输出</h2><p>当函数退出时，它可能：</p>
+<h4 id="五、函数输出"><a href="#五、函数输出" class="headerlink" title="五、函数输出"></a>五、函数输出</h4><p>当函数退出时，它可能：</p>
 <ul>
 <li>将值返回给调用方（例如，在 HTTP 请求/响应示例中）</li>
 <li>将结果传递到工作流程中的下一个执行阶段</li>
@@ -543,7 +535,7 @@
 <p>应该有确定的方式通过返回的错误值或退出代码来知道函数是成功还是失败。</p>
 <p>函数输出可以是结构化的（例如 HTTP 响应对象）或非结构化的（例如某些输出字符串）。</p>
 <hr>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul>
 <li><a href="https://www.bookstack.cn/read/serverless-handbook/core-function-code.md" target="_blank" rel="noopener">function</a></li>
 </ul>
 
@@ -991,7 +983,7 @@ jQuery.noConflict()(function ($) {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、函数定义"><span class="nav-number">1.</span> <span class="nav-text">一、函数定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#函数定义"><span class="nav-number">1.1.</span> <span class="nav-text">函数定义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、元数据"><span class="nav-number">2.</span> <span class="nav-text">二、元数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、数据绑定"><span class="nav-number">3.</span> <span class="nav-text">三、数据绑定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、函数输入"><span class="nav-number">4.</span> <span class="nav-text">四、函数输入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、函数上下文"><span class="nav-number">5.</span> <span class="nav-text">五、函数上下文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、函数输出"><span class="nav-number">6.</span> <span class="nav-text">五、函数输出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">7.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、函数定义"><span class="nav-number">1.</span> <span class="nav-text">一、函数定义</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#函数定义"><span class="nav-number">1.1.</span> <span class="nav-text">函数定义</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、元数据"><span class="nav-number">2.</span> <span class="nav-text">二、元数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、数据绑定"><span class="nav-number">3.</span> <span class="nav-text">三、数据绑定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、函数输入"><span class="nav-number">4.</span> <span class="nav-text">四、函数输入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、函数上下文"><span class="nav-number">5.</span> <span class="nav-text">五、函数上下文</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、函数输出"><span class="nav-number">6.</span> <span class="nav-text">五、函数输出</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考资料"><span class="nav-number">7.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
             
 
           </div>
