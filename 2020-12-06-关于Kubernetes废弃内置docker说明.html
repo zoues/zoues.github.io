@@ -105,18 +105,23 @@
 
 
 
-  <meta name="description" content="Docker Engine的Deamon进程是以root权限运行的，如果是普通用户要与之交互，需要使用sudo命令来提权与之交互。之前使用Docker官方的安装脚本安装完成之后，会给出一个提示将当前非root用户添加到doker组之中，以避免每次都需要输入sudo的麻烦。 然而随着Docker版本的迭代和官网的安装方式的更改，现在官方给出的安装方式是添加仓库源地址，然后使用默认的apt或者yum包">
-<meta name="keywords" content="Docker">
+  <meta name="description" content="今天，zouyee带各位看看关于前几天Kubernetes“废弃”docker支持的申明。首先，请各位稍安勿躁，主要还是中英文的翻译差别以及标题所引发的歧义，对Kubernetes开源项目有所了解的朋友，可能知道，该项目成功的原因之一，就在于对于接口及功能的版本管理，社区有一套完整且行之有效的方案，接口的兼容性、版本的多样性管理是驱动Kubernetes社区不断前行的内因。先说结论：  对于使用者">
+<meta name="keywords" content="Docker,Kubernetes,Containerd">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Docker非Root运行">
-<meta property="og:url" content="https://ustack.io/2017-07-11-Docker非Root用户运行.html">
+<meta property="og:title" content="关于Kubernetes废弃内置docker CRI功能的说明">
+<meta property="og:url" content="https://ustack.io/2020-12-06-关于Kubernetes废弃内置docker说明.html">
 <meta property="og:site_name" content="Indagate">
-<meta property="og:description" content="Docker Engine的Deamon进程是以root权限运行的，如果是普通用户要与之交互，需要使用sudo命令来提权与之交互。之前使用Docker官方的安装脚本安装完成之后，会给出一个提示将当前非root用户添加到doker组之中，以避免每次都需要输入sudo的麻烦。 然而随着Docker版本的迭代和官网的安装方式的更改，现在官方给出的安装方式是添加仓库源地址，然后使用默认的apt或者yum包">
+<meta property="og:description" content="今天，zouyee带各位看看关于前几天Kubernetes“废弃”docker支持的申明。首先，请各位稍安勿躁，主要还是中英文的翻译差别以及标题所引发的歧义，对Kubernetes开源项目有所了解的朋友，可能知道，该项目成功的原因之一，就在于对于接口及功能的版本管理，社区有一套完整且行之有效的方案，接口的兼容性、版本的多样性管理是驱动Kubernetes社区不断前行的内因。先说结论：  对于使用者">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-16T22:56:27.000Z">
+<meta property="og:image" content="https://s3.ax1x.com/2020/12/06/DjNt8x.png">
+<meta property="og:image" content="https://s3.ax1x.com/2020/12/06/DjN8a9.png">
+<meta property="og:image" content="https://s3.ax1x.com/2020/12/06/DjN3VJ.png">
+<meta property="og:image" content="https://s3.ax1x.com/2020/12/06/DjNN26.png">
+<meta property="og:updated_time" content="2020-12-06T12:45:10.126Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Docker非Root运行">
-<meta name="twitter:description" content="Docker Engine的Deamon进程是以root权限运行的，如果是普通用户要与之交互，需要使用sudo命令来提权与之交互。之前使用Docker官方的安装脚本安装完成之后，会给出一个提示将当前非root用户添加到doker组之中，以避免每次都需要输入sudo的麻烦。 然而随着Docker版本的迭代和官网的安装方式的更改，现在官方给出的安装方式是添加仓库源地址，然后使用默认的apt或者yum包">
+<meta name="twitter:title" content="关于Kubernetes废弃内置docker CRI功能的说明">
+<meta name="twitter:description" content="今天，zouyee带各位看看关于前几天Kubernetes“废弃”docker支持的申明。首先，请各位稍安勿躁，主要还是中英文的翻译差别以及标题所引发的歧义，对Kubernetes开源项目有所了解的朋友，可能知道，该项目成功的原因之一，就在于对于接口及功能的版本管理，社区有一套完整且行之有效的方案，接口的兼容性、版本的多样性管理是驱动Kubernetes社区不断前行的内因。先说结论：  对于使用者">
+<meta name="twitter:image" content="https://s3.ax1x.com/2020/12/06/DjNt8x.png">
 
 
 
@@ -125,7 +130,7 @@
 
 
 
-  <link rel="canonical" href="https://ustack.io/2017-07-11-Docker非Root用户运行.html">
+  <link rel="canonical" href="https://ustack.io/2020-12-06-关于Kubernetes废弃内置docker说明.html">
 
 
 
@@ -135,7 +140,7 @@
   };
 </script>
 
-  <title>Docker非Root运行 | Indagate</title>
+  <title>关于Kubernetes废弃内置docker CRI功能的说明 | Indagate</title>
   
 
 
@@ -303,7 +308,7 @@
   
   
   <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2017-07-11-Docker非Root用户运行.html">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2020-12-06-关于Kubernetes废弃内置docker说明.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zouyee">
@@ -318,10 +323,10 @@
     
     <div class="head">
         <div class="gr_up_title">
-          <span class="text-overflow-center">Docker非Root运行</span>
+          <span class="text-overflow-center">关于Kubernetes废弃内置docker CRI功能的说明</span>
         </div>
         <div class="gr_blog_post_cat">
-          <span class="gr_ddate">7月 11 2017</span><span class="gr_separate">|</span>
+          <span class="gr_ddate">12月 06 2020</span><span class="gr_separate">|</span>
           
             
               <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
@@ -330,7 +335,7 @@
         <div class="gr_blog_post_title_holder">
         
           
-          <h3 class="blog_title" itemprop="name headline">Docker非Root运行
+          <h3 class="blog_title" itemprop="name headline">关于Kubernetes废弃内置docker CRI功能的说明
               
             
           </h3>
@@ -355,24 +360,12 @@
                 
               
 
-              <time title="创建时间：7月 11 2017 10:56:01" itemprop="dateCreated datePublished" datetime="2017-07-11T10:56:01+08:00">7月 11 2017</time>
+              <time title="创建时间：12月 06 2020 22:56:01 / 修改时间：20:45:10" itemprop="dateCreated datePublished" datetime="2020-12-06T22:56:01+08:00">12月 06 2020</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
               
             
           </span>
@@ -386,8 +379,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017-07-11-Docker非Root用户运行.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017-07-11-Docker非Root用户运行.html" itemprop="commentCount"></span>
+                <a href="/2020-12-06-关于Kubernetes废弃内置docker说明.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020-12-06-关于Kubernetes废弃内置docker说明.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -395,7 +388,7 @@
 
           
           
-             <span id="/2017-07-11-Docker非Root用户运行.html" class="leancloud_visitors" data-flag-title="Docker非Root运行">
+             <span id="/2020-12-06-关于Kubernetes废弃内置docker说明.html" class="leancloud_visitors" data-flag-title="关于Kubernetes废弃内置docker CRI功能的说明">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -431,10 +424,23 @@
     <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
     
       
-        <div class="note info"><p>Docker Engine的Deamon进程是以root权限运行的，如果是普通用户要与之交互，需要使用<code>sudo</code>命令来提权与之交互。之前使用Docker官方的安装脚本安装完成之后，会给出一个提示将当前非root用户添加到doker组之中，以避免每次都需要输入<code>sudo</code>的麻烦。</p></div>
-<p>然而随着Docker版本的迭代和官网的安装方式的更改，现在官方给出的安装方式是添加仓库源地址，然后使用默认的<code>apt</code>或者<code>yum</code>包管理工具来完成后安装。并不再提示用户添加非root用户到组。</p>
-<p>默认情况下，完成Docker Engine的安装之后，Docker将会自动创建一个名为<code>docker</code>的用户组，所以<code>root</code>用户和在<code>docker</code>组中的用户都可以免去<code>sudo</code>来与Docker Engine交互。知道原理之后就简单了：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo usermod -aG docker $&#123;whoami&#125; #添加当前用户到docker组</span><br></pre></td></tr></table></figure>
+        <div class="note info"><p>今天，zouyee带各位看看关于前几天Kubernetes“废弃”docker支持的申明。首先，请各位稍安勿躁，主要还是中英文的翻译差别以及标题所引发的歧义，对Kubernetes开源项目有所了解的朋友，可能知道，该项目成功的原因之一，就在于对于接口及功能的版本管理，社区有一套完整且行之有效的方案，接口的兼容性、版本的多样性管理是驱动Kubernetes社区不断前行的内因。<br>先说结论：</p>
+<ol>
+<li>对于使用者没有任何影响</li>
+<li>对于开发者，若想保持原有docker使用方式只是新增一个已知组件</li>
+</ol>
+<p>Kubernetes 1.20前后，对于docker的支持没有变化，只是将该部分代码（dockershim）独立出来，使用者可独立配置。</p></div>
+<h4 id="一、改变动因"><a href="#一、改变动因" class="headerlink" title="一、改变动因"></a>一、改变动因</h4><p>维护dockershim已成为Kubernetes维护人员的一种负担。创建CRI标准就是为了减轻这种负担，并提升不同容器运行时的可移植性性。Docker本身目前没有实现CRI，但Containerd实现了CRI接口。Dockershim一直是一种临时解决方案，此外，与dockershim不兼容的特性，如cgroups v2和用户命名空间，实现CRI接口的运行时也在慢慢探索并实现上述特性。</p>
+<p><strong>何时完全废弃dockershim</strong></p>
+<p>考虑到此更改的影响，它在Kubernetes 1.22之前不会被删除。</p>
+<hr>
+<h4 id="二、架构变化"><a href="#二、架构变化" class="headerlink" title="二、架构变化"></a>二、架构变化</h4><p>在Kubernetes架构中，是由Kubelet组件负责与容器运行时交互的。Kubelet调用容器运行时的流程如下图所示。</p>
+<p><img src="https://s3.ax1x.com/2020/12/06/DjNt8x.png" alt></p>
+<p>CRI shim是实现CRI接口提供的gRPC server服务，负责连接Kubelet和Container runtime，Container runtime是容器运行时工具；具体的流程是Kubelet调用CRI shim接口，CRI shim响应请求，然后调用底层的Container runtime工具运行容器。Kubelet、CRI shim和Container runtime都部署在一个Kubernetes 业务节点上，前两者是以独立的守护进程的方式启动的，而Container runtime不是守护进程，它通常是一个命令行工具。Kubernetes在1.5版本之前没有CRI接口，当时Kubelet内部只集成了两种容器运行时(Docker和rkt)的代码。但这两种容器运行时并不能满足用户的所有使用场景（rkt早已废弃），因为用户对容器的安全隔离性及性能在不同的应用场景有着不同的需求，用户希望Kubernetes能支持更多种的容器运行时。因此，Kubernetes在1.5版本推出了CRI接口，各个容器运行时只要实现了CRI接口规范，就可以接入到Kubernetes平台。在推出CRI后，Kublet为了满足CRI接口，实现了dockershim以支持直接使用docker接口，前期Containerd为了支持CRI接口，实现了CRI-Containerd，但在Containerd 1.1发布后，CRI-Containerd被废弃，转而使用插件方式支持CRI，即CRI插件，当前Kubernetes(1.20之前)关于docker及Containerd的支持如下所示。</p>
+<p><img src="https://s3.ax1x.com/2020/12/06/DjN8a9.png" alt><br>内置dockershim方式</p>
+<p><img src="https://s3.ax1x.com/2020/12/06/DjN3VJ.png" alt><br>containerd CRI方式</p>
+<p>那么Kubernetes 1.20之后(1.22 之前)关于docker及Containerd的支持如下所示。<br><img src="https://s3.ax1x.com/2020/12/06/DjNN26.png" alt></p>
+<p>Kubernetes 1.20之后，若前期使用dockershim内置方式，那么只需要再部署dockershim即可，若使用containerd等runtime，则保持不变即可,当然，官方推荐配置为containerd方式。</p>
 
       
     </div>
@@ -526,7 +532,7 @@ jQuery.noConflict()(function ($) {
     <strong>本文作者： </strong>zouyee</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://ustack.io/2017-07-11-Docker非Root用户运行.html" title="Docker非Root运行">https://ustack.io/2017-07-11-Docker非Root用户运行.html</a>
+    <a href="https://ustack.io/2020-12-06-关于Kubernetes废弃内置docker说明.html" title="关于Kubernetes废弃内置docker CRI功能的说明">https://ustack.io/2020-12-06-关于Kubernetes废弃内置docker说明.html</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -541,6 +547,10 @@ jQuery.noConflict()(function ($) {
           
             <a href="/tags/Docker/" rel="tag"># Docker</a>
           
+            <a href="/tags/Kubernetes/" rel="tag"># Kubernetes</a>
+          
+            <a href="/tags/Containerd/" rel="tag"># Containerd</a>
+          
         </div>
       
 
@@ -552,8 +562,8 @@ jQuery.noConflict()(function ($) {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016-11-24-开启Git大小写敏感.html" rel="next" title="开启Git大小写敏感">
-                <i class="fa fa-chevron-left"></i> 开启Git大小写敏感
+              <a href="/2020-12-06-Containerd安全风险.html" rel="next" title="Containerd CVE-2020–15257细节说明">
+                <i class="fa fa-chevron-left"></i> Containerd CVE-2020–15257细节说明
               </a>
             
           </div>
@@ -561,10 +571,6 @@ jQuery.noConflict()(function ($) {
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018-03-26-Kubernetes集群之路之TLS证书配置.html" rel="prev" title="Kubernetes集群之路（一）TLS证书配置">
-                Kubernetes集群之路（一）TLS证书配置 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -619,8 +625,15 @@ jQuery.noConflict()(function ($) {
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -791,7 +804,11 @@ jQuery.noConflict()(function ($) {
                     
                       
                     
-                    <span class="site-state-item-count">19</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">21</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -863,6 +880,22 @@ jQuery.noConflict()(function ($) {
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、改变动因"><span class="nav-number">1.</span> <span class="nav-text">一、改变动因</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、架构变化"><span class="nav-number">2.</span> <span class="nav-text">二、架构变化</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

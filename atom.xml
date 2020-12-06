@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://ustack.io/"/>
-  <updated>2020-12-06T04:42:24.973Z</updated>
+  <updated>2020-12-06T12:45:10.126Z</updated>
   <id>https://ustack.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>关于Kubernetes废弃内置docker CRI功能的说明</title>
+    <link href="https://ustack.io/2020-12-06-%E5%85%B3%E4%BA%8EKubernetes%E5%BA%9F%E5%BC%83%E5%86%85%E7%BD%AEdocker%E8%AF%B4%E6%98%8E.html"/>
+    <id>https://ustack.io/2020-12-06-关于Kubernetes废弃内置docker说明.html</id>
+    <published>2020-12-06T14:56:01.000Z</published>
+    <updated>2020-12-06T12:45:10.126Z</updated>
+    
+    <content type="html"><![CDATA[<div class="note info"><p>今天，zouyee带各位看看关于前几天Kubernetes“废弃”docker支持的申明。首先，请各位稍安勿躁，主要还是中英文的翻译差别以及标题所引发的歧义，对Kubernetes开源项目有所了解的朋友，可能知道，该项目成功的原因之一，就在于对于接口及功能的版本管理，社区有一套完整且行之有效的方案，接口的兼容性、版本的多样性管理是驱动Kubernetes社区不断前行的内因。<br>先说结论：</p><ol><li>对于使用者没有任何影响</li><li>对于开发者，若想保持原有docker使用方式只是新增一个已知组件</li></ol><p>Kubernetes 1.20前后，对于docker的支持没有变化，只是将该部分代码（dockershim）独立出来，使用者可独立配置。</p></div><h4 id="一、改变动因"><a href="#一、改变动因" class="headerlink" title="一、改变动因"></a>一、改变动因</h4><p>维护dockershim已成为Kubernetes维护人员的一种负担。创建CRI标准就是为了减轻这种负担，并提升不同容器运行时的可移植性性。Docker本身目前没有实现CRI，但Containerd实现了CRI接口。Dockershim一直是一种临时解决方案，此外，与dockershim不兼容的特性，如cgroups v2和用户命名空间，实现CRI接口的运行时也在慢慢探索并实现上述特性。</p><p><strong>何时完全废弃dockershim</strong></p><p>考虑到此更改的影响，它在Kubernetes 1.22之前不会被删除。</p><hr><h4 id="二、架构变化"><a href="#二、架构变化" class="headerlink" title="二、架构变化"></a>二、架构变化</h4><p>在Kubernetes架构中，是由Kubelet组件负责与容器运行时交互的。Kubelet调用容器运行时的流程如下图所示。</p><p><img src="https://s3.ax1x.com/2020/12/06/DjNt8x.png" alt></p><p>CRI shim是实现CRI接口提供的gRPC server服务，负责连接Kubelet和Container runtime，Container runtime是容器运行时工具；具体的流程是Kubelet调用CRI shim接口，CRI shim响应请求，然后调用底层的Container runtime工具运行容器。Kubelet、CRI shim和Container runtime都部署在一个Kubernetes 业务节点上，前两者是以独立的守护进程的方式启动的，而Container runtime不是守护进程，它通常是一个命令行工具。Kubernetes在1.5版本之前没有CRI接口，当时Kubelet内部只集成了两种容器运行时(Docker和rkt)的代码。但这两种容器运行时并不能满足用户的所有使用场景（rkt早已废弃），因为用户对容器的安全隔离性及性能在不同的应用场景有着不同的需求，用户希望Kubernetes能支持更多种的容器运行时。因此，Kubernetes在1.5版本推出了CRI接口，各个容器运行时只要实现了CRI接口规范，就可以接入到Kubernetes平台。在推出CRI后，Kublet为了满足CRI接口，实现了dockershim以支持直接使用docker接口，前期Containerd为了支持CRI接口，实现了CRI-Containerd，但在Containerd 1.1发布后，CRI-Containerd被废弃，转而使用插件方式支持CRI，即CRI插件，当前Kubernetes(1.20之前)关于docker及Containerd的支持如下所示。</p><p><img src="https://s3.ax1x.com/2020/12/06/DjN8a9.png" alt><br>内置dockershim方式</p><p><img src="https://s3.ax1x.com/2020/12/06/DjN3VJ.png" alt><br>containerd CRI方式</p><p>那么Kubernetes 1.20之后(1.22 之前)关于docker及Containerd的支持如下所示。<br><img src="https://s3.ax1x.com/2020/12/06/DjNN26.png" alt></p><p>Kubernetes 1.20之后，若前期使用dockershim内置方式，那么只需要再部署dockershim即可，若使用containerd等runtime，则保持不变即可,当然，官方推荐配置为containerd方式。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;div class=&quot;note info&quot;&gt;&lt;p&gt;今天，zouyee带各位看看关于前几天Kubernetes“废弃”docker支持的申明。首先，请各位稍安勿躁，主要还是中英文的翻译差别以及标题所引发的歧义，对Kubernetes开源项目有所了解的朋友，可能知道，该项目成功的原
+      
+    
+    </summary>
+    
+    
+      <category term="Docker" scheme="https://ustack.io/tags/Docker/"/>
+    
+      <category term="Kubernetes" scheme="https://ustack.io/tags/Kubernetes/"/>
+    
+      <category term="Containerd" scheme="https://ustack.io/tags/Containerd/"/>
+    
+  </entry>
   
   <entry>
     <title>Containerd CVE-2020–15257细节说明</title>
@@ -465,29 +492,6 @@
       &lt;p&gt;&lt;img src=&quot;https://s1.ax1x.com/2020/04/09/G4EVSK.md.png&quot; alt=&quot;趋势&quot;&gt;&lt;/p&gt;
 &lt;div class=&quot;note info&quot;&gt;&lt;p&gt;当前大多数公司在运营应用产品时，无论是选择公有云还是自建的数据中心，都会面临服务器数量预估、存储容量规划和数据库的选型等问题。同时需要在基础设施之上部署依赖软件，以运行应用程序。当前是否存在一种简单的架构模型能够满足我们这种应用场景？当然，这个架构已经存在许久，它就是今天软件架构世界中很热门的一个话题——Serverless。&lt;/p&gt;
 &lt;p&gt;值得关注的是，在最近的几年里，微服务逐渐成为了一种新潮且实用的架构方案。微服务从2014年开始流行，如下图所示：&lt;/p&gt;&lt;/div&gt;
-    
-    </summary>
-    
-    
-      <category term="cloudnative" scheme="https://ustack.io/tags/cloudnative/"/>
-    
-      <category term="serverless" scheme="https://ustack.io/tags/serverless/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>五分钟初识Gloo</title>
-    <link href="https://ustack.io/2020-04-09-%E4%BA%94%E5%88%86%E9%92%9F%E5%88%9D%E8%AF%86Gloo.html"/>
-    <id>https://ustack.io/2020-04-09-五分钟初识Gloo.html</id>
-    <published>2020-04-09T12:40:08.000Z</published>
-    <updated>2020-05-17T10:06:11.283Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="https://s1.ax1x.com/2020/05/17/Ygqhod.md.png" alt="架构"></p><div class="note info"><p>Gloo是一种基于Kubernetes原生设计的功能丰富的Ingress Controller，致力于成为下一代API网关标杆产品。 Gloo在函数级路由等方面表现优异；对旧式应<br>用、微服务和serverless提供支持； 它具备高效的发现能力，且功能多样； 并与领先的开源项目（如Envoy、KNative等）紧密集成。 Gloo的独特设计旨在支持<br>异构应用程序，与多种技术，体系结构，协议和云中共存。</p></div><a id="more"></a><hr><h3 id="一、何为Gloo"><a href="#一、何为Gloo" class="headerlink" title="一、何为Gloo"></a>一、何为Gloo</h3><ul><li><p>*Kubernetes ingress controller**: 当部署在Kubernetes上时，Gloo可以充当功能丰富的入口控制器，并且当部署到AWS EKS等公共云时，可以简化路由功能。</p></li><li><p><strong>异构应用</strong>: Gloo创建的应用程序路由到实现为微服务，无服务器功能和旧式应用程序的后端。 此功能可以帮助用户逐渐从旧代码迁移到微服务、无服务器架构。<br>用户在保持其原有代码逻辑前提下，使用云原生技术添加新功能； 组织中的不同团队可以选择不同架构及其他场景。</p></li><li><p><strong>服务网格Ingress</strong>: 服务网格技术解决了跨云网络的服务到服务通信问题。 可以使用服务网格解决诸如服务标识，七层网络遥测信息收集，服务弹性，服务之<br>间的流量路由以及策略执行（例如配额，速率限制等）之类的问题。 为了使服务网格正常运行，它需要一种使流量进入网格的方法。 将流量从边缘传输到集群内部的<br>问题与服务到服务的问题有所不同。 前端网关应当提供缓存，安全性和流量管理，Oauth和最终用户身份验证/授权，用户速率限制，Web应用程序防火墙等。 Gloo<br>解决了以上问题，兼容所有服务网格技术，包括Istio，Linkerd，Consul Connect和AWS App Mesh。</p></li></ul><hr><h3 id="二、Gloo特色"><a href="#二、Gloo特色" class="headerlink" title="二、Gloo特色"></a>二、Gloo特色</h3><ul><li><p><strong>功能级路由允许集成旧版应用程序，微服务和无服务器</strong>：Gloo可以路由<br>直接向<em>functions</em>请求，可以是：无服务器功能调用（例如Lambda，Google Cloud Function，OpenFaaS函数等）；<br>微服务或旧服务上的API调用（例如REST API调用，OpenAPI操作，XML / SOAP请求等）；<br>或发布到邮件队列（例如，NATS，AMQP等）。 这种独特的功能使Gloo成为唯一的API网关<br>支持混合应用程序，以及不将用户绑定到特定范例的唯一应用程序。</p></li><li><p><strong>Gloo包含经过审查的开源项目，以提供广泛的功能</strong>：Gloo通过与顶级开源项目（包括gRPC，GraphQL，OpenTracing，NATS等）集成来支持高质量功能。<br>Gloo的体系结构允许在将来流行的开源项目出现时快速集成它们。</p></li><li><p><strong>全自动发现使用户可以快速移动</strong>：Gloo在启动时会创建所有可用目的地的目录，并不断对其进行更新。 这使开发人员无需承担“记账”的责任，并确保新功能<br>在准备就绪后立即可用。 Gloo跨IaaS，PaaS和FaaS提供程序以及Swagger，gRPC和GraphQL发现。</p></li><li><p><strong>Gloo与用户环境紧密集成</strong>：通过Gloo，用户可以自由选择自己喜欢的调度工具（例如K8S，Nomad，OpenShift等），持久性（K8s，Consul等）和安全性<br>（K8s, Vault）。</p></li></ul><h4 id="路由特性"><a href="#路由特性" class="headerlink" title="路由特性"></a>路由特性</h4><ul><li><p><strong>动态负载均衡</strong>:跨多个上游服务负载均衡流量。</p></li><li><p><strong>健康检查</strong>: 主动和被动监视上游服务。</p></li><li><p><strong>OpenTracing标准</strong>: 使用支持良好的OpenTracing标准监视请求。</p></li><li><p><strong>监控</strong>: 支持Prometheus、Statsd方式监控。</p></li><li><p><strong>SSL</strong>: 高度可定制的选项，用于向上游服务添加SSL加密，并完全支持SNI。</p></li><li><p><strong>转换</strong>: 添加，删除或处理HTTP请求和响应。</p></li></ul><h4 id="通用特性"><a href="#通用特性" class="headerlink" title="通用特性"></a>通用特性</h4><p>Gloo可以轻松应对管理入口流量进入应用程序架构（不单单是Kubernetes）的挑战。在Kubernetes，AWS Lambda，VM，Terraform，EC2，Consul<br>等架构/平台中运行时，可以动态发现后端服务。Gloo同时也被选为KNative项目的首选ingress项目，其主要有以下特性。</p><ul><li>解决云原生和混合云的挑战：微服务使应用程序的API更加复杂。 Gloo实现了API网关模式，通过实现管理平面来提升业务的可操作性。</li><li>构建Envoy代理：Gloo是Envoy Proxy的控制平面，使开发人员和操作员可以通过以声明性格式的xDS gRPC API动态更新Envoy配置。</li><li>服务网格的基石：Gloo将服务网格功能添加到集群入口。 Gloo允许您以迭代的方式渐进式使用高级功能，并与诸如Flagger的系统进<br>行金丝雀自动化发布，同时以本地化方式插入服务网格实现（如Istio，Linkerd或Consul）。</li><li>针对应用程序的集成：Gloo可以将请求直接路由到Function、微服务或遗留服务上的API，或发布到消息队列。这种独特的功能使Gloo成为支持混合应用程序的唯一<br>API网关，而不会将用户束缚于特定的技术方案。</li><li>强大的社区特性：Gloo通过与顶级开源项目（如gRPC，GraphQL，OpenTracing，NATS等）集成来支持高级别功能。 Gloo的技术架构允许在未来流行的开源项目<br>出现时快速集成。</li><li>全自动发现能力：Gloo动态发现能力，跨IaaS，PaaS和FaaS</li><li>与现有工具集成：使用Gloo，用户可以自由选择自己喜欢的调度工具（例如K8S，Nomad，OpenShift等），持久化（K8S，Consul等）和安全特性（K8，Vault）。</li></ul>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;img src=&quot;https://s1.ax1x.com/2020/05/17/Ygqhod.md.png&quot; alt=&quot;架构&quot;&gt;&lt;/p&gt;
-&lt;div class=&quot;note info&quot;&gt;&lt;p&gt;Gloo是一种基于Kubernetes原生设计的功能丰富的Ingress Controller，致力于成为下一代API网关标杆产品。 Gloo在函数级路由等方面表现优异；对旧式应&lt;br&gt;用、微服务和serverless提供支持； 它具备高效的发现能力，且功能多样； 并与领先的开源项目（如Envoy、KNative等）紧密集成。 Gloo的独特设计旨在支持&lt;br&gt;异构应用程序，与多种技术，体系结构，协议和云中共存。&lt;/p&gt;&lt;/div&gt;
     
     </summary>
     
