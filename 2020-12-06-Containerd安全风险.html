@@ -105,16 +105,22 @@
 
 
 
-  <meta name="description" content="Keep motivation for the world">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Indagate">
-<meta property="og:url" content="https://ustack.io/archives/2020/03/index.html">
+  <meta name="description" content="Containerd是基于OCI规范实现的一款工业级标准的容器运行时。 Containerd在宿主机中管理容器生命周期，如容器镜像的传输和存储、容器的执行和管理、存储和网络等。 containerd-shim是用作容器运行的载体，实现容器生命周期管理， 其API以抽象命名空间Unix域套接字方式暴露，该套接字可通过根网络名称空间访问。 因此，一旦普通用户获得主机网络访问权限（通过启动主机网络模式的">
+<meta name="keywords" content="kubernetes,CloudNative,containerd">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Containerd CVE-2020–15257细节说明">
+<meta property="og:url" content="https://ustack.io/2020-12-06-Containerd安全风险.html">
 <meta property="og:site_name" content="Indagate">
-<meta property="og:description" content="Keep motivation for the world">
+<meta property="og:description" content="Containerd是基于OCI规范实现的一款工业级标准的容器运行时。 Containerd在宿主机中管理容器生命周期，如容器镜像的传输和存储、容器的执行和管理、存储和网络等。 containerd-shim是用作容器运行的载体，实现容器生命周期管理， 其API以抽象命名空间Unix域套接字方式暴露，该套接字可通过根网络名称空间访问。 因此，一旦普通用户获得主机网络访问权限（通过启动主机网络模式的">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://s3.ax1x.com/2020/12/06/DXnbsP.png">
+<meta property="og:image" content="https://s3.ax1x.com/2020/12/06/DXk01K.png">
+<meta property="og:image" content="https://s3.ax1x.com/2020/12/06/DXEAaj.png">
+<meta property="og:updated_time" content="2020-12-06T04:42:24.973Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Indagate">
-<meta name="twitter:description" content="Keep motivation for the world">
+<meta name="twitter:title" content="Containerd CVE-2020–15257细节说明">
+<meta name="twitter:description" content="Containerd是基于OCI规范实现的一款工业级标准的容器运行时。 Containerd在宿主机中管理容器生命周期，如容器镜像的传输和存储、容器的执行和管理、存储和网络等。 containerd-shim是用作容器运行的载体，实现容器生命周期管理， 其API以抽象命名空间Unix域套接字方式暴露，该套接字可通过根网络名称空间访问。 因此，一旦普通用户获得主机网络访问权限（通过启动主机网络模式的">
+<meta name="twitter:image" content="https://s3.ax1x.com/2020/12/06/DXnbsP.png">
 
 
 
@@ -123,7 +129,7 @@
 
 
 
-  <link rel="canonical" href="https://ustack.io/archives/2020/03/">
+  <link rel="canonical" href="https://ustack.io/2020-12-06-Containerd安全风险.html">
 
 
 
@@ -133,7 +139,7 @@
   };
 </script>
 
-  <title>归档 | Indagate</title>
+  <title>Containerd CVE-2020–15257细节说明 | Indagate</title>
   
 
 
@@ -285,112 +291,435 @@
                 <div id="content" class="content gr_grid_container">
                 
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      
-      <span class="archive-page-counter">
-        
-        
-         
+  
+
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2020-12-06-Containerd安全风险.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">Containerd CVE-2020–15257细节说明</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">12月 06 2020</span><span class="gr_separate">|</span>
           
-        不错! 目前共计 56 篇日志。 继续努力。
-      </span>
-      
-
-      
-
-        
-        
-        
-
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
         
           
-          <div class="collection-title">
-            <h2 class="archive-year" id="archive-year-2020">2020</h2>
-          </div>
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2020-03-25-Kubernetes 1.18 福履将之.html" itemprop="url">
+          <h3 class="blog_title" itemprop="name headline">Containerd CVE-2020–15257细节说明
               
-                <span itemprop="name">Kubernetes 1.18 福履将之</span>
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
               
-            </a>
-        
-      </h3>
+                <span class="post-meta-item-text">发表于</span>
+              
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-03-25T20:40:08+08:00" content="3月 25 2020">
-          03-25
-        </time>
-      </div>
+              
+                
+              
 
-    </header>
-  </article>
+              <time title="创建时间：12月 06 2020 13:01:21 / 修改时间：12:42:24" itemprop="dateCreated datePublished" datetime="2020-12-06T13:01:21+08:00">12月 06 2020</time>
+            
 
+            
+              
 
+              
+            
+          </span>
 
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020-12-06-Containerd安全风险.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020-12-06-Containerd安全风险.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020-12-06-Containerd安全风险.html" class="leancloud_visitors" data-flag-title="Containerd CVE-2020–15257细节说明">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span>℃</span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2020-03-25-Kubernetes 1.18之Ingress API优化.html" itemprop="url">
-              
-                <span itemprop="name">Kubernetes 1.18之Ingress API优化</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2020-03-25T20:40:08+08:00" content="3月 25 2020">
-          03-25
-        </time>
       </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
+    
+      
+          <div class="note info"><p>Containerd是基于OCI规范实现的一款工业级标准的容器运行时。 Containerd在宿主机中管理容器生命周期，如容器镜像的传输和存储、容器的执行和管理、存储和网络等。 containerd-shim是用作容器运行的载体，实现容器生命周期管理， 其API以抽象命名空间Unix域套接字方式暴露，该套接字可通过根网络名称空间访问。 因此，一旦普通用户获得主机网络访问权限（通过启动主机网络模式的容器），则可以访问任一容器的API，并以此提权。</p>
+<p>在主机网络名称空间中运行容器是不安全的：</p>
+<ul>
+<li>请勿使用<code>docker run --net = host</code>运行Docker容器</li>
+<li>请勿使用<code>.spec.hostNetwork：true</code>配置运行Kubernetes Pods</li>
+</ul></div>
+<a id="more"></a>
+<h4 id="一、Containerd-CVE-2020–15257"><a href="#一、Containerd-CVE-2020–15257" class="headerlink" title="一、Containerd CVE-2020–15257"></a>一、Containerd CVE-2020–15257</h4><ol>
+<li>漏洞级别</li>
+</ol>
+<p>该漏洞社区评分为5.2 分/10分（中等）的安全级别，需要具备一定的触发条件、攻击路径较长。</p>
+<ol start="2">
+<li>提权条件</li>
+</ol>
+<p>如果不受信任的用户在平台上无法创建主机网络模式（hostnetwork）的容器，或者容器内的进程是以非root用户（UID 0）运行，则不会触发该漏洞，具体满足以下多个条件：</p>
+<ul>
+<li>容器使用主机网络<code>hostnetwork</code>部署，此时容器和主机共享网络命名空间;</li>
+<li>容器使用root用户(即UID 0);</li>
+<li><code>containerd</code>版本在 &lt;=1.3.7</li>
+</ul>
+<ol start="3">
+<li>漏洞确认</li>
+</ol>
+<p>对于在易受攻击的系统上运行容器的用户，可以通过禁止主机网络模式，或者通过确保此类容器以非零UID/GID运行来缓解此问题。用户可将<code>containerd</code>版本更新到最新版本。 此外，更新前创建并运行的容器仍会受到攻击，因此用户需要确保所有容器完全停止，然后在更新后重新启动。</p>
+<p>对于不确定<code>CVE-2020-15257</code>是否会影响的用户，可以使用以下命令快速确定受影响的<code>containerd</code>版本创建的容器是否仍在运行。 如果有返回结果，则说明存在。</p>
+<p><code>$ cat /proc/net/unix | grep &#39;containerd-shim&#39; | grep &#39;@&#39;</code></p>
+<ol start="4">
+<li>特别说明</li>
+</ol>
+<p>即使替换了补丁版本的<code>containerd</code>，使用主机网络也是不安全的。</p>
+<hr>
+<h4 id="二、-安全分析"><a href="#二、-安全分析" class="headerlink" title="二、 安全分析"></a>二、 安全分析</h4><h5 id="2-1-代码定位"><a href="#2-1-代码定位" class="headerlink" title="2.1 代码定位"></a>2.1 代码定位</h5><ul>
+<li>containerd/containerd<ul>
+<li>runtime/v1/shim/client/client.go: WithStart(), newCommand()</li>
+<li>cmd/containerd-shim/main_unix.go: serve()</li>
+<li>cmd/containerd-shim/shim_linux.go: newServer()</li>
+</ul>
+</li>
+<li>containerd/ttrpc (via vendor/github.com/containerd/ttrpc/unixcreds_linux.go)<ul>
+<li>unixcreds_linux.go: UnixSocketRequireSameUser()</li>
+</ul>
+</li>
+</ul>
+<h5 id="2-2-漏洞细节"><a href="#2-2-漏洞细节" class="headerlink" title="2.2 漏洞细节"></a>2.2 漏洞细节</h5><p>containerd是一个容器运行时的核心组件，其管理基于runc的容器，在Kubernetes中可通过Docker（dockershim）方式或CRI方式使用。Docker架构如下图所示。<br><img src="https://s3.ax1x.com/2020/12/06/DXnbsP.png" alt="containerd架构"><br>Docker架构包含docker、containerd、 containerd-shim、runC等组件。</p>
+<ul>
+<li><code>containerd</code>是容器运行时，作为守护进程，<code>containerd</code>通过<code>containerd-shim</code>调用<code>runc</code>管理容器。</li>
+<li><code>containerd</code>作为守护进程，其对外暴露用于容器生命周期管理（如容器运行管理、镜像管理等）的gRPC接口。</li>
+<li><code>containerd</code>生成<code>containerd-shim</code>进程对容器的生命周期进行一对一的管理。</li>
+</ul>
+<p>为了提供自己的gRPC（实际上是ttrpc，一种裁剪版gRPC协议）API，<code>containered-shim</code>监听Unix域套接字。 这些是Linux独有的Unix域套接字，其使用以空字节开头的长度前缀键，并且可以包含任意二进制序列。 它们在抽象Unix域套接字sun_path中嵌入了结尾的空字节，其可阻止常见的Unix工具（例如socat）与其连接。</p>
+<ul>
+<li>@/containerd-shim///shim.sock\0</li>
+<li>@/containerd-shim/.sock\0</li>
+</ul>
+<p><code>containered-shim</code>不仅具有绑定和侦听此类套接字的能力，它还支持从其父进程接收任意套接字文件描述符。 <code>containerd</code>通过此方法，先创建抽象的Unix套接字并对其进行监听，在<code>containerd-shim</code>进程启动后，可以使用该句柄进行初始化，接下来<code>containerd-shim</code>启动<code>ttrpc</code>服务。 <code>containerd-shim</code>使用标准的Unix域套接字功能来验证传入的连接是否具有与其相同的UID和EUID（通常为UID：0和EUID：0）。</p>
+<p><code>containerd-shim</code>所使用的抽象的Unix域套接字，是绑定在主机的网络命名空间上的。当一个恶意容器同样处于主机的网络命名空间中，该容器内的<code>root</code>用户，可以通过譬如<code>netstat -xl</code>或者<code>/proc/net/unix</code>来扫描，找到<code>containerd-shim</code>的套接字，然后链接<code>containerd-shim</code>的API以执行命令。</p>
+<p><code>containerd-shim</code>暴露了许多危险的API，可用于逃避容器和执行特权命令。在使用的<code>containerd（-shim）</code>的两个主要版本1.2.x和1.3.x中，暴露以下能力：</p>
+<ul>
+<li>任意文件读取</li>
+<li>任意文件追加</li>
+<li>任意文件写入</li>
+<li>containerd-shim中的任意命令执行</li>
+<li>从runc config.json文件创建容器</li>
+<li>启动创建的容器</li>
+</ul>
+<p>大多数用户实际上不受此CVE的影响。如果在未指定–user的情况下运行<code>docker run --net = host</code>，则会受到影响。如果Kubernetes用户使用<code>containerd</code>作为CRI运行时并使用<code>.spec.hostNetwork：true</code>配置运行pod且未设置<code>.spec.securityContext.runAsUser</code>，则受到影响。</p>
+<p><img src="https://s3.ax1x.com/2020/12/06/DXk01K.png" alt="prefix"></p>
+<p>该CVE修复了<code>containerd</code>的v1.4.3/v1.3.9版本，其将抽象套接字修改为<code>/run/containerd</code>下基于文件的普通UNIX套接字。</p>
+<p><img src="https://s3.ax1x.com/2020/12/06/DXEAaj.png" alt="fix"></p>
+<h5 id="2-3-问题容器"><a href="#2-3-问题容器" class="headerlink" title="2.3 问题容器"></a>2.3 问题容器</h5><p>Docker执行以下命令：</p>
+<p><code>$ docker ps -a --filter &#39;network=host&#39;</code></p>
+<p>Kubernetes执行以下命令：</p>
+<p><code>$ kubectl get pods -A -o json |
+   jq -c &#39;.items[] | select(.spec.hostNetwork==true) |[.metadata.namespace, .metadata.name]&#39;</code></p>
+<h5 id="2-4-是否不使用network就一劳永逸"><a href="#2-4-是否不使用network就一劳永逸" class="headerlink" title="2.4 是否不使用network就一劳永逸"></a>2.4 是否不使用network就一劳永逸</h5><p>并不是的。 因为除了容器外，还有很多程序使用了抽象套接字。 这些程序包括：</p>
+<ul>
+<li>dbus</li>
+<li>ibus</li>
+<li>irqbalance</li>
+<li>iscsid</li>
+<li>iscsiuio</li>
+<li>LXD</li>
+<li>multipathd</li>
+<li>X Window System</li>
+<li>[historical] systemd before v212</li>
+<li>[historical] Unity (desktop environment)</li>
+<li>[historical] upstart</li>
+</ul>
+<p>等等</p>
+<p>要查看主机上是否使用了抽象套接字，可运行<code>grep -ao &#39;@.*&#39; /proc/net/unix</code>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> grep -ao '@.*' /proc/net/unix ⏎</span><br><span class="line">@/org/kernel/linux/storage/multipathd</span><br><span class="line">@/tmp/dbus-ihrEYFlKyT</span><br><span class="line">@/containerd-shim/moby/d0f4f5dd326d505f79e20ca891ad35516656353bc7974378237826b3456bff86/shim.sock</span><br><span class="line">@ISCSIADM_ABSTRACT_NAMESPACE</span><br><span class="line">@/containerd-shim/moby/d0f4f5dd326d505f79e20ca891ad35516656353bc7974378237826b3456bff86/shim.sock</span><br></pre></td></tr></table></figure>
+<p>实际上，其实关于<code>containerd</code>的CVE-2020-15257漏洞，一些开发人员和用户早已知晓，但其一直未被视作安全漏洞，因为使用主机网络名称空间并不安全，无论是否存在<code>containerd</code>套接字。 虽然<code>containerd</code>项目考虑到攻击的影响范围而更改了漏洞策略，但上述的软件应该不会将抽象套接字视作漏洞。</p>
+<hr>
+<h4 id="三、安全建议"><a href="#三、安全建议" class="headerlink" title="三、安全建议"></a>三、安全建议</h4><p>在需要使用主机网络时，需要考虑以下安全策略</p>
+<ul>
+<li>以非root用户运行容器</li>
+<li>AppArmor</li>
+<li>SELinux等</li>
+</ul>
+<p><strong>Docker</strong></p>
+<p>可以使用端口映射方式: <code>docker run -p</code><br>通信时执行以下命令：</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> docker inspect -f '&#123;&#123;.NetworkSettings.IPAddress&#125;&#125;' nginx ⏎</span><br><span class="line">172.17.0.2</span><br><span class="line"><span class="meta">$</span> curl http://172.17.0.2</span><br><span class="line">...</span><br><span class="line">&lt;title&gt;Welcome to nginx!&lt;/title&gt;</span><br></pre></td></tr></table></figure>
+<p>或者修改docker proxy</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> cat &lt;&lt;EOF &gt; /etc/docker/daemon.json ⏎</span><br><span class="line">&#123;"userland-proxy": false&#125;</span><br><span class="line">EOF</span><br><span class="line"><span class="meta">#</span> systemctl restart docker</span><br></pre></td></tr></table></figure>
+<p>以及其他方案，如</p>
+<ul>
+<li>AppArmor</li>
+<li>SELinux等</li>
+</ul>
+<p><strong>Kubernetes</strong></p>
+<p>对于使用Kubernetes的用户，可以使用以下方式或特性</p>
+<ul>
+<li><code>kubectl get pods -o wide</code>获取IP进行访问</li>
+<li>内部DNS（CoreDNS）</li>
+<li>kubectl port-forward</li>
+<li>AppArmor</li>
+<li>SELinux等</li>
+</ul>
+<h5 id="3-1-以非root用户运行容器"><a href="#3-1-以非root用户运行容器" class="headerlink" title="3.1 以非root用户运行容器"></a>3.1 以非root用户运行容器</h5><p>对于Docker，运行<code>docker run --net=host --user 12345 --security-opt no-new-privileges</code>。 确保选择与主机上现有用户帐户没有冲突的UID号。<br>无需指定<code>no-new-privileges</code>，但是建议禁止使用sudo之类的特权。</p>
+<p>对于Kubernetes,指定Pod相关字段<code>.spec.[]containers.securityContext</code>:</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">hostNetwork: true</span><br><span class="line">containers:</span><br><span class="line">- name: foo</span><br><span class="line">  securityContext:</span><br><span class="line">    runAsUser: 12345</span><br><span class="line">    allowPrivilegeEscalation: false</span><br></pre></td></tr></table></figure>
+<p>对于普通用户使用1024以内端口，需要如下配置：<br><figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> echo 'net.ipv4.ip_unprivileged_port_start=0' &gt; /etc/sysctl.d/99-user.conf ⏎</span><br><span class="line"><span class="meta">#</span> sysctl --system</span><br></pre></td></tr></table></figure></p>
+<h5 id="3-2-使用AppArmor"><a href="#3-2-使用AppArmor" class="headerlink" title="3.2 使用AppArmor"></a>3.2 使用AppArmor</h5><p>AppArmor是Linux安全模块，供多个发行版使用，包括Ubuntu，Debian，SUSE和Google COS。<br>以下AppArmor配置文件可用于禁止容器使用抽象套接字：</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>include &lt;tunables/global&gt;</span><br><span class="line">profile docker-no-abstract-socket flags=(attach_disconnected,mediate_deleted) &#123;</span><br><span class="line"><span class="meta">  #</span>include &lt;abstractions/base&gt;</span><br><span class="line">  network,</span><br><span class="line">  capability,</span><br><span class="line">  file,</span><br><span class="line">  umount,</span><br><span class="line">  signal (receive) peer=unconfined,</span><br><span class="line">  signal (send,receive) peer=docker-no-abstract-socket,</span><br><span class="line">  deny @&#123;PROC&#125;/* w,</span><br><span class="line">  deny @&#123;PROC&#125;/&#123;[^1-9],[^1-9][^0-9],[^1-9s][^0-9y][^0-9s],[^1-9][^0-9][^0-9][^0-9]*&#125;/** w,</span><br><span class="line">  deny @&#123;PROC&#125;/sys/[^k]** w,</span><br><span class="line">  deny @&#123;PROC&#125;/sys/kernel/&#123;?,??,[^s][^h][^m]**&#125; w,</span><br><span class="line">  deny @&#123;PROC&#125;/sysrq-trigger rwklx,</span><br><span class="line">  deny @&#123;PROC&#125;/kcore rwklx,</span><br><span class="line">  deny mount,</span><br><span class="line">  deny /sys/[^f]*/** wklx,</span><br><span class="line">  deny /sys/f[^s]*/** wklx,</span><br><span class="line">  deny /sys/fs/[^c]*/** wklx,</span><br><span class="line">  deny /sys/fs/c[^g]*/** wklx,</span><br><span class="line">  deny /sys/fs/cg[^r]*/** wklx,</span><br><span class="line">  deny /sys/firmware/** rwklx,</span><br><span class="line">  deny /sys/kernel/security/** rwklx,</span><br><span class="line">  ptrace (trace,read,tracedby,readby) peer=docker-no-abstract-socket,</span><br><span class="line"></span><br><span class="line"><span class="meta">  #</span> Only the following line is related to abstract sockets.</span><br><span class="line"><span class="meta">  #</span> Other lines are from "docker-default" profile </span><br><span class="line"><span class="meta">  #</span> (https://github.com/moby/moby/pull/39923)</span><br><span class="line">  deny unix addr=@**,</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#</span> To load the profile, run `sudo apparmor_parser -r docker-no-abstract-socket`</span><br></pre></td></tr></table></figure>
+<p>可以按如下所示将此配置文件应用于Docker容器：</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> sudo apparmor_parser -r docker-no-abstract-socket</span><br><span class="line"><span class="meta">$</span> docker run --net=host --security-opt apparmor=docker-no-abstract-socket ...</span><br></pre></td></tr></table></figure>
+<p>关于在Kubernetes中如何使用<a href="https://kubernetes.io/docs/tutorials/clusters/apparmor/" target="_blank" rel="noopener">AppArmor特性</a></p>
+<h5 id="3-3-使用SELinux"><a href="#3-3-使用SELinux" class="headerlink" title="3.3 使用SELinux"></a>3.3 使用SELinux</h5><p>RHEL/CentOS和Fedora的SELinux策略，用于保护主机上的抽象套接字：</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> getenforce</span><br><span class="line">Enforcing</span><br><span class="line"><span class="meta">$</span> socat abstract-listen:foo,fork stdio &amp;</span><br><span class="line"><span class="meta">$</span> sudo podman run -it --net=host alpine</span><br><span class="line">/ # cat /proc/self/attr/current</span><br><span class="line">system_u:system_r:container_t:s0:c83,c1019</span><br><span class="line">/ # apk add -q socat</span><br><span class="line">/ # echo test | socat stdio abstract-connect:foo</span><br><span class="line">2020/11/27 15:42:08 socat[7] E connect(5, AF=1 "\0foo", 6): Permission denied</span><br></pre></td></tr></table></figure>
+<p>默认情况下，SELinux已启用Podman和OpenShift。 要为Docker启用SELinux，请按以下方式配置<code>/etc/docker/daemon.json</code>：</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> cat &lt;&lt;EOF &gt; /etc/docker/daemon.json</span><br><span class="line">&#123;"selinux-enabled": true&#125;</span><br><span class="line">EOF</span><br><span class="line"><span class="meta">#</span> systemctl restart docker</span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="四、参考资料"><a href="#四、参考资料" class="headerlink" title="四、参考资料"></a>四、参考资料</h4><ul>
+<li><a href="https://research.nccgroup.com/2020/11/30/technical-advisory-containerd-containerd-shim-api-exposed-to-host-network-containers-cve-2020-15257/" target="_blank" rel="noopener">technical advisory</a></li>
+<li><a href="https://medium.com/nttlabs/dont-use-host-network-namespace-f548aeeef575" target="_blank" rel="noopener">dont-use-host-network-namespace</a></li>
+</ul>
+
+      
+    </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+      <div class="qr_code_pc_inner">
+        <div class="qr_code_pc">
+    <img id="js_pc_qr_code_img" class="qr_code_pc_img" src="https://s2.ax1x.com/2019/09/22/upS79K.jpg" alt="zouyee wechat" style="width: 200px; max-width: 100%;">
+    <p>微信扫一扫<br>关注该公众号</p>
+</div>
+<script>
+jQuery.noConflict()(function ($) {
+    $(function () {
+		var offsetTop = $('#comments').offset().top - $(window).height();
+		
+		if (offsetTop <= 0) {
+			// load directly when there's no a scrollbar
+			console.log("....")
+		} else {
+			$(window).on('scroll', function () {
+				var scrollTop = document.documentElement.scrollTop;
+				var copyright = $('.post-copyright').offset().top;
+				
+				var imageH = $('.qr_code_pc').offset().top;
+				console.log("scrollTop", scrollTop)
+				console.log("copyright", copyright)
+				console.log("qr_code_pc", imageH)
+				if (scrollTop <= offsetTop) {
+					$('.qr_code_pc').css('position', 'absolute')
+					$('.qr_code_pc').css('top', 420)
+				}
+				if (scrollTop > 450 && copyright > scrollTop) {
+					$('.qr_code_pc').css('top', 20)
+					$('.qr_code_pc').css('position', 'fixed')
+				} else {
+					$('.qr_code_pc').css('position', 'absolute')
+				}
+			});
+		}
+	});
+
+})
+</script>
+
+      </div>
+      
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span style="padding-top: 5px;">打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="https://s2.ax1x.com/2019/09/22/uppS4P.jpg" alt="zouyee 微信支付">
+        
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>zouyee</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://ustack.io/2020-12-06-Containerd安全风险.html" title="Containerd CVE-2020–15257细节说明">https://ustack.io/2020-12-06-Containerd安全风险.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+          
+            <a href="/tags/CloudNative/" rel="tag"># CloudNative</a>
+          
+            <a href="/tags/containerd/" rel="tag"># containerd</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020-07-09-CloudEvents初识规范.html" rel="next" title="CloudEvents初识规范">
+                <i class="fa fa-chevron-left"></i> CloudEvents初识规范
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
                 </div>
                 
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
 
             </div>
                 
@@ -414,8 +743,15 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -658,6 +994,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、Containerd-CVE-2020–15257"><span class="nav-number">1.</span> <span class="nav-text">一、Containerd CVE-2020–15257</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、-安全分析"><span class="nav-number">2.</span> <span class="nav-text">二、 安全分析</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1-代码定位"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 代码定位</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2-漏洞细节"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 漏洞细节</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3-问题容器"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 问题容器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-4-是否不使用network就一劳永逸"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 是否不使用network就一劳永逸</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、安全建议"><span class="nav-number">3.</span> <span class="nav-text">三、安全建议</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-1-以非root用户运行容器"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 以非root用户运行容器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-2-使用AppArmor"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 使用AppArmor</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-3-使用SELinux"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 使用SELinux</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、参考资料"><span class="nav-number">4.</span> <span class="nav-text">四、参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -959,6 +1311,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
 
   
 
