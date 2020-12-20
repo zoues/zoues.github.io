@@ -105,20 +105,20 @@
 
 
 
-  <meta name="description" content="本文介绍当前serverless框架的函数概念，Serverless框架还允许用户监视代码存储库中的更改（例如代码触发器等），并在每次提交时自动构建函数镜像。函数代码、依赖项和/或二进制文件可以驻留在外部存储库（例如S3对象存储桶或Git存储库）中，或由用户直接提供。如果代码在外部存储库中，则用户需要指定路径和接入凭证。函数可能依赖于外部库或二进制文件，这些需要由用户提供，包括描述其构建过程的方">
+  <meta name="description" content="随着云原生的发展（云原生的下一个五年在哪里？），逐步进入深水区，业界需要一种统一的事件定义和描述规范，以提供跨服务、跨平台的交互能力。CloudEvents事件规范应运而生，并得到了行业的广泛关注，包括主要的云提供商和 SaaS 公司。对于CloudEvent的介绍、规范说明及实践落地，将以三篇系列文章进行说明，本文为《CloudEvent三部曲:初识篇》.">
 <meta name="keywords" content="cloudnative,serverless">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Serverless函数小解">
-<meta property="og:url" content="https://ustack.io/2020-06-12-Serverless函数小解.html">
+<meta property="og:title" content="CloudEvents三部曲:初识篇">
+<meta property="og:url" content="https://ustack.io/2020-12-20-CloudEvents三部曲:初识篇.html">
 <meta property="og:site_name" content="Indagate">
-<meta property="og:description" content="本文介绍当前serverless框架的函数概念，Serverless框架还允许用户监视代码存储库中的更改（例如代码触发器等），并在每次提交时自动构建函数镜像。函数代码、依赖项和/或二进制文件可以驻留在外部存储库（例如S3对象存储桶或Git存储库）中，或由用户直接提供。如果代码在外部存储库中，则用户需要指定路径和接入凭证。函数可能依赖于外部库或二进制文件，这些需要由用户提供，包括描述其构建过程的方">
+<meta property="og:description" content="随着云原生的发展（云原生的下一个五年在哪里？），逐步进入深水区，业界需要一种统一的事件定义和描述规范，以提供跨服务、跨平台的交互能力。CloudEvents事件规范应运而生，并得到了行业的广泛关注，包括主要的云提供商和 SaaS 公司。对于CloudEvent的介绍、规范说明及实践落地，将以三篇系列文章进行说明，本文为《CloudEvent三部曲:初识篇》.">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://s1.ax1x.com/2020/06/21/N8MiqS.md.png">
-<meta property="og:updated_time" content="2020-06-21T12:55:23.176Z">
+<meta property="og:image" content="https://s3.ax1x.com/2020/12/20/ra5EQA.png">
+<meta property="og:updated_time" content="2020-12-20T11:22:49.463Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Serverless函数小解">
-<meta name="twitter:description" content="本文介绍当前serverless框架的函数概念，Serverless框架还允许用户监视代码存储库中的更改（例如代码触发器等），并在每次提交时自动构建函数镜像。函数代码、依赖项和/或二进制文件可以驻留在外部存储库（例如S3对象存储桶或Git存储库）中，或由用户直接提供。如果代码在外部存储库中，则用户需要指定路径和接入凭证。函数可能依赖于外部库或二进制文件，这些需要由用户提供，包括描述其构建过程的方">
-<meta name="twitter:image" content="https://s1.ax1x.com/2020/06/21/N8MiqS.md.png">
+<meta name="twitter:title" content="CloudEvents三部曲:初识篇">
+<meta name="twitter:description" content="随着云原生的发展（云原生的下一个五年在哪里？），逐步进入深水区，业界需要一种统一的事件定义和描述规范，以提供跨服务、跨平台的交互能力。CloudEvents事件规范应运而生，并得到了行业的广泛关注，包括主要的云提供商和 SaaS 公司。对于CloudEvent的介绍、规范说明及实践落地，将以三篇系列文章进行说明，本文为《CloudEvent三部曲:初识篇》.">
+<meta name="twitter:image" content="https://s3.ax1x.com/2020/12/20/ra5EQA.png">
 
 
 
@@ -127,7 +127,7 @@
 
 
 
-  <link rel="canonical" href="https://ustack.io/2020-06-12-Serverless函数小解.html">
+  <link rel="canonical" href="https://ustack.io/2020-12-20-CloudEvents三部曲:初识篇.html">
 
 
 
@@ -137,7 +137,7 @@
   };
 </script>
 
-  <title>Serverless函数小解 | Indagate</title>
+  <title>CloudEvents三部曲:初识篇 | Indagate</title>
   
 
 
@@ -305,7 +305,7 @@
   
   
   <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2020-06-12-Serverless函数小解.html">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2020-12-20-CloudEvents三部曲:初识篇.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zouyee">
@@ -320,10 +320,10 @@
     
     <div class="head">
         <div class="gr_up_title">
-          <span class="text-overflow-center">Serverless函数小解</span>
+          <span class="text-overflow-center">CloudEvents三部曲:初识篇</span>
         </div>
         <div class="gr_blog_post_cat">
-          <span class="gr_ddate">6月 12 2020</span><span class="gr_separate">|</span>
+          <span class="gr_ddate">12月 20 2020</span><span class="gr_separate">|</span>
           
             
               <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
@@ -332,7 +332,7 @@
         <div class="gr_blog_post_title_holder">
         
           
-          <h3 class="blog_title" itemprop="name headline">Serverless函数小解
+          <h3 class="blog_title" itemprop="name headline">CloudEvents三部曲:初识篇
               
             
           </h3>
@@ -357,24 +357,12 @@
                 
               
 
-              <time title="创建时间：6月 12 2020 21:40:08" itemprop="dateCreated datePublished" datetime="2020-06-12T21:40:08+08:00">6月 12 2020</time>
+              <time title="创建时间：12月 20 2020 20:40:08 / 修改时间：19:22:49" itemprop="dateCreated datePublished" datetime="2020-12-20T20:40:08+08:00">12月 20 2020</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：6月 21 2020 20:55:23" itemprop="dateModified" datetime="2020-06-21T20:55:23+08:00">6月 21 2020</time>
               
             
           </span>
@@ -388,8 +376,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020-06-12-Serverless函数小解.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020-06-12-Serverless函数小解.html" itemprop="commentCount"></span>
+                <a href="/2020-12-20-CloudEvents三部曲:初识篇.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020-12-20-CloudEvents三部曲:初识篇.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -397,7 +385,7 @@
 
           
           
-             <span id="/2020-06-12-Serverless函数小解.html" class="leancloud_visitors" data-flag-title="Serverless函数小解">
+             <span id="/2020-12-20-CloudEvents三部曲:初识篇.html" class="leancloud_visitors" data-flag-title="CloudEvents三部曲:初识篇">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -433,107 +421,35 @@
     <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
     
       
-        <p><img src="https://s1.ax1x.com/2020/06/21/N8MiqS.md.png" alt></p>
-<div class="note info"><p>本文介绍当前serverless框架的函数概念，Serverless框架还允许用户监视代码存储库中的更改（例如代码触发器等），并在每次提交时自动构建函数镜像。函数代码、依赖项和/或二进制文件可以驻留在外部存储库（例如S3对象存储桶或Git存储库）中，或由用户直接提供。如果代码在外部存储库中，则用户需要指定路径和接入凭证。函数可能依赖于外部库或二进制文件，这些需要由用户提供，包括描述其构建过程的方式（例如，使用 Dockerfile、Zip等）。另外，可以通过一些二进制打包（例如OCI镜像）将函数提供给框架。</p></div>
+        <p><img src="https://s3.ax1x.com/2020/12/20/ra5EQA.png" alt></p>
+<div class="note info"><p>随着云原生的发展（云原生的下一个五年在哪里？），逐步进入深水区，业界需要一种统一的事件定义和描述规范，以提供跨服务、跨平台的交互能力。CloudEvents事件规范应运而生，并得到了行业的广泛关注，包括主要的云提供商和 SaaS 公司。<br>对于CloudEvent的介绍、规范说明及实践落地，将以三篇系列文章进行说明，本文为《CloudEvent三部曲:初识篇》.</p></div>
 <a id="more"></a>
-<p>接下来让我们介绍一下serverless函数概念。</p>
 <hr>
-<h4 id="一、函数定义"><a href="#一、函数定义" class="headerlink" title="一、函数定义"></a>一、函数定义</h4><p>函数代码、依赖项或二进制文件可以驻留在外部存储库（例如S3对象存储桶或Git存储库）中，或由用户直接提供。如果代码在外部存储库中，则用户需要指定路径和凭据。Serverless 框架还允许用户 watch 代码存储库中的更改（例如，使 Webhook），并在每次提交时自动构建函数镜像/二进制文件。函数可能依赖于外部库或二进制文件，这些需要由用户提供，包括描述其构建过程的方式（例如，使用 Dockerfile、Zip）。另外，可以通过一些二进制打包（例如OCI镜像）将函数提供给框架。</p>
-<h5 id="函数定义"><a href="#函数定义" class="headerlink" title="函数定义"></a>函数定义</h5><p>Serverless 函数定义可能包含以下规范和元数据，该函数定义：</p>
+<h4 id="一、规范背景"><a href="#一、规范背景" class="headerlink" title="一、规范背景"></a>一、规范背景</h4><h5 id="需求背景"><a href="#需求背景" class="headerlink" title="需求背景"></a>需求背景</h5><p>事件在系统设计中已经变的无处不在，但各类事件的提供方倾向于以不同的方式来描述事件，缺乏一种对事件的统一描述，事件使用方和提供方往往要花费大量的时间沟通字段定义，设计事件属性，并在将来的使用过程中疲于新增或修改事件的属性。这也限制了类库、工具和基础设施在跨环境时发送事件数据的潜力，如SDK、事件路由器或跟踪系统等。</p>
+<p>随着云原生的发展（云原生的下一个五年在哪里？），逐步进入深水区，业界需要一种统一的事件定义和描述规范，以提供跨服务、跨平台的交互能力。CloudEvents事件规范应运而生，并得到了行业的广泛关注，包括主要的云提供商和 SaaS 公司。</p>
+<h5 id="历史背景"><a href="#历史背景" class="headerlink" title="历史背景"></a>历史背景</h5><p>CloudEvents 是一种以通用方式描述事件数据的供应商中立的规范，该事件数据定义规范旨在简化跨服务，平台及其他方面的事件声明和发送。</p>
+<p> CloudEvents 的相关工作最初是作为云原生计算基金会（Cloud Native Computing Foundation，简称 CNCF）Serverless工作组的一部分开展的，当规范达到v0.1的里程碑之后，于2018年5月15日获得技术监督委员会（Technical Oversight Committee，简称 TOC）批准作为一个全新的独立的CNCF沙盒项目。</p>
+<p>2019年10月24日，CloudEvents项目取得了两项重大成果。第一，CNCF的技术监督委员会批准该项目成为 “孵化器“项目（从而使其从CNCF的“沙盒”毕业）。第二，CloudEvents规范发布了1.0版本，这是该规范的第一个主要版本！</p>
+<h6 id="现状"><a href="#现状" class="headerlink" title="现状"></a>现状</h6><p>目前各大第三方云提供商都在大力推广落地CloudEvents规范，例如：</p>
 <ul>
-<li>唯一ID</li>
-<li>名称</li>
-<li>说明</li>
-<li>Label（或tag）</li>
-<li>版本ID/或版本别名</li>
-<li>版本创建时间</li>
-<li>上次修改时间（函数定义）</li>
-<li>函数处理程序</li>
-<li>运行时语言</li>
-<li>代码 + 依赖关系或代码路径和凭据</li>
-<li>环境变量</li>
-<li>执行角色和密钥</li>
-<li>资源（所需的 CPU、内存）</li>
-<li>执行超时处理</li>
-<li>日志记录失败（Dead Letter Queue，）</li>
-<li>网络策略/VPC</li>
-<li>数据绑定</li>
-<li>网关接入等</li>
+<li>2018年，微软宣布将通过Event Grid服务（一项由Azure集中管理的事件服务，支持用户通过“发布-订阅”机制发送和接收事件）提供对CloudEvents的支持</li>
+<li>2019年，阿里云开始推广 OpenMessaging 标准协议，希望让 Apache RocketMQ 兼容 Cloudevent 体系，成为 Serverless 的桥梁</li>
+<li>2020年，字节跳动在其函数计算产品中利用CloudEvents规范统一事件源标准，极大方便之后的能力扩展。</li>
 </ul>
-<blockquote>
-<p>Dead Letter Queue<br>中文译作“死信队列”，在消息队列中，死信队列是一种服务实现，用于存储满足以下一个或多个条件的消息： 发送到不存在的队列的消息。 超出队列长度限制。 超<br>出了邮件长度限制。 消息被另一个队列交换拒绝。 消息达到阈值读取计数器编号，因为它没有被消耗。有时这被称为“退出队列”。 存储这些消息的死信队列允许<br>开发人员查找常见模式和潜在的软件问题。</p>
-</blockquote>
+<p>但大多数云目前缺乏CloudEvents规范的相应支持，导致各能力服务之间的联动效率较差，该问题丞待解决。</p>
 <hr>
-<h4 id="二、元数据"><a href="#二、元数据" class="headerlink" title="二、元数据"></a>二、元数据</h4><p>函数框架可能包括以下函数元数据：</p>
-<ul>
-<li>版本：每个函数版本应具有唯一的标识符，此外，可以使用一个或多个别名（例如“latest”、“production”、“beta”）来标记版本。API 网关和事件源会将流<br>量/事件路由到特定的函数版本。</li>
-<li>环境变量：用户可以指定在运行时将提供给函数的环境变量。环境变量也可以从机密和加密的内容派生，也可以从平台变量派生（例如，像Kubernetes EnvVar定<br>义）。环境变量使开发人员能够控制函数行为和参数，而无需修改代码和/或重建函数，从而获得更好的开发人员体验和函数重用。</li>
-<li>执行角色：该函数应在特定的用户或角色身份下运行，以授予和审核其对平台资源的访问权限。</li>
-<li>资源：定义所需或最大的硬件资源，例如函数使用的内存和CPU。</li>
-<li>超时：指定函数调用在平台终止之前可以运行的最长时间。</li>
-<li>故障日志（死信队列）：队列或流的路径，它将存储具有适当详细信息的失败函数执行列表。</li>
-<li>网络策略：分配给函数的网络域和策略（函数与外部服务/资源进行通信）。</li>
-<li>执行语义：指定应如何执行函数（例如，每个事件至少执行一次，最多执行一次，恰好一次）。</li>
-</ul>
+<h4 id="二、规范优势"><a href="#二、规范优势" class="headerlink" title="二、规范优势"></a>二、规范优势</h4><p>从历史上看，行业缺乏描述无服务器的事件元数据的标准，这意味着开发人员需要重新学习如何跨系统使用各种类型的事件数据，从而难以构建可移植的工具。 CloudEvents 定义了一套一致的元数据，且首次将业界的云供应商、企业软件巨头和初创企业的无服务器社区聚集在一起，实现并支持该规范。</p>
+<p>CloudEvents 具有如下一些优势：</p>
+<h5 id="消费优势"><a href="#消费优势" class="headerlink" title="消费优势"></a>消费优势</h5><p>生产者生产事件供消费者使用时，由于使用了 CloudEvents 规范，消费者不再需要为平台或服务的差异性编写特定的消费逻辑，改而使用通用逻辑处理事件数据，方便事件消费者提高开发效率，并降低系统复杂度。例如：阿里云的事件总线 EventBridge，微软Azure的Event Grid服务都极大方便了产品的端到端集成。</p>
+<h5 id="路由优势"><a href="#路由优势" class="headerlink" title="路由优势"></a>路由优势</h5><p>中间件将事件从生产者路由到消费者，或者转发到其他中间件的时，CloudEvents会保留事件的身份和语义完整性。 用于事件的分类过滤或元数据的鉴别。例如：消费者利用过滤功能只关注特定用户；或者利用元数据鉴别只接收后缀为 .doc 的新建文件等。</p>
+<p>利用 CloudEvents中间件可以在改变事件的语义含义时承担生成器的角色，在基于事件采取行动时承担消费者的角色，或在路由事件不进行语义更改时承担中间件的角色。例如： Apache RocketMQ 社区发布的OpenMessaging 标准协议兼容CloudEvents规范，从而成为 Serverless 的桥梁，更加高效广泛的进行消息路由。</p>
+<h5 id="交互优势"><a href="#交互优势" class="headerlink" title="交互优势"></a>交互优势</h5><p>利用 CloudEvents系统框架对内解耦各模块的通信能力，提高可维护性；对外与其他事件平台基础设施的交互将更简单，并且方便为其他平台设施提供通用 API，降低交互的复杂性，提高系统平台的扩展性。</p>
 <hr>
-<h4 id="三、数据绑定"><a href="#三、数据绑定" class="headerlink" title="三、数据绑定"></a>三、数据绑定</h4><p>某些 Serverless 框架允许用户指定函数使用的输入/输出数据资源，这使开发变得更简单，性能更高（在执行期间保留数据连接，可以预取数据等）以及更好的安全<br>性（数据资源凭据是上下文的一部分，而不是代码）。</p>
-<p>绑定数据可以采用文件、对象、记录、消息等形式，函数说明可以包括一组数据绑定定义，每个定义都指定数据资源、其凭证和使用参数。数据绑定可以引用事件数据<br>（例如，DB 键是从事件 “username” 字段派生的）</p>
-<hr>
-<h4 id="四、函数输入"><a href="#四、函数输入" class="headerlink" title="四、函数输入"></a>四、函数输入</h4><p>函数输入包括事件数据和元数据，并且可以包括上下文对象。</p>
-<p><strong><em>事件数据和元数据</em></strong></p>
-<p>事件详细信息应传递给函数处理程序，不同的事件可能具有不同的元数据，因此希望函数能够确定事件的类型并轻松解析公共和特定于事件的元数据。</p>
-<p>可能需要将事件类与实现分离，例如：不管流存储是 Kafka 还是 Kinesis，处理消息流的函数都可以运行。在这两种情况下，它将接收消息正文和事件元数据，消</p>
-<p>息可能在不同框架之间路由。</p>
-<p>事件可以包括单个记录（例如，在请求/响应模型中），也可以接受多个记录或微批处理（例如，在流模式中）。</p>
-<p>FaaS 解决方案使用的常见事件数据和元数据的示例：</p>
-<ul>
-<li>Event Class/Kind</li>
-<li>版本</li>
-<li>事件 ID</li>
-<li>Event Source/Origin</li>
-<li>来源身份</li>
-<li>内容类型</li>
-<li>邮件正文</li>
-<li>时间戳记</li>
-</ul>
-<p>事件/记录特定元数据的示例</p>
-<ul>
-<li>HTTP：Path、Method、Header、查询参数</li>
-<li>消息队列：Topic、Header</li>
-<li>记录流（Record Stream）：表、键、操作、修改时间、旧字段、新字段</li>
-</ul>
-<p>事件源结构的示例：</p>
-<ul>
-<li><a href="http://docs.aws.amazon.com/lambda/latest/dg/eventsources.html" target="_blank" rel="noopener">http://docs.aws.amazon.com/lambda/latest/dg/eventsources.html</a></li>
-<li><a href="https://docs.microsoft.com/zh-cn/azure/azure-functions/functions-triggers-bindings" target="_blank" rel="noopener">https://docs.microsoft.com/zh-cn/azure/azure-functions/functions-triggers-bindings</a></li>
-<li><a href="https://cloud.google.com/functions/docs/concepts/events-triggers" target="_blank" rel="noopener">https://cloud.google.com/functions/docs/concepts/events-triggers</a></li>
-</ul>
-<p>一些实现将 JSON 视为将事件信息传递给函数的机制。对于高速函数（例如，流处理）或低能耗设备（IoT），这可能会增加大量的序列化/反序列化开销。在这些情况</p>
-<p>下，可能值得考虑使用本地语言结构或其他序列化机制。</p>
-<hr>
-<h4 id="五、函数上下文"><a href="#五、函数上下文" class="headerlink" title="五、函数上下文"></a>五、函数上下文</h4><p>调用函数时，框架可能希望提供对跨多个函数调用的平台资源或常规属性的访问，而不是将所有静态数据放入事件中或强制该函数在每次调用时初始化平台服务。上下文（Context）可以是一组输入属性、环境变量或全局变量。有的实现将这三者结合使用。</p>
-<p>上下文示例：</p>
-<ul>
-<li>函数名称、版本、ARN</li>
-<li>内存限制</li>
-<li>请求 ID</li>
-<li>Cloud Region</li>
-<li>环境变量</li>
-<li>安全密钥/令牌</li>
-<li>运行时/绑定路径</li>
-<li>日志</li>
-<li>数据绑定</li>
-</ul>
-<p>有的实现初始化日志对象（例如， AWS 中的全局变量或 Azure 中的部分上下文），用户可以使用平台集成的工具查看日志来跟踪函数执行。除了传统的日志记录，未来的实现可能会将计数器/监控和跟踪活动抽象为平台上下文的一部分，以进一步提高函数的可用性。数据绑定是函数上下文的一部分，平台根据用户配置启动与外部数据资源的连接，并且这些连接可以在多个函数调用之间重用。</p>
-<hr>
-<h4 id="五、函数输出"><a href="#五、函数输出" class="headerlink" title="五、函数输出"></a>五、函数输出</h4><p>当函数退出时，它可能：</p>
-<ul>
-<li>将值返回给调用方（例如，在 HTTP 请求/响应示例中）</li>
-<li>将结果传递到工作流程中的下一个执行阶段</li>
-<li>将输出写入日志</li>
-</ul>
-<p>应该有确定的方式通过返回的错误值或退出代码来知道函数是成功还是失败。</p>
-<p>函数输出可以是结构化的（例如 HTTP 响应对象）或非结构化的（例如某些输出字符串）。</p>
+<h4 id="三、落地场景"><a href="#三、落地场景" class="headerlink" title="三、落地场景"></a>三、落地场景</h4><p>CloudEvents 在如下场景中有广泛的应用价值：</p>
+<h5 id="跨平台和服务的事件规范化"><a href="#跨平台和服务的事件规范化" class="headerlink" title="跨平台和服务的事件规范化"></a>跨平台和服务的事件规范化</h5><p>不同的云提供商都在各自的平台上以不同的格式发布事件，此外同一云提供商上的不同服务也可能以不同的格式发布事件。这就迫使事件消费者不得不针对各类平台或各类服务编写针对性逻辑来消费事件数据。而CloudEvents 可以为处理跨平台和跨服务的事件的消费者提供统一的体验。</p>
+<h5 id="事件追踪"><a href="#事件追踪" class="headerlink" title="事件追踪"></a>事件追踪</h5><p>从事件源发送的事件可能会导致各种中间件设备（如事件代理和网关）产生的附加事件序列。利用CloudEvents 包含事件的元数据这一特性（例如：事件经过多个代理时，代理会将自身IP追加到CloudEvents扩展属性中，最终事件消费者可以通过扩展属性中的 IP 信息，知道事件经过哪些代理），可以将这些附加的事件信息作为源事件序列的一部分进行关联，从而进行事件追踪和故障排除。</p>
+<h5 id="提高Serverless的可移植性"><a href="#提高Serverless的可移植性" class="headerlink" title="提高Serverless的可移植性"></a>提高Serverless的可移植性</h5><p>Serverless（也称无服务器计算）是IT领域发展最快的趋势之一，它主要是由事件驱动。然而，供应商的锁定是FaaS的一个主要问题，这种锁定部分主要是由于各供应商函数内部接收事件数据的格式差异造成的。CloudEvents 对事件数据的通用描述方式解决了该问题，从而提高了FaaS的可移植性。</p>
+<p>微软Azure的Event Grid事件服务提供了对CloudEvens的支持，用户可以将自己的CloudEvents推送到指定的Azure Grid Event主题（topic）。此后，Grid Event支持将符合CloudEvent模式的事件转换为符合特定Event Grid模式的事件，或者反之。</p>
 <hr>
 <h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul>
 <li><a href="https://www.bookstack.cn/read/serverless-handbook/core-function-code.md" target="_blank" rel="noopener">function</a></li>
@@ -629,7 +545,7 @@ jQuery.noConflict()(function ($) {
     <strong>本文作者： </strong>zouyee</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://ustack.io/2020-06-12-Serverless函数小解.html" title="Serverless函数小解">https://ustack.io/2020-06-12-Serverless函数小解.html</a>
+    <a href="https://ustack.io/2020-12-20-CloudEvents三部曲:初识篇.html" title="CloudEvents三部曲:初识篇">https://ustack.io/2020-12-20-CloudEvents三部曲:初识篇.html</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -657,8 +573,8 @@ jQuery.noConflict()(function ($) {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020-06-12-Serverless功能特性.html" rel="next" title="Serverless功能特性">
-                <i class="fa fa-chevron-left"></i> Serverless功能特性
+              <a href="/2020-12-06-关于Kubernetes废弃内置docker说明.html" rel="next" title="关于Kubernetes废弃内置docker CRI功能的说明">
+                <i class="fa fa-chevron-left"></i> 关于Kubernetes废弃内置docker CRI功能的说明
               </a>
             
           </div>
@@ -667,8 +583,8 @@ jQuery.noConflict()(function ($) {
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020-06-15-CloudEvents核心规范之一.html" rel="prev" title="CloudEvents核心规范之一">
-                CloudEvents核心规范之一 <i class="fa fa-chevron-right"></i>
+              <a href="/2020-12-20-CloudEvents三部曲:规范篇.html" rel="prev" title="CloudEvents三部曲:规范篇">
+                CloudEvents三部曲:规范篇 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -989,7 +905,7 @@ jQuery.noConflict()(function ($) {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、函数定义"><span class="nav-number">1.</span> <span class="nav-text">一、函数定义</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#函数定义"><span class="nav-number">1.1.</span> <span class="nav-text">函数定义</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、元数据"><span class="nav-number">2.</span> <span class="nav-text">二、元数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、数据绑定"><span class="nav-number">3.</span> <span class="nav-text">三、数据绑定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、函数输入"><span class="nav-number">4.</span> <span class="nav-text">四、函数输入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、函数上下文"><span class="nav-number">5.</span> <span class="nav-text">五、函数上下文</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、函数输出"><span class="nav-number">6.</span> <span class="nav-text">五、函数输出</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考资料"><span class="nav-number">7.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、规范背景"><span class="nav-number">1.</span> <span class="nav-text">一、规范背景</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#需求背景"><span class="nav-number">1.1.</span> <span class="nav-text">需求背景</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#历史背景"><span class="nav-number">1.2.</span> <span class="nav-text">历史背景</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#现状"><span class="nav-number">1.2.1.</span> <span class="nav-text">现状</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、规范优势"><span class="nav-number">2.</span> <span class="nav-text">二、规范优势</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#消费优势"><span class="nav-number">2.1.</span> <span class="nav-text">消费优势</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#路由优势"><span class="nav-number">2.2.</span> <span class="nav-text">路由优势</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#交互优势"><span class="nav-number">2.3.</span> <span class="nav-text">交互优势</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、落地场景"><span class="nav-number">3.</span> <span class="nav-text">三、落地场景</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#跨平台和服务的事件规范化"><span class="nav-number">3.1.</span> <span class="nav-text">跨平台和服务的事件规范化</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#事件追踪"><span class="nav-number">3.2.</span> <span class="nav-text">事件追踪</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#提高Serverless的可移植性"><span class="nav-number">3.3.</span> <span class="nav-text">提高Serverless的可移植性</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
             
 
           </div>
