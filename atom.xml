@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://ustack.io/"/>
-  <updated>2020-12-20T11:19:35.676Z</updated>
+  <updated>2021-01-06T13:51:35.975Z</updated>
   <id>https://ustack.io/</id>
   
   <author>
@@ -15,6 +15,37 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Kubernetes调度由浅入深：初探</title>
+    <link href="https://ustack.io/2021-01-08-Kubernetes%20%E8%B0%83%E5%BA%A6%E7%B3%BB%E7%BB%9F%E5%88%9D%E6%8E%A2.html"/>
+    <id>https://ustack.io/2021-01-08-Kubernetes 调度系统初探.html</id>
+    <published>2021-01-08T04:40:08.000Z</published>
+    <updated>2021-01-06T13:51:35.975Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="https://upload.wikimedia.org/wikipedia/commons/6/67/Kubernetes_logo.svg" alt></p><div class="note default"><p>从CNCF基金会的成立，到Kubernetes社区蓬勃发展，历经6载，17年异军突起，在mesos、swarm等项目角逐中，拔得头筹，继而一统容器编排,其成功的关键原因可概括为以下几点：</p><ul><li>项目领导者们的坚守与远见</li><li>社区的良好的运作与社区文化</li><li>社区与企业落地的正反馈</li></ul><p>虽然针对kubernetes的介绍已经比较多了，但是云原生还是Kubernetes项目的发展都已经迈入深水区，因而今天zouyee为大家带来《kuberneter调度由浅入深》，希望通过接下来的五篇文章，让各位能够系统深入的了解kubernetes调度系统，该系列对应版本为<code>1.20.+</code>，今天带来《Kubernetes调度系统由浅入深系列：初探》</p></div><a id="more"></a><hr><h4 id="一、调度简介"><a href="#一、调度简介" class="headerlink" title="一、调度简介"></a>一、调度简介</h4><p>​    在开始前，先来看看Kubernetes的架构示意图，其中控制平面包含以下三大组件：kube-scheduler、kube-apiserver、kube-controller-manager。kubelet及kube-proxy组件的分析我们后续单独成章进行讲解，现在我们可以简单给理解上述组件的难易程度排个序，kube-apiserver、kubelet、kube-scheduler、kube-controller-manager、kube-proxy。</p><p><img src="https://d33wubrfki0l68.cloudfront.net/2475489eaf20163ec0f54ddc1d92aa8d4c87c96b/e7c81/images/docs/components-of-kubernetes.svg" alt="Components of Kubernetes"></p><div class="note danger"><p>​    如上所述，<code>kube-scheduler</code>是K8S系统的核心组件之一，其主要负责Pod的调度，其监听kube-apiserver，查询未分配 Node的Pod（未分配、分配失败及尝试多次无法分配），根据配置的调度策略，将Pod调度到最优的工作节点上，从而高效、合理的利用集群的资源，该特性是用户选择K8S系统的关键因素之一，帮助用户提升效率、降低能耗。</p></div><p>​    <code>kube-scheduler</code> 负责将Pod 调度到集群内的<em>最佳节点</em>(基于相应策略计算出的最佳值)上，它监听<code>kube-apiserver</code>，查询还未分配节点 的 Pod，然后根据调度策略为这些 Pod 分配节点，执行绑定节点的操作(更新Pod的<strong>nodeName</strong>字段)。</p><p>​    在上述过程中，需要考虑以下问题：</p><ul><li>如何确保节点分配的公平性</li><li>如何确保节点资源分配的高效性</li><li>如何确保Pod调度的公平性</li><li>如何确保Pod调度的高效性</li><li>如何扩展Pod调度策略</li></ul><p>为解决上述的问题，<code>kube-scheduler</code>通过汇集节点资源、节点地域、节点镜像、Pod调度等信息综合决策，确保Pod分配到最佳节点，以下为<code>kube-scheduler</code>的主要目标：</p><ul><li>公平性：在调度Pod时需要公平的决策，每个节点都有被分配的机会，调度器需要针对不同节点作出平衡决策。</li><li>资源高效：最大化提升所有可调度资源的利用率，使有限的CPU、内存等资源服务尽可能更多的Pod。</li><li>性能：能快速的完成对大规模Pod的调度工作，在集群规模扩增的情况下，依然能确保调度的性能。</li><li>灵活性：在实际生产中，用户希望Pod的调度策略是可扩展的，从而可以定制化调度算法以处理复杂的实际问题。因此平台要允许多种调度器并行工作，并支持自定义调度器。</li></ul><h4 id="二、调度流程"><a href="#二、调度流程" class="headerlink" title="二、调度流程"></a>二、调度流程</h4><p>首先我们通过下面的整体的交互图，来构建Pod调度的直观感受。</p><p><img src="https://s3.ax1x.com/2021/01/06/sZ9Aun.png" alt></p><p>上述以创建一个Pod为例，简要介绍调度流程：</p><ol><li><p>用户通过命令行创建Pod(选择直接创建Pod而不是其他workload，是为了省略kube-controller-manager)</p></li><li><p>kube-apiserver经过对象校验、admission、quota等准入操作，写入etcd</p></li><li>kube-apiserver将结果返回给用户</li><li>同时kube-scheduler一直监听节点、Pod事件等（流程1）</li><li>kube-scheduler将spec.nodeName的pod加入到调度队列中，进行调度周期（该周期即位后续介绍内容）（流程2-3）</li><li>kube-scheduler将pod与得分最高的节点进行binding操作（流程4）</li><li>kube-apiserver将binding信息写入etcd</li><li>kubelet监听分配给自己的Pod，调用CRI接口进行Pod创建（该部分内容后续出系列，进行介绍）</li><li>kubelet创建Pod后，更新Pod状态等信息，并向kube-apiserver上报</li><li>kube-apiserver写入数据</li></ol><h5 id="调度周期"><a href="#调度周期" class="headerlink" title="调度周期"></a>调度周期</h5><p><code>kube-scheduler</code>的工作任务是根据各种调度算法将Pod绑定（bind）到最合适的工作节点，整个调度流程分为两个阶段：过滤和评分。流程示意图如下所示。</p><p><img src="https://s3.ax1x.com/2021/01/06/sZ9lv9.png" alt></p><p>​    注：以前称之为predicate与priorities，当前统称为过滤与评分，实际效果一致</p><ul><li><p><strong>过滤</strong>：输入是所有节点，输出是满足预选条件的节点。<code>kube-scheduler</code>根据过滤策略过滤掉不满足的节点。例如，如果某节点的资源不足或者不满足预选策略的条件如“节点的标签必须与Pod的Selector一致”时则无法通过过滤。</p></li><li><p><strong>评分：</strong>输入是通过过滤阶段的节点，评分时会根据评分算法为通过过滤的节点进行打分，选择得分最高的节点。例如，资源越充足、负载越小的节点可能具有越高的排名。</p></li></ul><p>​    通俗点说，调度的过程就是在回答两个问题：1. 候选节点有哪些？2. 其中最适合的是哪一个？</p><p>​    如果在过滤阶段没有节点满足条件，Pod会一直处在Pending状态直到出现满足的节点，在此期间调度器会不断的进行重试。如果有多个节点评分一致，那么<code>kube-scheduler</code>任意选择其一。</p><p>​    注：Pod首先进入调度队列，失败后进入backoff，多次失败后进入unschedule，该部分内容后续介绍。</p><h5 id="调度算法"><a href="#调度算法" class="headerlink" title="调度算法"></a>调度算法</h5><p>当前支持两种方式配置过滤、评分算法：</p><pre><code>1. Scheduling Policies：通过文件或者configmap配置Predicate算法(过滤)和 Priorities算法(评分)的算法 2. Scheduling Profiles：当前调度系统为插拔架构，其将调度周期分为 `QueueSort`、`PreFilter`、`Filter`、`PreScore`、`Score`、`Reserve`、`Permit`、`PreBind`、`Bind`、`PostBind`等阶段，通过定制调度周期中不同阶段的插件行为来实现自定义。</code></pre><p>下面简单介绍一下通过Scheduling Policies方式配置</p><p><code>pkg/scheduler/framework/plugins/legacy_registry.go</code></p><p> <strong><em>预选(Precates)</em></strong></p><table><thead><tr><th>算法名称</th><th>算法含义</th></tr></thead><tbody><tr><td>MatchInterPodAffinity</td><td>检查pod资源对象与其他pod资源对象是否符合亲和性规则</td></tr><tr><td>CheckVolumeBinding</td><td>检查节点是否满足pod资源对象的pvc挂载需求</td></tr><tr><td>GeneralPredicates</td><td>检查节点上pod资源对象数量的上线，以及CPU 内存 GPU等资源是否符合要求</td></tr><tr><td>HostName</td><td>检查Pod指定的NodeName是否匹配当前节点</td></tr><tr><td>PodFitsHostPorts</td><td>检查Pod容器所需的HostPort是否已被节点上其它容器或服务占用。如果已被占用，则禁止Pod调度到该节点</td></tr><tr><td>MatchNodeSelector</td><td>检查Pod的节点选择器是否与节点的标签匹配</td></tr><tr><td>PodFitsResources</td><td>检查节点是否有足够空闲资源（例如CPU和内存）来满足Pod的要求</td></tr><tr><td>NoDiskConflict</td><td>检查当前pod资源对象使用的卷是否与节点上其他的pod资源对象使用的卷冲突</td></tr><tr><td>PodToleratesNodeTaints</td><td>如果当前节点被标记为taints，检查pod资源对象是否能容忍node taints</td></tr><tr><td>CheckNodeUnschedulable</td><td>检查节点是否可调度</td></tr><tr><td>CheckNodeLabelPresence</td><td>检查节点标签是否存在</td></tr><tr><td>CheckServiceAffinity</td><td>检查服务亲和性</td></tr><tr><td>MaxCSIVolumeCountPred</td><td>如果设置了featuregate （attachvolumelimit）功能，检查pod资源对象挂载的csi卷是否超出了节点上卷的最大挂载数量</td></tr><tr><td>NoVolumeZoneConflict</td><td>检查pod资源对象挂载pvc是否属于跨区域挂载，因为gce的pd存储或aws的ebs卷都不支持跨区域挂载</td></tr><tr><td>EvenPodsSpreadPred</td><td>一组 Pod 在某个 TopologyKey 上的均衡打散需求</td></tr></tbody></table><p>注：其中 MaxEBSVolumeCountPred、 MaxGCEPDVolumeCountPred  MaxAzureDiskVolumeCountPred、MaxCinderVolumeCountPred 等云厂商相关预选算法已经废弃</p><p><strong><em>优选(Priorities)</em></strong></p><table><thead><tr><th>算法名称</th><th>算法含义</th></tr></thead><tbody><tr><td>EqualPriority</td><td>节点权重相等</td></tr><tr><td>MostRequestedPriority</td><td>偏向具有最多请求资源的节点。这个策略将把计划的Pods放到整个工作负载集所需的最小节点上运行。</td></tr><tr><td>RequestedToCapacityRatioPriority</td><td>使用默认的资源评分函数模型创建基于ResourceAllocationPriority的requestedToCapacity。</td></tr><tr><td>SelectorSpreadPriority</td><td>将属于相同service rcs rss sts 的pod尽量调度在不同的节点上</td></tr><tr><td>ServiceSpreadingPriority</td><td>对于给定的服务，此策略旨在确保Service的Pods运行在不同的节点上。总的结果是，Service对单个节点故障变得更有弹性。</td></tr><tr><td>InterPodAffinityPriority</td><td>基于亲和性（affinity）和反亲和性（anti-affinity）计算分数</td></tr><tr><td>LeastRequestdPriority</td><td>偏向使用较少请求资源的节点。换句话说，放置在节点上的Pod越多，这些Pod使用的资源越多，此策略给出的排名就越低。</td></tr><tr><td>BalancedRequestdPriority</td><td>计算节点上cpu和内存的使用率，使用率最均衡的节点最优</td></tr><tr><td>NodePreferAvoidPodsPriority</td><td>基于节点上定义的注释（annotaion）记分，注释中如果定义了alpha.kubernetes.io/preferAvoidPods则会禁用ReplicationController或者将ReplicaSet的pod资源对象调度在该节点上</td></tr><tr><td>NodeAffinityPriority</td><td>基于节点亲和性计算分数</td></tr><tr><td>TaintTolerationPriority</td><td>基于污点（taint）和容忍度（toleration）是否匹配计算分数</td></tr><tr><td>ImageLocalityPriority</td><td>基于节点上是否已经下拉了运行pod资源对象的镜像计算分数</td></tr><tr><td>EvenPodsSpreadPriority</td><td>用来指定一组符合条件的 Pod 在某个拓扑结构上的打散需求</td></tr></tbody></table>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;https://upload.wikimedia.org/wikipedia/commons/6/67/Kubernetes_logo.svg&quot; alt&gt;&lt;/p&gt;
+&lt;div class=&quot;note default&quot;&gt;&lt;p&gt;从CNCF基金会的成立，到Kubernetes社区蓬勃发展，历经6载，17年异军突起，在mesos、swarm等项目角逐中，拔得头筹，继而一统容器编排,其成功的关键原因可概括为以下几点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;项目领导者们的坚守与远见&lt;/li&gt;
+&lt;li&gt;社区的良好的运作与社区文化&lt;/li&gt;
+&lt;li&gt;社区与企业落地的正反馈&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;虽然针对kubernetes的介绍已经比较多了，但是云原生还是Kubernetes项目的发展都已经迈入深水区，因而今天zouyee为大家带来《kuberneter调度由浅入深》，希望通过接下来的五篇文章，让各位能够系统深入的了解kubernetes调度系统，该系列对应版本为&lt;code&gt;1.20.+&lt;/code&gt;，今天带来《Kubernetes调度系统由浅入深系列：初探》&lt;/p&gt;&lt;/div&gt;
+    
+    </summary>
+    
+      <category term="Kubernetes GO" scheme="https://ustack.io/categories/Kubernetes-GO/"/>
+    
+    
+      <category term="kubernetes" scheme="https://ustack.io/tags/kubernetes/"/>
+    
+      <category term="cloudnative" scheme="https://ustack.io/tags/cloudnative/"/>
+    
+  </entry>
   
   <entry>
     <title>CloudEvents三部曲:实践篇</title>
@@ -472,30 +503,6 @@
       <category term="cloudnative" scheme="https://ustack.io/tags/cloudnative/"/>
     
       <category term="grpc" scheme="https://ustack.io/tags/grpc/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>下一代云原生网关Gloo之架构赏析</title>
-    <link href="https://ustack.io/2020-05-06-%E4%B8%8B%E4%B8%80%E4%BB%A3%E4%BA%91%E5%8E%9F%E7%94%9F%E7%BD%91%E5%85%B3Gloo:%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5.html"/>
-    <id>https://ustack.io/2020-05-06-下一代云原生网关Gloo:相关概念.html</id>
-    <published>2020-05-06T12:40:08.000Z</published>
-    <updated>2020-05-21T13:25:30.795Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="https://s1.ax1x.com/2020/05/21/YqsrWR.md.png" alt></p><div class="note info"><p>Gloo聚合后端服务并为客户端提供端到端的功能转换，从而允许与后端API分离。客户端向在Gloo上定义的路由发出请求或<a href="https://github.com/solo-io/gloo-sdk-go" target="_blank" rel="noopener">发出事件</a>。 这些路由<br>通过Gloo的配置（由Gloo的API的客户端提供）在上游服务起作用。</p></div><p>Gloo在客户端定义的路由和后端功能之间执行必要的转换，能够<br>通过其可扩展的<a href="https://github.com/solo-io/gloo/blob/master/projects/gloo/pkg/plugins/plugin_interface.go" target="_blank" rel="noopener">插件接口</a>支持各种上游功能。<br><a id="more"></a></p><p>Gloo在所有功能上均提供一流的API管理功能:</p><ul><li>超时</li><li>指标和追踪</li><li>健康检查</li><li>重试</li><li>高级负载平衡</li><li>具有SNI支持的TLS终止</li><li>HTTP标头修改</li></ul><hr><h3 id="一、Gloo组件"><a href="#一、Gloo组件" class="headerlink" title="一、Gloo组件"></a>一、Gloo组件</h3><blockquote><p>从最基本的意义上讲，Gloo是转换引擎，Envoy xDS服务器为Envoy提供高级配置（包括Gloo的自定义Envoy过滤器）。 Gloo遵循基于事件的体系结构，监视各<br>种配置源以进行更新，并立即通过v2 版本的gRPC接口更新Envoy配置。</p></blockquote><p><img src="https://s1.ax1x.com/2020/05/21/YqsrWR.md.png" alt="架构图"></p><h4 id="Config-Watcher"><a href="#Config-Watcher" class="headerlink" title="Config Watcher"></a>Config Watcher</h4><p>在介绍gRPC之前，我们将探讨一些常用的方法来实现负载平衡。</p><h4 id="Secret-Watcher"><a href="#Secret-Watcher" class="headerlink" title="Secret Watcher"></a>Secret Watcher</h4><h4 id="Endpoint-Discovery"><a href="#Endpoint-Discovery" class="headerlink" title="Endpoint Discovery"></a>Endpoint Discovery</h4><h4 id="Translator"><a href="#Translator" class="headerlink" title="Translator"></a>Translator</h4><h4 id="Reporter"><a href="#Reporter" class="headerlink" title="Reporter"></a>Reporter</h4><h4 id="xDS-Server"><a href="#xDS-Server" class="headerlink" title="xDS Server"></a>xDS Server</h4><hr><h3 id="二、Discovery架构"><a href="#二、Discovery架构" class="headerlink" title="二、Discovery架构"></a>二、Discovery架构</h3><p>一组可选的发现服务支持Gloo，它们会自动发现和配置Gloo上游和功能，简化了用户和自助服务的路由。</p><p><img src="../discovery_architecture.png" alt="Discovery架构" title="Discovery Architecture"></p><p>发现服务充当自动化的Gloo客户端，自动使用上游和功能填充存储层以便于用户轻松路由。 发现是可选的，但是启用后，它将尝试发现可用上游和功能。</p><p>当前支持平台:</p><ul><li>Kubernetes Service-Based Upstream Discovery</li><li>AWS Lambda-Based Function Discovery</li><li>Google Cloud Function-Based Function Discovery</li><li>OpenAPI-Based Function Discovery</li><li>Istio-Based Route Rule Discovery (Experimental)</li></ul><hr><h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul><li><a href="https://docs.solo.io/gloo/latest/introduction/architecture/" target="_blank" rel="noopener">architecture</a></li></ul>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;img src=&quot;https://s1.ax1x.com/2020/05/21/YqsrWR.md.png&quot; alt&gt;&lt;/p&gt;
-&lt;div class=&quot;note info&quot;&gt;&lt;p&gt;Gloo聚合后端服务并为客户端提供端到端的功能转换，从而允许与后端API分离。客户端向在Gloo上定义的路由发出请求或&lt;a href=&quot;https://github.com/solo-io/gloo-sdk-go&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;发出事件&lt;/a&gt;。 这些路由&lt;br&gt;通过Gloo的配置（由Gloo的API的客户端提供）在上游服务起作用。&lt;/p&gt;&lt;/div&gt;
-&lt;p&gt;Gloo在客户端定义的路由和后端功能之间执行必要的转换，能够&lt;br&gt;通过其可扩展的&lt;a href=&quot;https://github.com/solo-io/gloo/blob/master/projects/gloo/pkg/plugins/plugin_interface.go&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;插件接口&lt;/a&gt;支持各种上游功能。&lt;br&gt;
-    
-    </summary>
-    
-    
-      <category term="cloudnative" scheme="https://ustack.io/tags/cloudnative/"/>
-    
-      <category term="serverless" scheme="https://ustack.io/tags/serverless/"/>
     
   </entry>
   

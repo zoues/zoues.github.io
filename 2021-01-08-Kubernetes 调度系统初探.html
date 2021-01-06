@@ -105,19 +105,22 @@
 
 
 
-  <meta name="description" content="Kubernetes是Google开源的容器化集群管理系统，其提供的应用部署、扩展、服务发现等机制对于微服务化架构应用有着十分重要的作用。 本系列文章基于以下版本来讲述如何使用二进制方式安装Kubernetes集群顺便讲述下踩坑的心路历程：  Kubernetes version: v1.10 System: CentOS Linux 7 Kernel: Linux 3.10.0  Kubern">
+  <meta name="description" content="从CNCF基金会的成立，到Kubernetes社区蓬勃发展，历经6载，17年异军突起，在mesos、swarm等项目角逐中，拔得头筹，继而一统容器编排,其成功的关键原因可概括为以下几点：  项目领导者们的坚守与远见 社区的良好的运作与社区文化 社区与企业落地的正反馈  虽然针对kubernetes的介绍已经比较多了，但是云原生还是Kubernetes项目的发展都已经迈入深水区，因而今天zouye">
 <meta name="keywords" content="kubernetes,cloudnative">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Kubernetes调度系统初探">
-<meta property="og:url" content="https://ustack.io/2019-11-26-Kubernetes 调度系统初探.html">
+<meta property="og:title" content="Kubernetes调度由浅入深：初探">
+<meta property="og:url" content="https://ustack.io/2021-01-08-Kubernetes 调度系统初探.html">
 <meta property="og:site_name" content="Indagate">
-<meta property="og:description" content="Kubernetes是Google开源的容器化集群管理系统，其提供的应用部署、扩展、服务发现等机制对于微服务化架构应用有着十分重要的作用。 本系列文章基于以下版本来讲述如何使用二进制方式安装Kubernetes集群顺便讲述下踩坑的心路历程：  Kubernetes version: v1.10 System: CentOS Linux 7 Kernel: Linux 3.10.0  Kubern">
+<meta property="og:description" content="从CNCF基金会的成立，到Kubernetes社区蓬勃发展，历经6载，17年异军突起，在mesos、swarm等项目角逐中，拔得头筹，继而一统容器编排,其成功的关键原因可概括为以下几点：  项目领导者们的坚守与远见 社区的良好的运作与社区文化 社区与企业落地的正反馈  虽然针对kubernetes的介绍已经比较多了，但是云原生还是Kubernetes项目的发展都已经迈入深水区，因而今天zouye">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/6/67/Kubernetes_logo.svg">
-<meta property="og:updated_time" content="2019-11-26T02:10:41.297Z">
+<meta property="og:image" content="https://d33wubrfki0l68.cloudfront.net/2475489eaf20163ec0f54ddc1d92aa8d4c87c96b/e7c81/images/docs/components-of-kubernetes.svg">
+<meta property="og:image" content="https://s3.ax1x.com/2021/01/06/sZ9Aun.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/01/06/sZ9lv9.png">
+<meta property="og:updated_time" content="2021-01-06T13:51:35.975Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Kubernetes调度系统初探">
-<meta name="twitter:description" content="Kubernetes是Google开源的容器化集群管理系统，其提供的应用部署、扩展、服务发现等机制对于微服务化架构应用有着十分重要的作用。 本系列文章基于以下版本来讲述如何使用二进制方式安装Kubernetes集群顺便讲述下踩坑的心路历程：  Kubernetes version: v1.10 System: CentOS Linux 7 Kernel: Linux 3.10.0  Kubern">
+<meta name="twitter:title" content="Kubernetes调度由浅入深：初探">
+<meta name="twitter:description" content="从CNCF基金会的成立，到Kubernetes社区蓬勃发展，历经6载，17年异军突起，在mesos、swarm等项目角逐中，拔得头筹，继而一统容器编排,其成功的关键原因可概括为以下几点：  项目领导者们的坚守与远见 社区的良好的运作与社区文化 社区与企业落地的正反馈  虽然针对kubernetes的介绍已经比较多了，但是云原生还是Kubernetes项目的发展都已经迈入深水区，因而今天zouye">
 <meta name="twitter:image" content="https://upload.wikimedia.org/wikipedia/commons/6/67/Kubernetes_logo.svg">
 
 
@@ -127,7 +130,7 @@
 
 
 
-  <link rel="canonical" href="https://ustack.io/2019-11-26-Kubernetes 调度系统初探.html">
+  <link rel="canonical" href="https://ustack.io/2021-01-08-Kubernetes 调度系统初探.html">
 
 
 
@@ -137,7 +140,7 @@
   };
 </script>
 
-  <title>Kubernetes调度系统初探 | Indagate</title>
+  <title>Kubernetes调度由浅入深：初探 | Indagate</title>
   
 
 
@@ -305,7 +308,7 @@
   
   
   <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-11-26-Kubernetes 调度系统初探.html">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2021-01-08-Kubernetes 调度系统初探.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zouyee">
@@ -320,10 +323,10 @@
     
     <div class="head">
         <div class="gr_up_title">
-          <span class="text-overflow-center">Kubernetes调度系统初探</span>
+          <span class="text-overflow-center">Kubernetes调度由浅入深：初探</span>
         </div>
         <div class="gr_blog_post_cat">
-          <span class="gr_ddate">11月 26 2019</span><span class="gr_separate">|</span>
+          <span class="gr_ddate">1月 08 2021</span><span class="gr_separate">|</span>
           
                 <a href="/categories/Kubernetes-GO/" itemprop="url" rel="category tag"><span itemprop="name">Kubernetes GO</span></a>
 
@@ -335,7 +338,7 @@
         <div class="gr_blog_post_title_holder">
         
           
-          <h3 class="blog_title" itemprop="name headline">Kubernetes调度系统初探
+          <h3 class="blog_title" itemprop="name headline">Kubernetes调度由浅入深：初探
               
             
           </h3>
@@ -360,12 +363,24 @@
                 
               
 
-              <time title="创建时间：11月 26 2019 12:40:08 / 修改时间：10:10:41" itemprop="dateCreated datePublished" datetime="2019-11-26T12:40:08+08:00">11月 26 2019</time>
+              <time title="创建时间：1月 08 2021 12:40:08" itemprop="dateCreated datePublished" datetime="2021-01-08T12:40:08+08:00">1月 08 2021</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：1月 06 2021 21:51:35" itemprop="dateModified" datetime="2021-01-06T21:51:35+08:00">1月 06 2021</time>
               
             
           </span>
@@ -397,8 +412,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019-11-26-Kubernetes 调度系统初探.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-11-26-Kubernetes 调度系统初探.html" itemprop="commentCount"></span>
+                <a href="/2021-01-08-Kubernetes 调度系统初探.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2021-01-08-Kubernetes 调度系统初探.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -406,7 +421,7 @@
 
           
           
-             <span id="/2019-11-26-Kubernetes 调度系统初探.html" class="leancloud_visitors" data-flag-title="Kubernetes调度系统初探">
+             <span id="/2021-01-08-Kubernetes 调度系统初探.html" class="leancloud_visitors" data-flag-title="Kubernetes调度由浅入深：初探">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -443,104 +458,203 @@
     
       
         <p><img src="https://upload.wikimedia.org/wikipedia/commons/6/67/Kubernetes_logo.svg" alt></p>
-<div class="note default"><p>Kubernetes是Google开源的容器化集群管理系统，其提供的应用部署、扩展、服务发现等机制对于微服务化架构应用有着十分重要的作用。</p>
-<p>本系列文章基于以下版本来讲述如何使用二进制方式安装Kubernetes集群顺便讲述下踩坑的心路历程：</p>
+<div class="note default"><p>从CNCF基金会的成立，到Kubernetes社区蓬勃发展，历经6载，17年异军突起，在mesos、swarm等项目角逐中，拔得头筹，继而一统容器编排,其成功的关键原因可概括为以下几点：</p>
 <ul>
-<li>Kubernetes version: <code>v1.10</code></li>
-<li>System: <code>CentOS Linux 7</code></li>
-<li>Kernel: <code>Linux 3.10.0</code></li>
-</ul></div>
-<p>Kubernetes系统的各个组件需要使用TLS证书对其通信加密以及授权认证，所以在部署之前我们需要先生成相关的TLS证书以便后续操作能够顺利进行。</p>
+<li>项目领导者们的坚守与远见</li>
+<li>社区的良好的运作与社区文化</li>
+<li>社区与企业落地的正反馈</li>
+</ul>
+<p>虽然针对kubernetes的介绍已经比较多了，但是云原生还是Kubernetes项目的发展都已经迈入深水区，因而今天zouyee为大家带来《kuberneter调度由浅入深》，希望通过接下来的五篇文章，让各位能够系统深入的了解kubernetes调度系统，该系列对应版本为<code>1.20.+</code>，今天带来《Kubernetes调度系统由浅入深系列：初探》</p></div>
 <a id="more"></a>
 <hr>
-<blockquote>
-<p>在后续安装部署中，将不使用kube-apiserver的HTTP非安全端口，所有组件都启用TLS双向认证通信。因此TLS证书配置是在安装配置Kubernetes系统中最容易出错和难于排查问题的一步，所以请务必耐心仔细。</p>
-</blockquote>
-<p>在开始前，为了模拟集群节点，我们假定需要在以下三台Linux主机上部署Kubernetes:</p>
+<h4 id="一、调度简介"><a href="#一、调度简介" class="headerlink" title="一、调度简介"></a>一、调度简介</h4><p>​    在开始前，先来看看Kubernetes的架构示意图，其中控制平面包含以下三大组件：kube-scheduler、kube-apiserver、kube-controller-manager。kubelet及kube-proxy组件的分析我们后续单独成章进行讲解，现在我们可以简单给理解上述组件的难易程度排个序，kube-apiserver、kubelet、kube-scheduler、kube-controller-manager、kube-proxy。</p>
+<p><img src="https://d33wubrfki0l68.cloudfront.net/2475489eaf20163ec0f54ddc1d92aa8d4c87c96b/e7c81/images/docs/components-of-kubernetes.svg" alt="Components of Kubernetes"></p>
+<div class="note danger"><p>​    如上所述，<code>kube-scheduler</code>是K8S系统的核心组件之一，其主要负责Pod的调度，其监听kube-apiserver，查询未分配 Node的Pod（未分配、分配失败及尝试多次无法分配），根据配置的调度策略，将Pod调度到最优的工作节点上，从而高效、合理的利用集群的资源，该特性是用户选择K8S系统的关键因素之一，帮助用户提升效率、降低能耗。</p></div>
+<p>​    <code>kube-scheduler</code> 负责将Pod 调度到集群内的<em>最佳节点</em>(基于相应策略计算出的最佳值)上，它监听<code>kube-apiserver</code>，查询还未分配节点 的 Pod，然后根据调度策略为这些 Pod 分配节点，执行绑定节点的操作(更新Pod的<strong>nodeName</strong>字段)。</p>
+<p>​    在上述过程中，需要考虑以下问题：</p>
 <ul>
-<li><code>10.138.148.161</code>：作为<code>master</code>节点</li>
-<li><code>10.138.196.180</code>：作为<code>Node</code>节点</li>
-<li><code>10.138.212.68</code>：作为<code>Node</code>节点</li>
+<li>如何确保节点分配的公平性</li>
+<li>如何确保节点资源分配的高效性</li>
+<li>如何确保Pod调度的公平性</li>
+<li>如何确保Pod调度的高效性</li>
+<li>如何扩展Pod调度策略</li>
 </ul>
-<div class="note danger"><p>同一台主机上可以同时部署master和Node节点相关组件，即同时作为控制节点和工作节点，不过这么做可能导致master节点负载过高而失去响应进而导致整个集群出现无法预知的问题。</p></div>
-<hr>
-<h3 id="安装CFSSL证书生成工具"><a href="#安装CFSSL证书生成工具" class="headerlink" title="安装CFSSL证书生成工具"></a>安装<code>CFSSL</code>证书生成工具</h3><div class="note info"><p>我们将使用<code>Cloudflare</code>的PKI工具集<a href="https://github.com/cloudflare/cfssl" target="_blank" rel="noopener">cloudflare/cfssl</a>来生成集群所需要的各种<code>TLS</code>证书。</p></div>
-<p>执行以下命令直接下载二进制文件进行安装:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">wget https://pkg.cfssl.org/R1.2/cfssl_linux-amd64 -O cfssl </span><br><span class="line">chmod +x cfssl </span><br><span class="line">sudo mv cfssl /usr/<span class="built_in">local</span>/bin</span><br><span class="line"></span><br><span class="line">wget https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64 -O cfssljson </span><br><span class="line">chmod +x cfssljson </span><br><span class="line">sudo mv cfssljson /usr/<span class="built_in">local</span>/bin</span><br><span class="line"></span><br><span class="line">wget https://pkg.cfssl.org/R1.2/cfssl-certinfo_linux-amd64 -O cfssl-certinfo </span><br><span class="line">chmod +x cfssl-certinfo </span><br><span class="line">sudo mv cfssl-certinfo /usr/<span class="built_in">local</span>/bin</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> PATH=/usr/<span class="built_in">local</span>/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
-<h3 id="创建CA根证书（Certificate-Authority）"><a href="#创建CA根证书（Certificate-Authority）" class="headerlink" title="创建CA根证书（Certificate Authority）"></a>创建CA根证书（Certificate Authority）</h3><p>CA（Certificate Authority）是自签名的根证书，用来签名后续创建的其它 TLS 证书；<br>确认<code>CFSSL</code>工具安装成功之后，我们先通过<code>CFSSL</code>工具来创建模版配置json文件:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cfssl <span class="built_in">print</span>-defaults config &gt; config.json</span><br><span class="line">cfssl <span class="built_in">print</span>-defaults csr &gt; csr.json</span><br></pre></td></tr></table></figure>
-<h4 id="创建CA配置文件"><a href="#创建CA配置文件" class="headerlink" title="创建CA配置文件"></a>创建CA配置文件</h4><p>这将生成两个模版json文件，后续<code>CFSSL</code>将读取json文件内容并生成对应的<code>pem</code>文件。我们先复制<code>config.json</code>为<code>ca-config.json</code>文件并做如下修改:</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"signing"</span>: &#123;</span><br><span class="line">        <span class="attr">"default"</span>: &#123;</span><br><span class="line">            <span class="attr">"expiry"</span>: <span class="string">"99999h"</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">"profiles"</span>: &#123;</span><br><span class="line">            <span class="attr">"kubernetes"</span>: &#123;</span><br><span class="line">                <span class="attr">"expiry"</span>: <span class="string">"99999h"</span>,</span><br><span class="line">                <span class="attr">"usages"</span>: [</span><br><span class="line">                    <span class="string">"signing"</span>,</span><br><span class="line">                    <span class="string">"key encipherment"</span>,</span><br><span class="line">                    <span class="string">"server auth"</span>,</span><br><span class="line">                    <span class="string">"client auth"</span></span><br><span class="line">                ]</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<div class="note warning"><p><code>profiles</code>：可以定义多个profiles，分别指定不同的过期时间、使用场景等参数；后续在签名证书时使用某个特定的profile。</p>
-<p><code>signing</code>：表示该证书可用于签名(签发)其它证书，生成的 ca.pem 证书中 CA=TRUE。</p>
-<p><code>server auth</code>：表示`client可以用该 CA（生成的ca.pem） 对server提供的证书进行验证。</p>
-<p><code>client auth</code>：表示server可以用该CA(生成的ca.pem）对client提供的证书进行验证。</p></div>
-<h4 id="创建CA证书签名请求"><a href="#创建CA证书签名请求" class="headerlink" title="创建CA证书签名请求"></a>创建CA证书签名请求</h4><p>我们复制<code>csr.json</code>为<code>ca-csr.json</code>并做以下修改:</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"CN"</span>: <span class="string">"kubernetes"</span>,</span><br><span class="line">  <span class="attr">"key"</span>: &#123;</span><br><span class="line">    <span class="attr">"algo"</span>: <span class="string">"rsa"</span>,</span><br><span class="line">    <span class="attr">"size"</span>: <span class="number">2048</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"names"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"C"</span>: <span class="string">"CN"</span>,</span><br><span class="line">      <span class="attr">"ST"</span>: <span class="string">"Shanghai"</span>,</span><br><span class="line">      <span class="attr">"L"</span>: <span class="string">"Shanghai"</span>,</span><br><span class="line">      <span class="attr">"O"</span>: <span class="string">"k8s"</span>,</span><br><span class="line">      <span class="attr">"OU"</span>: <span class="string">"System"</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<div class="note warning"><p><code>CN</code>(<code>Common Name</code>):后续<code>kube-apiserver</code>组件将从证书中提取该字段作为请求的用户名；</p>
-<p><code>O</code>(<code>Organtzation</code>):后续<code>kube-apiserver</code>组件将从证书中提取该字段作为请求的用户所属的用户组；</p></div>
-<h4 id="生成CA证书和私钥"><a href="#生成CA证书和私钥" class="headerlink" title="生成CA证书和私钥"></a>生成CA证书和私钥</h4><p>执行以下命令来生成CA证书和私钥：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cfssl gencert -initca ca-csr.json | cfssljson -bare ca</span><br><span class="line">ls ca*</span><br><span class="line">ca.csr  ca-csr.json  ca-key.pem  ca.pem</span><br></pre></td></tr></table></figure>
-<p>这样，我们就生成了CA证书和私钥了，因为我们需要双向<code>TLS</code>认证，所以需要拷贝<code>ca-key.pem</code>和<code>ca.pem</code>到所有要部署的机器的<code>/etc/kubernetes/ssl</code>目录下备用。</p>
-<h3 id="创建kubernetes组件认证授权证书"><a href="#创建kubernetes组件认证授权证书" class="headerlink" title="创建kubernetes组件认证授权证书"></a>创建kubernetes组件认证授权证书</h3><p>因为我们准备部署的kubernetes组件是使用<code>TLS</code>双向认证的，包括<code>kube-apiserver</code>不打算使用HTTP端口，因此，我们需要生成以下的证书以供后续组件部署的时候备用：</p>
-<div class="note info"><ul>
-<li><code>etcd</code>证书：etcd集群之间通信加密使用的<code>TLS</code>证书。</li>
-<li><code>kube-apiserver</code>证书：配置<code>kube-apiserver</code>组件的证书。</li>
-<li><code>kube-controller-manager</code>证书：用于和<code>kube-apiserver</code>通信认证的证书。</li>
-<li><code>kube-scheduler</code>证书：用于和<code>kube-apiserver</code>通信认证的证书。</li>
-<li><code>kubelet</code>证书【可选,非必需】：用于和<code>kube-apiserver</code>通信认证的证书，如果使用<code>TLS Bootstarp</code>认证方式，将没有必要配置。</li>
-<li><code>kube-proxy</code>证书【可选,非必需】：用于和<code>kube-apiserver</code>通信认证的证书，如果使用<code>TLS Bootstarp</code>认证方式，将没有必要配置。</li>
-</ul></div>
-<p>下面我们将逐个创建对应的<code>TLS</code>证书，并做相应的简短说明：</p>
-<h4 id="创建etcd证书："><a href="#创建etcd证书：" class="headerlink" title="创建etcd证书："></a>创建<code>etcd</code>证书：</h4><p>首选我们创建<code>etcd</code>证书签名请求(CSR)，拷贝<code>csr.json</code>为<code>etcd-csr.json</code>并做以下修改:</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"CN"</span>: <span class="string">"etcd"</span>,</span><br><span class="line">    <span class="attr">"hosts"</span>: [</span><br><span class="line">      <span class="string">"127.0.0.1"</span>,</span><br><span class="line">      <span class="string">"10.138.212.68"</span>,</span><br><span class="line">      <span class="string">"10.138.196.180"</span>,</span><br><span class="line">      <span class="string">"10.138.148.161"</span>,</span><br><span class="line">        <span class="string">"master"</span>,</span><br><span class="line">        <span class="string">"node1"</span>,</span><br><span class="line">        <span class="string">"node2"</span></span><br><span class="line">    ],</span><br><span class="line">  <span class="attr">"key"</span>: &#123;</span><br><span class="line">    <span class="attr">"algo"</span>: <span class="string">"rsa"</span>,</span><br><span class="line">    <span class="attr">"size"</span>: <span class="number">2048</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"names"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"C"</span>: <span class="string">"CN"</span>,</span><br><span class="line">      <span class="attr">"ST"</span>: <span class="string">"Shanghai"</span>,</span><br><span class="line">      <span class="attr">"L"</span>: <span class="string">"Shanghai"</span>,</span><br><span class="line">      <span class="attr">"O"</span>: <span class="string">"k8s"</span>,</span><br><span class="line">      <span class="attr">"OU"</span>: <span class="string">"System"</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<div class="note danger"><p>此处需要指定<code>host</code>字段的值，该值为所有需要部署etcd节点的<code>ip 域名 或者 hostname</code>，etcd需要使用<code>Subject Alternative Name（SAN）</code>来校验集群以及防止滥用。如果你不清楚应该使用哪个ip，默认情况下使用<code>ip a</code>查看<code>eth0</code>即可。此处指定的<code>ip</code>与后续指定的<code>etcd的systemd</code>配置<code>initial-cluster</code>相关。</p>
-<p>相关阅读: <a href="https://github.com/coreos/etcd/issues/2056" target="_blank" rel="noopener">Option to accept TLS client certificates even if they lack correct Subject Alternative Names</a></p></div>
-<p>生成<code>etcd</code>证书和私钥：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes etcd-csr.json | cfssljson -bare etcd</span><br><span class="line">ls etcd*</span><br><span class="line">etcd.csr  etcd-csr.json  etcd-key.pem etcd.pem</span><br></pre></td></tr></table></figure>
-<p>将生成的<code>etch-key.pem</code>和<code>etcd.pem</code>拷贝到所有需要部署<code>etcd</code>集群的服务器<code>/etc/etcd/ssl</code>目录下备用。</p>
-<h4 id="创建kube-apiserver证书"><a href="#创建kube-apiserver证书" class="headerlink" title="创建kube-apiserver证书"></a>创建<code>kube-apiserver</code>证书</h4><p>创建<code>kube-apiserver</code>证书签名请求配置文件，拷贝<code>csr.json</code>为<code>kubernetes-csr.json</code>并做以下修改：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"CN"</span>: <span class="string">"kubernetes"</span>,</span><br><span class="line">    <span class="attr">"hosts"</span>: [</span><br><span class="line">      <span class="string">"127.0.0.1"</span>,</span><br><span class="line">      <span class="string">"10.138.212.68"</span>,</span><br><span class="line">      <span class="string">"10.138.196.180"</span>,</span><br><span class="line">      <span class="string">"10.138.148.161"</span>,</span><br><span class="line">      <span class="string">"10.254.0.1"</span>,</span><br><span class="line">      <span class="string">"kubernetes"</span>,</span><br><span class="line">      <span class="string">"kubernetes.default"</span>,</span><br><span class="line">      <span class="string">"kubernetes.default.svc"</span>,</span><br><span class="line">      <span class="string">"kubernetes.default.svc.cluster"</span>,</span><br><span class="line">      <span class="string">"kubernetes.default.svc.cluster.local"</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">"key"</span>: &#123;</span><br><span class="line">        <span class="attr">"algo"</span>: <span class="string">"rsa"</span>,</span><br><span class="line">        <span class="attr">"size"</span>: <span class="number">2048</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"names"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"C"</span>: <span class="string">"CN"</span>,</span><br><span class="line">            <span class="attr">"ST"</span>: <span class="string">"Shanghai"</span>,</span><br><span class="line">            <span class="attr">"L"</span>: <span class="string">"Shanghai"</span>,</span><br><span class="line">            <span class="attr">"O"</span>: <span class="string">"k8s"</span>,</span><br><span class="line">            <span class="attr">"OU"</span>: <span class="string">"System"</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<div class="note warning"><p>此处指定了<code>host</code>字段来表示授权使用该证书的<code>ip或域名</code>列表，因此上述配置文件指定了要部署的kubernetes三台服务器ip（实际上只需要指定打算部署master节点的ip即可）以及<code>kube-apiserver</code>注册的名为<code>kubernetes</code>服务的服务ip（一般默认为后续配置<code>kube-apiserve</code>组件的时候指定的<code>—service-cluster-ip-range</code>网段的第一个ip。）如果你不清楚怎么操作，可以留空<code>host</code>字段。</p>
-<p>如果你指定了<code>host</code>字段，这里如果有 <code>VIP</code> 的，也是需要填写的。</p></div>
-<p>生成<code>kube-apiserver</code>证书和私钥：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes kubernetes-csr.json | cfssljson -bare apiserver</span><br><span class="line">ls apiserver*</span><br><span class="line">apiserver.csr  apiserver-key.pem  apiserver.pem</span><br></pre></td></tr></table></figure>
-<p>我们将该证书拷贝到需要部署到<code>master</code>节点上的<code>/etc/kubernetes/ssl</code>上备用。</p>
-<div class="note info"><p>因为我们master节点的组件之间的通信使用<code>非HTTP</code>的安全端口，所以同样也需要<code>TLS</code>认证授权，因此我们也需要配置<code>kube-controller-manager</code>和<code>kube-scheduler</code>的证书来供这两个组件访问<code>kube-apiserver</code>.如果你的集群master节点组件使用HTTP非安全端口通信，那么可以不需要配置这两个证书。</p></div>
-<h4 id="创建kube-controller-manager证书"><a href="#创建kube-controller-manager证书" class="headerlink" title="创建kube-controller-manager证书"></a>创建<code>kube-controller-manager</code>证书</h4><p>复制<code>car.json</code>为<code>kube-controller-manager-csr.json</code>并做以下修改：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"CN"</span>: <span class="string">"system:kube-controller-manager"</span>,</span><br><span class="line">  <span class="attr">"hosts"</span>: [],</span><br><span class="line">  <span class="attr">"key"</span>: &#123;</span><br><span class="line">    <span class="attr">"algo"</span>: <span class="string">"rsa"</span>,</span><br><span class="line">    <span class="attr">"size"</span>: <span class="number">2048</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"names"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"C"</span>: <span class="string">"CN"</span>,</span><br><span class="line">      <span class="attr">"ST"</span>: <span class="string">"Shanghai"</span>,</span><br><span class="line">      <span class="attr">"L"</span>: <span class="string">"Shanghai"</span>,</span><br><span class="line">      <span class="attr">"O"</span>: <span class="string">"k8s"</span>,</span><br><span class="line">      <span class="attr">"OU"</span>: <span class="string">"System"</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上述的配置中，<code>kube-apiserver</code>将提取<code>CN</code>作为客户端组件(kube-controller-manager)的用户名(system:kube-controller-manager)，<code>kube-apiserver</code>预定义的RBAC使用ClusterRoleBinding <code>system:kube-controller-manager</code>将<code>用户system:kube-controller-manager</code>与<code>ClusterRole system:kube-controller-manager</code>绑定。</p>
-<p>生成<code>kube-controller-manager</code>证书和私钥：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes kube-controller-manager-csr.json | cfssljson -bare controller-manager</span><br><span class="line">ls controller-manager*</span><br><span class="line">controller-manager.csr  controller-manager-key.pem  controller-manager.pem</span><br></pre></td></tr></table></figure>
-<p>将证书拷贝到需要部署<code>kube-controller-manager</code>的master节点<code>/etc/kubernetes/ssl</code>上备用。</p>
-<h4 id="创建kube-scheduler-证书"><a href="#创建kube-scheduler-证书" class="headerlink" title="创建kube-scheduler`证书"></a>创建kube-scheduler`证书</h4><p>与<code>kube-controller-manager</code>一样，<code>kube-scheduler</code>同样也需要<code>TLS</code>证书来访问<code>kube-apiserver</code>。此处不再赘述。直接上<code>kube-scheduler-csr.json</code>文件内容：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"CN"</span>: <span class="string">"system:kube-scheduler"</span>,</span><br><span class="line">  <span class="attr">"hosts"</span>: [],</span><br><span class="line">  <span class="attr">"key"</span>: &#123;</span><br><span class="line">    <span class="attr">"algo"</span>: <span class="string">"rsa"</span>,</span><br><span class="line">    <span class="attr">"size"</span>: <span class="number">2048</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"names"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"C"</span>: <span class="string">"CN"</span>,</span><br><span class="line">      <span class="attr">"ST"</span>: <span class="string">"Shanghai"</span>,</span><br><span class="line">      <span class="attr">"L"</span>: <span class="string">"Shanghai"</span>,</span><br><span class="line">      <span class="attr">"O"</span>: <span class="string">"k8s"</span>,</span><br><span class="line">      <span class="attr">"OU"</span>: <span class="string">"System"</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code></code>kube-scheduler <code>将提取</code>CN作为客户端的用户名<code>,这里是</code>system:kube-scheduler<code>。 kube-apiserver 预定义的 RBAC 使用的 ClusterRoleBindings</code>system:kube-scheduler <code>将</code>用户system:kube-scheduler <code>与</code>ClusterRole system:kube-scheduler `绑定。</p>
-<p>生成<code>kube-scheduler</code>证书以及私钥：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes kube-scheduler-csr.json | cfssljson -bare scheduler</span><br><span class="line">ls scheduler*</span><br><span class="line">scheduler.csr  scheduler-key.pem  scheduler.pem</span><br></pre></td></tr></table></figure>
-<p>将证书拷贝到需要部署<code>kube-scheduler</code>的master节点<code>/etc/kubernetes/ssl</code>上备用。</p>
-<p>至此，<code>master</code>节点上的证书生成就全部完成了，接下来是生成<code>worker</code>节点的证书，需要注意的是：生成<code>worker</code>证书是可选的，如果你使用<code>TLS Bootstarpping</code>那么你可以跳过以下步骤<code>worker</code>证书生成工作。直接转到部署的实际操作环节。关于<code>TLS</code>证书和<code>TLS Bootstarpping</code>认证方式的区别，后续考虑单独写一遍文章展开来讲。</p>
-<hr>
-<h4 id="创建kubelet证书"><a href="#创建kubelet证书" class="headerlink" title="创建kubelet证书"></a>创建<code>kubelet</code>证书</h4><p>拷贝<code>car.json</code>为<code>kubelet-csr.json</code>并做以下修改:</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"CN"</span>: <span class="string">"system:node:node"</span>,</span><br><span class="line">  <span class="attr">"hosts"</span>: [],</span><br><span class="line">  <span class="attr">"key"</span>: &#123;</span><br><span class="line">    <span class="attr">"algo"</span>: <span class="string">"rsa"</span>,</span><br><span class="line">    <span class="attr">"size"</span>: <span class="number">2048</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"names"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"C"</span>: <span class="string">"CN"</span>,</span><br><span class="line">      <span class="attr">"ST"</span>: <span class="string">"Shanghai"</span>,</span><br><span class="line">      <span class="attr">"L"</span>: <span class="string">"Shanghai"</span>,</span><br><span class="line">      <span class="attr">"O"</span>: <span class="string">"system:nodes"</span>,</span><br><span class="line">      <span class="attr">"OU"</span>: <span class="string">"System"</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<div class="note warning"><p><code>O</code>为用户组，kubernetes RBAC定义了ClusterRoleBinding将Group system:nodes和CLusterRole system:node关联起来。</p>
-<p>注意:在<code>kubernetes v1.8+</code>以上版本，将不会自动创建<code>binding</code>,因此我们后续需要手动创建绑定关系。</p></div>
-<p>生成<code>kubelet</code>证书和私钥：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes kubelet-csr.json | cfssljson -bare kubelet</span><br><span class="line">ls kubelet*</span><br><span class="line">kubelet.csr  kubelet-csr.json  kubelet-key.pem  kubelet.pem</span><br></pre></td></tr></table></figure>
-<p>将生成的证书和秘钥拷贝到所有需要部署的worker节点上的<code>/etc/kubernetes/ssl</code>下备用。</p>
-<h4 id="创建kube-proxy证书"><a href="#创建kube-proxy证书" class="headerlink" title="创建kube-proxy证书"></a>创建<code>kube-proxy</code>证书</h4><p>拷贝<code>car.json</code>为<code>kube-proxy-csr.json</code>并做以下修改:</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"CN"</span>: <span class="string">"system:kube-proxy"</span>,</span><br><span class="line">  <span class="attr">"hosts"</span>: [],</span><br><span class="line">  <span class="attr">"key"</span>: &#123;</span><br><span class="line">    <span class="attr">"algo"</span>: <span class="string">"rsa"</span>,</span><br><span class="line">    <span class="attr">"size"</span>: <span class="number">2048</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">"names"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"C"</span>: <span class="string">"CN"</span>,</span><br><span class="line">      <span class="attr">"ST"</span>: <span class="string">"Shanghai"</span>,</span><br><span class="line">      <span class="attr">"L"</span>: <span class="string">"Shanghai"</span>,</span><br><span class="line">      <span class="attr">"O"</span>: <span class="string">"k8s"</span>,</span><br><span class="line">      <span class="attr">"OU"</span>: <span class="string">"System"</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<div class="note warning"><p><code>CN</code> 指定该证书的 User为 system:kube-proxy。Kubernetes RBAC定义了ClusterRoleBinding将<code>system:kube-proxy用户</code>与<code>system:node-proxier 角色</code>绑定。system:node-proxier具有kube-proxy组件访问ApiServer的相关权限。</p></div>
-<p>生成<code>kube-proxy</code>证书和私钥：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes kube-proxy-csr.json | cfssljson -bare kube-proxy</span><br><span class="line">ls kube-proxy*</span><br><span class="line">kube-proxy.csr  kube-proxy-csr.json  kube-proxy-key.pem  kube-proxy.pem</span><br></pre></td></tr></table></figure>
-<p>将生成的证书和私钥拷贝到所有需要部署<code>worker</code>节点的<code>/etc/kubernetes/ssl</code>下备用。</p>
-<p>在完成证书分发之后，这样我们的证书相关的生成工作就完成了。接下来开始配置各个组件。</p>
-<p>参考资料：</p>
+<p>为解决上述的问题，<code>kube-scheduler</code>通过汇集节点资源、节点地域、节点镜像、Pod调度等信息综合决策，确保Pod分配到最佳节点，以下为<code>kube-scheduler</code>的主要目标：</p>
 <ul>
-<li><a href="https://kubernetes.io/docs/admin/authorization/rbac/" target="_blank" rel="noopener">Using RBAC Authorization</a></li>
-<li><a href="https://wiki.shileizcc.com/display/KUB/Kubernetes+HA+Cluster+Build" target="_blank" rel="noopener">Kubernetes HA Cluster Build</a></li>
-<li><a href="https://jimmysong.io/kubernetes-handbook/practice/install-kubernetes-on-centos.html" target="_blank" rel="noopener">在CentOS上部署kubernetes集群</a></li>
+<li>公平性：在调度Pod时需要公平的决策，每个节点都有被分配的机会，调度器需要针对不同节点作出平衡决策。</li>
+<li>资源高效：最大化提升所有可调度资源的利用率，使有限的CPU、内存等资源服务尽可能更多的Pod。</li>
+<li>性能：能快速的完成对大规模Pod的调度工作，在集群规模扩增的情况下，依然能确保调度的性能。</li>
+<li>灵活性：在实际生产中，用户希望Pod的调度策略是可扩展的，从而可以定制化调度算法以处理复杂的实际问题。因此平台要允许多种调度器并行工作，并支持自定义调度器。</li>
 </ul>
+<h4 id="二、调度流程"><a href="#二、调度流程" class="headerlink" title="二、调度流程"></a>二、调度流程</h4><p>首先我们通过下面的整体的交互图，来构建Pod调度的直观感受。</p>
+<p><img src="https://s3.ax1x.com/2021/01/06/sZ9Aun.png" alt></p>
+<p>上述以创建一个Pod为例，简要介绍调度流程：</p>
+<ol>
+<li><p>用户通过命令行创建Pod(选择直接创建Pod而不是其他workload，是为了省略kube-controller-manager)</p>
+</li>
+<li><p>kube-apiserver经过对象校验、admission、quota等准入操作，写入etcd</p>
+</li>
+<li>kube-apiserver将结果返回给用户</li>
+<li>同时kube-scheduler一直监听节点、Pod事件等（流程1）</li>
+<li>kube-scheduler将spec.nodeName的pod加入到调度队列中，进行调度周期（该周期即位后续介绍内容）（流程2-3）</li>
+<li>kube-scheduler将pod与得分最高的节点进行binding操作（流程4）</li>
+<li>kube-apiserver将binding信息写入etcd</li>
+<li>kubelet监听分配给自己的Pod，调用CRI接口进行Pod创建（该部分内容后续出系列，进行介绍）</li>
+<li>kubelet创建Pod后，更新Pod状态等信息，并向kube-apiserver上报</li>
+<li>kube-apiserver写入数据</li>
+</ol>
+<h5 id="调度周期"><a href="#调度周期" class="headerlink" title="调度周期"></a>调度周期</h5><p><code>kube-scheduler</code>的工作任务是根据各种调度算法将Pod绑定（bind）到最合适的工作节点，整个调度流程分为两个阶段：过滤和评分。流程示意图如下所示。</p>
+<p><img src="https://s3.ax1x.com/2021/01/06/sZ9lv9.png" alt></p>
+<p>​    注：以前称之为predicate与priorities，当前统称为过滤与评分，实际效果一致</p>
+<ul>
+<li><p><strong>过滤</strong>：输入是所有节点，输出是满足预选条件的节点。<code>kube-scheduler</code>根据过滤策略过滤掉不满足的节点。例如，如果某节点的资源不足或者不满足预选策略的条件如“节点的标签必须与Pod的Selector一致”时则无法通过过滤。</p>
+</li>
+<li><p><strong>评分：</strong>输入是通过过滤阶段的节点，评分时会根据评分算法为通过过滤的节点进行打分，选择得分最高的节点。例如，资源越充足、负载越小的节点可能具有越高的排名。</p>
+</li>
+</ul>
+<p>​    通俗点说，调度的过程就是在回答两个问题：1. 候选节点有哪些？2. 其中最适合的是哪一个？</p>
+<p>​    如果在过滤阶段没有节点满足条件，Pod会一直处在Pending状态直到出现满足的节点，在此期间调度器会不断的进行重试。如果有多个节点评分一致，那么<code>kube-scheduler</code>任意选择其一。</p>
+<p>​    注：Pod首先进入调度队列，失败后进入backoff，多次失败后进入unschedule，该部分内容后续介绍。</p>
+<h5 id="调度算法"><a href="#调度算法" class="headerlink" title="调度算法"></a>调度算法</h5><p>当前支持两种方式配置过滤、评分算法：</p>
+<pre><code>1. Scheduling Policies：通过文件或者configmap配置Predicate算法(过滤)和 Priorities算法(评分)的算法
+ 2. Scheduling Profiles：当前调度系统为插拔架构，其将调度周期分为 `QueueSort`、`PreFilter`、`Filter`、`PreScore`、`Score`、`Reserve`、`Permit`、`PreBind`、`Bind`、`PostBind`等阶段，通过定制调度周期中不同阶段的插件行为来实现自定义。
+</code></pre><p>下面简单介绍一下通过Scheduling Policies方式配置</p>
+<p><code>pkg/scheduler/framework/plugins/legacy_registry.go</code></p>
+<p> <strong><em>预选(Precates)</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>算法名称</th>
+<th>算法含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MatchInterPodAffinity</td>
+<td>检查pod资源对象与其他pod资源对象是否符合亲和性规则</td>
+</tr>
+<tr>
+<td>CheckVolumeBinding</td>
+<td>检查节点是否满足pod资源对象的pvc挂载需求</td>
+</tr>
+<tr>
+<td>GeneralPredicates</td>
+<td>检查节点上pod资源对象数量的上线，以及CPU 内存 GPU等资源是否符合要求</td>
+</tr>
+<tr>
+<td>HostName</td>
+<td>检查Pod指定的NodeName是否匹配当前节点</td>
+</tr>
+<tr>
+<td>PodFitsHostPorts</td>
+<td>检查Pod容器所需的HostPort是否已被节点上其它容器或服务占用。如果已被占用，则禁止Pod调度到该节点</td>
+</tr>
+<tr>
+<td>MatchNodeSelector</td>
+<td>检查Pod的节点选择器是否与节点的标签匹配</td>
+</tr>
+<tr>
+<td>PodFitsResources</td>
+<td>检查节点是否有足够空闲资源（例如CPU和内存）来满足Pod的要求</td>
+</tr>
+<tr>
+<td>NoDiskConflict</td>
+<td>检查当前pod资源对象使用的卷是否与节点上其他的pod资源对象使用的卷冲突</td>
+</tr>
+<tr>
+<td>PodToleratesNodeTaints</td>
+<td>如果当前节点被标记为taints，检查pod资源对象是否能容忍node taints</td>
+</tr>
+<tr>
+<td>CheckNodeUnschedulable</td>
+<td>检查节点是否可调度</td>
+</tr>
+<tr>
+<td>CheckNodeLabelPresence</td>
+<td>检查节点标签是否存在</td>
+</tr>
+<tr>
+<td>CheckServiceAffinity</td>
+<td>检查服务亲和性</td>
+</tr>
+<tr>
+<td>MaxCSIVolumeCountPred</td>
+<td>如果设置了featuregate （attachvolumelimit）功能，检查pod资源对象挂载的csi卷是否超出了节点上卷的最大挂载数量</td>
+</tr>
+<tr>
+<td>NoVolumeZoneConflict</td>
+<td>检查pod资源对象挂载pvc是否属于跨区域挂载，因为gce的pd存储或aws的ebs卷都不支持跨区域挂载</td>
+</tr>
+<tr>
+<td>EvenPodsSpreadPred</td>
+<td>一组 Pod 在某个 TopologyKey 上的均衡打散需求</td>
+</tr>
+</tbody>
+</table>
+<p>注：其中 MaxEBSVolumeCountPred、 MaxGCEPDVolumeCountPred  MaxAzureDiskVolumeCountPred、MaxCinderVolumeCountPred 等云厂商相关预选算法已经废弃</p>
+<p><strong><em>优选(Priorities)</em></strong></p>
+<table>
+<thead>
+<tr>
+<th>算法名称</th>
+<th>算法含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EqualPriority</td>
+<td>节点权重相等</td>
+</tr>
+<tr>
+<td>MostRequestedPriority</td>
+<td>偏向具有最多请求资源的节点。这个策略将把计划的Pods放到整个工作负载集所需的最小节点上运行。</td>
+</tr>
+<tr>
+<td>RequestedToCapacityRatioPriority</td>
+<td>使用默认的资源评分函数模型创建基于ResourceAllocationPriority的requestedToCapacity。</td>
+</tr>
+<tr>
+<td>SelectorSpreadPriority</td>
+<td>将属于相同service rcs rss sts 的pod尽量调度在不同的节点上</td>
+</tr>
+<tr>
+<td>ServiceSpreadingPriority</td>
+<td>对于给定的服务，此策略旨在确保Service的Pods运行在不同的节点上。总的结果是，Service对单个节点故障变得更有弹性。</td>
+</tr>
+<tr>
+<td>InterPodAffinityPriority</td>
+<td>基于亲和性（affinity）和反亲和性（anti-affinity）计算分数</td>
+</tr>
+<tr>
+<td>LeastRequestdPriority</td>
+<td>偏向使用较少请求资源的节点。换句话说，放置在节点上的Pod越多，这些Pod使用的资源越多，此策略给出的排名就越低。</td>
+</tr>
+<tr>
+<td>BalancedRequestdPriority</td>
+<td>计算节点上cpu和内存的使用率，使用率最均衡的节点最优</td>
+</tr>
+<tr>
+<td>NodePreferAvoidPodsPriority</td>
+<td>基于节点上定义的注释（annotaion）记分，注释中如果定义了alpha.kubernetes.io/preferAvoidPods则会禁用ReplicationController或者将ReplicaSet的pod资源对象调度在该节点上</td>
+</tr>
+<tr>
+<td>NodeAffinityPriority</td>
+<td>基于节点亲和性计算分数</td>
+</tr>
+<tr>
+<td>TaintTolerationPriority</td>
+<td>基于污点（taint）和容忍度（toleration）是否匹配计算分数</td>
+</tr>
+<tr>
+<td>ImageLocalityPriority</td>
+<td>基于节点上是否已经下拉了运行pod资源对象的镜像计算分数</td>
+</tr>
+<tr>
+<td>EvenPodsSpreadPriority</td>
+<td>用来指定一组符合条件的 Pod 在某个拓扑结构上的打散需求</td>
+</tr>
+</tbody>
+</table>
 
       
     </div>
@@ -632,7 +746,7 @@ jQuery.noConflict()(function ($) {
     <strong>本文作者： </strong>zouyee</li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://ustack.io/2019-11-26-Kubernetes 调度系统初探.html" title="Kubernetes调度系统初探">https://ustack.io/2019-11-26-Kubernetes 调度系统初探.html</a>
+    <a href="https://ustack.io/2021-01-08-Kubernetes 调度系统初探.html" title="Kubernetes调度由浅入深：初探">https://ustack.io/2021-01-08-Kubernetes 调度系统初探.html</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
@@ -660,8 +774,8 @@ jQuery.noConflict()(function ($) {
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019-11-22-Golang漫谈之cond.html" rel="next" title="Golang漫谈之cond">
-                <i class="fa fa-chevron-left"></i> Golang漫谈之cond
+              <a href="/2020-12-20-CloudEvents三部曲:实践篇.html" rel="next" title="CloudEvents三部曲:实践篇">
+                <i class="fa fa-chevron-left"></i> CloudEvents三部曲:实践篇
               </a>
             
           </div>
@@ -669,10 +783,6 @@ jQuery.noConflict()(function ($) {
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019-12-02-Linux 线程通信之eventfd.html" rel="prev" title="Linux线程通信之eventfd">
-                Linux线程通信之eventfd <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -992,7 +1102,7 @@ jQuery.noConflict()(function ($) {
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装CFSSL证书生成工具"><span class="nav-number">1.</span> <span class="nav-text">安装CFSSL证书生成工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建CA根证书（Certificate-Authority）"><span class="nav-number">2.</span> <span class="nav-text">创建CA根证书（Certificate Authority）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建CA配置文件"><span class="nav-number">2.1.</span> <span class="nav-text">创建CA配置文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建CA证书签名请求"><span class="nav-number">2.2.</span> <span class="nav-text">创建CA证书签名请求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生成CA证书和私钥"><span class="nav-number">2.3.</span> <span class="nav-text">生成CA证书和私钥</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建kubernetes组件认证授权证书"><span class="nav-number">3.</span> <span class="nav-text">创建kubernetes组件认证授权证书</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建etcd证书："><span class="nav-number">3.1.</span> <span class="nav-text">创建etcd证书：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建kube-apiserver证书"><span class="nav-number">3.2.</span> <span class="nav-text">创建kube-apiserver证书</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建kube-controller-manager证书"><span class="nav-number">3.3.</span> <span class="nav-text">创建kube-controller-manager证书</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建kube-scheduler-证书"><span class="nav-number">3.4.</span> <span class="nav-text">创建kube-scheduler`证书</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建kubelet证书"><span class="nav-number">3.5.</span> <span class="nav-text">创建kubelet证书</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建kube-proxy证书"><span class="nav-number">3.6.</span> <span class="nav-text">创建kube-proxy证书</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、调度简介"><span class="nav-number">1.</span> <span class="nav-text">一、调度简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、调度流程"><span class="nav-number">2.</span> <span class="nav-text">二、调度流程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#调度周期"><span class="nav-number">2.1.</span> <span class="nav-text">调度周期</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#调度算法"><span class="nav-number">2.2.</span> <span class="nav-text">调度算法</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -1189,7 +1299,7 @@ jQuery.noConflict()(function ($) {
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2021</span>
   <span class="with-love" id="animate">
     <i class="fa fa-heart"></i>
   </span>

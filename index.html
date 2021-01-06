@@ -301,6 +301,218 @@
   
   
   <div class="gr_post_holder">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2021-01-08-Kubernetes 调度系统初探.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zouyee">
+      <meta itemprop="description" content="Keep motivation for the world">
+      <meta itemprop="image" content="/images/author.webp">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Indagate">
+    </span>
+
+    
+    <div class="head">
+        <div class="gr_up_title">
+          <span class="text-overflow-center">Kubernetes调度由浅入深：初探</span>
+        </div>
+        <div class="gr_blog_post_cat">
+          <span class="gr_ddate">1月 08 2021</span><span class="gr_separate">|</span>
+          
+                <a href="/categories/Kubernetes-GO/" itemprop="url" rel="category tag"><span itemprop="name">Kubernetes GO</span></a>
+
+                
+                
+              
+            
+        </div>
+        <div class="gr_blog_post_title_holder">
+        
+          
+          <h3 class="blog_title" itemprop="name headline">
+                
+                <a class="blog_title_a" href="/2021-01-08-Kubernetes 调度系统初探.html" itemprop="url">
+                  Kubernetes调度由浅入深：初探
+                </a>
+              
+            
+          </h3>
+          
+        </div>
+        <div class="gr_blog_post_cat" style="text-align: center;">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：1月 08 2021 12:40:08" itemprop="dateCreated datePublished" datetime="2021-01-08T12:40:08+08:00">1月 08 2021</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：1月 06 2021 21:51:35" itemprop="dateModified" datetime="2021-01-06T21:51:35+08:00">1月 06 2021</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Kubernetes-GO/" itemprop="url" rel="index"><span itemprop="name">Kubernetes GO</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021-01-08-Kubernetes 调度系统初探.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2021-01-08-Kubernetes 调度系统初探.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+    </div>   
+    
+
+    
+    
+    
+    
+    <div class="gr_media">
+      <div class="gr_blog_post_featuder_holder text-center">
+      
+      </div>
+    </div>
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+    
+      
+        
+          <p><img src="https://upload.wikimedia.org/wikipedia/commons/6/67/Kubernetes_logo.svg" alt></p>
+<div class="note default"><p>从CNCF基金会的成立，到Kubernetes社区蓬勃发展，历经6载，17年异军突起，在mesos、swarm等项目角逐中，拔得头筹，继而一统容器编排,其成功的关键原因可概括为以下几点：</p>
+<ul>
+<li>项目领导者们的坚守与远见</li>
+<li>社区的良好的运作与社区文化</li>
+<li>社区与企业落地的正反馈</li>
+</ul>
+<p>虽然针对kubernetes的介绍已经比较多了，但是云原生还是Kubernetes项目的发展都已经迈入深水区，因而今天zouyee为大家带来《kuberneter调度由浅入深》，希望通过接下来的五篇文章，让各位能够系统深入的了解kubernetes调度系统，该系列对应版本为<code>1.20.+</code>，今天带来《Kubernetes调度系统由浅入深系列：初探》</p></div>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021-01-08-Kubernetes 调度系统初探.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+      
+
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer" stype="color:#5d3434">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="gr_post_holder">
     <link itemprop="mainEntityOfPage" href="https://ustack.io/2020-12-20-CloudEvents三部曲:实践篇.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1166,180 +1378,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2020-07-09-CloudEvents初识规范.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zouyee">
-      <meta itemprop="description" content="Keep motivation for the world">
-      <meta itemprop="image" content="/images/author.webp">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Indagate">
-    </span>
-
-    
-    <div class="head">
-        <div class="gr_up_title">
-          <span class="text-overflow-center">CloudEvents初识规范</span>
-        </div>
-        <div class="gr_blog_post_cat">
-          <span class="gr_ddate">7月 09 2020</span><span class="gr_separate">|</span>
-          
-            
-              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
-            
-        </div>
-        <div class="gr_blog_post_title_holder">
-        
-          
-          <h3 class="blog_title" itemprop="name headline">
-                
-                <a class="blog_title_a" href="/2020-07-09-CloudEvents初识规范.html" itemprop="url">
-                  CloudEvents初识规范
-                </a>
-              
-            
-          </h3>
-          
-        </div>
-        <div class="gr_blog_post_cat" style="text-align: center;">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：7月 09 2020 20:40:08 / 修改时间：20:51:16" itemprop="dateCreated datePublished" datetime="2020-07-09T20:40:08+08:00">7月 09 2020</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020-07-09-CloudEvents初识规范.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020-07-09-CloudEvents初识规范.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-    </div>   
-    
-
-    
-    
-    
-    
-    <div class="gr_media">
-      <div class="gr_blog_post_featuder_holder text-center">
-      
-      </div>
-    </div>
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-    
-      
-        
-          <p><img src="https://s1.ax1x.com/2020/05/16/Yc4JUK.jpg" alt></p>
-<div class="note info"><p>事件无处不在。然而，事件生产者倾向于以不同的方式来描述事件。</p>
-<p>缺乏通用的描述事件的方式意味着开发人员必须不断地重新学习如何消费事件。这也限制了类库、工具和基础设施在跨环境时发送事件数据的潜力，如SDK、事件路由器或跟踪系统等。我们从事件数据中实现的可移植性和生产力总体上受到了阻碍。CloudEvents是一个用通用格式描述事件数据的规范，以提供跨服务、跨平台和跨系统的互操作性。CloudEvents得到了大量的行业关注，从主要的云提供商到流行的SaaS公司都有。CloudEvents由云原生计算基金会（CNCF）主办，于2018年5月15日获批为云原生沙盒级项目。</p></div>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020-07-09-CloudEvents初识规范.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-      
-
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer" stype="color:#5d3434">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1650,7 +1688,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2021</span>
   <span class="with-love" id="animate">
     <i class="fa fa-heart"></i>
   </span>
