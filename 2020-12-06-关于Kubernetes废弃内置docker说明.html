@@ -117,7 +117,7 @@
 <meta property="og:image" content="https://s3.ax1x.com/2020/12/06/DjN8a9.png">
 <meta property="og:image" content="https://s3.ax1x.com/2020/12/06/DjN3VJ.png">
 <meta property="og:image" content="https://s3.ax1x.com/2020/12/06/DjNN26.png">
-<meta property="og:updated_time" content="2020-12-06T12:45:10.126Z">
+<meta property="og:updated_time" content="2021-01-12T08:48:26.427Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于Kubernetes废弃内置docker CRI功能的说明">
 <meta name="twitter:description" content="今天，zouyee带各位看看关于前几天Kubernetes“废弃”docker支持的申明。首先，请各位稍安勿躁，主要还是中英文的翻译差别以及标题所引发的歧义，对Kubernetes开源项目有所了解的朋友，可能知道，该项目成功的原因之一，就在于对于接口及功能的版本管理，社区有一套完整且行之有效的方案，接口的兼容性、版本的多样性管理是驱动Kubernetes社区不断前行的内因。先说结论：  对于使用者">
@@ -179,7 +179,7 @@
 </noscript>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  
+
   <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
   <script type="text/javascript" src="https://cdn.bootcss.com/jquery-migrate/1.4.1/jquery-migrate.min.js"></script>
   <link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css">
@@ -192,8 +192,8 @@
   <link rel="stylesheet" id="cff-font-awesome-css" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css" media="all">
   <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
   <script src="/js/Valine.min.js"></script>
-  
- 
+
+
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN" style="opacity: 1;" class="home blog">
@@ -360,12 +360,24 @@
                 
               
 
-              <time title="创建时间：12月 06 2020 22:56:01 / 修改时间：20:45:10" itemprop="dateCreated datePublished" datetime="2020-12-06T22:56:01+08:00">12月 06 2020</time>
+              <time title="创建时间：12月 06 2020 22:56:01" itemprop="dateCreated datePublished" datetime="2020-12-06T22:56:01+08:00">12月 06 2020</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：1月 12 2021 16:48:26" itemprop="dateModified" datetime="2021-01-12T16:48:26+08:00">1月 12 2021</time>
               
             
           </span>
@@ -430,6 +442,8 @@
 <li>对于开发者，若想保持原有docker使用方式只是新增一个已知组件</li>
 </ol>
 <p>Kubernetes 1.20前后，对于docker的支持没有变化，只是将该部分代码（dockershim）独立出来，使用者可独立配置。</p></div>
+<a id="more"></a>
+<hr>
 <h4 id="一、改变动因"><a href="#一、改变动因" class="headerlink" title="一、改变动因"></a>一、改变动因</h4><p>维护dockershim已成为Kubernetes维护人员的一种负担。创建CRI标准就是为了减轻这种负担，并提升不同容器运行时的可移植性性。Docker本身目前没有实现CRI，但Containerd实现了CRI接口。Dockershim一直是一种临时解决方案，此外，与dockershim不兼容的特性，如cgroups v2和用户命名空间，实现CRI接口的运行时也在慢慢探索并实现上述特性。</p>
 <p><strong>何时完全废弃dockershim</strong></p>
 <p>考虑到此更改的影响，它在Kubernetes 1.22之前不会被删除。</p>
@@ -654,7 +668,7 @@ jQuery.noConflict()(function ($) {
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">59</span>
+                    <span class="site-state-item-count">60</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1059,7 +1073,7 @@ jQuery.noConflict()(function ($) {
                     <div class="col-md-4 col-sm-12 col-xs-12">
                         <div class="gr_widget">
                             <h6 class="gr_widget_title"><span>Dou Feed</span></h6>
-                            
+
 
                             <div class="gr_tweet TableObject org-header-wrapper mb-4">
                                 <img id="github" itemprop="image" class="TableObject-item douban" src="https://s2.ax1x.com/2019/09/22/upSEY6.jpg" width="50" height="50" alt="@virtual-kubelet">

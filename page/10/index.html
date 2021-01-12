@@ -172,7 +172,7 @@
 </noscript>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-  
+
   <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
   <script type="text/javascript" src="https://cdn.bootcss.com/jquery-migrate/1.4.1/jquery-migrate.min.js"></script>
   <link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css">
@@ -185,8 +185,8 @@
   <link rel="stylesheet" id="cff-font-awesome-css" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css" media="all">
   <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
   <script src="/js/Valine.min.js"></script>
-  
- 
+
+
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN" style="opacity: 1;" class="home blog">
@@ -301,7 +301,7 @@
   
   
   <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2016-10-26-基于LeanCloud、Telegram实现多说评论推送.html">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-11-21-证书相关概念梳理.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zouyee">
@@ -316,16 +316,13 @@
     
     <div class="head">
         <div class="gr_up_title">
-          <span class="text-overflow-center">基于LeanCloud、Telegram实现多说评论推送</span>
+          <span class="text-overflow-center">证书相关概念</span>
         </div>
         <div class="gr_blog_post_cat">
-          <span class="gr_ddate">10月 26 2016</span><span class="gr_separate">|</span>
+          <span class="gr_ddate">11月 21 2019</span><span class="gr_separate">|</span>
           
-                <a href="/categories/Python/" itemprop="url" rel="category tag"><span itemprop="name">Python</span></a>
-
-                
-                
-              
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
             
         </div>
         <div class="gr_blog_post_title_holder">
@@ -333,8 +330,8 @@
           
           <h3 class="blog_title" itemprop="name headline">
                 
-                <a class="blog_title_a" href="/2016-10-26-基于LeanCloud、Telegram实现多说评论推送.html" itemprop="url">
-                  基于LeanCloud、Telegram实现多说评论推送
+                <a class="blog_title_a" href="/2019-11-21-证书相关概念梳理.html" itemprop="url">
+                  证书相关概念
                 </a>
               
             
@@ -360,7 +357,7 @@
                 
               
 
-              <time title="创建时间：10月 26 2016 00:19:53" itemprop="dateCreated datePublished" datetime="2016-10-26T00:19:53+08:00">10月 26 2016</time>
+              <time title="创建时间：11月 21 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-11-21T20:40:08+08:00">11月 21 2019</time>
             
 
             
@@ -377,29 +374,11 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
+                <time title="修改时间：11月 22 2019 16:53:43" itemprop="dateModified" datetime="2019-11-22T16:53:43+08:00">11月 22 2019</time>
               
             
           </span>
 
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -409,8 +388,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2016-10-26-基于LeanCloud、Telegram实现多说评论推送.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2016-10-26-基于LeanCloud、Telegram实现多说评论推送.html" itemprop="commentCount"></span>
+                <a href="/2019-11-21-证书相关概念梳理.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-11-21-证书相关概念梳理.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -443,220 +422,11 @@
     
       
         
-          
-            <p>众所周知多说评论是不支持主动推送的，也就是说如果访客主动留言评论，多说是不会给我们邮件推送提醒的。但是我们总不能每隔一段时间去检查下博客的评论留言吧，这样效率也太低了ヾ(。￣□￣)ﾂ゜゜゜于是趁着最近闲的蛋疼折腾出了这么个东东，能够实现访客主动评论的时候，在5分钟之内响应并通过Telegram推送到手机上方便查看和浏览。</p>
-<hr>
-<p>嗯，相关的源码和基本的部署说明丢在Github上了,感兴趣的可以<font color="red"><strong><a href="https://github.com/Doublemine/TelegramBot" target="_blank" rel="noopener">戳此查看</a></strong></font>。</p>
-<ul>
-<li><a href="https://github.com/Doublemine/TelegramBot" target="_blank" rel="noopener">Telegram Bot For DuoShuo</a></li>
-</ul>
-<p>目前保证基本的功能能够稳定的运行，后续再添加一些其它的功能吧。嗯，详细的配置说明先挖个坑，改天再写。懒癌犯了，先休息~</p>
-<p><img src="https://ws1.sinaimg.cn/large/694830ebgy1fh3r3jys56g208c08cx6p.jpg" alt title="休息"></p>
-
-          
-        
-      
-    </div>
-
-    
-      
-
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer" stype="color:#5d3434">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2015-10-21-为NexT主题添加文章阅读量统计功能.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zouyee">
-      <meta itemprop="description" content="Keep motivation for the world">
-      <meta itemprop="image" content="/images/author.webp">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Indagate">
-    </span>
-
-    
-    <div class="head">
-        <div class="gr_up_title">
-          <span class="text-overflow-center">为NexT主题添加文章阅读量统计功能</span>
-        </div>
-        <div class="gr_blog_post_cat">
-          <span class="gr_ddate">10月 21 2015</span><span class="gr_separate">|</span>
-          
-                <a href="/categories/Hexo/" itemprop="url" rel="category tag"><span itemprop="name">Hexo</span></a>
-
-                
-                
-              
-            
-        </div>
-        <div class="gr_blog_post_title_holder">
-        
-          
-          <h3 class="blog_title" itemprop="name headline">
-                
-                <a class="blog_title_a" href="/2015-10-21-为NexT主题添加文章阅读量统计功能.html" itemprop="url">
-                  为NexT主题添加文章阅读量统计功能
-                </a>
-              
-            
-          </h3>
-          
-        </div>
-        <div class="gr_blog_post_cat" style="text-align: center;">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：10月 21 2015 21:57:00" itemprop="dateCreated datePublished" datetime="2015-10-21T21:57:00+08:00">10月 21 2015</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2015-10-21-为NexT主题添加文章阅读量统计功能.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015-10-21-为NexT主题添加文章阅读量统计功能.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-    </div>   
-    
-
-    
-    
-    
-    
-    <div class="gr_media">
-      <div class="gr_blog_post_featuder_holder text-center">
-      
-      </div>
-    </div>
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-    
-      
-        
-          <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><hr>
-<p>由于最近在折腾Android项目，需要用到一些与服务器交互、以及数据存储的相关功能，然后发现了<a href="https://leancloud.cn" target="_blank" rel="noopener">LeanCloud</a>这家服务提供商,使用下来还感觉还挺靠谱的(请给我广告费)。正好发现他们服务提供了<a href="https://leancloud.cn/docs/js_guide.html" target="_blank" rel="noopener">JavaScript SDK</a>，于是就想着尝试着实现Hexo博客文章的浏览数统计功能，之前虽然在使用不蒜子，但是不蒜子不能够在主页展示文章阅读量啊！对于博主这种有强迫症又想装X的人来说果断不能忍啊！</p>
-<h3 id="修改NexT主题模版"><a href="#修改NexT主题模版" class="headerlink" title="修改NexT主题模版"></a><del>修改NexT主题模版</del></h3><p><del>本方法理论上对Hexo博客通用，由于博主使用的是NexT主题，所以当然针对NexT来说咯。</del><strong><font color="red">NexT主题目前已经合并这个Feature，因此如果你使用的是NexT主题，可以直接使用不用修改主题模版而直接在<code>_config.yml</code>中配置即可，请直接跳转查看<a href="#%E9%85%8D%E7%BD%AELeanCloud">配置LeanCloud</a></font></strong></p>
+          <div class="note info"><p>接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。</p>
+<p>之前没接触过证书加密的话,对证书相关的这些概念一知半解,虽然属于密码学范畴，但从事计算机专业，就需要保持时刻学习的态度.写这篇文章的目的就是为了理理清这些概念及后续推出的kubernetes安全相关文档.</p></div>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2015-10-21-为NexT主题添加文章阅读量统计功能.html#more" rel="contents">
+            <a class="btn" href="/2019-11-21-证书相关概念梳理.html#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -716,7 +486,7 @@
   
   
   <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2015-07-06-自动备份Hexo博客源文件.html">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-11-21-Linux之hugepages原理概念.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zouyee">
@@ -731,16 +501,13 @@
     
     <div class="head">
         <div class="gr_up_title">
-          <span class="text-overflow-center">自动备份Hexo博客源文件</span>
+          <span class="text-overflow-center">Linux hugepages原理概念</span>
         </div>
         <div class="gr_blog_post_cat">
-          <span class="gr_ddate">7月 06 2015</span><span class="gr_separate">|</span>
+          <span class="gr_ddate">11月 21 2019</span><span class="gr_separate">|</span>
           
-                <a href="/categories/Hexo/" itemprop="url" rel="category tag"><span itemprop="name">Hexo</span></a>
-
-                
-                
-              
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
             
         </div>
         <div class="gr_blog_post_title_holder">
@@ -748,8 +515,8 @@
           
           <h3 class="blog_title" itemprop="name headline">
                 
-                <a class="blog_title_a" href="/2015-07-06-自动备份Hexo博客源文件.html" itemprop="url">
-                  自动备份Hexo博客源文件
+                <a class="blog_title_a" href="/2019-11-21-Linux之hugepages原理概念.html" itemprop="url">
+                  Linux hugepages原理概念
                 </a>
               
             
@@ -775,7 +542,7 @@
                 
               
 
-              <time title="创建时间：7月 06 2015 12:49:01" itemprop="dateCreated datePublished" datetime="2015-07-06T12:49:01+08:00">7月 06 2015</time>
+              <time title="创建时间：11月 21 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-11-21T20:40:08+08:00">11月 21 2019</time>
             
 
             
@@ -792,29 +559,11 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
+                <time title="修改时间：11月 23 2019 22:27:53" itemprop="dateModified" datetime="2019-11-23T22:27:53+08:00">11月 23 2019</time>
               
             
           </span>
 
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a></span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -824,8 +573,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2015-07-06-自动备份Hexo博客源文件.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015-07-06-自动备份Hexo博客源文件.html" itemprop="commentCount"></span>
+                <a href="/2019-11-21-Linux之hugepages原理概念.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-11-21-Linux之hugepages原理概念.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -858,11 +607,11 @@
     
       
         
-          <p>&ensp;&ensp;用Hexo写博客是一件比较享受的事情，无奈如果换电脑的话，备份博客就是一件比较闹心的事情。</p>
-<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>&ensp;&ensp;我曾经给出过通过Git备份Hexo博客源文件的方式，这种方式虽然能够备份Hexo博客的源文件，但是对于博主这种懒人，每次更新博文都需要输入两三行重复的Git命令真是一件麻烦的事情。况且指不定哪天就搞忘push到github上了。</p>
+          <div class="note info"><p>接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。</p>
+<p> hugepage是在Linux2.6内核被引入的，主要提供4k的page和比较大的page的选择。</p></div>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2015-07-06-自动备份Hexo博客源文件.html#more" rel="contents">
+            <a class="btn" href="/2019-11-21-Linux之hugepages原理概念.html#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -922,7 +671,7 @@
   
   
   <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2015-06-30-常见的开源许可证区别.html">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-11-21-Linux内存控制之oom killer机制.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zouyee">
@@ -937,16 +686,13 @@
     
     <div class="head">
         <div class="gr_up_title">
-          <span class="text-overflow-center">常见的开源许可证</span>
+          <span class="text-overflow-center">Linux内存控制之oom killer机制</span>
         </div>
         <div class="gr_blog_post_cat">
-          <span class="gr_ddate">6月 30 2015</span><span class="gr_separate">|</span>
+          <span class="gr_ddate">11月 21 2019</span><span class="gr_separate">|</span>
           
-                <a href="/categories/Notes/" itemprop="url" rel="category tag"><span itemprop="name">Notes</span></a>
-
-                
-                
-              
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
             
         </div>
         <div class="gr_blog_post_title_holder">
@@ -954,8 +700,8 @@
           
           <h3 class="blog_title" itemprop="name headline">
                 
-                <a class="blog_title_a" href="/2015-06-30-常见的开源许可证区别.html" itemprop="url">
-                  常见的开源许可证
+                <a class="blog_title_a" href="/2019-11-21-Linux内存控制之oom killer机制.html" itemprop="url">
+                  Linux内存控制之oom killer机制
                 </a>
               
             
@@ -981,7 +727,7 @@
                 
               
 
-              <time title="创建时间：6月 30 2015 15:18:41" itemprop="dateCreated datePublished" datetime="2015-06-30T15:18:41+08:00">6月 30 2015</time>
+              <time title="创建时间：11月 21 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-11-21T20:40:08+08:00">11月 21 2019</time>
             
 
             
@@ -998,29 +744,11 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
+                <time title="修改时间：11月 22 2019 23:36:30" itemprop="dateModified" datetime="2019-11-22T23:36:30+08:00">11月 22 2019</time>
               
             
           </span>
 
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Notes/" itemprop="url" rel="index"><span itemprop="name">Notes</span></a></span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -1030,8 +758,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2015-06-30-常见的开源许可证区别.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015-06-30-常见的开源许可证区别.html" itemprop="commentCount"></span>
+                <a href="/2019-11-21-Linux内存控制之oom killer机制.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-11-21-Linux内存控制之oom killer机制.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1064,12 +792,11 @@
     
       
         
-          <p>如何为代码选择开源许可证，这是一个问题。</p>
-<p>世界上的开源许可证，大概有上百种。很少有人搞得清楚它们的区别。千言万语，比不上一张图：</p>
-<p><img src="http://7xkj6q.com1.z0.glb.clouddn.com/blog/image/jpg/1135650364a1ffda02o.jpg" class="full-image"></p>
+          <div class="note info"><p>接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。</p>
+<p>kubelet组件涉及oom killer相关概念，在此先作学习铺垫。</p></div>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2015-06-30-常见的开源许可证区别.html#more" rel="contents">
+            <a class="btn" href="/2019-11-21-Linux内存控制之oom killer机制.html#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1129,7 +856,7 @@
   
   
   <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2015-04-29-欢迎光临我的博客.html">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2019-11-21-Linux几个重要的内核配置.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zouyee">
@@ -1144,16 +871,13 @@
     
     <div class="head">
         <div class="gr_up_title">
-          <span class="text-overflow-center">欢迎</span>
+          <span class="text-overflow-center">Linux几个重要的内核配置</span>
         </div>
         <div class="gr_blog_post_cat">
-          <span class="gr_ddate">4月 29 2015</span><span class="gr_separate">|</span>
+          <span class="gr_ddate">11月 21 2019</span><span class="gr_separate">|</span>
           
-                <a href="/categories/折腾/" itemprop="url" rel="category tag"><span itemprop="name">折腾</span></a>
-
-                
-                
-              
+            
+              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
             
         </div>
         <div class="gr_blog_post_title_holder">
@@ -1161,8 +885,8 @@
           
           <h3 class="blog_title" itemprop="name headline">
                 
-                <a class="blog_title_a" href="/2015-04-29-欢迎光临我的博客.html" itemprop="url">
-                  欢迎
+                <a class="blog_title_a" href="/2019-11-21-Linux几个重要的内核配置.html" itemprop="url">
+                  Linux几个重要的内核配置
                 </a>
               
             
@@ -1188,7 +912,7 @@
                 
               
 
-              <time title="创建时间：4月 29 2015 10:02:10" itemprop="dateCreated datePublished" datetime="2015-04-29T10:02:10+08:00">4月 29 2015</time>
+              <time title="创建时间：11月 21 2019 20:40:08" itemprop="dateCreated datePublished" datetime="2019-11-21T20:40:08+08:00">11月 21 2019</time>
             
 
             
@@ -1205,29 +929,11 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：5月 17 2019 06:56:27" itemprop="dateModified" datetime="2019-05-17T06:56:27+08:00">5月 17 2019</time>
+                <time title="修改时间：11月 23 2019 21:50:17" itemprop="dateModified" datetime="2019-11-23T21:50:17+08:00">11月 23 2019</time>
               
             
           </span>
 
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/折腾/" itemprop="url" rel="index"><span itemprop="name">折腾</span></a></span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -1237,8 +943,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2015-04-29-欢迎光临我的博客.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2015-04-29-欢迎光临我的博客.html" itemprop="commentCount"></span>
+                <a href="/2019-11-21-Linux几个重要的内核配置.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019-11-21-Linux几个重要的内核配置.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1271,45 +977,15 @@
     
       
         
-          
-            <a id="more"></a>
-<center><br><br><br><input type="text" id="intext" value="请输入你的英文名" onfocus="this.value=(this.value=='请输入你的英文名')?'':this.value;"><br><br><br><input type="submit" value="显示效果" onclick="xiamo(intext.value)"><br><br></center>
-
-
-
-<script type="text/javascript" src="http://s3.amazonaws.com/codecademy-content/courses/hour-of-code/js/alphabet.js"></script>
-
-<p><div><canvas id="myCanvas" style="width=60%"></canvas></div></p>
-<script type="text/javascript" src="http://s3.amazonaws.com/codecademy-content/courses/hour-of-code/js/bubbles.js"></script>
-<script type="text/javascript">
-
-function xiamo(text_in){
-
-var myName = text_in;
-
-var red = [0, 100, 63];
-var orange = [40, 100, 60];
-var green = [75, 100, 40];
-var blue = [196, 77, 55];
-var purple = [280, 50, 60];
-var letterColors = [red, orange, green, blue, purple];
-
-drawName(myName, letterColors);
-
-if(10 < 3)
-{
-    bubbleShape = 'square';
-}
-else
-{
-    bubbleShape = 'circle';
-}
-
-bounceBubbles();
-}
-xiamo("xiamo's note");
-</script>
-          
+          <div class="note info"><p>接触kubernetes两年有余，从18年初加入kubernetes社区来算，已经一年半，或许是时候写点什么。简单文章如何写好，难点文章如何写透，或许是一种学问，打算推一个系列：《Kubernetes GO》算是对这两年的一个总结。</p>
+<p>以下是在/etc/sysctl.conf文件中配置的几个重要内核参数，这几个参数的设置关系到系统性能。</p></div>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019-11-21-Linux几个重要的内核配置.html#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1354,7 +1030,7 @@ xiamo("xiamo's note");
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span>
+    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1377,7 +1053,7 @@ xiamo("xiamo's note");
                 <div class="gr_widget about" style="text-align: center;">
                     <h6 class="gr_widget_title"><span>About Me</span></h6>
                     <div class="gr_about_widget">
-                        <div class="gr_image_author_back" style="background:url(http://wx4.sinaimg.cn/mw690/007uo485ly1g3rsqtuql2j31400p0kjl.jpg);">
+                        <div class="gr_image_author_back" style="background:url(https://s3.ax1x.com/2021/01/12/sJW5rR.jpg);">
 -                            <div class="gr_image_author"><img src="https://s2.ax1x.com/2019/09/22/uSvEY8.jpg" class="img-responsive gr_round_img site-author-image" alt></div>
                         </div>
                         <div class="gr_about_text">Hello, my name is Zouyee.<br> I'm a programmer from SUZHOU, work on CloudNative.</div>
@@ -1409,22 +1085,6 @@ xiamo("xiamo's note");
                     <div class="textwidget"><img class="img-responsive" src="https://s2.ax1x.com/2019/09/22/uSvrtK.jpg" alt></div>
                 </div>
                 <div class="gr_widget c_widget">
-                    <h6 class="gr_widget_title"><span>Instagram Feed</span></h6>
-                    <ul class="list-unstyled gr_instagram_widget_ul instagram-size-small">
-                        <li><a href="http://instagram.com/p/BT1Tv2JDzOq/" target="_blank"><img src="./images/18299179_125245014697150_1635022718770348032_n.webp" alt="| and every tear is a waterfall |" title="| and every tear is a waterfall |" class="img-responsive"></a></li>
-                        <li><a href="http://instagram.com/p/BTyqJtfjqPb/" target="_blank"><img src="./images/18298992_1905071053110183_5124787653698387968_n.webp" alt="| the space in which we&#39;re traveling | by my @alex_pottery_art" title="| the space in which we&#39;re traveling | by my @alex_pottery_art" class="img-responsive"></a></li>
-                        <li><a href="http://instagram.com/p/BTs4JdbD1rJ/" target="_blank"><img src="./images/18251816_455478884802616_4846069457581244416_n.webp" alt="| up&amp;up |" title="| up&amp;up |" class="img-responsive"></a></li>
-                        <li><a href="http://instagram.com/p/BTbxB_ElG9y/" target="_blank"><img src="./images/18251563_1436576526404535_5034524337537810432_n.webp" alt="| Friday candy | #ihavethisthingwithfloors" title="| Friday candy | #ihavethisthingwithfloors" class="img-responsive"></a>
-                        </li>
-                        <li><a href="http://instagram.com/p/BTWOFEIlbvA/" target="_blank"><img src="/images/18011985_194692447716449_4036966420095959040_n.webp" alt="| in my place in my place |" title="| in my place in my place |" class="img-responsive"></a></li>
-                        <li><a href="http://instagram.com/p/BTTFsd3FODJ/" target="_blank"><img src="/images/18096488_1830607597262728_5575911188606222336_n.webp" alt="| just the two of us | #kat_windows" title="| just the two of us | #kat_windows" class="img-responsive"></a></li>
-                        <li><a href="http://instagram.com/p/BTRbKwID2L_/" target="_blank"><img src="/images/18095990_1760655587597268_1212529865354379264_n.webp" alt="| be colorful |" title="| be colorful |" class="img-responsive"></a></li>
-                        <li><a href="http://instagram.com/p/BSlD7RMDjJF/" target="_blank"><img src="/images/17818158_1174996802628213_4662550512955031552_n.webp" alt="| when i grow up |" title="| when i grow up |" class="img-responsive"></a>
-                        </li>
-                    </ul>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="gr_widget c_widget">
                     <h6 class="gr_widget_title"><span>Categories</span></h6>
                     <ul>
                         <li class="cat-item cat-item-2"><a href="/category/livestyle/">Livestyle</a>
@@ -1440,45 +1100,6 @@ xiamo("xiamo's note");
                         <li class="cat-item cat-item-3"><a href="/category/music/">Tech</a>
                         </li>
                     </ul>
-                </div>
-                <div class="gr_widget c_widget">
-                    <h6 class="gr_widget_title"><span>Facebook feed</span></h6>
-                    <div class="textwidget">
-                        <div class="cff-wrapper">
-                            <div id="cff" data-char="400" class="cff-default-styles">
-                                <div class="cff-item cff-status-post author--ahin-hm-dov" id="cff_80655071208_10155634461736209" style="border-bottom: 1px solid #ddd; ">
-                                    <div class="cff-author"><a href="https://facebook.com/10155453838068864" target="_blank" rel="nofollow" title="Şahin Əhmədov on Facebook">
-                                            <div class="cff-author-text">
-                                                <p class="cff-page-name cff-author-date">Şahin Əhmədov</p>
-                                                <p class="cff-date"> 3 hours ago </p>
-                                            </div>
-                                            <div class="cff-author-img"><img src="/images/picture" title="Şahin Əhmədov" alt="Şahin Əhmədov" class="img-responsive">
-                                            </div>
-                                        </a></div>
-                                    <p class="cff-post-text"><span class="cff-text" data-color>Whey yours maxshop
-                                            theme is not work true and yours support dont help us </span><span class="cff-expand">... <a href="./wp/boroda/#" style="color: #"><span class="cff-more">See More</span><span class="cff-less">See
-                                                    Less</span></a></span></p>
-                                    <div class="cff-post-links"><a class="cff-viewpost-facebook" href="https://www.facebook.com/80655071208/posts/10155634461736209" title="View on Facebook" target="_blank" rel="nofollow">View on
-                                            Facebook</a></div>
-                                </div>
-                            </div>
-                            <div class="cff-clear"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="gr_widget c_widget">
-                    <h6 class="gr_widget_title"><span>Video</span></h6>
-                    <div class="textwidget">
-                        <div class="embed-responsive embed-responsive-1by1">
-                        
-                       <iframe src="//player.bilibili.com/player.html?aid=31886449&cid=55766083&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
-                        </div>
-                    </div>
-                </div>
-                <div class="gr_widget">
-                    <h6 class="gr_widget_title"><span>ad Unit</span></h6>
-                    <div class="textwidget">
-                        <a href="https://www.vultr.com/?ref=7831562-4F"><img class="img-responsive" src="https://s2.ax1x.com/2019/09/22/uSzCIP.jpg" alt></a></div>
                 </div>
             </div>
         
@@ -1628,7 +1249,7 @@ xiamo("xiamo's note");
                     <div class="col-md-4 col-sm-12 col-xs-12">
                         <div class="gr_widget">
                             <h6 class="gr_widget_title"><span>Dou Feed</span></h6>
-                            
+
 
                             <div class="gr_tweet TableObject org-header-wrapper mb-4">
                                 <img id="github" itemprop="image" class="TableObject-item douban" src="https://s2.ax1x.com/2019/09/22/upSEY6.jpg" width="50" height="50" alt="@virtual-kubelet">
