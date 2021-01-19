@@ -125,7 +125,7 @@
 <meta property="og:image" content="https://github.com/ahmetb/kubernetes-network-policy-recipes/raw/master/img/9.gif">
 <meta property="og:image" content="https://github.com/feiskyer/kubernetes-handbook/raw/master/plugins/images/policy-controller.jpg">
 <meta property="og:image" content="https://s3.ax1x.com/2021/01/12/sJzrLt.png">
-<meta property="og:updated_time" content="2021-01-12T09:19:08.878Z">
+<meta property="og:updated_time" content="2021-01-12T22:50:02.486Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一文搞懂Kubernetes网络策略">
 <meta name="twitter:description" content="从CNCF基金会的成立，到Kubernetes社区蓬勃发展，历经6载，17年异军突起，在mesos、swarm等项目角逐中，拔得头筹，继而一统容器编排,其成功的关键原因可概括为以下几点：  项目领导者们的坚守与远见 社区的良好的运作与社区文化 社区与企业落地的正反馈  今天zouyee为大家带来《一文搞懂Kubernetes网络策略》，其中《kuberneter调度由浅入深：框架》正在编写中，敬">
@@ -371,24 +371,12 @@
                 
               
 
-              <time title="创建时间：1月 13 2021 12:40:08" itemprop="dateCreated datePublished" datetime="2021-01-13T12:40:08+08:00">1月 13 2021</time>
+              <time title="创建时间：1月 13 2021 12:40:08 / 修改时间：06:50:02" itemprop="dateCreated datePublished" datetime="2021-01-13T12:40:08+08:00">1月 13 2021</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：1月 12 2021 17:19:08" itemprop="dateModified" datetime="2021-01-12T17:19:08+08:00">1月 12 2021</time>
               
             
           </span>
@@ -648,9 +636,11 @@
 <p>创建网络策略</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># cat foo-deny-egress.yaml</span><br><span class="line">apiVersion: networking.k8s.io/v1</span><br><span class="line">kind: NetworkPolicy</span><br><span class="line">metadata:</span><br><span class="line">  name: foo-deny-egress</span><br><span class="line">spec:</span><br><span class="line">  podSelector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: foo</span><br><span class="line">  policyTypes:</span><br><span class="line">  - Egress</span><br><span class="line">  egress: []</span><br><span class="line"># kubectl apply -f foo-deny-egress.yaml</span><br></pre></td></tr></table></figure>
 <p>说明：</p>
-<pre><code>- `policyTypes: [&quot;egress&quot;]` 该策略类型为出口流量
-- `egress: []` 策略为空说明出口流量全部禁止
-</code></pre><h5 id="b-禁止命名空间非白名单流量"><a href="#b-禁止命名空间非白名单流量" class="headerlink" title="b. 禁止命名空间非白名单流量"></a>b. 禁止命名空间非白名单流量</h5><p>创建网络策略</p>
+<ul>
+<li><code>policyTypes: [&quot;egress&quot;]</code> 该策略类型为出口流量</li>
+<li><code>egress: []</code> 策略为空说明出口流量全部禁止</li>
+</ul>
+<h5 id="b-禁止命名空间非白名单流量"><a href="#b-禁止命名空间非白名单流量" class="headerlink" title="b. 禁止命名空间非白名单流量"></a>b. 禁止命名空间非白名单流量</h5><p>创建网络策略</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># cat default-deny-all-egress.yaml</span><br><span class="line">kind: NetworkPolicy</span><br><span class="line">apiVersion: networking.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  name: default-deny-all-egress</span><br><span class="line">  namespace: default</span><br><span class="line">spec:</span><br><span class="line">  policyTypes:</span><br><span class="line">  - Egress</span><br><span class="line">  podSelector: &#123;&#125;</span><br><span class="line">  egress: []</span><br><span class="line"># kubectl apply -f default-deny-all-egress.yaml</span><br></pre></td></tr></table></figure>
 <p>说明：</p>
 <ul>
@@ -820,6 +810,10 @@ jQuery.noConflict()(function ($) {
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2021-01-19-Kubernetes 调度系统框架.html" rel="prev" title="Kubernetes调度由浅入深：框架">
+                Kubernetes调度由浅入深：框架 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -898,7 +892,7 @@ jQuery.noConflict()(function ($) {
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">60</span>
+                    <span class="site-state-item-count">61</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

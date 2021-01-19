@@ -105,16 +105,22 @@
 
 
 
-  <meta name="description" content="Keep motivation for the world">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Indagate">
-<meta property="og:url" content="https://ustack.io/page/6/index.html">
+  <meta name="description" content="今天zouyee先带各位盘点CNCF上周的一些有趣的事情：  Kubernetes社区GB代表选举结束 Paris Pittman当选  CNCF孵化项目OPA进入毕业流程  上周helm项目发布v3.5.0功能性版本  CoreDNS项目通过Docker镜像仓库放开拉取限制的申请   书接上文《Kubernetes调度系统由浅入深系列：初探》，今天zouyee为大家带来《kuberneter调">
+<meta name="keywords" content="kubernetes,cloudnative">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes调度由浅入深：框架">
+<meta property="og:url" content="https://ustack.io/2021-01-19-Kubernetes 调度系统框架.html">
 <meta property="og:site_name" content="Indagate">
-<meta property="og:description" content="Keep motivation for the world">
+<meta property="og:description" content="今天zouyee先带各位盘点CNCF上周的一些有趣的事情：  Kubernetes社区GB代表选举结束 Paris Pittman当选  CNCF孵化项目OPA进入毕业流程  上周helm项目发布v3.5.0功能性版本  CoreDNS项目通过Docker镜像仓库放开拉取限制的申请   书接上文《Kubernetes调度系统由浅入深系列：初探》，今天zouyee为大家带来《kuberneter调">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/6/67/Kubernetes_logo.svg">
+<meta property="og:image" content="https://s3.ax1x.com/2021/01/19/sgNXVJ.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/01/19/sg2Jns.png">
+<meta property="og:updated_time" content="2021-01-19T12:27:46.907Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Indagate">
-<meta name="twitter:description" content="Keep motivation for the world">
+<meta name="twitter:title" content="Kubernetes调度由浅入深：框架">
+<meta name="twitter:description" content="今天zouyee先带各位盘点CNCF上周的一些有趣的事情：  Kubernetes社区GB代表选举结束 Paris Pittman当选  CNCF孵化项目OPA进入毕业流程  上周helm项目发布v3.5.0功能性版本  CoreDNS项目通过Docker镜像仓库放开拉取限制的申请   书接上文《Kubernetes调度系统由浅入深系列：初探》，今天zouyee为大家带来《kuberneter调">
+<meta name="twitter:image" content="https://upload.wikimedia.org/wikipedia/commons/6/67/Kubernetes_logo.svg">
 
 
 
@@ -123,7 +129,7 @@
 
 
 
-  <link rel="canonical" href="https://ustack.io/page/6/">
+  <link rel="canonical" href="https://ustack.io/2021-01-19-Kubernetes 调度系统框架.html">
 
 
 
@@ -133,7 +139,7 @@
   };
 </script>
 
-  <title>Indagate</title>
+  <title>Kubernetes调度由浅入深：框架 | Indagate</title>
   
 
 
@@ -278,15 +284,15 @@
 
     <main id="main" class="main row">
          
-        <div id="main-inner" class="main-inner  col-md-8 gr_sidebar_pad">
+        <div class="main-inner">
          
             <div class="content-wrap">
                 
                 <div id="content" class="content gr_grid_container">
                 
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -301,7 +307,7 @@
   
   
   <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2020-05-16-Serverless标准化夯实应用基础架构的未来.html">
+    <link itemprop="mainEntityOfPage" href="https://ustack.io/2021-01-19-Kubernetes 调度系统框架.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zouyee">
@@ -316,23 +322,22 @@
     
     <div class="head">
         <div class="gr_up_title">
-          <span class="text-overflow-center">Serverless标准化夯实应用基础架构的未来</span>
+          <span class="text-overflow-center">Kubernetes调度由浅入深：框架</span>
         </div>
         <div class="gr_blog_post_cat">
-          <span class="gr_ddate">5月 16 2020</span><span class="gr_separate">|</span>
+          <span class="gr_ddate">1月 19 2021</span><span class="gr_separate">|</span>
           
-            
-              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
+                <a href="/categories/Kubernetes-GO/" itemprop="url" rel="category tag"><span itemprop="name">Kubernetes GO</span></a>
+
+                
+                
+              
             
         </div>
         <div class="gr_blog_post_title_holder">
         
           
-          <h3 class="blog_title" itemprop="name headline">
-                
-                <a class="blog_title_a" href="/2020-05-16-Serverless标准化夯实应用基础架构的未来.html" itemprop="url">
-                  Serverless标准化夯实应用基础架构的未来
-                </a>
+          <h3 class="blog_title" itemprop="name headline">Kubernetes调度由浅入深：框架
               
             
           </h3>
@@ -357,201 +362,34 @@
                 
               
 
-              <time title="创建时间：5月 16 2020 21:40:08" itemprop="dateCreated datePublished" datetime="2020-05-16T21:40:08+08:00">5月 16 2020</time>
+              <time title="创建时间：1月 19 2021 21:40:08 / 修改时间：20:27:46" itemprop="dateCreated datePublished" datetime="2021-01-19T21:40:08+08:00">1月 19 2021</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：5月 17 2020 19:57:11" itemprop="dateModified" datetime="2020-05-17T19:57:11+08:00">5月 17 2020</time>
               
             
           </span>
 
           
-
-          
+            <span class="post-category">
             
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020-05-16-Serverless标准化夯实应用基础架构的未来.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020-05-16-Serverless标准化夯实应用基础架构的未来.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-    </div>   
-    
-
-    
-    
-    
-    
-    <div class="gr_media">
-      <div class="gr_blog_post_featuder_holder text-center">
-      
-      </div>
-    </div>
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-    
-      
-        
-          <p><img src="https://s1.ax1x.com/2020/05/16/Yc4JUK.jpg" alt></p>
-<div class="note info"><p>Serverless正在迅猛发展：根据2019度CNCF调查报告，目前有41％的受访者正在使用serverless技术，另有20％的受访者计<br>划在未来12至18个月内使用serverless技术。 serverless技术允许云化应用程序开发团队将代码交付给serverless服务商-以减少<br>开销成本，提高可伸缩性并简化DevOps周期。</p></div>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020-05-16-Serverless标准化夯实应用基础架构的未来.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-      
-
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer" stype="color:#5d3434">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2020-05-06-xDS标准引入GRPC生态.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zouyee">
-      <meta itemprop="description" content="Keep motivation for the world">
-      <meta itemprop="image" content="/images/author.webp">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Indagate">
-    </span>
-
-    
-    <div class="head">
-        <div class="gr_up_title">
-          <span class="text-overflow-center">xDS标准引入gRPC生态</span>
-        </div>
-        <div class="gr_blog_post_cat">
-          <span class="gr_ddate">5月 06 2020</span><span class="gr_separate">|</span>
-          
-            
-              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
-            
-        </div>
-        <div class="gr_blog_post_title_holder">
-        
-          
-          <h3 class="blog_title" itemprop="name headline">
-                
-                <a class="blog_title_a" href="/2020-05-06-xDS标准引入GRPC生态.html" itemprop="url">
-                  xDS标准引入gRPC生态
-                </a>
-              
-            
-          </h3>
-          
-        </div>
-        <div class="gr_blog_post_cat" style="text-align: center;">
-          <span class="post-time">
-
-            
-            
-            
-
+              <span class="post-meta-divider">|</span>
             
               <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
+                <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">发表于</span>
+                <span class="post-meta-item-text">分类于</span>
               
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Kubernetes-GO/" itemprop="url" rel="index"><span itemprop="name">Kubernetes GO</span></a></span>
 
-              
+                
                 
               
-
-              <time title="创建时间：5月 06 2020 20:40:08 / 修改时间：20:45:25" itemprop="dateCreated datePublished" datetime="2020-05-06T20:40:08+08:00">5月 06 2020</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
+            </span>
           
 
           
@@ -561,14 +399,26 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020-05-06-xDS标准引入GRPC生态.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020-05-06-xDS标准引入GRPC生态.html" itemprop="commentCount"></span>
+                <a href="/2021-01-19-Kubernetes 调度系统框架.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2021-01-19-Kubernetes 调度系统框架.html" itemprop="commentCount"></span>
                 </a>
               </span>
             
           
 
           
+          
+             <span id="/2021-01-19-Kubernetes 调度系统框架.html" class="leancloud_visitors" data-flag-title="Kubernetes调度由浅入深：框架">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+                 <span>℃</span>
+             </span>
           
 
           
@@ -591,27 +441,170 @@
       </div>
     </div>
     
-    <div class="post-body han-init-context" itemprop="articleBody">
+    <div class="post-body han-init-context" itemprop="articleBody" style="opacity: 1; display: block; transform: translateY(0px);">
     
       
-        
-          <p><img src="https://s1.ax1x.com/2020/05/06/YAWtkd.md.png" alt></p>
-<div class="note info"><p>gRPC小组正在努力扩展当前的gRPCLB功能。其不再使用自定义负载均衡协议，而是采用基于Envoy xDS API的xDS协议。这将允许与支持xDS API的开源控制<br>平面（例如Istio Pilot，go-control-plane和java-control-plane）进行交互。其他优化如下所示：</p>
+        <p><img src="https://upload.wikimedia.org/wikipedia/commons/6/67/Kubernetes_logo.svg" alt></p>
+<div class="note default"><p>今天zouyee先带各位盘点CNCF上周的一些有趣的事情：</p>
+<ol>
+<li><p>Kubernetes社区GB代表选举结束 Paris Pittman当选</p>
+</li>
+<li><p>CNCF孵化项目OPA进入毕业流程</p>
+</li>
+<li><p>上周<code>helm</code>项目发布v3.5.0功能性版本</p>
+</li>
+<li><p>CoreDNS项目通过Docker镜像仓库放开拉取限制的申请</p>
+</li>
+</ol>
+<p>书接上文《Kubernetes调度系统由浅入深系列：初探》，今天zouyee为大家带来《kuberneter调度由浅入深：框架》，该系列对应版本为<code>1.20.+</code>.</p></div>
+<a id="more"></a>
+<hr>
+<h4 id="一、前文回顾"><a href="#一、前文回顾" class="headerlink" title="一、前文回顾"></a>一、前文回顾</h4><p>在《Kubernetes调度系统由浅入深系列：初探》中，给出整体的交互图，来构建Pod调度的直观感受，我们拓展了一下交互图，如下所示。</p>
+<p>注：该交互图非专业UML，还请谅解。</p>
+<p><img src="https://s3.ax1x.com/2021/01/19/sgNXVJ.png" alt="图1 交互流程图"></p>
+<p>上述以创建一个Pod为例，简要介绍调度流程：</p>
+<ol>
+<li><p>用户通过命令行创建Pod(选择直接创建Pod而不是其他workload，是为了省略kube-controller-manager)</p>
+</li>
+<li><p>kube-apiserver经过对象校验、admission、quota等准入操作，写入etcd</p>
+</li>
+<li>kube-apiserver将结果返回给用户</li>
+<li>同时kube-scheduler一直监听节点、Pod事件等（流程1）</li>
+<li><strong>kube-scheduler将spec.nodeName的pod加入到调度队列中，调度系统选择pod，进入调度周期（本文介绍内容）（流程2-3）</strong></li>
+<li>kube-scheduler将pod与得分最高的节点进行binding操作（流程4）</li>
+<li>kube-apiserver将binding信息写入etcd</li>
+<li>kubelet监听分配给自己的Pod，调用CRI接口进行Pod创建（该部分内容后续出系列，进行介绍）</li>
+<li>kubelet创建Pod后，更新Pod状态等信息，并向kube-apiserver上报</li>
+<li>kube-apiserver写入数据</li>
+</ol>
+<h5 id="二、框架背景"><a href="#二、框架背景" class="headerlink" title="二、框架背景"></a>二、框架背景</h5><p>​    Kubernetes 随着功能的增多，代码与逻辑也日益复杂。代码体量及复杂度的提升必然带来维护成本的增加，隐形的增加错误定位和修复的难度。旧版本的Kubernetes调度程序（<strong>1.16前</strong>）提供了webhooks进行扩展。但有以下缺陷：</p>
 <ul>
-<li>更加灵活和先进的负载均衡策略配置功能</li>
-<li>基于LRS（负载报告服务）的负载报告功能等</li>
-</ul></div>
-<p>客户端侧实现的xDS负载均衡插件与当前的gRPCLB协议不兼容。因此，我们可以认为当前的gRPCLB实现已被废弃。我们正在积极致力于新协议的推进。预计在接下来的几<br>个季度中会看到更多的进展，其中包括有关新设计的gRFC。下述将介绍gRPC关于负载均衡的设计。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020-05-06-xDS标准引入GRPC生态.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+<li><p>用户可以扩展的点比较有限，位置比较固定，无法支持灵活的扩展与调配，例如只能在执行完默认的 Filter 策略后才能调用。</p>
+</li>
+<li><p>调用扩展接口使用 HTTP 请求，其受到网络影响，性能远低于本地的函数调用。同时每次调用都需要将 Pod 和 Node 的信息进行 序列化与反序列化 操作，会进一步降低性能。</p>
+</li>
+<li>Pod当前的相关信息，无法及时传递（利用调度Cache）。</li>
+</ul>
+<p>为了解决上述问题，使调度系统代码精简、扩展性更好，社区从<code>Kubernetes 1.16</code> 版本开始, 引入了一种新的调度框架- Scheduling Framework 。</p>
+<p>Scheduling Framework 在原有调度流程的基础之上, 定义了丰富的扩展点接口，开发者可以通过实现扩展点所定义的接口来实现插件，将插件注册到扩展点。Scheduling Framework 在执行调度流程时，运行到相应的扩展点时，执行用户注册的插件，生成当前阶段的结果。通过这种方式来将用户的调度逻辑集成到 Scheduling Framework 中。Scheduling Framework明确了以下目标：</p>
+<ul>
+<li>扩展性：调度更具扩展性</li>
+<li>维护性：将调度器的一些特性移到插件中</li>
+<li>功能性<ul>
+<li>框架提供扩展</li>
+<li>提供一种机制来接收插件结果并根据接收到的结果继续或终止</li>
+<li>提供一种机制处理错误与插件通信</li>
+</ul>
+</li>
+</ul>
+<h5 id="三、框架原理"><a href="#三、框架原理" class="headerlink" title="三、框架原理"></a>三、框架原理</h5><p>​    Framework 的调度流程是分为两个阶段：</p>
+<ul>
+<li>调度阶段是同步执行的，同一个周期内只有一个 scheduling cycle，线程安全</li>
+<li>绑定阶段(gouroutine)是异步执行的，同一个周期内可能会有多个 binding cycle在运行，线程不安全</li>
+</ul>
+<p>在介绍Framework 的调度流程之前，先介绍上图的调度流程，即schedulerOne的处理逻辑：</p>
+<p><strong>a. 调度阶段</strong></p>
+<pre><code>1. **过滤**操作即findNodesThatFitPod函数
+- 执行PreFilterPlugins
+- 执行FilterPlugins
+- 执行扩展 Filter
+- 若出现FitError，执行PostFilter
+2. **评分**操作即prioritizeNodes函数
+    - 执行PreScorePlugins
+    - 执行ScorePlugins
+    - 执行扩展Prioritize
+3. 挑选节点即select函数（符合条件节点，按照评分排序及采样选择）
+4. 节点预分配即assume（只是预先分配，可收回）
+5. 相关调度数据缓存即RunReservePlugins，从该节点开始，后续阶段发生错误，需要调用UnReserve，进行回滚（类似事务）
+6.  执行准入操作即RunPermitPlugins
+</code></pre><p><strong>b. 绑定阶段</strong></p>
+<pre><code>1. 执行WaitOnPermit，失败时调用RunReservePluginsUnreserve
+ 2. 执行预绑定即RunPreBindPlugins，失败时调用RunReservePluginsUnreserve
+ 3. 执行扩展bingding即extendersBinding，失败时调用RunReservePluginsUnreserve
+ 4. 执行绑定收尾工作即RunPostBindPlugins
+</code></pre><h5 id="扩展点介绍"><a href="#扩展点介绍" class="headerlink" title="扩展点介绍"></a>扩展点介绍</h5><p>上述涉及到的各类Plugins（图中紫色部分），针对下图，各位应该看了很多篇了，需要注意的是Unreserve的时机，各插件功能说明如下：</p>
+<p><code>pkg/scheduler/framework/interface.go</code></p>
+<p><img src="https://s3.ax1x.com/2021/01/19/sg2Jns.png" alt></p>
+<table>
+<thead>
+<tr>
+<th>扩展点</th>
+<th>用途说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>QueueSort</td>
+<td>用来支持自定义 Pod 的排序。如果指定 QueueSort 的排序算法，在调度队列里面就会按照指定的排序算法来进行排序，只能enable一个</td>
+</tr>
+<tr>
+<td>Prefilter</td>
+<td>对 Pod 信息的预处理，比如 Pod 的缓存等</td>
+</tr>
+<tr>
+<td>Filter</td>
+<td>对应旧式的Predicate ，过滤不满足要求的节点</td>
+</tr>
+<tr>
+<td>PostFilter</td>
+<td>用于处理当 Pod 在 Filter 阶段失败后的操作，例如抢占等行为</td>
+</tr>
+<tr>
+<td>PreScore</td>
+<td>用于在 Score 之前进行一些信息生成，也可以在此处生成一些日志或者监控信息</td>
+</tr>
+<tr>
+<td>Score</td>
+<td>对应旧式的Priority，根据 扩展点定义的评分策略挑选出最优的节点(打分与归一化处理)</td>
+</tr>
+<tr>
+<td>Reserver</td>
+<td>调度阶段的最后一个插件, 防止调度成功后资源的竞争, 确保集群的资源信息的准确性</td>
+</tr>
+<tr>
+<td>Permit</td>
+<td>主要提供了Pod绑定的拦截功能，根据条件对pod进行allow、reject或者wait。</td>
+</tr>
+<tr>
+<td>PreBind</td>
+<td>在真正 bind node 之前，执行一些操作</td>
+</tr>
+<tr>
+<td>Bind</td>
+<td>一个 Pod 只会被一个 BindPlugin 处理，创建Bind对象</td>
+</tr>
+<tr>
+<td>PostBind</td>
+<td>bind 成功之后执行的逻辑</td>
+</tr>
+<tr>
+<td>Unreserve</td>
+<td>在 Permit 到 Bind 这几个阶段只要报错就回滚数据至初始状态，类似事务。</td>
+</tr>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h5 id="四、使用场景"><a href="#四、使用场景" class="headerlink" title="四、使用场景"></a>四、使用场景</h5><p>​    下述为一些关于如何使用调度框架来解决常见调度场景的示例。</p>
+<ol>
+<li><p>联合调度</p>
+<p>类似<code>kube-batch</code>，允许调度以一定数量的Pod为整体的任务。其能够将一个训练任务的多个worker当做一个整体进行调度，只有当任务所有worker的资源都满足，才会将容器在节点上启动。</p>
+</li>
+<li><p>集群资源的动态绑定</p>
+<p> Volume topology-aware调度可以通过filter和prebind方式实现。</p>
+</li>
+<li><p>调度拓展</p>
+<p>该框架允许自定义插件，以main函数封装scheduler方式运行。</p>
+</li>
+</ol>
+<p>关于框架部分，该文就介绍到此处，接下里将进入源码阶段，后续内容为调度配置及第三方调度集成的相关内容，敬请关注。</p>
+<h5 id="五、参考资料"><a href="#五、参考资料" class="headerlink" title="五、参考资料"></a>五、参考资料</h5><pre><code>1. https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/
+ 2. https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/
+ 3. https://github.com/kubernetes/enhancements/blob/master/keps/sig-scheduling/624-scheduling-framework/README.md
+</code></pre>
       
-    </p></div>
+    </div>
 
     
       
@@ -624,380 +617,125 @@
     
 
     
+      <div class="qr_code_pc_inner">
+        <div class="qr_code_pc">
+    <img id="js_pc_qr_code_img" class="qr_code_pc_img" src="https://s2.ax1x.com/2019/09/22/upS79K.jpg" alt="zouyee wechat" style="width: 200px; max-width: 100%;">
+    <p>微信扫一扫<br>关注该公众号</p>
+</div>
+<script>
+jQuery.noConflict()(function ($) {
+    $(function () {
+		var offsetTop = $('#comments').offset().top - $(window).height();
+		
+		if (offsetTop <= 0) {
+			// load directly when there's no a scrollbar
+			console.log("....")
+		} else {
+			$(window).on('scroll', function () {
+				var scrollTop = document.documentElement.scrollTop;
+				var copyright = $('.post-copyright').offset().top;
+				
+				var imageH = $('.qr_code_pc').offset().top;
+				console.log("scrollTop", scrollTop)
+				console.log("copyright", copyright)
+				console.log("qr_code_pc", imageH)
+				if (scrollTop <= offsetTop) {
+					$('.qr_code_pc').css('position', 'absolute')
+					$('.qr_code_pc').css('top', 420)
+				}
+				if (scrollTop > 450 && copyright > scrollTop) {
+					$('.qr_code_pc').css('top', 20)
+					$('.qr_code_pc').css('position', 'fixed')
+				} else {
+					$('.qr_code_pc').css('position', 'absolute')
+				}
+			});
+		}
+	});
 
-    
+})
+</script>
 
-    
-
-    <footer class="post-footer" stype="color:#5d3434">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2020-05-06-下一代云原生网关Gloo:相关概念.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zouyee">
-      <meta itemprop="description" content="Keep motivation for the world">
-      <meta itemprop="image" content="/images/author.webp">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Indagate">
-    </span>
-
-    
-    <div class="head">
-        <div class="gr_up_title">
-          <span class="text-overflow-center">下一代云原生网关Gloo之架构赏析</span>
-        </div>
-        <div class="gr_blog_post_cat">
-          <span class="gr_ddate">5月 06 2020</span><span class="gr_separate">|</span>
-          
-            
-              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
-            
-        </div>
-        <div class="gr_blog_post_title_holder">
-        
-          
-          <h3 class="blog_title" itemprop="name headline">
-                
-                <a class="blog_title_a" href="/2020-05-06-下一代云原生网关Gloo:相关概念.html" itemprop="url">
-                  下一代云原生网关Gloo之架构赏析
-                </a>
-              
-            
-          </h3>
-          
-        </div>
-        <div class="gr_blog_post_cat" style="text-align: center;">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：5月 06 2020 20:40:08" itemprop="dateCreated datePublished" datetime="2020-05-06T20:40:08+08:00">5月 06 2020</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：5月 21 2020 21:25:30" itemprop="dateModified" datetime="2020-05-21T21:25:30+08:00">5月 21 2020</time>
-              
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020-05-06-下一代云原生网关Gloo:相关概念.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020-05-06-下一代云原生网关Gloo:相关概念.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-    </div>   
-    
-
-    
-    
-    
-    
-    <div class="gr_media">
-      <div class="gr_blog_post_featuder_holder text-center">
-      
       </div>
-    </div>
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-    
       
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span style="padding-top: 5px;">联系</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="https://s3.ax1x.com/2020/12/20/rao0M9.jpg" alt="zouyee 微信支付">
         
-          <p><img src="https://s1.ax1x.com/2020/05/21/YqsrWR.md.png" alt></p>
-<div class="note info"><p>Gloo聚合后端服务并为客户端提供端到端的功能转换，从而允许与后端API分离。客户端向在Gloo上定义的路由发出请求或<a href="https://github.com/solo-io/gloo-sdk-go" target="_blank" rel="noopener">发出事件</a>。 这些路由<br>通过Gloo的配置（由Gloo的API的客户端提供）在上游服务起作用。</p></div>
-<p>Gloo在客户端定义的路由和后端功能之间执行必要的转换，能够<br>通过其可扩展的<a href="https://github.com/solo-io/gloo/blob/master/projects/gloo/pkg/plugins/plugin_interface.go" target="_blank" rel="noopener">插件接口</a>支持各种上游功能。<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020-05-06-下一代云原生网关Gloo:相关概念.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </p></div>
-
-    
-      
-
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer" stype="color:#5d3434">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="item post post-type-normal type-post status-publish format-gallery has-post-thumbnail hentry category-livestyle tag-face tag-redhead tag-young post_format-post-format-gallery" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="gr_post_holder">
-    <link itemprop="mainEntityOfPage" href="https://ustack.io/2020-04-20-Kubernetes进阶之NT技术小解.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zouyee">
-      <meta itemprop="description" content="Keep motivation for the world">
-      <meta itemprop="image" content="/images/author.webp">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Indagate">
-    </span>
-
-    
-    <div class="head">
-        <div class="gr_up_title">
-          <span class="text-overflow-center">Kubernetes进阶之NT技术小解</span>
-        </div>
-        <div class="gr_blog_post_cat">
-          <span class="gr_ddate">4月 20 2020</span><span class="gr_separate">|</span>
-          
-            
-              <a href="/categories/tech" itemprop="url" rel="category tag"><span itemprop="name">Tech</span></a>
-            
-        </div>
-        <div class="gr_blog_post_title_holder">
-        
-          
-          <h3 class="blog_title" itemprop="name headline">
-                
-                <a class="blog_title_a" href="/2020-04-20-Kubernetes进阶之NT技术小解.html" itemprop="url">
-                  Kubernetes进阶之NT技术小解
-                </a>
-              
-            
-          </h3>
-          
-        </div>
-        <div class="gr_blog_post_cat" style="text-align: center;">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：4月 20 2020 20:40:08 / 修改时间：21:41:53" itemprop="dateCreated datePublished" datetime="2020-04-20T20:40:08+08:00">4月 20 2020</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020-04-20-Kubernetes进阶之NT技术小解.html#comments" itemprop="discussionUrl" style="padding-left: 0px;">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020-04-20-Kubernetes进阶之NT技术小解.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-    </div>   
-    
-
-    
-    
-    
-    
-    <div class="gr_media">
-      <div class="gr_blog_post_featuder_holder text-center">
-      
       </div>
-    </div>
-    
-    <div class="post-body han-init-context" itemprop="articleBody">
-    
-      
-        
-          <p><img src="https://s1.ax1x.com/2020/04/20/J1gtsK.md.png" alt></p>
-<div class="note info"><p>&lt;&lt;Kubernetes进阶&gt;&gt;系列将kubernetes系统的设计理念进行深入梳理与分享。<br>在这篇文章中我会主要介绍CPU相关的一些重要概念和技术，以此作为后续对于kubelet组件相关分析的铺垫。</p></div>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020-04-20-Kubernetes进阶之NT技术小解.html#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-      
-
-
-    
-
-    
-    
     
 
     
 
     
 
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>zouyee</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://ustack.io/2021-01-19-Kubernetes 调度系统框架.html" title="Kubernetes调度由浅入深：框架">https://ustack.io/2021-01-19-Kubernetes 调度系统框架.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
     
 
     <footer class="post-footer" stype="color:#5d3434">
       
-
+        <div class="post-tags">
+          
+            <a href="/tags/kubernetes/" rel="tag"># kubernetes</a>
+          
+            <a href="/tags/cloudnative/" rel="tag"># cloudnative</a>
+          
+        </div>
       
 
       
+      
+      
 
       
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021-01-13-一文搞懂Kubernetes网络策略.html" rel="next" title="一文搞懂Kubernetes网络策略">
+                <i class="fa fa-chevron-left"></i> 一文搞懂Kubernetes网络策略
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
       
-        <div class="post-eof"></div>
+
+      
       
     </footer>
   </div>
@@ -1007,40 +745,247 @@
   </article>
 
 
-    
-  </section>
 
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
-  </nav>
-
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
                 </div>
                 
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
 
             </div>
                 
                 
   
 
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
 
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
 
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/author.webp" alt="zouyee">
+            
+              <p class="site-author-name" itemprop="name">zouyee</p>
+              <p class="site-description motion-element" itemprop="description">Keep motivation for the world</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
                 
-        </div>
-        
-        
-        <div class="col-md-4 gr_widget_area ">
-                <div class="gr_widget about" style="text-align: center;">
-                    <h6 class="gr_widget_title"><span>About Me</span></h6>
-                    <div class="gr_about_widget">
-                        <div class="gr_image_author_back" style="background:url(https://s3.ax1x.com/2021/01/12/sJW5rR.jpg);">
--                            <div class="gr_image_author"><img src="https://s2.ax1x.com/2019/09/22/uSvEY8.jpg" class="img-responsive gr_round_img site-author-image" alt></div>
-                        </div>
-                        <div class="gr_about_text">Hello, my name is Zouyee.<br> I'm a programmer from SUZHOU, work on CloudNative.</div>
-                        
-            <div class="links-of-author motion-element" style="opacity: 1; display: block; transform: translateX(0px);">
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
               
                 <span class="links-of-author-item">
                   <a href="https://twitter.com/zouyee" target="_blank" title="Twitter" rel="external nofollow"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
@@ -1059,31 +1004,69 @@
               
             </div>
           
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="gr_widget c_widget">
-                    <h6 class="gr_widget_title"><span>advertising</span></h6>
-                    <div class="textwidget"><img class="img-responsive" src="https://s2.ax1x.com/2019/09/22/uSvrtK.jpg" alt></div>
-                </div>
-                <div class="gr_widget c_widget">
-                    <h6 class="gr_widget_title"><span>Categories</span></h6>
-                    <ul>
-                        <li class="cat-item cat-item-2"><a href="/category/livestyle/">Livestyle</a>
-                        </li>
-                        <li class="cat-item cat-item-4"><a href="/category/people/">People</a>
-                        </li>
-                        <li class="cat-item cat-item-5"><a href="/category/place/">CloudNative</a>
-                        </li>
-                        <li class="cat-item cat-item-6"><a href="/category/video/">Serveless</a>
-                        </li>
-                         <li class="cat-item cat-item-6"><a href="/category/video/">Golang</a>
-                        </li>
-                        <li class="cat-item cat-item-3"><a href="/category/music/">Tech</a>
-                        </li>
-                    </ul>
-                </div>
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank" rel="external nofollow">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+              </a>
             </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.zoues.com/" title="Zoues" target="_blank">Zoues</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、前文回顾"><span class="nav-number">1.</span> <span class="nav-text">一、前文回顾</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#二、框架背景"><span class="nav-number">1.1.</span> <span class="nav-text">二、框架背景</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#三、框架原理"><span class="nav-number">1.2.</span> <span class="nav-text">三、框架原理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#扩展点介绍"><span class="nav-number">1.3.</span> <span class="nav-text">扩展点介绍</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#四、使用场景"><span class="nav-number">1.4.</span> <span class="nav-text">四、使用场景</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#五、参考资料"><span class="nav-number">1.5.</span> <span class="nav-text">五、参考资料</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+                
+        </div>
+        
         
     </main>
 
@@ -1373,6 +1356,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
 
   
 
