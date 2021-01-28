@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://ustack.io/2021-01-28-Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5.html</loc>
+    
+    <lastmod>2021-01-28T03:04:00.970Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://ustack.io/2021-01-21-Kubernetes%E5%BA%9F%E5%BC%83PodSecurityPolicy%E5%90%8E%E7%BB%AD.html</loc>
+    
+    <lastmod>2021-01-20T05:45:20.331Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://ustack.io/2021-01-19-Kubernetes%20%E8%B0%83%E5%BA%A6%E7%B3%BB%E7%BB%9F%E6%A1%86%E6%9E%B6.html</loc>
     
     <lastmod>2021-01-19T12:27:46.907Z</lastmod>
