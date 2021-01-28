@@ -114,13 +114,13 @@
 <meta property="og:description" content="OpenAI已经将Kubernetes集群规模扩展至7500个节点，为大型神经网络模型（如GPT-3，CLIP和DALL·E）及小型实验性研究提供了可扩展的基础架构。 很少将单个Kubernetes集群扩展到如此规模，为此进行了一些必要的改进，但好处是单一的基础架构使我们的机器学习研究团队可以在不修改代码的前提下，快速扩展以缩短实验时间、加速研发进度。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/6/67/Kubernetes_logo.svg">
-<meta property="og:image" content="https://ustack.io/Users/zoues/Desktop/截屏2021-01-27%20下午4.20.03.png">
-<meta property="og:image" content="https://ustack.io/Users/zoues/Desktop/截屏2021-01-27%20下午4.21.17.png">
-<meta property="og:image" content="https://ustack.io/Users/zoues/Desktop/截屏2021-01-27%20下午4.24.00.png">
-<meta property="og:image" content="https://ustack.io/Users/zoues/Desktop/截屏2021-01-27%20下午4.25.19.png">
-<meta property="og:image" content="https://ustack.io/Users/zoues/Desktop/截屏2021-01-27%20下午4.26.10.png">
-<meta property="og:image" content="https://ustack.io/Users/zoues/Desktop/截屏2021-01-27%20下午4.26.58.png">
-<meta property="og:updated_time" content="2021-01-28T03:04:00.970Z">
+<meta property="og:image" content="https://s3.ax1x.com/2021/01/28/yS7JHA.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/01/28/yS7GBd.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/01/28/yS7tAI.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/01/28/yS78nH.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/01/28/yS71je.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/01/28/yS7NNt.png">
+<meta property="og:updated_time" content="2021-01-28T04:35:56.628Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OpenAI关于Kubernetes集群近万节点的生产实践">
 <meta name="twitter:description" content="OpenAI已经将Kubernetes集群规模扩展至7500个节点，为大型神经网络模型（如GPT-3，CLIP和DALL·E）及小型实验性研究提供了可扩展的基础架构。 很少将单个Kubernetes集群扩展到如此规模，为此进行了一些必要的改进，但好处是单一的基础架构使我们的机器学习研究团队可以在不修改代码的前提下，快速扩展以缩短实验时间、加速研发进度。">
@@ -363,7 +363,7 @@
                 
               
 
-              <time title="创建时间：1月 28 2021 08:40:08 / 修改时间：11:04:00" itemprop="dateCreated datePublished" datetime="2021-01-28T08:40:08+08:00">1月 28 2021</time>
+              <time title="创建时间：1月 28 2021 08:40:08 / 修改时间：12:35:56" itemprop="dateCreated datePublished" datetime="2021-01-28T08:40:08+08:00">1月 28 2021</time>
             
 
             
@@ -434,12 +434,12 @@
 <p>作者：Benjamin Chess、Eric Sigler</p>
 <p>译者：zouyee</p>
 <p>原文：<a href="https://openai.com/blog/scaling-kubernetes-to-7500-nodes/" target="_blank" rel="noopener">https://openai.com/blog/scaling-kubernetes-to-7500-nodes/</a></p>
-<p><img src="/Users/zoues/Desktop/截屏2021-01-27 下午4.20.03.png" alt></p>
+<p><img src="https://s3.ax1x.com/2021/01/28/yS7JHA.png" alt></p>
 <p>自上一篇有关扩展到2500个节点的文章以来，我们一直在不断扩展基础架构以满足研究人员的需求，并在此过程中学习了许多其他相关知识。 该篇文章总结了相关经验，以便Kubernetes社区中的其他人可以从中受益，接下来介绍，需要解决的问题。</p>
 <h4 id="一、工作负载"><a href="#一、工作负载" class="headerlink" title="一、工作负载"></a>一、工作负载</h4><p>首先需要说明的是，针对工作负载，我们在Kubernetes集群上运行的应用程序和硬件与其他公司中的场景完全不同。我们面临的问题和相应的解决方案可能与读者所处的实际场景不是太一致。</p>
 <p>大型的机器学习作业可以访问多个节点，及每个节点上的所有硬件资源，因此运行效率最高。允许GPU使用NVLink进行交叉通信，或者GPU使用GPUDirect与NIC通信。因此，对于我们的许多工作负载，单个pod占据了整个节点，因此调度不涉及任何NUMA，CPU或PCIE资源抢占。当前的集群具有完整的双向带宽互通，因此无需考虑任何网络拓扑。因此，调度程序的压力相对较低。</p>
 <p>因为一个新的任务可能包含数百个Pod调度的需求，kube-scheduler存在毛刺现象。</p>
-<p><img src="/Users/zoues/Desktop/截屏2021-01-27 下午4.21.17.png" alt></p>
+<p><img src="https://s3.ax1x.com/2021/01/28/yS7GBd.png" alt></p>
 <p>最大的job是运行MPI（并行计算），job中的所有Pod都工作在同一个MPI通信器中。任何Pod的消亡，都会导致整个job暂停，并重新启动。job定期备份相关信息（即checkpoint），在重新启动时从最近的备份信息处恢复。</p>
 <p>我们不完全依赖Kubernetes进行负载平衡。我们的七层流量很少，因为不需要进行A / B测试，蓝绿升级或金丝雀发布等。 Pod通过SSH与其他Pod的MPI直接通信(这部分貌似有点疑问)，而不是<code>service endpoint</code>。服务发现功能相对有限，因为我们只执行一次查找，即在工作启动时（pod刚参与MPI时）。</p>
 <p>大多数job都与Blob类型存储进行交互，通常直接向Blob传输一些数据集的分片，或将其缓存到本地盘。我们也使用了一些PersistentVolumes，但是blob类型存储具有更好的伸缩性，并且不需要挂载、卸载操作。</p>
@@ -454,17 +454,17 @@
 <p>一旦标记，iptables将启动计数器以跟踪与此规则匹配的字节和数据包。 </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">% iptables -t mangle -L -v</span><br><span class="line">Chain FORWARD (policy ACCEPT 50M packets, 334G bytes)</span><br><span class="line"> pkts bytes target     prot opt in     out     source               destination</span><br><span class="line">....</span><br><span class="line">1253K  555M            all  --  any    any     anywhere            !10.0.0.0/8           /* iptables-exporter openai traffic=internet-out */</span><br><span class="line">1161K 7937M            all  --  any    any    !10.0.0.0/8           anywhere             /* iptables-exporter openai traffic=internet-in */</span><br></pre></td></tr></table></figure>
 <p>我们使用基于Prometheus的<code>iptables-exporter</code>的方案，然后将其接入到我们的监控系统。 </p>
-<p><img src="/Users/zoues/Desktop/截屏2021-01-27 下午4.24.00.png" alt></p>
+<p><img src="https://s3.ax1x.com/2021/01/28/yS7tAI.png" alt></p>
 <p>我们网络模型的一个特别的地方是，我们向研究人员公开了节点，容器和服务网络CIDR范围。 我们有一个辐射状网络模型，并使用本机节点和Pod CIDR范围来路由该流量。 研究人员连接到中枢节点，从那里可以访问任何单个集群。 但是集群本身无法相互通信。 这样可以确保集群间相互隔离，且没有跨集群的依存关系以破坏隔离（译者表示…）。</p>
 <p>我们使用主机<code>NAT</code>来转换服务网络CIDR，以处理来自集群外部的流量。 这种设置使我们的研究人员在选择实验方式和选择哪种网络配置上具有极大的灵活性。</p>
 <hr>
 <h5 id="三、API-Server"><a href="#三、API-Server" class="headerlink" title="三、API Server"></a>三、API Server</h5><p>Kubernetes的API Server和etcd集群是集群健康运行的关键组件，因此我们特别注意这些系统上的压力。 我们使用kube-prometheus项目提供的Grafana以及其他内部仪表板。 我们发现针对API Server的HTTP（如429、5xx等状态）告警还是很有效的。</p>
-<p><img src="/Users/zoues/Desktop/截屏2021-01-27 下午4.25.19.png" alt></p>
+<p><img src="https://s3.ax1x.com/2021/01/28/yS78nH.png" alt></p>
 <p>尽管大多数人在k8s集群内运行API Server，但我们选择在集群外运行。 etcd和API Server服务都在它们自己的专用节点上运行。 我们最大的集群运行了5个API  Server和5个etcd节点，以分散负载并最大程度地降低影响（如果其中一台发生故障）。 自从我们在上一篇文章中将Kubernetes Events写入到其他etcd集群以来，我们在etcd方面没有遇到任何麻烦。 API Server是无状态的，通常很容易在自愈实例组或规模集中运行。 我们尚未尝试建立etcd集群的任何自愈等自动化功能。</p>
 <p>API  Server会占用相当大的内存，并且会随着集群中节点的数量线性上升。 对于具有7500个节点的集群，我们观察到每个API Server最多使用了70GB。</p>
-<p><img src="/Users/zoues/Desktop/截屏2021-01-27 下午4.26.10.png" alt></p>
+<p><img src="https://s3.ax1x.com/2021/01/28/yS71je.png" alt></p>
 <p>API Server上的另一大压力是API上的WATCH能力，例如<code>kubelet</code>和<code>node-exporter</code>。 当从集群中添加或删除节点时，将触发此WATCH。 并且由于通常每个节点本身都通过<code>kube-proxy</code>监视<code>kubelet</code>服务（译者：可通过本地LB优化，并分配固定几个Master），因此这些响应所需的带宽为节点的二次方，有时甚至达到1GB / s或更高。 在Kubernetes 1.17中的EndpointSlices特性带来巨大的优化，使此负载降低了1000倍。</p>
-<p><img src="/Users/zoues/Desktop/截屏2021-01-27 下午4.26.58.png" alt></p>
+<p><img src="https://s3.ax1x.com/2021/01/28/yS7NNt.png" alt></p>
 <p>通常，我们密切关注任何随集群大小扩展的API Server请求。 我们尝试避免让任何DaemonSet与API Server进行交互。 在确实需求更改所有节点的监控组件时，引入中间缓存服务（例如Datadog Cluster Agent）似乎成了一种避免集群范围瓶颈的最佳实践。</p>
 <p>随着集群数量的增长，我们对集群的自动伸缩操作逐步减少。 有时自动伸缩超标时，我们就会遇到麻烦。 当新节点加入集群时，就会产生许多请求，并且一次添加数百个节点可能会使API Server服务过载。</p>
 <hr>
