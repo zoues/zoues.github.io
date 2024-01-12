@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="OpenAI已经将Kubernetes集群规模扩展至7500个节点，为大型神经网络模型（如GPT-3，CLIP和DALL·E）及小型实验性研究提供了可扩展的基础架构。 很少将单个Kubernetes集群扩展到如此规模，为此进行了一些必要的改进，但好处是单一的基础架构使我们的机器学习研究团队可以在不修改代码的前提下，快速扩展以缩短实验时间、加速研发进度。  作者：Benjamin Chess、Eri">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenAI关于Kubernetes集群近万节点的生产实践">
+<meta property="og:url" content="http://example.com/2021/01/28/Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/index.html">
+<meta property="og:site_name" content="ustack.io">
+<meta property="og:description" content="OpenAI已经将Kubernetes集群规模扩展至7500个节点，为大型神经网络模型（如GPT-3，CLIP和DALL·E）及小型实验性研究提供了可扩展的基础架构。 很少将单个Kubernetes集群扩展到如此规模，为此进行了一些必要的改进，但好处是单一的基础架构使我们的机器学习研究团队可以在不修改代码的前提下，快速扩展以缩短实验时间、加速研发进度。  作者：Benjamin Chess、Eri">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s3.ax1x.com/2021/01/28/yS7JHA.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/01/28/yS7GBd.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/01/28/yS7tAI.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/01/28/yS78nH.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/01/28/yS71je.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/01/28/yS7NNt.png">
+<meta property="article:published_time" content="2021-01-28T00:40:08.000Z">
+<meta property="article:modified_time" content="2023-12-22T10:20:14.052Z">
+<meta property="article:author" content="zouyee">
+<meta property="article:tag" content="cloudnative">
+<meta property="article:tag" content="kubernetes">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s3.ax1x.com/2021/01/28/yS7JHA.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>OpenAI关于Kubernetes集群近万节点的生产实践</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="ustack.io" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/tags/~">tags</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2023/12/21/hello-world/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2021/01/21/Kubernetes%E5%BA%9F%E5%BC%83PodSecurityPolicy%E5%90%8E%E7%BB%AD/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2021/01/28/Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2021/01/28/Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/&text=OpenAI关于Kubernetes集群近万节点的生产实践"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2021/01/28/Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/&title=OpenAI关于Kubernetes集群近万节点的生产实践"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2021/01/28/Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/&is_video=false&description=OpenAI关于Kubernetes集群近万节点的生产实践"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=OpenAI关于Kubernetes集群近万节点的生产实践&body=Check out this article: http://example.com/2021/01/28/Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2021/01/28/Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/&title=OpenAI关于Kubernetes集群近万节点的生产实践"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2021/01/28/Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/&title=OpenAI关于Kubernetes集群近万节点的生产实践"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2021/01/28/Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/&title=OpenAI关于Kubernetes集群近万节点的生产实践"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2021/01/28/Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/&title=OpenAI关于Kubernetes集群近万节点的生产实践"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2021/01/28/Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/&name=OpenAI关于Kubernetes集群近万节点的生产实践&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2021/01/28/Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/&t=OpenAI关于Kubernetes集群近万节点的生产实践"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%B7%A5%E4%BD%9C%E8%B4%9F%E8%BD%BD"><span class="toc-number">1.</span> <span class="toc-text">一、工作负载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%BD%91%E7%BB%9C"><span class="toc-number">2.</span> <span class="toc-text">二、网络</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%89%E3%80%81API-Server"><span class="toc-number">2.1.</span> <span class="toc-text">三、API Server</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E7%9B%91%E6%8E%A7"><span class="toc-number">2.2.</span> <span class="toc-text">四、监控</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5"><span class="toc-number">2.3.</span> <span class="toc-text">五、健康检查</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#a-%E8%A2%AB%E5%8A%A8%E6%A3%80%E6%9F%A5"><span class="toc-number">2.4.</span> <span class="toc-text">a. 被动检查</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#b-GPU%E5%8A%A8%E6%80%81%E6%B5%8B%E8%AF%95"><span class="toc-number">2.5.</span> <span class="toc-text">b. GPU动态测试</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E8%B5%84%E6%BA%90%E9%85%8D%E9%A2%9D%E5%8F%8A%E7%94%A8%E9%87%8F"><span class="toc-number">2.6.</span> <span class="toc-text">五、资源配额及用量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%88%90%E7%BB%84%E8%B0%83%E5%BA%A6-Gang-scheduling"><span class="toc-number">2.7.</span> <span class="toc-text">六、成组调度(Gang scheduling)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E7%BB%93%E8%AE%BA"><span class="toc-number">2.8.</span> <span class="toc-text">七、结论</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">3.</span> <span class="toc-text">参考资料</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        OpenAI关于Kubernetes集群近万节点的生产实践
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zouyee</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-01-28T00:40:08.000Z" class="dt-published" itemprop="datePublished">2021-01-28</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/cloudnative/" rel="tag">cloudnative</a>, <a class="p-category" href="/tags/kubernetes/" rel="tag">kubernetes</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>OpenAI已经将Kubernetes集群规模扩展至7500个节点，为大型神经网络模型（如GPT-3，CLIP和DALL·E）及小型实验性研究提供了可扩展的基础架构。 很少将单个Kubernetes集群扩展到如此规模，为此进行了一些必要的改进，但好处是单一的基础架构使我们的机器学习研究团队可以在不修改代码的前提下，快速扩展以缩短实验时间、加速研发进度。</p>
+<hr>
+<p>作者：Benjamin Chess、Eric Sigler</p>
+<p>译者：zouyee</p>
+<p>原文：<a target="_blank" rel="noopener" href="https://openai.com/blog/scaling-kubernetes-to-7500-nodes/">https://openai.com/blog/scaling-kubernetes-to-7500-nodes/</a></p>
+<p><img src="https://s3.ax1x.com/2021/01/28/yS7JHA.png"></p>
+<p>自上一篇有关扩展到2500个节点的文章以来，我们一直在不断扩展基础架构以满足研究人员的需求，并在此过程中学习了许多其他相关知识。 该篇文章总结了相关经验，以便Kubernetes社区中的其他人可以从中受益，接下来介绍，需要解决的问题。</p>
+<h4 id="一、工作负载"><a href="#一、工作负载" class="headerlink" title="一、工作负载"></a>一、工作负载</h4><p>首先需要说明的是，针对工作负载，我们在Kubernetes集群上运行的应用程序和硬件与其他公司中的场景完全不同。我们面临的问题和相应的解决方案可能与读者所处的实际场景不是太一致。</p>
+<p>大型的机器学习作业可以访问多个节点，及每个节点上的所有硬件资源，因此运行效率最高。允许GPU使用NVLink进行交叉通信，或者GPU使用GPUDirect与NIC通信。因此，对于我们的许多工作负载，单个pod占据了整个节点，因此调度不涉及任何NUMA，CPU或PCIE资源抢占。当前的集群具有完整的双向带宽互通，因此无需考虑任何网络拓扑。因此，调度程序的压力相对较低。</p>
+<p>因为一个新的任务可能包含数百个Pod调度的需求，kube-scheduler存在毛刺现象。</p>
+<p><img src="https://s3.ax1x.com/2021/01/28/yS7GBd.png"></p>
+<p>最大的job是运行MPI（并行计算），job中的所有Pod都工作在同一个MPI通信器中。任何Pod的消亡，都会导致整个job暂停，并重新启动。job定期备份相关信息（即checkpoint），在重新启动时从最近的备份信息处恢复。</p>
+<p>我们不完全依赖Kubernetes进行负载平衡。我们的七层流量很少，因为不需要进行A &#x2F; B测试，蓝绿升级或金丝雀发布等。 Pod通过SSH与其他Pod的MPI直接通信(这部分貌似有点疑问)，而不是<code>service endpoint</code>。服务发现功能相对有限，因为我们只执行一次查找，即在工作启动时（pod刚参与MPI时）。</p>
+<p>大多数job都与Blob类型存储进行交互，通常直接向Blob传输一些数据集的分片，或将其缓存到本地盘。我们也使用了一些PersistentVolumes，但是blob类型存储具有更好的伸缩性，并且不需要挂载、卸载操作。</p>
+<p>超级计算团队努力致力于提供生产级别的计算基础架构，当前在该集群上运行的应用寿命较短，开发人员正在快速迭代中。任何时候都有可能出现新的应用场景，这需要我们对趋势进行预判，并做出适当折衷的设想。</p>
+<hr>
+<h4 id="二、网络"><a href="#二、网络" class="headerlink" title="二、网络"></a>二、网络</h4><p>随着集群中节点和Pod数量的增加，我们发现<code>Flannel</code>难以满足需求。转而使用主机pod网络技术进行Azure VMSSes和相关CNI插件的IP配置。这使我们能够在Pod上获得主机级别的网络吞吐量。</p>
+<p>我们改用基于别名的IP寻址的另一个原因是，在我们最大的集群上，我们可能随时有大约200,000个IP地址正在使用。在测试基于路由的Pod网络时，我们发现路由数量存在明显的限制。</p>
+<p>改造SDN或路由引擎虽然麻烦，但它会使我们的网络设置变得简单。无需任何其他适配器即可添加VPN或隧道。同时我们不必担心数据包分片，因为网络的某些部分的MTU较低。网络策略和流量监控非常简单；数据包的来源和目的地没有任何歧义。</p>
+<p>我们在主机上使用iptables来跟踪每个命名空间和pod的网络资源使用情况。这使研究人员可以可视化其网络使用。由于我们的许多实验都具有独特的外部和Pod内部通信模式，因此对于调查可能出现瓶颈的位置很有用。</p>
+<p>iptables mangle规则可用于标记任意符合特定条件的数据包。如下是我们用来检测流量是内部流量还是外部流量的规则。 FORWARD规则涵盖来自Pod的流量，以及来自主机的INPUT和OUTPUT流量：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iptables -t mangle -A INPUT ! -s 10.0.0.0/8 -m comment --comment &quot;iptables-exporter openai traffic=internet-in&quot;</span><br><span class="line">iptables -t mangle -A FORWARD ! -s 10.0.0.0/8 -m comment --comment &quot;iptables-exporter openai traffic=internet-in&quot;</span><br><span class="line">iptables -t mangle -A OUTPUT ! -d 10.0.0.0/8 -m comment --comment &quot;iptables-exporter openai traffic=internet-out&quot;</span><br><span class="line">iptables -t mangle -A FORWARD ! -d 10.0.0.0/8 -m comment --comment &quot;iptables-exporter openai traffic=internet-out&quot;</span><br></pre></td></tr></table></figure>
+
+<p>一旦标记，iptables将启动计数器以跟踪与此规则匹配的字节和数据包。 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">% iptables -t mangle -L -v</span><br><span class="line">Chain FORWARD (policy ACCEPT 50M packets, 334G bytes)</span><br><span class="line"> pkts bytes target     prot opt in     out     source               destination</span><br><span class="line">....</span><br><span class="line">1253K  555M            all  --  any    any     anywhere            !10.0.0.0/8           /* iptables-exporter openai traffic=internet-out */</span><br><span class="line">1161K 7937M            all  --  any    any    !10.0.0.0/8           anywhere             /* iptables-exporter openai traffic=internet-in */</span><br></pre></td></tr></table></figure>
+
+<p>我们使用基于Prometheus的<code>iptables-exporter</code>的方案，然后将其接入到我们的监控系统。 </p>
+<p><img src="https://s3.ax1x.com/2021/01/28/yS7tAI.png"></p>
+<p>我们网络模型的一个特别的地方是，我们向研究人员公开了节点，容器和服务网络CIDR范围。 我们有一个辐射状网络模型，并使用本机节点和Pod CIDR范围来路由该流量。 研究人员连接到中枢节点，从那里可以访问任何单个集群。 但是集群本身无法相互通信。 这样可以确保集群间相互隔离，且没有跨集群的依存关系以破坏隔离（译者表示…）。</p>
+<p>我们使用主机<code> NAT</code>来转换服务网络CIDR，以处理来自集群外部的流量。 这种设置使我们的研究人员在选择实验方式和选择哪种网络配置上具有极大的灵活性。</p>
+<hr>
+<h5 id="三、API-Server"><a href="#三、API-Server" class="headerlink" title="三、API Server"></a>三、API Server</h5><p>Kubernetes的API Server和etcd集群是集群健康运行的关键组件，因此我们特别注意这些系统上的压力。 我们使用kube-prometheus项目提供的Grafana以及其他内部仪表板。 我们发现针对API Server的HTTP（如429、5xx等状态）告警还是很有效的。</p>
+<p><img src="https://s3.ax1x.com/2021/01/28/yS78nH.png"></p>
+<p>尽管大多数人在k8s集群内运行API Server，但我们选择在集群外运行。 etcd和API Server服务都在它们自己的专用节点上运行。 我们最大的集群运行了5个API  Server和5个etcd节点，以分散负载并最大程度地降低影响（如果其中一台发生故障）。 自从我们在上一篇文章中将Kubernetes Events写入到其他etcd集群以来，我们在etcd方面没有遇到任何麻烦。 API Server是无状态的，通常很容易在自愈实例组或规模集中运行。 我们尚未尝试建立etcd集群的任何自愈等自动化功能。</p>
+<p>API  Server会占用相当大的内存，并且会随着集群中节点的数量线性上升。 对于具有7500个节点的集群，我们观察到每个API Server最多使用了70GB。</p>
+<p><img src="https://s3.ax1x.com/2021/01/28/yS71je.png"></p>
+<p>API Server上的另一大压力是API上的WATCH能力，例如<code>kubelet</code>和<code> node-exporter</code>。 当从集群中添加或删除节点时，将触发此WATCH。 并且由于通常每个节点本身都通过<code>kube-proxy</code>监视<code>kubelet</code>服务（译者：可通过本地LB优化，并分配固定几个Master），因此这些响应所需的带宽为节点的二次方，有时甚至达到1GB &#x2F; s或更高。 在Kubernetes 1.17中的EndpointSlices特性带来巨大的优化，使此负载降低了1000倍。</p>
+<p><img src="https://s3.ax1x.com/2021/01/28/yS7NNt.png"></p>
+<p>通常，我们密切关注任何随集群大小扩展的API Server请求。 我们尝试避免让任何DaemonSet与API Server进行交互。 在确实需求更改所有节点的监控组件时，引入中间缓存服务（例如Datadog Cluster Agent）似乎成了一种避免集群范围瓶颈的最佳实践。</p>
+<p>随着集群数量的增长，我们对集群的自动伸缩操作逐步减少。 有时自动伸缩超标时，我们就会遇到麻烦。 当新节点加入集群时，就会产生许多请求，并且一次添加数百个节点可能会使API Server服务过载。</p>
+<hr>
+<h5 id="四、监控"><a href="#四、监控" class="headerlink" title="四、监控"></a>四、监控</h5><p>我们使用Prometheus收集指标，并使用Grafana配置图形界面，管理仪表板和警报。我们从部署<code>kube-prometheus</code>项目开始，该项目收集各种指标，并提供良好的仪表板以完成可视化。随着时间的推移，我们添加了许多自己特有的仪表板，指标和警报。</p>
+<p>随着节点日益增多，我们发现Prometheus收集的大量指标毫无用处。尽管kube-prometheus公开了许多有用的数据，但其中有部分我们从未使用过。我们使用Prometheus接口<code>删除</code>其中的某些指标。</p>
+<p>一段时间以来，我们一直在努力解决一个问题，即Prometheus会消耗越来越多的内存，直到最终OOM。即使在设置了超大内存容量之后，这种情况似乎仍会发生（译者：该问题应该是发生在旧版本）。更糟糕的是，当它崩溃时，启动后需要花费很多时间进行恢复。</p>
+<p>最终，我们找到了这些OOM的来源，是Grafana和Prometheus之间的交互，其中Grafana调用Prometheus接口<code>/api/v1/series</code>查询。<code> /api/v1/series</code>接口获取所有监控指标，这将带来内存的持续增长。我们改进了Prometheus，使其在Context中包含此超时控制。</p>
+<p>虽然Prometheus崩溃的频率降低了很多，但在确实需要重新启动它的时候，WAL恢复仍然是一个问题。在Prometheus收集新指标和为查询提供服务之前，通常需要花费很长时间来恢复所有WAL日志。在Robust Perception的帮助下，我们发现通过配置GOMAXPROCS &#x3D; 24进行优化。 Prometheus会在WAL重放期间尝试使用所有内核，而对于具有大量内核的服务器来说，抢占会削减性能。</p>
+<hr>
+<h5 id="五、健康检查"><a href="#五、健康检查" class="headerlink" title="五、健康检查"></a>五、健康检查</h5><p>对于规模如此大的集群，当然需要依靠自动化来检测和删除集群中行为异常的节点。 随之逐步深入，我们已经建立了一套完善的健康检查系统。</p>
+<h5 id="a-被动检查"><a href="#a-被动检查" class="headerlink" title="a. 被动检查"></a>a. 被动检查</h5><p>（译者：可以将之称为性能监控）某些运行状况检查是被动的，始终在所有节点上运行。它们监视基本的系统资源，例如网络可达性，磁盘损坏或磁盘已满或GPU错误等。 GPU会出现多种不同的问题，但一个比较常见的错误是<code>无法纠正的ECC错误</code>。 Nvidia的数据中心GPU管理器（DCGM）工具使查询此错误和许多其他<code>Xid</code>错误变得容易了许多。我们跟踪这些错误的一种方法是通过<code>dcgm-exporter</code>将指标抓取到我们的监控系统Prometheus中。其为DCGM_FI_DEV_XID_ERRORS指标。此外，NVML设备查询API公开了有关GPU的运行状况和操作的详细信息。</p>
+<p>一旦我们检测到错误，通常可以通过重置GPU或系统来修复它们。</p>
+<p>健康检查的另一种形式是跟踪来自上游云提供商的维护事件。大多数云提供商都提供了一种方法来了解当前虚拟机是否由于即将发生的维护事件而导致的中断。如安装升级补丁、替换硬件等。</p>
+<p>这些被动运行的监控运行在所有节点上。如果健康检查开始失败，该节点将自动建立报警，对于更严重的健康检查故障，我们还将尝试驱逐容器，该操组由Pod本身决定，可以通过Pod Disruption Budget进行配置，以决定是否允许这种驱逐。</p>
+<h5 id="b-GPU动态测试"><a href="#b-GPU动态测试" class="headerlink" title="b. GPU动态测试"></a>b. GPU动态测试</h5><p>不幸的是，并非所有GPU问题都表现为通过DCGM可见的错误代码。我们已经建立了自己的测试库，这些测试库可以利用GPU来捕获其他问题，并确保硬件和驱动程序的运行情况符合预期。这些测试无法在后台运行，它们需要在几秒钟或几分钟内独占GPU。</p>
+<p>所有节点都以<code>preflight</code>污点和标签加入集群。此污点会阻止在节点上调度常规Pod。将DaemonSet配置为在带有此标签的节点上运行预检测试Pod。成功完成测试后，测试本身将去除<code>preflight</code>污点和标签，然后该节点即可用于常规用途。</p>
+<p>随后，我们将在节点的生命周期内定期运行这些测试。我们以CronJob方式运行，使其可以在群集中的任何可用节点上运行。</p>
+<hr>
+<h5 id="五、资源配额及用量"><a href="#五、资源配额及用量" class="headerlink" title="五、资源配额及用量"></a>五、资源配额及用量</h5><p>随着我们集群规模的不断扩大，然而研究人员开始发现自己难以获得分配的所有容量。 传统的调度系统具有许多不同的能力以确保团队之间公平地运行任务，而Kubernetes则没有。我们从这些调度系统中获得了灵感，并以Kubernetes原生的方式构建了一些功能。</p>
+<p><em><strong>污点</strong></em></p>
+<p>我们在每个集群中都有一个服务，即<code>team-resource-manager</code>，它具有多种功能。 它的数据源是ConfigMap，它为在给定集群中具有容量的所有研究团队指定元组（节点选择器，要应用的团队标签，分配数量）。 它使用openai.com&#x2F;team&#x3D;teamname:NoSchedule调整适当数量的节点。</p>
+<p><code>team-resource-manager</code>还配置一个<code>admission webhook</code>(译者：即准入服务插件)服务，以便在提交每个作业时，根据提交者的团队成员身份应用相应的容忍度。 通过使用污点，我们可以灵活地约束Kubernetes Pod Scheduler，例如允许对优先级较低的Pod允许<code>任意</code>容忍，这允许团队在无需强力协调的情况下资源共享。</p>
+<p><em><strong>CPU &amp; GPU balloons</strong></em></p>
+<p>除了使用cluster-autoscaler动态扩展虚拟机集群外，我们还使用它来管理（删除和重新添加）集群中不正常的节点。为此，我们将激情的<code>最小</code>设置为零，并将集群的<code>最大</code>设置为可用容量。但是，如果cluster-autoscaler看到空闲节点，则将尝试缩小到仅所需的容量。由于多种原因（VM启动延迟，预分配的成本，上述API Server的影响），这种空闲扩展并不理想。</p>
+<p>因此，我们为CPU和GPU主机引入了balloons Deployment。该Deployment包含一个具有<code>最大值</code>数量的低优先级容器配置。这些Pod占用了节点内的资源，因此自cluster-autoscaler不会将其视为空闲。但是，由于它们的优先级较低，因此调度程序可以立即将其逐出，以便为实际工作腾出空间。 （我们选择使用Deployment而不是DaemonSet，以避免将DaemonSet视为节点上的空闲工作负载。）</p>
+<p>需要注意的一件事是，我们使用容器抗亲和力来确保容器在节点上均匀分布。自Kubernetes 1.18起已更正了该算法的性能问题。</p>
+<hr>
+<h5 id="六、成组调度-Gang-scheduling"><a href="#六、成组调度-Gang-scheduling" class="headerlink" title="六、成组调度(Gang scheduling)"></a>六、成组调度(Gang scheduling)</h5><p>我们的实验通常涉及一个或多个StatefulSet，每个StatefulSet都在训练工作的不同部分进行。对于优化器，研究人员需要在进行任何训练之前调度完StatefulSet的所有pod（因为我们经常在优化器成员之间使用MPI进行协作，并且MPI对组成员身份更改很敏感）。</p>
+<p>但是，默认情况下，Kubernetes并不一定要优先执行一个StatefulSet的请求。例如，如果两个实验作业各自请求集群容量的100％，但Kubernetes可能只调度每个实验Pod的一半，从而导致调度僵局，这两个实验作业都无法完成。</p>
+<p>我们尝试了实现自定义调度程序，但是遇到了一些极端情况，这些情况导致与常规Pod的调度方式发生冲突。 Kubernetes 1.18引入了Kubernetes framwork plugin架构，这使得在本地添加此类功能变得更加容易。我们最近引入Coscheduling插件解决此问题。</p>
+<hr>
+<h5 id="七、结论"><a href="#七、结论" class="headerlink" title="七、结论"></a>七、结论</h5><p>在扩展Kubernetes集群时，仍有许多问题需要解决。 其中一些包括：</p>
+<p>a. 监控指标</p>
+<p>就我们的规模而言，Prometheus的内置TSDB存储引擎的压缩速度很慢，并且每次重新启动时都需要花费很长的时间来恢复WAL（Write-Ahead-Log），这给我们带来了很大的麻烦。 我们正在迁移到其他与Prometheus兼容的存储和查询引擎。 期待将来有关它如何发展的博客文章！</p>
+<p>b. Pod网络流量整形</p>
+<p>当我们扩展群集时，每个Pod都会被计算为具有一定数量的Internet带宽，那么所有Pod总体流量将非常惊人，因而需要引入流量整形技术，防止网络风暴、流量泛滥等问题。</p>
+<p>我们发现Kubernetes是满足我们研究需求的异常灵活的平台。 它具有扩展能力，可以满足我们要求的最苛刻的工作负载。 尽管还有很多地方需要改进，但OpenAI的超级计算团队将继续探索Kubernetes如何扩展。 </p>
+<hr>
+<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul>
+<li>[scaling-kubernetes-to-7500-nodes](<a target="_blank" rel="noopener" href="https://openai.com/blog/scaling-kubernetes-to-7500-nodes/%EF%BC%89">https://openai.com/blog/scaling-kubernetes-to-7500-nodes/）</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/tags/~">tags</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/zouyee">项目</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%B7%A5%E4%BD%9C%E8%B4%9F%E8%BD%BD"><span class="toc-number">1.</span> <span class="toc-text">一、工作负载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%BD%91%E7%BB%9C"><span class="toc-number">2.</span> <span class="toc-text">二、网络</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%89%E3%80%81API-Server"><span class="toc-number">2.1.</span> <span class="toc-text">三、API Server</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E7%9B%91%E6%8E%A7"><span class="toc-number">2.2.</span> <span class="toc-text">四、监控</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5"><span class="toc-number">2.3.</span> <span class="toc-text">五、健康检查</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#a-%E8%A2%AB%E5%8A%A8%E6%A3%80%E6%9F%A5"><span class="toc-number">2.4.</span> <span class="toc-text">a. 被动检查</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#b-GPU%E5%8A%A8%E6%80%81%E6%B5%8B%E8%AF%95"><span class="toc-number">2.5.</span> <span class="toc-text">b. GPU动态测试</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E8%B5%84%E6%BA%90%E9%85%8D%E9%A2%9D%E5%8F%8A%E7%94%A8%E9%87%8F"><span class="toc-number">2.6.</span> <span class="toc-text">五、资源配额及用量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E6%88%90%E7%BB%84%E8%B0%83%E5%BA%A6-Gang-scheduling"><span class="toc-number">2.7.</span> <span class="toc-text">六、成组调度(Gang scheduling)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E7%BB%93%E8%AE%BA"><span class="toc-number">2.8.</span> <span class="toc-text">七、结论</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">3.</span> <span class="toc-text">参考资料</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2021/01/28/Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2021/01/28/Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/&text=OpenAI关于Kubernetes集群近万节点的生产实践"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2021/01/28/Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/&title=OpenAI关于Kubernetes集群近万节点的生产实践"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2021/01/28/Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/&is_video=false&description=OpenAI关于Kubernetes集群近万节点的生产实践"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=OpenAI关于Kubernetes集群近万节点的生产实践&body=Check out this article: http://example.com/2021/01/28/Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2021/01/28/Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/&title=OpenAI关于Kubernetes集群近万节点的生产实践"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2021/01/28/Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/&title=OpenAI关于Kubernetes集群近万节点的生产实践"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2021/01/28/Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/&title=OpenAI关于Kubernetes集群近万节点的生产实践"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2021/01/28/Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/&title=OpenAI关于Kubernetes集群近万节点的生产实践"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2021/01/28/Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/&name=OpenAI关于Kubernetes集群近万节点的生产实践&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2021/01/28/Kubernetes%E9%9B%86%E7%BE%A4%E5%9C%A8OpenAI%E7%9A%84%E7%94%9F%E4%BA%A7%E5%AE%9E%E8%B7%B5/&t=OpenAI关于Kubernetes集群近万节点的生产实践"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zouyee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/tags/~">tags</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

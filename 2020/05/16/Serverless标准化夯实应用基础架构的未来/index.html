@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Serverless正在迅猛发展：根据2019度CNCF调查报告，目前有41％的受访者正在使用serverless技术，另有20％的受访者计划在未来12至18个月内使用serverless技术。 serverless技术允许云化应用程序开发团队将代码交付给serverless服务商-以减少开销成本，提高可伸缩性并简化DevOps周期。  一、Serverless标准 Serverless已经被认为">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Serverless标准化夯实应用基础架构的未来">
+<meta property="og:url" content="http://example.com/2020/05/16/Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5/index.html">
+<meta property="og:site_name" content="ustack.io">
+<meta property="og:description" content="Serverless正在迅猛发展：根据2019度CNCF调查报告，目前有41％的受访者正在使用serverless技术，另有20％的受访者计划在未来12至18个月内使用serverless技术。 serverless技术允许云化应用程序开发团队将代码交付给serverless服务商-以减少开销成本，提高可伸缩性并简化DevOps周期。  一、Serverless标准 Serverless已经被认为">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-05-16T13:40:08.000Z">
+<meta property="article:modified_time" content="2023-12-22T10:30:24.688Z">
+<meta property="article:author" content="zouyee">
+<meta property="article:tag" content="serverless">
+<meta property="article:tag" content="cloudnative">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Serverless标准化夯实应用基础架构的未来</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="ustack.io" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/tags/~">tags</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2020/05/25/Operators%E5%8F%8ASidecars%E6%88%90%E4%B8%BA%E8%BD%AF%E4%BB%B6%E4%BA%A4%E4%BB%98%E6%96%B0%E6%A8%A1%E5%BC%8F/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2020/05/06/xDS%E6%A0%87%E5%87%86%E5%BC%95%E5%85%A5GRPC%E7%94%9F%E6%80%81/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2020/05/16/Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2020/05/16/Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5/&text=Serverless标准化夯实应用基础架构的未来"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2020/05/16/Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5/&title=Serverless标准化夯实应用基础架构的未来"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2020/05/16/Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5/&is_video=false&description=Serverless标准化夯实应用基础架构的未来"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Serverless标准化夯实应用基础架构的未来&body=Check out this article: http://example.com/2020/05/16/Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2020/05/16/Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5/&title=Serverless标准化夯实应用基础架构的未来"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2020/05/16/Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5/&title=Serverless标准化夯实应用基础架构的未来"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2020/05/16/Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5/&title=Serverless标准化夯实应用基础架构的未来"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2020/05/16/Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5/&title=Serverless标准化夯实应用基础架构的未来"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2020/05/16/Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5/&name=Serverless标准化夯实应用基础架构的未来&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2020/05/16/Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5/&t=Serverless标准化夯实应用基础架构的未来"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81Serverless%E6%A0%87%E5%87%86"><span class="toc-number">1.</span> <span class="toc-text">一、Serverless标准</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81CloudEvent%E8%AF%95%E6%B0%B4"><span class="toc-number">2.</span> <span class="toc-text">二、CloudEvent试水</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%BD%95%E4%B8%BACloudEvent"><span class="toc-number">3.</span> <span class="toc-text">三、何为CloudEvent</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2"><span class="toc-number">3.1.</span> <span class="toc-text">历史</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87"><span class="toc-number">3.2.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">3.3.</span> <span class="toc-text">参考资料</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Serverless标准化夯实应用基础架构的未来
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zouyee</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-05-16T13:40:08.000Z" class="dt-published" itemprop="datePublished">2020-05-16</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/cloudnative/" rel="tag">cloudnative</a>, <a class="p-category" href="/tags/serverless/" rel="tag">serverless</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>Serverless正在迅猛发展：根据2019度CNCF调查报告，目前有41％的受访者正在使用serverless技术，另有20％的受访者计<br>划在未来12至18个月内使用serverless技术。 serverless技术允许云化应用程序开发团队将代码交付给serverless服务商-以减少<br>开销成本，提高可伸缩性并简化DevOps周期。</p>
+<hr>
+<h3 id="一、Serverless标准"><a href="#一、Serverless标准" class="headerlink" title="一、Serverless标准"></a>一、Serverless标准</h3><blockquote>
+<p>Serverless已经被认为是应用程序基础架构的下一个发展阶段，但目前仍然有一些障碍需要克服，特别是标准化工作。</p>
+</blockquote>
+<p>长期以来，推进标准化一直是统一计算领域的重要方式。 正如当初的Mesos、Kubernetes以及Swarm的容器编排之争，在争夺霸主地位的过程中，因为Kubernetes致力于标准化的引进，从而异军突起，后发制人，一举赢得容器编排之争，正是因为秉持标准化的理念，Kubernetes得到越来越多的人员的加入，从社区的维护到使用者的参与，再到CNCF的壮大。更久远的事例，就是浏览器之争，因为2001年成功说服Internet Explorer，Netscape和其他浏览器采用World Wide Web Consortium建立的标准。 结果就是今天我们知道和喜欢的互联网：一个开放，协作且通用的平台，可以在线连接世界各地的人们，从而使Web开发人员的生活变得更加轻松。</p>
+<p>如今，serverless的生态系统仍然呈现零散状态，就像早期的互联网一样。 在AWS Lambda，Microsoft Azure Functions，Google Cloud Functions和众多其他平台之间，许多serverless功能都是专有的，这使得将应用程序从一个平台迁移到另一个平台成为一项难题。 平台之间缺乏可移植性和互操作性，这阻碍了serverless的应用，开发人员担心业务与云服务商过于耦合。</p>
+<p>在serverless市场较初期的情况下，如果能够降低业务与服务的耦合下，那么在将来存在更好的选择情况下，开发人员就不会陷入选择serverless提供商的困境。 而且，随着新冠病毒给经济造成的不可弥补的伤害，serverless市场有望为快速整合做好准备，这使得云服务商具备跨平台迁移serverless应用程序的能力比以往任何时候都更为重要。</p>
+<p>缺乏serverless标准化同时也带来了安全挑战。尽管serverless可以通过减少服务器管理来简化运维等成本，但是由于开发人员无法看到他们在无服务器平台上运行的工作负载。这意味着无法察觉诸如数据泄露，配置错误，过度的访问权限等安全威胁。当然，可以让开发人员通过serverless提供商提供的API来观察可能的安全威胁。但是没有标准化的serverless框架，在整个serverless生态系统中就不会存在标准化的安全工具或最佳实践。</p>
+<p>庆幸的是，标准化工作正在推进。位于云原生世界中心的CNCF，已经意识到了”标准化的紧迫性，并指出需要高质量的文档，最佳实践，更重要的是工具和实用程序。通常，有必要将不同的参与者聚集在同一个屋檐下，以通过协作来推动创新”。本着协作的精神，CNCFserverless平台提供商和第三方库开发人员召集到serverless工作组中，以推进标准化。</p>
+<hr>
+<h3 id="二、CloudEvent试水"><a href="#二、CloudEvent试水" class="headerlink" title="二、CloudEvent试水"></a>二、CloudEvent试水</h3><p>serverless工作组的早期推出的CloudEvents标准，它用于事件描述的标准化。serverless工作组经过两年的工作，于2019年10月发布了1.0版。 CloudEvents为Go，JavaScript，Java，C＃，Ruby和Python等语言提供了标准化的SDK，可用于构建事件路由器，跟踪系统和其他工具，从而简化跨平台和环境的事件数据交付。</p>
+<p>Kubernetes已经成为另一个有预期未来的解决方案。容器生态系统已经围绕Kubernetes进行了整合，使其成为统一serverless生态系统的理想平台。在2018年，由Google领导、与Pivotal，IBM，Red Hat和SAP合作推出了Knative开源框架，其用于在Kubernetes之上运行serverless应用程序组件。该平台提供以构建，部署，扩展和运行serverless工作负载的所有API。</p>
+<p>除了互操作性和可移植性之外，Knative还具有安全性优势。 Knative允许您使用已经为Kubernetes开发的安全工具，其中安全策略更加成熟。借助Knative，您可以通过将安全代理嵌入Kubernetes中的serverless工作负载来实现更丰富的可扩展性，而无需使用serverless平台提供的基础架构插件。如果您的团队已经在Kubernetes安全性上进行了投资，则这些安全性投资可以扩展到serverless安全性。</p>
+<p>Knative是否能够成为serverless标准化的赢家还有待观察。截至3月，Knative的采用率达到17％，这意味着其成熟度和增长空间仍然很大。 Knative本身建立在Kubeless的基础上，Kubeless是先前围绕Kubernetes标准化serverless的前期尝试。但是，有迹象表明，谷歌已经在Knative的基础上构建了其下一代，完全托管的无服务器平台Cloud Run，这表明其他早期的serverless平台可能会加速效仿。</p>
+<p>Serverless使开发人员可以心无旁骛的专注于在其代码中构建功能，而不是管理运行这些功能的服务器。从繁重而又至关重要的运维责任中解放出来的有可能为应用程序开发人员释放更多的创新热情和业务价值，但是缺乏标准化的风险会分散serverless生态系统。随着标准化的发展，开源协作的力量便推动了创新。</p>
+<hr>
+<h3 id="三、何为CloudEvent"><a href="#三、何为CloudEvent" class="headerlink" title="三、何为CloudEvent"></a>三、何为CloudEvent</h3><h4 id="历史"><a href="#历史" class="headerlink" title="历史"></a>历史</h4><p>CNCF的Serverless工作组最初是由CNCF技术监督委员会创建的，旨在调查serverless技术并为该领域中与CNCF相关的活动提出一些可能的下一步建议。 建议之一是研究创建通用事件格式，以帮助云提供商之间功能的可移植性以及事件流处理的互操作性。 最终，创建了CloudEvents规范。</p>
+<h4 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h4><p>起初，制定CloudEvents标准是serverless工作组的一部分工作内容的，而当规范达到其v0.1里程碑时，TOC批准将其作为CNCF一个全新的独立沙箱项目。</p>
+<p>CloudEvents通常用于分布式系统中，以实现服务在开发过程中的解耦，并完成独立部署，并且以后以此连接新的应用程序。</p>
+<p>CloudEvents规范的目标是定义事件系统的互操作性，该系统允许服务生成或使用事件，其中包括独立开发和部署生产者和使用者。生产者可以在消费者收听之前生成事件，并且消费者可以进行相关订阅操作。需要注意的是，此工作产生的规范集中于事件格式的互操作性以及在各种协议（例如HTTP）上发送事件格式的显示方式。规范不关注事件产生者或事件消费者的处理模型。</p>
+<p>CloudEvents的核心是定义了一组元数据，称为属性，以及有关在系统之间传输的事件和这些元数据应如何出现在消息中。该元数据是将请求路由到适当组件并促进该组件对事件进行适当处理所需的最少信息集。尽管这可能意味着事件本身的某些应用程序数据可能会作CloudEvent属性集的一部分，但这也是为了正确传递和处理消息而进行的必要操作。相反，不打算用于此目的的数据应放在事件（数据）本身。</p>
+<p>此外，假定协议层将消息传递到目标系统所需的元数据完全由协议处理，那么就没有必要包含在CloudEvents属性中。除了这些属性的定义之外，还将规范如何以不同的格式（例如JSON）和协议（例如HTTP，AMQP，Kafka）来序列化事件。某些协议本身支持将多个事件批处理到单个API调用中。为了帮助实现互操作性，应由协议决定是否实现批处理以及如何实现批处理。</p>
+<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://thenewstack.io/serverless-needs-standards-to-be-the-future-of-application-infrastructure/">the-future-of-application-infrastructure</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/tags/~">tags</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/zouyee">项目</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81Serverless%E6%A0%87%E5%87%86"><span class="toc-number">1.</span> <span class="toc-text">一、Serverless标准</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81CloudEvent%E8%AF%95%E6%B0%B4"><span class="toc-number">2.</span> <span class="toc-text">二、CloudEvent试水</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E4%BD%95%E4%B8%BACloudEvent"><span class="toc-number">3.</span> <span class="toc-text">三、何为CloudEvent</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2"><span class="toc-number">3.1.</span> <span class="toc-text">历史</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87"><span class="toc-number">3.2.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">3.3.</span> <span class="toc-text">参考资料</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2020/05/16/Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2020/05/16/Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5/&text=Serverless标准化夯实应用基础架构的未来"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2020/05/16/Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5/&title=Serverless标准化夯实应用基础架构的未来"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2020/05/16/Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5/&is_video=false&description=Serverless标准化夯实应用基础架构的未来"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Serverless标准化夯实应用基础架构的未来&body=Check out this article: http://example.com/2020/05/16/Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2020/05/16/Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5/&title=Serverless标准化夯实应用基础架构的未来"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2020/05/16/Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5/&title=Serverless标准化夯实应用基础架构的未来"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2020/05/16/Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5/&title=Serverless标准化夯实应用基础架构的未来"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2020/05/16/Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5/&title=Serverless标准化夯实应用基础架构的未来"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2020/05/16/Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5/&name=Serverless标准化夯实应用基础架构的未来&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2020/05/16/Serverless%E6%A0%87%E5%87%86%E5%8C%96%E5%A4%AF%E5%AE%9E%E5%BA%94%E7%94%A8%E5%9F%BA%E7%A1%80%E6%9E%B6%E6%9E%84%E7%9A%84%E6%9C%AA%E6%9D%A5/&t=Serverless标准化夯实应用基础架构的未来"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zouyee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/tags/~">tags</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

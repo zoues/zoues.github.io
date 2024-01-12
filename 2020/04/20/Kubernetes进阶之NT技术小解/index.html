@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="&lt;&lt;Kubernetes进阶&gt;&gt;系列将kubernetes系统的设计理念进行深入梳理与分享。在这篇文章中我会主要介绍CPU相关的一些重要概念和技术，以此作为后续对于kubelet组件相关分析的铺垫。  1、引言中央处理器（Central processing unit）在我们了解其它概念之前，我们应该首先了解一下什么是CPU，它是做什么的，它的主要组件以及相应的作用都是什么">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes进阶之NT技术小解">
+<meta property="og:url" content="http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/index.html">
+<meta property="og:site_name" content="ustack.io">
+<meta property="og:description" content="&lt;&lt;Kubernetes进阶&gt;&gt;系列将kubernetes系统的设计理念进行深入梳理与分享。在这篇文章中我会主要介绍CPU相关的一些重要概念和技术，以此作为后续对于kubelet组件相关分析的铺垫。  1、引言中央处理器（Central processing unit）在我们了解其它概念之前，我们应该首先了解一下什么是CPU，它是做什么的，它的主要组件以及相应的作用都是什么">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s1.ax1x.com/2020/04/20/J1cvxP.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/04/20/J1gVx0.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/04/20/J1gmrT.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/04/20/J1gMa4.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/04/20/J1g3GR.md.png">
+<meta property="article:published_time" content="2020-04-20T12:40:08.000Z">
+<meta property="article:modified_time" content="2023-12-22T11:37:57.715Z">
+<meta property="article:author" content="zouyee">
+<meta property="article:tag" content="cloudnative">
+<meta property="article:tag" content="kubernetes">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/04/20/J1cvxP.md.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Kubernetes进阶之NT技术小解</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="ustack.io" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/tags/~">tags</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2020/05/06/%E4%B8%8B%E4%B8%80%E4%BB%A3%E4%BA%91%E5%8E%9F%E7%94%9F%E7%BD%91%E5%85%B3Gloo:%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2020/04/10/servicemesh%E5%B9%B3%E5%8F%B0%E5%A4%A7%E8%A7%82/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/&text=Kubernetes进阶之NT技术小解"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/&title=Kubernetes进阶之NT技术小解"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/&is_video=false&description=Kubernetes进阶之NT技术小解"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Kubernetes进阶之NT技术小解&body=Check out this article: http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/&title=Kubernetes进阶之NT技术小解"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/&title=Kubernetes进阶之NT技术小解"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/&title=Kubernetes进阶之NT技术小解"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/&title=Kubernetes进阶之NT技术小解"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/&name=Kubernetes进阶之NT技术小解&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/&t=Kubernetes进阶之NT技术小解"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">1、引言</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%AD%E5%A4%AE%E5%A4%84%E7%90%86%E5%99%A8%EF%BC%88Central-processing-unit%EF%BC%89"><span class="toc-number">1.1.</span> <span class="toc-text">中央处理器（Central processing unit）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E4%B8%AACPU"><span class="toc-number">1.2.</span> <span class="toc-text">多个CPU</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Hyper-Threading"><span class="toc-number">1.3.</span> <span class="toc-text">Hyper-Threading</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E6%A0%B8CPU"><span class="toc-number">1.4.</span> <span class="toc-text">多核CPU</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B6%85%E7%BA%BF%E7%A8%8B%E6%8A%80%E6%9C%AF"><span class="toc-number">2.</span> <span class="toc-text">超线程技术</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">2.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.2.</span> <span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8E%E7%BB%AD"><span class="toc-number">3.</span> <span class="toc-text">后续</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">3.1.</span> <span class="toc-text">参考资料</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Kubernetes进阶之NT技术小解
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zouyee</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-04-20T12:40:08.000Z" class="dt-published" itemprop="datePublished">2020-04-20</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/Linux/" rel="tag">Linux</a>, <a class="p-category" href="/tags/cloudnative/" rel="tag">cloudnative</a>, <a class="p-category" href="/tags/kubernetes/" rel="tag">kubernetes</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>&lt;&lt;Kubernetes进阶&gt;&gt;系列将kubernetes系统的设计理念进行深入梳理与分享。<br>在这篇文章中我会主要介绍CPU相关的一些重要概念和技术，以此作为后续对于kubelet组件相关分析的铺垫。</p>
+<hr>
+<h3 id="1、引言"><a href="#1、引言" class="headerlink" title="1、引言"></a>1、引言</h3><h4 id="中央处理器（Central-processing-unit）"><a href="#中央处理器（Central-processing-unit）" class="headerlink" title="中央处理器（Central processing unit）"></a>中央处理器（Central processing unit）</h4><p>在我们了解其它概念之前，我们应该首先了解一下什么是CPU，它是做什么的，它的主要组件以及相应的作用都是什么？<br>简单点说，CPU其实就是计算机内部的一个电子电路。根据一些具体的指令它可以执行基本的运算，逻辑，控制和IO操作等。<br>CPU的主要组件包括：</p>
+<ul>
+<li>算术逻辑单元（ALU is short for ‘arithmetic logic unit’），它主要执行一些算术和逻辑操作</li>
+<li>处理器寄存器（processor registers），它主要的作用是给ALU提供操作数并存储ALU操作的结果</li>
+<li>控制器（control unit），通过协调ALU，寄存器和其它组件之间的操作，从主存中取得并执行相应的指令。</li>
+</ul>
+<p>当今大多数地CPU都是微处理器，即它们被包含在单个集成电路芯片（integrated circuit chip）中。一个包含CPU的集成电路可能也包含内存，<br>外围接口和其它的一些计算机组件。这样的集成设备叫做微控制器（microcontrollers）或者芯片上的系统（SoC）。一些计算机采用多核处理器，<br>即单个芯片中包含2个或更多的CPU（也被叫做“cores”）; 在这种情况下，单个芯片有时也被称作”sockets”.</p>
+<p>下图表示的是CPU与主存和IO之间的交互。</p>
+<p><img src="https://s1.ax1x.com/2020/04/20/J1cvxP.md.png" alt="CPU与主存和IO之间的交互"></p>
+<h4 id="多个CPU"><a href="#多个CPU" class="headerlink" title="多个CPU"></a>多个CPU</h4><p>贯穿这个数字计算机的历史，我们一直以来的目标就是想要计算机可以做更多的事情，并且做的更快。因此在hyper-threading 和 multi-core CPUs<br>出现之前，人们想到通过增加CPU的数量来增加计算机的计算机能力和速度，但是这样的方法并没有在个人PC中得到普及，我们只会在一些超级计算机或者一<br>些服务器上会看到这个多个CPU的计算机。因为多个CPU会需要主板有多个CPU socket - 多个CPU被插入到不同的socket中。同时主板也需要额外的硬件<br>去连接这些CPU socket到RAM和一些其它的资源。如果CPU之间需要彼此通信，多个CPU的系统会有很大地开销。</p>
+<h4 id="Hyper-Threading"><a href="#Hyper-Threading" class="headerlink" title="Hyper-Threading"></a>Hyper-Threading</h4><p>由于多个CPU上面存在的缺点，因此它并没有进入普通大众的电脑中，因此消费者电脑的计算始终没有达到并行的状态，电脑的速度也一直没有加快。直到多核<br>处理器和Hyper-Threading技术的出现，才改变了这一点。Hyper-threading这个概念是Intel提出的，这家伟大的公司想把计算机并行计算的能力带入到<br>个人PC中，它第一次进入大众PC的产品是2002年的Pentium 4 HT，最初的这款处理器仅有单个CPU核心，因此它一次只能做一件事情。但是Hyper-threading<br>技术的出现弥补了这个不足。</p>
+<p>Hyperthreading 有时叫做 simultaneous multi-threading，它可以使我们的单核CPU执行多个控制流程。这个技术会涉及到备份一些CPU硬件的一些信息，<br>比如程序计数器和寄存器文件等，而对于比如执行浮点运算的单元它只有一个备份，可以被共享。一个传统的处理器在线程之间切换大约需要20000时钟周期，而一个<br>具有Hyperthreading技术的处理器只需要1个时钟周期，因此这大大减小了线程之间切换的成本。hyperthreading技术的关键点就是：当我们在处理器中执行代<br>码时，很多时候处理器并不会使用到全部的计算能力，部分计算能力会处于空闲状态，而hyperthreading技术会更大程度地“压榨”处理器。举个例子，如果一个线<br>程必须要等到一些数据加载到缓存中以后才能继续执行，此时CPU可以切换到另一个线程去执行，而不用去处于空闲状态，等待当前线程的IO执行完毕。</p>
+<p>Hyper-threading 使操作系统认为处理器的核心数是实际核心数的2倍，因此如果有4个核心的处理器，操作系统会认为处理器有8个核心。这项技术通常会对程序<br>有一个性能的提升，通常提升的范围大约在15%-30%之间，对于一些程序来说它的性能甚至会小于20%, 其实性能是否提升这完全取决于具体的程序。比如，这2个逻<br>辑核心都需要用到处理器的同一个组件，那么一个线程必须要等待。因此，Hyper-threading只是一种“欺骗”手段，对于一些程序来说，它可以更有效地利用CPU的<br>计算能力，但是它的性能远没有真正有2个核心的处理器性能好，因此它不能替代真正有2个核心的处理器。但是同样都是2核的处理器，一个有hyper-threading技<br>术而另一个没有，那么有这项技术的处理器在大部分情况下都要比没有的好。</p>
+<h4 id="多核CPU"><a href="#多核CPU" class="headerlink" title="多核CPU"></a>多核CPU</h4><p>相比于多个处理器而言，多核处理器把多个CPU（核心）集成到单个集成电路芯片（integrated circuit chip）中，因此主板的单个socket也可以适应这样的<br>CPU，不需要去更更改一些硬件结构。一个双核的CPU有2个中央处理单元，因此不像上面我介绍的hyper-threading技术那样，操作系统看到的只是一种假象，这<br>回操作系统看到的是真正的2个核心，所以2个不同的进程可以分别在不同的核心中同时执行，这大大加快了系统的速度。由于2个核心都在一个芯片上，因此它们之间<br>的通信也要更快，系统也会有更小地延迟。</p>
+<p>下图展示了一个Intel Core i7处理器的一个组织结构，这个微处理器芯片中有4个CPU核，每个核中都有它自己的L1和L2缓存。</p>
+<p><img src="https://s1.ax1x.com/2020/04/20/J1gVx0.md.png" alt="Intel Core i7处理器的一个组织结构"></p>
+<hr>
+<h3 id="超线程技术"><a href="#超线程技术" class="headerlink" title="超线程技术"></a>超线程技术</h3><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>在操作系统中，有多线程（multi-threading）的概念，这很好理解，因为线程是进程最小的调度单位，一个进程至少包含一个线程。本文将介绍CPU特有的超线程<br>技术。简单来说就是，多线程比较软，超线程比较硬，二者本质上都是虚拟化。</p>
+<p>超线程(hyper-threading)其实就是同时多线程(simultaneous multi-theading),是一项允许一个CPU执行多个控制流的技术。它的原理很简单，就是把一<br>颗CPU当成两颗来用，将一颗具有超线程功能的物理CPU变成两颗逻辑CPU，而逻辑CPU对操作系统来说，跟物理CPU并没有什么区别。因此，操作系统会把工作线程分<br>派给这两颗（逻辑）CPU上去执行，让（多个或单个）应用程序的多个线程，能够同时在同一颗CPU上被执行。注意：两颗逻辑CPU共享单颗物理CPU的所有执行资源。<br>因此，我们可以认为，超线程技术就是对CPU的虚拟化。</p>
+<p>超线程技术是同时多线程技术的一种实现形式，由Intel公司提出，而该技术背后的概念则是Sun公司的专利。Sun公司虽然倒下了，但它永远是一个伟大的公司。</p>
+<p>纵观计算机的历史，有两个需求是驱动计算机科技进步的持续动力。<br>    第一，人类想让计算机做得更多；<br>    第二，人类想让计算机跑得更快。<br>从这个意义上讲，那些把工程师当做机器的资本家或资本家豢养的打手在榨取程序员的剩余价值的时候，就是不断地追求上述两个需求。超线程技术的发明，就是基于<br>这样的考虑，不榨干处理器的最后一滴油决不罢休。</p>
+<p><img src="https://s1.ax1x.com/2020/04/20/J1gmrT.md.png" alt="CPU"></p>
+<p>常规的CPU需要大约两万个时钟周期做不同线程间的切换，而超线程的CPU可以在单个时钟周期的基础上决定要执行哪一个线程。这使得CPU能够更好地利用它的处理<br>资源。例如：假设一个线程必须等到某些数据被装入到cache中，那么CPU就可以继续去执行另一个线程。</p>
+<p><img src="https://s1.ax1x.com/2020/04/20/J1gMa4.md.png" alt="NT"></p>
+<p>超线程允许单个处理器在同一时刻并行地抓取和执行两个独立的代码流。那么超线程是如何工作的？见下图。</p>
+<p><img src="https://s1.ax1x.com/2020/04/20/J1g3GR.md.png" alt="nt工作"></p>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><p>实现超线程技术的前提:</p>
+<ul>
+<li>需要CPU支持</li>
+<li>需要主板芯片组支持</li>
+<li>需要BIOS支持</li>
+<li>需要操作系统支持</li>
+<li>需要应用软件支持</li>
+</ul>
+<p>由此可见，超线程技术虽然很酷，但需要方方面面的支持，否则就玩不转。 类似地，如果想最大可能地榨取程序员的剩余价值的话，给程序员提供实现超线程运行的软<br>硬件环境也是必须地，否则一味地让他们拼体力(加班)实在不是个好办法，因为人毕竟不是机器，人只有需要休息好了才可能有创造力，疲惫的人们大多时候是在瞎折<br>腾，往往事倍功半。</p>
+<p>超线程(hyper-threading)本质上就是CPU支持的同时多线程(simultaneous multi-threading)技术，简单理解就是对CPU的虚拟化，一颗物理CPU可以被操<br>作系统当做多颗CPU来使用。</p>
+<hr>
+<h3 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h3><p>后续将介绍1.18版本后的kubelet关于CPU的管理技术方案。</p>
+<hr>
+<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Central_processing_unit">Central processing unit</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.howtogeek.com/194756/cpu-basics-multiple-cpus-cores-and-hyper-threading-explained/">hyper threadingexplained</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/tags/~">tags</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/zouyee">项目</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">1、引言</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%AD%E5%A4%AE%E5%A4%84%E7%90%86%E5%99%A8%EF%BC%88Central-processing-unit%EF%BC%89"><span class="toc-number">1.1.</span> <span class="toc-text">中央处理器（Central processing unit）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E4%B8%AACPU"><span class="toc-number">1.2.</span> <span class="toc-text">多个CPU</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Hyper-Threading"><span class="toc-number">1.3.</span> <span class="toc-text">Hyper-Threading</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E6%A0%B8CPU"><span class="toc-number">1.4.</span> <span class="toc-text">多核CPU</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B6%85%E7%BA%BF%E7%A8%8B%E6%8A%80%E6%9C%AF"><span class="toc-number">2.</span> <span class="toc-text">超线程技术</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">2.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.2.</span> <span class="toc-text">实现</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8E%E7%BB%AD"><span class="toc-number">3.</span> <span class="toc-text">后续</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">3.1.</span> <span class="toc-text">参考资料</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/&text=Kubernetes进阶之NT技术小解"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/&title=Kubernetes进阶之NT技术小解"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/&is_video=false&description=Kubernetes进阶之NT技术小解"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Kubernetes进阶之NT技术小解&body=Check out this article: http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/&title=Kubernetes进阶之NT技术小解"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/&title=Kubernetes进阶之NT技术小解"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/&title=Kubernetes进阶之NT技术小解"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/&title=Kubernetes进阶之NT技术小解"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/&name=Kubernetes进阶之NT技术小解&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/&t=Kubernetes进阶之NT技术小解"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zouyee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/tags/~">tags</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
