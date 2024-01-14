@@ -1,3 +1,4 @@
+http://example.com/2024/01/14/hello-world/
 http://example.com/categories/index.html
 http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/
 http://example.com/2019/09/20/Kubernetes%E5%B1%95%E6%9C%9B%E4%B8%8E%E6%80%9D%E8%80%83%E4%B9%8B1.17%E5%88%9D%E4%BD%93%E9%AA%8C/
@@ -43,7 +44,6 @@ http://example.com/2020/07/09/CloudEvents%E5%88%9D%E8%AF%86%E8%A7%84%E8%8C%83/
 http://example.com/2019/11/21/container%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%E6%A2%B3%E7%90%86/
 http://example.com/2020/12/06/Containerd%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9/
 http://example.com/2015/06/30/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%BC%80%E6%BA%90%E8%AE%B8%E5%8F%AF%E8%AF%81%E5%8C%BA%E5%88%AB/
-http://example.com/2023/12/21/hello-world/
 http://example.com/
 http://example.com/tags/serverless/
 http://example.com/tags/cloudnative/
@@ -58,6 +58,7 @@ http://example.com/tags/Kubernetes/
 http://example.com/tags/Containerd/
 http://example.com/tags/%E7%AC%94%E8%AE%B0/
 http://example.com/tags/golang/
+http://example.com/tags/zig/
 http://example.com/categories/Kubernetes-GO/
 http://example.com/categories/Notes/
 http://example.com/categories/%E7%AE%97%E6%B3%95/
