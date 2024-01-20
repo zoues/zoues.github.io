@@ -1,3 +1,6 @@
+http://example.com/2024/01/20/embracing-cgroup-v2-best-practices-for-migrating-kubernetes-clusters-to-almalinux/
+http://example.com/2024/01/20/Optimizing%20the%20construction%20of%20the%20VM%20ecosystem%20with%20KubeVirt/
+http://example.com/2024/01/20/best-practices-for-transitioning-vm-clusters-to-kubevirt-1-0/
 http://example.com/2024/01/14/hello-world/
 http://example.com/categories/index.html
 http://example.com/2020/04/20/Kubernetes%E8%BF%9B%E9%98%B6%E4%B9%8BNT%E6%8A%80%E6%9C%AF%E5%B0%8F%E8%A7%A3/
@@ -59,6 +62,9 @@ http://example.com/tags/Containerd/
 http://example.com/tags/%E7%AC%94%E8%AE%B0/
 http://example.com/tags/golang/
 http://example.com/tags/zig/
+http://example.com/tags/kubevirt/
+http://example.com/tags/cncf/
+http://example.com/tags/almalinux/
 http://example.com/categories/Kubernetes-GO/
 http://example.com/categories/Notes/
 http://example.com/categories/%E7%AE%97%E6%B3%95/
