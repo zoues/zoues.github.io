@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="The KubeVirt community is thrilled to announce the highly-anticipated release of KubeVirt v1.0! This momentous release signifies the remarkable achievements and widespread adoption within the communit">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Best practices for transitioning VM clusters to KubeVirt 1.0">
+<meta property="og:url" content="https://zoues.com/posts/912f3650/index.html">
+<meta property="og:site_name" content="zouyee">
+<meta property="og:description" content="The KubeVirt community is thrilled to announce the highly-anticipated release of KubeVirt v1.0! This momentous release signifies the remarkable achievements and widespread adoption within the communit">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-01-20T05:40:08.000Z">
+<meta property="article:modified_time" content="2024-01-20T12:01:27.478Z">
+<meta property="article:author" content="zouyee">
+<meta property="article:tag" content="kubernetes">
+<meta property="article:tag" content="cncf">
+<meta property="article:tag" content="kubevirt">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Best practices for transitioning VM clusters to KubeVirt 1.0</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="zouyee" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/posts/58fc8d19/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/5941d835/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/912f3650/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/912f3650/&text=Best practices for transitioning VM clusters to KubeVirt 1.0"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/912f3650/&title=Best practices for transitioning VM clusters to KubeVirt 1.0"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/912f3650/&is_video=false&description=Best practices for transitioning VM clusters to KubeVirt 1.0"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Best practices for transitioning VM clusters to KubeVirt 1.0&body=Check out this article: https://zoues.com/posts/912f3650/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/912f3650/&title=Best practices for transitioning VM clusters to KubeVirt 1.0"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/912f3650/&title=Best practices for transitioning VM clusters to KubeVirt 1.0"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/912f3650/&title=Best practices for transitioning VM clusters to KubeVirt 1.0"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/912f3650/&title=Best practices for transitioning VM clusters to KubeVirt 1.0"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/912f3650/&name=Best practices for transitioning VM clusters to KubeVirt 1.0&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/912f3650/&t=Best practices for transitioning VM clusters to KubeVirt 1.0"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Why-KubeVirt"><span class="toc-number">1.</span> <span class="toc-text">Why KubeVirt?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#What%E2%80%98s-new-in-kubeVirt-1-0-%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">What‘s new in kubeVirt 1.0 ？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#What-issues-in-kubeVirt-1-0%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">What issues in kubeVirt 1.0？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CgroupV2-support"><span class="toc-number">3.1.</span> <span class="toc-text">CgroupV2 support</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Cilium-Support"><span class="toc-number">3.2.</span> <span class="toc-text">Cilium Support</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Harbor-limit"><span class="toc-number">3.3.</span> <span class="toc-text">Harbor limit</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Conclusion"><span class="toc-number">4.</span> <span class="toc-text">Conclusion</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Best practices for transitioning VM clusters to KubeVirt 1.0
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zouyee</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-01-20T05:40:08.000Z" class="dt-published" itemprop="datePublished">2024-01-20</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/cncf/" rel="tag">cncf</a>, <a class="p-category" href="/tags/kubernetes/" rel="tag">kubernetes</a>, <a class="p-category" href="/tags/kubevirt/" rel="tag">kubevirt</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>The KubeVirt community is thrilled to announce the highly-anticipated release of KubeVirt v1.0! This momentous release signifies the remarkable achievements and widespread adoption within the community, marking a significant milestone for all stakeholders involved. This project became part of CNCF as a sandbox project in September 2019 and attained incubation status in April 2022. KubeVirt has evolved into a production-ready virtual machine management project that seamlessly operates as a native Kubernetes API. We have also chosen KubeVirt as our ultimate solution for virtual machine orchestration. Currently, we are utilizing AlmaLinux as the virtualization foundation and cgroup v2 as the resource isolation mechanism. Throughout the process of implementing KubeVirt, we encountered certain challenges. Therefore, we aim to share some of the practical experiences and insights we’ve gained from working with KubeVirt in this article.</p>
+<h3 id="Why-KubeVirt"><a href="#Why-KubeVirt" class="headerlink" title="Why KubeVirt?"></a>Why KubeVirt?</h3><p>While OpenStack has seen widespread adoption, its architecture is relatively complex. By utilizing KubeVirt, virtual machine management is streamlined, offering an improved integration experience. With KubeVirt’s inclusion in the CNCF sandbox project and its integration with the CNCF ecosystem, Kubernetes API has been extended with custom resource definitions (CRDs) to enable native VM operation within Kubernetes.</p>
+<p>KubeVirt containerizes the trusted virtualization layer of QEMU and libvirt, allowing VMs to be handled just like any other Kubernetes resource. This approach provides users with a more flexible, scalable, and modern virtual machine management solution, offering the following key advantages:</p>
+<ul>
+<li>Simplified Architecture and Management: Compared to OpenStack, KubeVirt offers a simplified architecture and management requirements. OpenStack can be unwieldy and costly to maintain, while KubeVirt leverages Kubernetes for the automated lifecycle management of VMs. It eliminates separate processes for VMs and containers, facilitating the integration of workflows for both virtualization and containerization. This simplifies the underlying infrastructure stack and reduces management costs.</li>
+<li>Modern, Scalable, Kubernetes-Based Solution: KubeVirt is a modern, scalable, Kubernetes-based virtual machine management solution. By standardizing automated testing and deployment of all applications using Kubernetes, and unifying metadata within Kubernetes, it reduces the risk of deployment errors and enables faster iteration. This minimizes the operational workload for DevOps teams and accelerates day-to-day operations.</li>
+<li>Tight Integration with the Kubernetes Ecosystem: KubeVirt seamlessly integrates with the Kubernetes ecosystem, offering improved scalability and performance. When VMs are migrated to Kubernetes, it can lead to cost reductions for software and application use and minimize performance overhead at the virtualization layer.</li>
+<li>Ideal for Lightweight, Flexible, and Modern VM Management: KubeVirt is well-suited for scenarios requiring lightweight, flexible, and modern virtual machine management. Users can run their virtual workloads alongside container workloads, managing them in the same manner. They can also leverage familiar cloud-native tools such as Tekton, Istio, ArgoCD, and more, which are already favored by cloud-native users.</li>
+</ul>
+<h3 id="What‘s-new-in-kubeVirt-1-0-？"><a href="#What‘s-new-in-kubeVirt-1-0-？" class="headerlink" title="What‘s new in kubeVirt 1.0 ？"></a>What‘s new in kubeVirt 1.0 ？</h3><p>In POC phase, two RPM-based packages and six container images were used, providing an extension for virtual machine management within Kubernetes:</p>
+<ol>
+<li>kubevirt-virtctl: This package can be installed on any machine with administrator access to the cluster. It contains the virtctl tool, which simplifies virtual machine management using kubectl. While kubectl can be used for this purpose, managing VMs can be complex due to their stateful nature. The virtctl tool abstracts this complexity, enabling operations like starting, stopping, pausing, unpausing, and migrating VMs. It also provides access to the virtual machine’s serial console and graphics server.</li>
+<li>kubevirt-manifests: This package contains manifests for installing KubeVirt. Key files include kubevirt-cr.yaml, representing the KubeVirt Custom Resource definition, and kubevirt-operator.yaml, which deploys the KubeVirt operator responsible for managing the KubeVirt service within the cluster.<br>The container images are as follows:</li>
+</ol>
+<ul>
+<li>virt-api: Provides a Kubernetes API extension for virtual machine resources.</li>
+<li>virt-controller: Watches for new or updated objects created via virt-api and ensures object states match the requested state.</li>
+<li>virt-handler: A DaemonSet and node component that keeps cluster-level virtual machine objects in sync with libvirtd domains running in virt-launcher. It can also perform node-centric operations like configuring networking and storage.</li>
+<li>virt-launcher: A node component that runs libvirt and QEMU to provide the virtual machine environment.</li>
+<li>virt-operator: Implements the Kubernetes operator pattern for managing the KubeVirt application.</li>
+<li>libguestfs-tools: Provides utilities for accessing and modifying VM disk images.<br>The v1.0 release signifies significant growth for the KubeVirt community, progressing from an idea to a production-ready Virtual Machine Management solution over the past six years. This release emphasizes maintaining APIs while expanding the project. The release cadence has shifted to align with Kubernetes practices, enabling better stability, compatibility, and support.</li>
+</ul>
+<p>The project has embraced Kubernetes community practices, including SIGs for test and review responsibilities, a SIG release repo for release-related tasks, and regular SIG meetings covering areas like scale, performance, and storage.</p>
+<p>Notable features in v1.0 include memory over-commit support, persistent vTPM for easier BitLocker usage on Windows, initial CPU Hotplug support, hot plug, and hot unplug (in alpha), and further developments in API stabilization and SR-IOV interface support.</p>
+<p>The focus is on aligning KubeVirt with Kubernetes and fostering community collaboration to enhance virtual machine management within the Kubernetes ecosystem.</p>
+<h3 id="What-issues-in-kubeVirt-1-0？"><a href="#What-issues-in-kubeVirt-1-0？" class="headerlink" title="What issues in kubeVirt 1.0？"></a>What issues in kubeVirt 1.0？</h3><h4 id="CgroupV2-support"><a href="#CgroupV2-support" class="headerlink" title="CgroupV2 support"></a>CgroupV2 support</h4><p>When using cgroup v2, starting a VM with a non-hotpluggable volume can be problematic because cgroup v2 doesn’t provide information about the currently allowed devices for a container. KubeVirt addresses this issue by tracking device rules internally using a global variable:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/kubevirt/7/pkg/virt-handler/cgroup/cgroup_v2_manager.go#L10</span><br><span class="line"></span><br><span class="line">var rulesPerPid = make(map[string][]*devices.Rule)</span><br></pre></td></tr></table></figure>
+<p>However, this approach has some drawbacks:</p>
+<p>The variable won’t survive a crash or restart of the virt-handler pod, resulting in data loss.<br>The state is stored in a dynamic structure (a map), and stale data is not removed, causing memory consumption to continuously increase.<br>A potential solution is to store the state in a file, for example, <code>/var/run/kubevirt-private/devices.list</code>. This file should be updated each time a device is added or removed. Additionally, it should be removed when the corresponding VM is destroyed, or periodic cleanup can be performed. The file can follow the same data format as devices.list on cgroup v1 hosts, allowing the same code to parse the current state for both v1 and v2.</p>
+<p>However, managing the file introduces the challenge of performing transactions, i.e., applying actual device rules and writing the state to the file atomically.</p>
+<p>You can find more details and discussions about this issue in GitHub issue #7710.</p>
+<h4 id="Cilium-Support"><a href="#Cilium-Support" class="headerlink" title="Cilium Support"></a>Cilium Support</h4><ul>
+<li>cilium multi-homing<br>In Kubernetes, each pod typically has only one network interface (aside from a loopback interface). Cilium-native multi-homing aims to enable the attachment of additional network interfaces to pods. This functionality is similar to what the Multus CNI offers, which allows the attachment of multiple network interfaces to pods. However, Cilium-native multi-homing distinguishes itself by relying exclusively on the Cilium CNI as the sole CNI installed.</li>
+</ul>
+<p>This feature should provide robust support for all existing Cilium datapath capabilities, including network policies, observability, datapath acceleration, and service discovery. Furthermore, it aims to offer a straightforward developer experience that aligns with the simplicity and usability that Cilium already provides today.</p>
+<ul>
+<li>multus<br>When utilizing Cilium version 1.14.0 alongside multus-cni, there seems to be an issue where the secondary interface does not become visible. Here’s a list of files you can find under the &#x2F;etc&#x2F;cni directory after installing multus in a Cilium 1.14 environment:<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ ls -l</span><br><span class="line">/etc/cni/net.d/05-cilium.conflist</span><br><span class="line">/etc/cni/net.d/00-multus.conf.cilium_bak</span><br><span class="line">/etc/cni/net.d/100-crio-bridge.conflist.cilium_bak</span><br><span class="line">/etc/cni/net.d/200-loopback.conflist.cilium_bak</span><br><span class="line">/etc/cni/net.d/multus.d/multus.kubeconfig</span><br></pre></td></tr></table></figure>
+The issue with multus installation in Cilium 1.14 has been resolved by setting cni.exclusive to false.<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># Make Cilium take ownership over the `/etc/cni/net.d` directory on the</span><br><span class="line"># node, renaming all non-Cilium CNI configurations to `*.cilium_bak`.</span><br><span class="line"># This ensures no Pods can be scheduled using other CNI plugins during Cilium</span><br><span class="line"># agent downtime.</span><br><span class="line">exclusive: false</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="Harbor-limit"><a href="#Harbor-limit" class="headerlink" title="Harbor limit"></a>Harbor limit</h4><p>We encountered an issue when attempting to push a container with a single layer size which contain win.qcow2 image exceeding 10.25GB to our Harbor instance hosted on an EC2 instance. Our Harbor version is v2.1.2, and we are using S3 as the storage backend.</p>
+<p>Our system has successfully handled containers with total sizes exceeding 15GB in the past. However, this specific container with a single layer size of 13.5GB repeatedly fails to push. On the client side, we receive limited feedback:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Sep 10 22:29:19 backend-ci dockerd[934]:</span><br><span class="line">time=&quot;2023-09-10T22:29:19.628869277+02:00&quot; level=error msg=&quot;Upload failed, retrying: blob upload unknown&quot;</span><br><span class="line">Although the push activity completes successfully, the client-side error only appears afterward. In the registry.log, we’ve noticed the following error:</span><br><span class="line"></span><br><span class="line">registry[885]: time=&quot;2023-09-10T08:47:25.330317861Z&quot; level=error msg=&quot;upload resumed at wrong offest: 10485760000 != 12341008872&quot;</span><br></pre></td></tr></table></figure>
+<p>We would greatly appreciate any insights or advice on this matter. Perhaps others have encountered similar issues with very large layers, especially when using S3 as a storage backend, where pushing layers larger than 10GB is not supported. We’ve also come across potential fixes proposed in this GitHub pull request:</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/goharbor/harbor/pull/16322">https://github.com/goharbor/harbor/pull/16322</a></p>
+<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><p>KubeVirt simplifies running virtual machines on Kubernetes, making it as easy as managing containers. It provides a cloud-native approach to managing virtual machines. KubeVirt addresses the challenge of unifying the management of virtual machines and containers, effectively harnessing the strengths of both. However, there is still a long way to go in practice. Nevertheless, the release of version 1.0 is significant for the community and users. We look forward to the widespread adoption of KubeVirt and its full support for cgroupv2.</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://documentation.suse.com/container/kubevirt/html/SLE-kubevirt/index.html">https://documentation.suse.com/container/kubevirt/html/SLE-kubevirt/index.html</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://kubevirt.io/2023/KubeVirt-v1-has-landed.html">https://kubevirt.io/2023/KubeVirt-v1-has-landed.html</a></p>
+</li>
+<li><p>CFP: Cilium-native multi-homing · Issue #20129</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/goharbor/harbor/issues/15719">https://github.com/goharbor/harbor/issues/15719</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/kubevirt/kubevirt/issues/398">https://github.com/kubevirt/kubevirt/issues/398</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/k8snetworkplumbingwg/multus-cni/issues/1132">https://github.com/k8snetworkplumbingwg/multus-cni/issues/1132</a></p>
+</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/categories/">Category</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Why-KubeVirt"><span class="toc-number">1.</span> <span class="toc-text">Why KubeVirt?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#What%E2%80%98s-new-in-kubeVirt-1-0-%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">What‘s new in kubeVirt 1.0 ？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#What-issues-in-kubeVirt-1-0%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">What issues in kubeVirt 1.0？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CgroupV2-support"><span class="toc-number">3.1.</span> <span class="toc-text">CgroupV2 support</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Cilium-Support"><span class="toc-number">3.2.</span> <span class="toc-text">Cilium Support</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Harbor-limit"><span class="toc-number">3.3.</span> <span class="toc-text">Harbor limit</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Conclusion"><span class="toc-number">4.</span> <span class="toc-text">Conclusion</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/912f3650/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/912f3650/&text=Best practices for transitioning VM clusters to KubeVirt 1.0"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/912f3650/&title=Best practices for transitioning VM clusters to KubeVirt 1.0"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/912f3650/&is_video=false&description=Best practices for transitioning VM clusters to KubeVirt 1.0"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Best practices for transitioning VM clusters to KubeVirt 1.0&body=Check out this article: https://zoues.com/posts/912f3650/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/912f3650/&title=Best practices for transitioning VM clusters to KubeVirt 1.0"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/912f3650/&title=Best practices for transitioning VM clusters to KubeVirt 1.0"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/912f3650/&title=Best practices for transitioning VM clusters to KubeVirt 1.0"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/912f3650/&title=Best practices for transitioning VM clusters to KubeVirt 1.0"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/912f3650/&name=Best practices for transitioning VM clusters to KubeVirt 1.0&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/912f3650/&t=Best practices for transitioning VM clusters to KubeVirt 1.0"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zouyee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

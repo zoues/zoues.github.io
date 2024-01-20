@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="从CNCF基金会的成立，到Kubernetes社区蓬勃发展，历经6载，17年异军突起，在mesos、swarm等项目角逐中，拔得头筹，继而一统容器编排,其成功的关键原因可概括为以下几点：  项目领导者们的坚守与远见 社区的良好的运作与社区文化 社区与企业落地的正反馈  今天zouyee为大家带来《一文搞懂Kubernetes网络策略》，其中《kuberneter调度由浅入深：框架》正在编写中，敬请">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一文搞懂Kubernetes网络策略">
+<meta property="og:url" content="https://zoues.com/posts/d6be75a2/index.html">
+<meta property="og:site_name" content="zouyee">
+<meta property="og:description" content="从CNCF基金会的成立，到Kubernetes社区蓬勃发展，历经6载，17年异军突起，在mesos、swarm等项目角逐中，拔得头筹，继而一统容器编排,其成功的关键原因可概括为以下几点：  项目领导者们的坚守与远见 社区的良好的运作与社区文化 社区与企业落地的正反馈  今天zouyee为大家带来《一文搞懂Kubernetes网络策略》，其中《kuberneter调度由浅入深：框架》正在编写中，敬请">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s3.ax1x.com/2021/01/12/sYphbq.png">
+<meta property="og:image" content="https://github.com/feiskyer/kubernetes-handbook/raw/master/concepts/images/15022447799137.jpg">
+<meta property="og:image" content="https://github.com/feiskyer/kubernetes-handbook/raw/master/concepts/images/15022448622429.jpg">
+<meta property="og:image" content="https://github.com/feiskyer/kubernetes-handbook/raw/master/concepts/images/15022451724392.gif">
+<meta property="og:image" content="https://github.com/feiskyer/kubernetes-handbook/raw/master/concepts/images/15022452203435.gif">
+<meta property="og:image" content="https://github.com/ahmetb/kubernetes-network-policy-recipes/raw/master/img/5.gif">
+<meta property="og:image" content="https://github.com/feiskyer/kubernetes-handbook/raw/master/concepts/images/15022453441751.gif">
+<meta property="og:image" content="https://github.com/feiskyer/kubernetes-handbook/raw/master/concepts/images/15022454444461.gif">
+<meta property="og:image" content="https://github.com/ahmetb/kubernetes-network-policy-recipes/raw/master/img/9.gif">
+<meta property="og:image" content="https://github.com/feiskyer/kubernetes-handbook/raw/master/plugins/images/policy-controller.jpg">
+<meta property="og:image" content="https://s3.ax1x.com/2021/01/12/sJzrLt.png">
+<meta property="article:published_time" content="2021-01-13T04:40:08.000Z">
+<meta property="article:modified_time" content="2024-01-20T12:01:27.471Z">
+<meta property="article:author" content="zouyee">
+<meta property="article:tag" content="cloudnative">
+<meta property="article:tag" content="kubernetes">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s3.ax1x.com/2021/01/12/sYphbq.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>一文搞懂Kubernetes网络策略</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="zouyee" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/posts/27bb006d/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/bafe2904/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/d6be75a2/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/d6be75a2/&text=一文搞懂Kubernetes网络策略"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/d6be75a2/&title=一文搞懂Kubernetes网络策略"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/d6be75a2/&is_video=false&description=一文搞懂Kubernetes网络策略"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=一文搞懂Kubernetes网络策略&body=Check out this article: https://zoues.com/posts/d6be75a2/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/d6be75a2/&title=一文搞懂Kubernetes网络策略"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/d6be75a2/&title=一文搞懂Kubernetes网络策略"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/d6be75a2/&title=一文搞懂Kubernetes网络策略"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/d6be75a2/&title=一文搞懂Kubernetes网络策略"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/d6be75a2/&name=一文搞懂Kubernetes网络策略&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/d6be75a2/&t=一文搞懂Kubernetes网络策略"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E3%80%81Network-Policy%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">一、Network Policy简介</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%89%88%E6%9C%AC%E5%8F%98%E8%BF%81"><span class="toc-number">1.1.</span> <span class="toc-text">版本变迁</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.</span> <span class="toc-text">二、简要介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-1-%E7%BB%93%E6%9E%84%E4%BD%93%E8%AF%B4%E6%98%8E"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 结构体说明</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-%E7%AE%80%E5%8D%95%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 简单示例</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">2.3.</span> <span class="toc-text">三、应用场景</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-1-%E4%B8%80%E8%88%AC%E5%9C%BA%E6%99%AF"><span class="toc-number">2.4.</span> <span class="toc-text">3.1 一般场景</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#a-%E7%A6%81%E6%AD%A2%E8%AE%BF%E9%97%AE%E6%8C%87%E5%AE%9A%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.5.</span> <span class="toc-text">a. 禁止访问指定服务</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#b-%E9%99%90%E5%88%B6%E8%AE%BF%E9%97%AE%E6%8C%87%E5%AE%9A%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.6.</span> <span class="toc-text">b. 限制访问指定服务</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#c-%E6%94%BE%E9%80%9A%E8%AE%BF%E9%97%AE%E9%99%90%E5%88%B6"><span class="toc-number">2.7.</span> <span class="toc-text">c. 放通访问限制</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-namespace%E9%99%90%E5%88%B6"><span class="toc-number">2.8.</span> <span class="toc-text">3.2 namespace限制</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#a-%E7%A6%81%E6%AD%A2-namespace-%E4%B8%AD%E9%9D%9E%E7%99%BD%E5%90%8D%E5%8D%95%E6%B5%81%E9%87%8F"><span class="toc-number">2.9.</span> <span class="toc-text">a. 禁止 namespace 中非白名单流量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#b-%E7%A6%81%E6%AD%A2%E5%85%B6%E4%BB%96-namespace-%E6%B5%81%E9%87%8F"><span class="toc-number">2.10.</span> <span class="toc-text">b. 禁止其他 namespace 流量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#c-%E8%BF%90%E8%A1%8C%E6%89%80%E6%9C%89namespace%E6%B5%81%E9%87%8F"><span class="toc-number">2.11.</span> <span class="toc-text">c. 运行所有namespace流量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#c-%E6%8C%87%E5%AE%9A-namespace-%E8%AE%BF%E9%97%AE%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.12.</span> <span class="toc-text">c. 指定 namespace 访问服务</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#d-%E5%85%81%E8%AE%B8%E5%85%B6%E4%BB%96namespace%E7%9A%84%E6%8C%87%E5%AE%9Apod%E7%9A%84%E6%B5%81%E9%87%8F"><span class="toc-number">2.13.</span> <span class="toc-text">d. 允许其他namespace的指定pod的流量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-3-%E5%85%81%E8%AE%B8%E5%A4%96%E7%BD%91%E8%AE%BF%E9%97%AE%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.14.</span> <span class="toc-text">3.3 允许外网访问服务</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-5-%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD"><span class="toc-number">2.15.</span> <span class="toc-text">3.5 高级功能</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#a-%E5%85%81%E8%AE%B8%E5%BA%94%E7%94%A8%E5%9B%BA%E5%AE%9A%E7%AB%AF%E5%8F%A3%E6%B5%81%E9%87%8F"><span class="toc-number">2.16.</span> <span class="toc-text">a. 允许应用固定端口流量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#b-%E5%A4%9A%E6%A0%87%E7%AD%BE%E9%99%90%E5%88%B6"><span class="toc-number">2.17.</span> <span class="toc-text">b. 多标签限制</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-6-%E6%8E%A7%E5%88%B6%E5%87%BA%E5%8F%A3%E6%B5%81%E9%87%8F"><span class="toc-number">2.18.</span> <span class="toc-text">3.6 控制出口流量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#a-%E7%A6%81%E6%AD%A2%E5%BA%94%E7%94%A8%E7%9A%84%E5%87%BA%E5%8F%A3%E6%B5%81%E9%87%8F"><span class="toc-number">2.19.</span> <span class="toc-text">a. 禁止应用的出口流量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#b-%E7%A6%81%E6%AD%A2%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4%E9%9D%9E%E7%99%BD%E5%90%8D%E5%8D%95%E6%B5%81%E9%87%8F"><span class="toc-number">2.20.</span> <span class="toc-text">b. 禁止命名空间非白名单流量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9B%9B%E3%80%81NetworkPolicy-%E5%BC%80%E5%8F%91"><span class="toc-number">2.21.</span> <span class="toc-text">四、NetworkPolicy 开发</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95"><span class="toc-number">2.22.</span> <span class="toc-text">性能测试</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%9C%AA%E6%9D%A5%E5%B1%95%E6%9C%9B"><span class="toc-number">2.23.</span> <span class="toc-text">五、未来展望</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#a-SCTP%E7%89%B9%E6%80%A7"><span class="toc-number">2.24.</span> <span class="toc-text">a. SCTP特性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#b-%E5%BE%85%E5%BC%80%E5%8F%91"><span class="toc-number">2.25.</span> <span class="toc-text">b. 待开发</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3"><span class="toc-number">2.26.</span> <span class="toc-text">六、参考文档</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        一文搞懂Kubernetes网络策略
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zouyee</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-01-13T04:40:08.000Z" class="dt-published" itemprop="datePublished">2021-01-13</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Kubernetes-GO/">Kubernetes GO</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/cloudnative/" rel="tag">cloudnative</a>, <a class="p-category" href="/tags/kubernetes/" rel="tag">kubernetes</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>从CNCF基金会的成立，到Kubernetes社区蓬勃发展，历经6载，17年异军突起，在mesos、swarm等项目角逐中，拔得头筹，继而一统容器编排,其成功的关键原因可概括为以下几点：</p>
+<ul>
+<li>项目领导者们的坚守与远见</li>
+<li>社区的良好的运作与社区文化</li>
+<li>社区与企业落地的正反馈</li>
+</ul>
+<p>今天zouyee为大家带来《一文搞懂Kubernetes网络策略》，其中《kuberneter调度由浅入深：框架》正在编写中，敬请期待，当前涉及版本均为<code>1.20.+</code>。</p>
+<hr>
+<h4 id="一、Network-Policy简介"><a href="#一、Network-Policy简介" class="headerlink" title="一、Network Policy简介"></a>一、Network Policy简介</h4><p>​	随着微服务架构的日渐盛行，Serverless框架的逐步落地，应用上云后带来了模块间网络调用需求的大规模增长，Kubernetes 自 1.3 引入了 Network Policy，其提供以应用为中心， 基于策略的网络控制，用于隔离应用以减少攻击面。</p>
+<p>​	Pod之间能否通信可通过如下三种组合进行确认：</p>
+<ol>
+<li>其他被允许的 Pods（例如：Pod 无法限制对自身的访问）</li>
+<li>被允许访问的namespace</li>
+<li>IP  CIDR（例如：与 Pod 运行所在节点的通信总是被允许的）</li>
+</ol>
+<p>在定义基于 Pod 或namespace的 NetworkPolicy 时，可以使用<code>标签选择器</code>来设定哪些流量可以进入或离开 Pod。同时，当创建基于 IP 的 NetworkPolicy 时，可以基于 IP CIDR 来定义策略。</p>
+<p>以下结构体示意图辅助理解，后面章节有具体说明：</p>
+<p><img src="https://s3.ax1x.com/2021/01/12/sYphbq.png"></p>
+<h5 id="版本变迁"><a href="#版本变迁" class="headerlink" title="版本变迁"></a>版本变迁</h5><table>
+<thead>
+<tr>
+<th>Kubernetes 版本</th>
+<th>Networking API 版本</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>v1.5-v1.6</td>
+<td>extensions&#x2F;v1beta1</td>
+<td>需要在kube-apiserver开启 <code>extensions/v1beta1/networkpolicies</code></td>
+</tr>
+<tr>
+<td>v1.7</td>
+<td>networking.k8s.io&#x2F;v1</td>
+<td></td>
+</tr>
+<tr>
+<td>v1.8</td>
+<td>networking.k8s.io&#x2F;v1</td>
+<td>新增 <strong>Egress</strong> 和 <strong>IPBlock</strong> 的支持</td>
+</tr>
+</tbody></table>
+<h4 id="二、简要介绍"><a href="#二、简要介绍" class="headerlink" title="二、简要介绍"></a>二、简要介绍</h4><p>默认情况下，Pod 是非隔离的，它们接受任何流量。</p>
+<p>Pod 在被某 NetworkPolicy 选中时进入隔离状态。 一旦名字空间中有 NetworkPolicy 选择了特定的 Pod，该 Pod 会拒绝该 NetworkPolicy 所不允许的连接。 （名字空间下其他未被 NetworkPolicy 所选择的 Pod 会继续接受所有的流量）</p>
+<p><em><strong>网络策略不会冲突</strong></em>。 如果任何一个或多个策略选择了一个 Pod, 则该 Pod 受限于这些策略的 入站（Ingress）&#x2F;出站（Egress）规则的并集。</p>
+<p>⚠️在使用 Network Policy 时，网络插件需要支持 Network Policy，如 Calico、Romana、Weave Net 和 Trireme 等，其中Engress为 出口流量，Ingress为 入口流量。</p>
+<h5 id="2-1-结构体说明"><a href="#2-1-结构体说明" class="headerlink" title="2.1 结构体说明"></a>2.1 结构体说明</h5><p><code>staging/src/k8s.io/api/networking/v1/types.go</code></p>
+<p>下面是 NetworkPolicy 的一个示例，如需完整说明，可参看结构定义文档:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">NetworkPolicy</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">network-policy-sample</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">podSelector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">role:</span> <span class="string">db</span></span><br><span class="line">  <span class="attr">policyTypes:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">Ingress</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">Egress</span></span><br><span class="line">  <span class="attr">ingress:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">from:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">ipBlock:</span></span><br><span class="line">        <span class="attr">cidr:</span> <span class="number">172.17</span><span class="number">.0</span><span class="number">.0</span><span class="string">/16</span></span><br><span class="line">        <span class="attr">except:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="number">172.17</span><span class="number">.1</span><span class="number">.0</span><span class="string">/24</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">namespaceSelector:</span></span><br><span class="line">        <span class="attr">matchLabels:</span></span><br><span class="line">          <span class="attr">project:</span> <span class="string">myproject</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">podSelector:</span></span><br><span class="line">        <span class="attr">matchLabels:</span></span><br><span class="line">          <span class="attr">role:</span> <span class="string">frontend</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">6379</span></span><br><span class="line">  <span class="attr">egress:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">to:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">ipBlock:</span></span><br><span class="line">        <span class="attr">cidr:</span> <span class="number">10.0</span><span class="number">.0</span><span class="number">.0</span><span class="string">/24</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">protocol:</span> <span class="string">TCP</span></span><br><span class="line">      <span class="attr">port:</span> <span class="number">5978</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>必需字段</strong>：与所有其他的 Kubernetes 对象一样，NetworkPolicy 需要 <code>apiVersion</code>、 <code>kind</code> 和 <code>metadata</code> 字段。</p>
+<p><strong>spec</strong>：NetworkPolicy <a target="_blank" rel="noopener" href="https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#spec-and-status">规约</a>中包含了在名字空间中定义特定网络策略所需的所有信息。</p>
+<p><strong>podSelector</strong>：每个 NetworkPolicy 都包括一个 <code>podSelector</code>，它选择适用该该策略的 Pod。示例中的策略选择带有 “role&#x3D;db” 标签的 Pod。 若<code>podSelector</code>为空的，则选择名字空间下所有 Pod。</p>
+<p><strong>policyTypes</strong>: 每个 NetworkPolicy 都包含一个 <code>policyTypes</code> 列表，其中包含 <code>Ingress</code> 或 <code>Egress</code> 或（两者亦可）。<code>policyTypes</code> 字段表示给定的策略是应用于 所选 Pod 的入口流量还是来出口流量（两者亦可）。 如果 NetworkPolicy 未指定 <code>policyTypes</code> 则默认情况下始终设置 <code>Ingress</code>； 如果 NetworkPolicy 有任何出口规则的话则设置 <code>Egress</code>。</p>
+<p><strong>ingress</strong>: 每个 NetworkPolicy 可包含一个 <code>ingress</code> 规则的白名单列表。 每个规则都允许同时匹配 <code>from</code> 和 <code>ports</code> 部分的流量。示例策略中包含一条 简单的规则： 它匹配某个特定端口，第一个通过 <code>ipBlock</code> 指定，第二个通过 <code>namespaceSelector</code> 指定，第三个通过 <code>podSelector</code> 指定。</p>
+<p><strong>egress</strong>: 每个 NetworkPolicy 可包含一个 <code>egress</code> 规则的白名单列表。 每个规则都允许匹配 <code>to</code> 和 <code>port</code> 部分的流量。该示例策略包含一条规则， 该规则指定端口上的流量匹配到 <code>10.0.0.0/24</code> 中的任何目的地。</p>
+<p>该网络策略总结如下:</p>
+<ol>
+<li>隔离 <code>default</code>名字空间下 <code>role=db</code> 的 Pod 。</li>
+<li>出口限制:允许符合以下条件的 Pod 连接到 <code>default</code>名字空间下标签为 <code>role=db</code>的所有 Pod 的 6379 TCP 端口：<ul>
+<li><code>default</code>名字空间下带有 <code>role=frontend</code> 标签的所有 Pod</li>
+<li>带有 <code>project=myproject</code> 标签的所有名字空间中的 Pod</li>
+<li>IP 地址范围为<code> 172.17.0.0–172.17.0.255</code> 和 <code>172.17.2.0–172.17.255.255 </code>（即除了 172.17.1.0&#x2F;24 之外的所有 172.17.0.0&#x2F;16）</li>
+</ul>
+</li>
+<li>入口限制：允许从带有 <code>role=db</code>标签的名字空间下的任何 Pod 到 CIDR 10.0.0.0&#x2F;24 下 5978 TCP 端口。</li>
+</ol>
+<h5 id="2-2-简单示例"><a href="#2-2-简单示例" class="headerlink" title="2.2 简单示例"></a>2.2 简单示例</h5><p>以 calico 为例看一下 Network Policy 的具体用法。</p>
+<ol>
+<li>配置 kubelet 使用 CNI 网络插件(默认已经配置，无需更改)</li>
+</ol>
+<p><code>kubelet --network-plugin=cni --cni-conf-dir=/etc/cni/net.d --cni-bin-dir=/opt/cni/bin ...</code></p>
+<ol start="2">
+<li>安装 calio 网络插件</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 注意修改 CIDR，需要跟 k8s pod-network-cidr 一致，默认为 192.168.0.0/16</span><br><span class="line"># 当前选择的是小于50节点的安装方式，具体安装可查看</span><br><span class="line"># https://docs.projectcalico.org/getting-started/kubernetes/self-managed-onprem/onpremises</span><br><span class="line">kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>部署应用</li>
+</ol>
+<p>部署 nginx 服务</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl create deployment nginx --image=nginx</span><br><span class="line">deployment &quot;nginx&quot; created</span><br><span class="line">$ kubectl expose deployment nginx --port=80</span><br><span class="line">service &quot;nginx&quot; exposed</span><br></pre></td></tr></table></figure>
+
+<p>测试网络</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get svc,pod</span><br><span class="line">NAME                 TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE</span><br><span class="line">service/kubernetes   ClusterIP   10.233.0.1      &lt;none&gt;        443/TCP   186d</span><br><span class="line">service/nginx        ClusterIP   10.233.27.142   &lt;none&gt;        80/TCP    2s</span><br><span class="line"></span><br><span class="line">NAME                            READY   STATUS              RESTARTS   AGE</span><br><span class="line">pod/nginx-f89759699-kfmbj       1/1     Running   					0          62s</span><br><span class="line"></span><br><span class="line">$ kubectl run busybox --rm -ti --image=busybox /bin/sh</span><br><span class="line">If you don&#x27;t see a command prompt, try pressing enter.</span><br><span class="line"></span><br><span class="line">/ # wget --spider --timeout=1 nginx</span><br><span class="line">Connecting to nginx (10.233.27.142:80)</span><br><span class="line">remote file exists</span><br><span class="line">/ #</span><br></pre></td></tr></table></figure>
+
+<p>4）测试网络策略</p>
+<p>如果只让那些拥有标签 <code>access: true</code> 的 Pod 访问 <code>nginx</code> 服务， 那么可以创建一个如下所示的 NetworkPolicy 对象：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">$ cat nginx-policy.yaml</span><br><span class="line">apiVersion: networking.k8s.io/v1</span><br><span class="line">kind: NetworkPolicy</span><br><span class="line">metadata:</span><br><span class="line">  name: access-nginx</span><br><span class="line">spec:</span><br><span class="line">  podSelector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: nginx</span><br><span class="line">  ingress:</span><br><span class="line">  - from:</span><br><span class="line">    - podSelector:</span><br><span class="line">        matchLabels:</span><br><span class="line">          access: &quot;true&quot;</span><br><span class="line"></span><br><span class="line">$ kubectl create -f nginx-policy.yaml</span><br><span class="line">networkpolicy &quot;access-nginx&quot; created</span><br><span class="line"></span><br><span class="line"># 不带 access=true 标签的 Pod 还是无法访问 nginx 服务</span><br><span class="line">$ kubectl run busybox --rm -ti --image=busybox /bin/sh</span><br><span class="line">If you don&#x27;t see a command prompt, try pressing enter.</span><br><span class="line"></span><br><span class="line">/ # wget --spider --timeout=1 nginx</span><br><span class="line">Connecting to nginx (10.233.27.142:80)</span><br><span class="line">wget: download timed out</span><br><span class="line">/ #</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 而带有 access=true 标签的 Pod 可以访问 nginx 服务</span><br><span class="line">$ kubectl run busybox --rm -ti --labels=&quot;access=true&quot; --image=busybox /bin/sh</span><br><span class="line">If you don&#x27;t see a command prompt, try pressing enter.</span><br><span class="line"></span><br><span class="line">/ # wget --spider --timeout=1 nginx</span><br><span class="line">Connecting to nginx (10.233.27.142:80)</span><br><span class="line">/ #</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="三、应用场景"><a href="#三、应用场景" class="headerlink" title="三、应用场景"></a>三、应用场景</h5><h5 id="3-1-一般场景"><a href="#3-1-一般场景" class="headerlink" title="3.1 一般场景"></a>3.1 一般场景</h5><h5 id="a-禁止访问指定服务"><a href="#a-禁止访问指定服务" class="headerlink" title="a. 禁止访问指定服务"></a>a. 禁止访问指定服务</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run web --image=nginx --labels app=web --expose --port 80</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 未有策略限制时，可以访问</span><br><span class="line">$ kubectl run busybox --rm -ti --image=busybox /bin/sh</span><br><span class="line">If you don&#x27;t see a command prompt, try pressing enter.</span><br><span class="line">/ # wget -qO- http://web</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br></pre></td></tr></table></figure>
+
+<p>创建网络策略</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># cat web-deny-all.yaml</span><br><span class="line">kind: NetworkPolicy</span><br><span class="line">apiVersion: networking.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  name: web-deny-all</span><br><span class="line">spec:</span><br><span class="line">  podSelector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: web</span><br><span class="line">  ingress: []</span><br><span class="line">  </span><br><span class="line">$ kubectl apply -f web-deny-all.yaml</span><br><span class="line">networkpolicy &quot;web-deny-all&quot; created</span><br></pre></td></tr></table></figure>
+
+<p>访问测试</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl run busybox --rm -ti --image=busybox /bin/sh</span><br><span class="line">If you don&#x27;t see a command prompt, try pressing enter.</span><br><span class="line">/ # wget -qO- --timeout=2 http://web</span><br><span class="line">wget: download timed out</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://github.com/feiskyer/kubernetes-handbook/raw/master/concepts/images/15022447799137.jpg" alt="img"></p>
+<h5 id="b-限制访问指定服务"><a href="#b-限制访问指定服务" class="headerlink" title="b. 限制访问指定服务"></a>b. 限制访问指定服务</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run apiserver --image=nginx --labels app=bookstore,role=api --expose --port 80</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://github.com/feiskyer/kubernetes-handbook/raw/master/concepts/images/15022448622429.jpg" alt="img"></p>
+<p>创建网络策略</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># cat api-allow.yaml</span><br><span class="line">kind: NetworkPolicy</span><br><span class="line">apiVersion: networking.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  name: api-allow</span><br><span class="line">spec:</span><br><span class="line">  podSelector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: bookstore</span><br><span class="line">      role: api</span><br><span class="line">  ingress:</span><br><span class="line">  - from:</span><br><span class="line">      - podSelector:</span><br><span class="line">          matchLabels:</span><br><span class="line">            app: bookstore</span><br><span class="line"># kubectl apply -f api-allow.yaml</span><br><span class="line">networkpolicy &quot;api-allow&quot; created</span><br></pre></td></tr></table></figure>
+
+<p>访问测试</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">创建不加label的pod，预期结果，访问被限制</span><br><span class="line">$ kubectl run busybox --rm -ti --image=busybox /bin/sh</span><br><span class="line">If you don&#x27;t see a command prompt, try pressing enter.</span><br><span class="line">/ # wget -qO- --timeout=2 http://apiserver</span><br><span class="line">wget: download timed out</span><br><span class="line">/ # exit</span><br><span class="line">创建带app=bookstore标签的pod，预期结果，访问被限制</span><br><span class="line">$ kubectl run busybox --rm -ti --image=busybox --labels app=bookstore,role=frontend /bin/sh</span><br><span class="line">If you don&#x27;t see a command prompt, try pressing enter.</span><br><span class="line">/ # wget -qO- --timeout=2 http://apiserver</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;&lt;head&gt;</span><br><span class="line">/ # exit</span><br></pre></td></tr></table></figure>
+
+<h5 id="c-放通访问限制"><a href="#c-放通访问限制" class="headerlink" title="c. 放通访问限制"></a>c. 放通访问限制</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run apiserver --image=nginx --labels app=bookstore,role=api --expose --port 80</span><br></pre></td></tr></table></figure>
+
+<p>应用a中的网络策略，限制所有流量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># cat web-deny-all.yaml</span><br><span class="line">kind: NetworkPolicy</span><br><span class="line">apiVersion: networking.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  name: web-deny-all</span><br><span class="line">spec:</span><br><span class="line">  podSelector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: web</span><br><span class="line">  ingress: []</span><br><span class="line">  </span><br><span class="line">$ kubectl apply -f web-deny-all.yaml</span><br><span class="line">networkpolicy &quot;web-deny-all&quot; created</span><br></pre></td></tr></table></figure>
+
+<p>创建放通通网络策略</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"># cat web-deny-all.yaml</span><br><span class="line">kind: NetworkPolicy</span><br><span class="line">apiVersion: networking.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  name: web-allow-all</span><br><span class="line">  namespace: default</span><br><span class="line">spec:</span><br><span class="line">  podSelector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: web</span><br><span class="line">  ingress:</span><br><span class="line">  - &#123;&#125;</span><br><span class="line">  </span><br><span class="line">$ kubectl apply -f web-allow-all.yaml</span><br><span class="line">networkpolicy &quot;web-allow-all&quot; created</span><br><span class="line"># 需要注意deny跟allow的细微差别就是[]与&#123;&#125;，其中&#123;&#125;代表</span><br><span class="line">- from:</span><br><span class="line">    podSelector: &#123;&#125;</span><br><span class="line">    namespaceSelector: &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="3-2-namespace限制"><a href="#3-2-namespace限制" class="headerlink" title="3.2 namespace限制"></a>3.2 namespace限制</h5><h5 id="a-禁止-namespace-中非白名单流量"><a href="#a-禁止-namespace-中非白名单流量" class="headerlink" title="a. 禁止 namespace 中非白名单流量"></a>a. 禁止 namespace 中非白名单流量</h5><p><img src="https://github.com/feiskyer/kubernetes-handbook/raw/master/concepts/images/15022451724392.gif" alt="img"></p>
+<p>创建网络策略</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># cat default-deny-all.yaml</span><br><span class="line">kind: NetworkPolicy</span><br><span class="line">apiVersion: networking.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  name: default-deny-all</span><br><span class="line">  namespace: default</span><br><span class="line">spec:</span><br><span class="line">  podSelector: &#123;&#125;</span><br><span class="line">  ingress: []</span><br><span class="line"># kubectl apply -f default-deny-all.yaml</span><br></pre></td></tr></table></figure>
+
+<p>说明:</p>
+<ul>
+<li><p><code>namespace: default</code> 该策略部署于default</p>
+</li>
+<li><p><code>podSelector</code>为<code>&#123;&#125;</code>指匹配所有pod，因而该策略对default命名空间的所有pod都有效</p>
+</li>
+<li><p><code>ingress</code>未指定，因而对于所有进入流量都禁止</p>
+</li>
+</ul>
+<h5 id="b-禁止其他-namespace-流量"><a href="#b-禁止其他-namespace-流量" class="headerlink" title="b. 禁止其他 namespace 流量"></a>b. 禁止其他 namespace 流量</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl create namespace secondary</span><br><span class="line">kubectl run web --namespace secondary --image=nginx \</span><br><span class="line">    --labels=app=web --expose --port 80</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://github.com/feiskyer/kubernetes-handbook/raw/master/concepts/images/15022452203435.gif" alt="img"></p>
+<p>创建网络配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">kind: NetworkPolicy</span><br><span class="line">apiVersion: networking.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  namespace: secondary</span><br><span class="line">  name: web-deny-other-namespaces</span><br><span class="line">spec:</span><br><span class="line">  podSelector:</span><br><span class="line">    matchLabels:</span><br><span class="line">  ingress:</span><br><span class="line">  - from:</span><br><span class="line">    - podSelector: &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>访问测试</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># default命名空间访问</span><br><span class="line">$ kubectl run busybox --rm -ti --image=busybox /bin/sh</span><br><span class="line">If you don&#x27;t see a command prompt, try pressing enter.</span><br><span class="line">/ # wget -qO- --timeout=2 http://web.secondary</span><br><span class="line">wget: download timed out</span><br><span class="line">/ # exit</span><br><span class="line"># secondary命名空间访问</span><br><span class="line">$ kubectl run busybox --rm -ti --image=busybox --namespace=secondary /bin/sh</span><br><span class="line">If you don&#x27;t see a command prompt, try pressing enter.</span><br><span class="line">/ # wget -qO- --timeout=2 http://web.secondary</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br></pre></td></tr></table></figure>
+
+<h5 id="c-运行所有namespace流量"><a href="#c-运行所有namespace流量" class="headerlink" title="c. 运行所有namespace流量"></a>c. 运行所有namespace流量</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run web --image=nginx --labels app=web --expose --port 80</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://github.com/ahmetb/kubernetes-network-policy-recipes/raw/master/img/5.gif" alt="Diagram of  ALLOW traffic to an application from all namespaces policy"></p>
+<p>创建网络策略</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># cat web-allow-all-namespaces.yaml</span><br><span class="line">kind: NetworkPolicy</span><br><span class="line">apiVersion: networking.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  namespace: default</span><br><span class="line">  name: web-allow-all-namespaces</span><br><span class="line">spec:</span><br><span class="line">  podSelector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: web</span><br><span class="line">  ingress:</span><br><span class="line">  - from:</span><br><span class="line">    - namespaceSelector: &#123;&#125;</span><br><span class="line"># kubectl apply -f web-allow-all-namespaces.yaml</span><br><span class="line"># kubectl create namespace secondary</span><br></pre></td></tr></table></figure>
+
+<p>说明：</p>
+<ul>
+<li><code>app: web</code>网络策略应用到该标签pod</li>
+<li><code>namespaceSelector: &#123;&#125;</code>匹配所有命名空间</li>
+</ul>
+<p>访问测试</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># kubectl run busybox --rm -ti --image=busybox --namespace=secondary /bin/sh</span><br><span class="line">If you don&#x27;t see a command prompt, try pressing enter.</span><br><span class="line">/ # wget -qO- --timeout=2 http://web.secondary</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="c-指定-namespace-访问服务"><a href="#c-指定-namespace-访问服务" class="headerlink" title="c. 指定 namespace 访问服务"></a>c. 指定 namespace 访问服务</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># kubectl run web --image=nginx \</span><br><span class="line">    --labels=app=web --expose --port 80</span><br><span class="line"># kubectl create namespace dev</span><br><span class="line"># kubectl label namespace/dev purpose=testing</span><br><span class="line"># kubectl create namespace prod</span><br><span class="line"># kubectl label namespace/prod purpose=production</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://github.com/feiskyer/kubernetes-handbook/raw/master/concepts/images/15022453441751.gif" alt="img"></p>
+<p>创建网络策略</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># cat web-allow-prod.yaml</span><br><span class="line">kind: NetworkPolicy</span><br><span class="line">apiVersion: networking.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  name: web-allow-prod</span><br><span class="line">spec:</span><br><span class="line">  podSelector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: web</span><br><span class="line">  ingress:</span><br><span class="line">  - from:</span><br><span class="line">    - namespaceSelector:</span><br><span class="line">        matchLabels:</span><br><span class="line">          purpose: production</span><br><span class="line"># kubectl apply -f web-allow-prod.yaml</span><br></pre></td></tr></table></figure>
+
+<h5 id="d-允许其他namespace的指定pod的流量"><a href="#d-允许其他namespace的指定pod的流量" class="headerlink" title="d. 允许其他namespace的指定pod的流量"></a>d. 允许其他namespace的指定pod的流量</h5><p>⚠️ Kubernetes 1.11后支持<code>podSelector</code> 与<code>namespaceSelector</code>的运算符操作，同时需要网络插件支持</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># kubectl run web --image=nginx \</span><br><span class="line">    --labels=app=web --expose --port 80</span><br><span class="line"># kubectl create namespace other</span><br><span class="line"># kubectl create namespace other</span><br></pre></td></tr></table></figure>
+
+<p> 创建网络策略</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"># cat web-allow-all-ns-monitoring.yaml</span><br><span class="line">kind: NetworkPolicy</span><br><span class="line">apiVersion: networking.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  name: web-allow-all-ns-monitoring</span><br><span class="line">  namespace: default</span><br><span class="line">spec:</span><br><span class="line">  podSelector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: web</span><br><span class="line">  ingress:</span><br><span class="line">    - from:</span><br><span class="line">      - namespaceSelector:     # 选择namespaces中带有team=operations标签的pod</span><br><span class="line">          matchLabels:</span><br><span class="line">            team: operations  </span><br><span class="line">        podSelector:           # 选择带有type=monitoring标签的pod</span><br><span class="line">          matchLabels:</span><br><span class="line">            type: monitoring</span><br><span class="line"># kubectl apply -f web-allow-all-ns-monitoring.yaml</span><br></pre></td></tr></table></figure>
+
+<p>访问测试</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">kubectl run busybox --rm -ti --image=busybox  /bin/sh</span><br><span class="line">If you don&#x27;t see a command prompt, try pressing enter.</span><br><span class="line">/ # wget -qO- --timeout=2 http://web.default</span><br><span class="line">wget: download timed out</span><br><span class="line"></span><br><span class="line">(访问限制)</span><br><span class="line">/ # exit</span><br><span class="line"></span><br><span class="line"># kubectl run busybox --rm -ti --image=busybox --labels type=monitoring /bin/sh</span><br><span class="line">If you don&#x27;t see a command prompt, try pressing enter.</span><br><span class="line">/ # wget -qO- --timeout=2 http://web.default</span><br><span class="line">wget: download timed out</span><br><span class="line"></span><br><span class="line">(访问限制)</span><br><span class="line"></span><br><span class="line"># kubectl run busybox --rm -ti --image=busybox --namespace=other /bin/sh</span><br><span class="line">If you don&#x27;t see a command prompt, try pressing enter.</span><br><span class="line">/ # wget -qO- --timeout=2 http://web.default</span><br><span class="line">wget: download timed out</span><br><span class="line"></span><br><span class="line">(访问限制)</span><br><span class="line"></span><br><span class="line"># kubectl run busybox --rm -ti --image=busybox --namespace=other  --labels type=monitoring /bin/sh</span><br><span class="line">If you don&#x27;t see a command prompt, try pressing enter.</span><br><span class="line">/ # wget -qO- --timeout=2 http://web.default</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">...</span><br><span class="line">(允许访问)</span><br></pre></td></tr></table></figure>
+
+<h5 id="3-3-允许外网访问服务"><a href="#3-3-允许外网访问服务" class="headerlink" title="3.3 允许外网访问服务"></a>3.3 允许外网访问服务</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">kubectl run web --image=nginx --labels=app=web --port 80</span><br><span class="line">kubectl expose pod/web --type=LoadBalancer</span><br><span class="line">kubectl get svc web</span><br><span class="line">NAME   TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE</span><br><span class="line">web    LoadBalancer   10.233.54.206   &lt;pending&gt;     80:32548/TCP   40s</span><br><span class="line">直至EXTERNAL-IP分配IP为止</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://github.com/feiskyer/kubernetes-handbook/raw/master/concepts/images/15022454444461.gif" alt="img"></p>
+<p>创建网络策略</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># cat web-allow-external.yaml</span><br><span class="line">kind: NetworkPolicy</span><br><span class="line">apiVersion: networking.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  name: web-allow-external</span><br><span class="line">spec:</span><br><span class="line">  podSelector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: web</span><br><span class="line">  ingress:</span><br><span class="line">  - ports:</span><br><span class="line">    - port: 80</span><br><span class="line">    from: []</span><br><span class="line"># kubectl apply -f web-allow-external.yaml</span><br></pre></td></tr></table></figure>
+
+<h5 id="3-5-高级功能"><a href="#3-5-高级功能" class="headerlink" title="3.5 高级功能"></a>3.5 高级功能</h5><h5 id="a-允许应用固定端口流量"><a href="#a-允许应用固定端口流量" class="headerlink" title="a. 允许应用固定端口流量"></a>a. 允许应用固定端口流量</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># kubectl run busybox -ti --image=busybox --labels=app=apiserver /bin/sh</span><br><span class="line">If you don&#x27;t see a command prompt, try pressing enter.</span><br><span class="line"># nohup python3 -m http.server 8001 &amp;</span><br><span class="line"># nohup python3 -m http.server 5001 &amp;</span><br><span class="line"># exit</span><br><span class="line"># kubectl create service clusterip apiserver \</span><br><span class="line">    --tcp 8001:8000 \</span><br><span class="line">    --tcp 5001:5000</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://github.com/ahmetb/kubernetes-network-policy-recipes/raw/master/img/9.gif" alt="Diagram of ALLOW traffic only to a port of an application policy"></p>
+<p>创建网络策略</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># cat api-allow-5000.yml</span><br><span class="line">kind: NetworkPolicy</span><br><span class="line">apiVersion: networking.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  name: api-allow-5000</span><br><span class="line">spec:</span><br><span class="line">  podSelector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: apiserver</span><br><span class="line">  ingress:</span><br><span class="line">  - ports:</span><br><span class="line">    - port: 5000</span><br><span class="line">    from:</span><br><span class="line">    - podSelector:</span><br><span class="line">        matchLabels:</span><br><span class="line">          role: monitoring</span><br><span class="line"># kubectl apply -f api-allow-5000.yml</span><br></pre></td></tr></table></figure>
+
+<p>访问测试</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># 启动pod未携带指定label时，访问受限</span><br><span class="line"># kubectl run busybox --rm -ti --image=busybox /bin/sh</span><br><span class="line">If you don&#x27;t see a command prompt, try pressing enter.</span><br><span class="line">/ # wget -qO- --timeout=2 http://apiserver:8001</span><br><span class="line">wget: download timed out</span><br><span class="line"></span><br><span class="line">/ # wget -qO- --timeout=2 http://apiserver:5001/metrics</span><br><span class="line">wget: download timed out</span><br><span class="line"></span><br><span class="line"># 启动pod携带指定label时，访问不受限</span><br><span class="line">$ kubectl run busybox --rm -ti --image=busybox --labels=role=monitoring /bin/sh</span><br><span class="line">/ # wget -qO- --timeout=2 http://apiserver:8001</span><br><span class="line">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01//EN&quot; &quot;http://www.w3.org/TR/html4/strict.dtd&quot;&gt;</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">/ # wget -qO- --timeout=2 http://apiserver:5001/</span><br><span class="line">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01//EN&quot; &quot;http://www.w3.org/TR/html4/strict.dtd&quot;&gt;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h5 id="b-多标签限制"><a href="#b-多标签限制" class="headerlink" title="b. 多标签限制"></a>b. 多标签限制</h5><p>说明：Network Policy定义一组微服务访问某一应用,如下述示例中，一组微服务共享redis服务</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl run db --image=redis:4 --port 6379 --expose \</span><br><span class="line">    --labels app=bookstore,role=db</span><br></pre></td></tr></table></figure>
+
+<p>以下服务共享redis服务</p>
+<table>
+<thead>
+<tr>
+<th>service</th>
+<th>labels</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>search</code></td>
+<td><code>app=bookstore</code> <code>role=search</code></td>
+</tr>
+<tr>
+<td><code>api</code></td>
+<td><code>app=bookstore</code> <code>role=api</code></td>
+</tr>
+<tr>
+<td><code>catalog</code></td>
+<td><code>app=inventory</code> <code>role=web</code></td>
+</tr>
+</tbody></table>
+<p>创建网络策略</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"># cat redis-allow-services.yaml</span><br><span class="line">kind: NetworkPolicy</span><br><span class="line">apiVersion: networking.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  name: redis-allow-services</span><br><span class="line">spec:</span><br><span class="line">  podSelector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: bookstore</span><br><span class="line">      role: db</span><br><span class="line">  ingress:</span><br><span class="line">  - from:</span><br><span class="line">    - podSelector:</span><br><span class="line">        matchLabels:</span><br><span class="line">          app: bookstore</span><br><span class="line">          role: search</span><br><span class="line">    - podSelector:</span><br><span class="line">        matchLabels:</span><br><span class="line">          app: bookstore</span><br><span class="line">          role: api</span><br><span class="line">    - podSelector:</span><br><span class="line">        matchLabels:</span><br><span class="line">          app: inventory</span><br><span class="line">          role: web</span><br><span class="line"># kubectl apply -f redis-allow-services.yaml</span><br></pre></td></tr></table></figure>
+
+<p>访问测试</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl run busybox --rm -ti --image=curl --labels=app=inventory,role=web /bin/sh</span><br><span class="line"></span><br><span class="line">/ # nc -v -w 2 db 6379</span><br><span class="line">db (10.233.27.143:6379) open</span><br><span class="line"></span><br><span class="line">(works)</span><br><span class="line"></span><br><span class="line">$ kubectl run busybox --rm -ti --image=curl --labels=app=other /bin/sh</span><br><span class="line"></span><br><span class="line">/ # nc -v -w 2 db 6379</span><br><span class="line">nc: db (10.233.27.143:6379): Operation timed out</span><br><span class="line"></span><br><span class="line">(访问受限)</span><br></pre></td></tr></table></figure>
+
+<h5 id="3-6-控制出口流量"><a href="#3-6-控制出口流量" class="headerlink" title="3.6 控制出口流量"></a>3.6 控制出口流量</h5><h5 id="a-禁止应用的出口流量"><a href="#a-禁止应用的出口流量" class="headerlink" title="a. 禁止应用的出口流量"></a>a. 禁止应用的出口流量</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run web --image=nginx --labels app=web --expose --port 80</span><br></pre></td></tr></table></figure>
+
+<p>创建网络策略</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># cat foo-deny-egress.yaml</span><br><span class="line">apiVersion: networking.k8s.io/v1</span><br><span class="line">kind: NetworkPolicy</span><br><span class="line">metadata:</span><br><span class="line">  name: foo-deny-egress</span><br><span class="line">spec:</span><br><span class="line">  podSelector:</span><br><span class="line">    matchLabels:</span><br><span class="line">      app: foo</span><br><span class="line">  policyTypes:</span><br><span class="line">  - Egress</span><br><span class="line">  egress: []</span><br><span class="line"># kubectl apply -f foo-deny-egress.yaml</span><br></pre></td></tr></table></figure>
+
+<p>说明：</p>
+<ul>
+<li><code>policyTypes: [&quot;egress&quot;]</code> 该策略类型为出口流量</li>
+<li><code>egress: []</code> 策略为空说明出口流量全部禁止</li>
+</ul>
+<h5 id="b-禁止命名空间非白名单流量"><a href="#b-禁止命名空间非白名单流量" class="headerlink" title="b. 禁止命名空间非白名单流量"></a>b. 禁止命名空间非白名单流量</h5><p>创建网络策略</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># cat default-deny-all-egress.yaml</span><br><span class="line">kind: NetworkPolicy</span><br><span class="line">apiVersion: networking.k8s.io/v1</span><br><span class="line">metadata:</span><br><span class="line">  name: default-deny-all-egress</span><br><span class="line">  namespace: default</span><br><span class="line">spec:</span><br><span class="line">  policyTypes:</span><br><span class="line">  - Egress</span><br><span class="line">  podSelector: &#123;&#125;</span><br><span class="line">  egress: []</span><br><span class="line"># kubectl apply -f default-deny-all-egress.yaml</span><br></pre></td></tr></table></figure>
+
+<p>说明：</p>
+<ul>
+<li><code>podSelector</code>为空，说明匹配所有pod</li>
+<li><code>egress</code>为空数组，说明禁止所有符合<code>podSelector</code>的出口流量</li>
+</ul>
+<h5 id="四、NetworkPolicy-开发"><a href="#四、NetworkPolicy-开发" class="headerlink" title="四、NetworkPolicy 开发"></a>四、NetworkPolicy 开发</h5><p>​	实现一个支持 Network Policy 的网络扩展需要至少包含两个组件</p>
+<ul>
+<li>CNI 网络插件：负责给 Pod 配置网络接口</li>
+<li>Policy controller：监听 Network Policy 的变化，并将 Policy 应用到相应的网络接口</li>
+</ul>
+<p><img src="https://github.com/feiskyer/kubernetes-handbook/raw/master/plugins/images/policy-controller.jpg" alt="img"></p>
+<h5 id="性能测试"><a href="#性能测试" class="headerlink" title="性能测试"></a>性能测试</h5><p>下图基于Kubernetes 1.19版本测试了以下特性：</p>
+<p>1）MTU auto config</p>
+<p>2） 带宽性能: Pod to Pod、Pod to Service（TCP、UDP）</p>
+<p>3）资源消耗: Pod to Pod、Pod to Service（TCP、UDP）</p>
+<p>4）安全特性：Network Policies、 Encryption等</p>
+<p><img src="https://s3.ax1x.com/2021/01/12/sJzrLt.png" alt="Image for post"></p>
+<p>calico其他详细的能力说明，可参看官网。</p>
+<h5 id="五、未来展望"><a href="#五、未来展望" class="headerlink" title="五、未来展望"></a>五、未来展望</h5><h5 id="a-SCTP特性"><a href="#a-SCTP特性" class="headerlink" title="a. SCTP特性"></a>a. SCTP特性</h5><p><strong>支持版本：</strong> <code>Kubernetes v1.19 [beta]</code></p>
+<p>作为一个 Beta 特性，SCTP 默认是被启用的。 要在集群层面禁用 SCTP，需要为 <code>kube-apiserver</code>关闭特性<code>--feature-gates=SCTPSupport=false,...</code> 以禁用 <code>SCTP</code> 。 启用该特性后，用户可以将 NetworkPolicy 的 <code>protocol</code> 字段设置为 <code>SCTP</code>。</p>
+<p>⚠️ CNI插件需要支持SCTP协议</p>
+<h5 id="b-待开发"><a href="#b-待开发" class="headerlink" title="b. 待开发"></a>b. 待开发</h5><p>截止Kubernetes v1.20 ，NetworkPolicy API 还不支持下述功能。</p>
+<ul>
+<li>强制集群内部流量经过某公用网关（可通过服务网格或其他代理来实现）</li>
+<li>与 TLS 相关的场景（可使用服务网格或者 Ingress 控制器）</li>
+<li>实现适用于所有名字空间或 Pods 的默认策略（如calico）</li>
+<li>高级的策略查询或者策略验证相关工具（如calico）</li>
+<li>在同一策略声明中选择目标端口范围的能力</li>
+<li>生成网络安全事件日志的能力（例如，被阻塞或接收的连接请求）</li>
+<li>禁止本地回路或指向宿主的网络流量（Pod 目前无法阻塞 localhost 访问， 它们也无法禁止来自所在节点的访问请求）。</li>
+</ul>
+<p>上述需求可以通过操作系统组件（如 SELinux、OpenVSwitch、IPTables 等） 或者七层技术（Ingress 控制器、服务网格实现）及准入控制器进行功能增强，当然有兴趣的可以参考calico及OPA项目。</p>
+<h5 id="六、参考文档"><a href="#六、参考文档" class="headerlink" title="六、参考文档"></a>六、参考文档</h5><ul>
+<li><a target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/services-networking/network-policies/">Kubernetes network policies</a></li>
+<li><a target="_blank" rel="noopener" href="https://kubernetes.io/docs/tasks/administer-cluster/declare-network-policy/">Declare Network Policy</a></li>
+<li><a target="_blank" rel="noopener" href="https://ahmet.im/blog/kubernetes-network-policy/">Securing Kubernetes Cluster Networking</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/ahmetb/kubernetes-networkpolicy-tutorial">Kubernetes Network Policy Recipes</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/feiskyer/kubernetes-handbook/blob/master/concepts/network-policy.md">fesikyer network policy</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/categories/">Category</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E3%80%81Network-Policy%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">一、Network Policy简介</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%89%88%E6%9C%AC%E5%8F%98%E8%BF%81"><span class="toc-number">1.1.</span> <span class="toc-text">版本变迁</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%AE%80%E8%A6%81%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.</span> <span class="toc-text">二、简要介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-1-%E7%BB%93%E6%9E%84%E4%BD%93%E8%AF%B4%E6%98%8E"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 结构体说明</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-%E7%AE%80%E5%8D%95%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 简单示例</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">2.3.</span> <span class="toc-text">三、应用场景</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-1-%E4%B8%80%E8%88%AC%E5%9C%BA%E6%99%AF"><span class="toc-number">2.4.</span> <span class="toc-text">3.1 一般场景</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#a-%E7%A6%81%E6%AD%A2%E8%AE%BF%E9%97%AE%E6%8C%87%E5%AE%9A%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.5.</span> <span class="toc-text">a. 禁止访问指定服务</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#b-%E9%99%90%E5%88%B6%E8%AE%BF%E9%97%AE%E6%8C%87%E5%AE%9A%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.6.</span> <span class="toc-text">b. 限制访问指定服务</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#c-%E6%94%BE%E9%80%9A%E8%AE%BF%E9%97%AE%E9%99%90%E5%88%B6"><span class="toc-number">2.7.</span> <span class="toc-text">c. 放通访问限制</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-namespace%E9%99%90%E5%88%B6"><span class="toc-number">2.8.</span> <span class="toc-text">3.2 namespace限制</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#a-%E7%A6%81%E6%AD%A2-namespace-%E4%B8%AD%E9%9D%9E%E7%99%BD%E5%90%8D%E5%8D%95%E6%B5%81%E9%87%8F"><span class="toc-number">2.9.</span> <span class="toc-text">a. 禁止 namespace 中非白名单流量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#b-%E7%A6%81%E6%AD%A2%E5%85%B6%E4%BB%96-namespace-%E6%B5%81%E9%87%8F"><span class="toc-number">2.10.</span> <span class="toc-text">b. 禁止其他 namespace 流量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#c-%E8%BF%90%E8%A1%8C%E6%89%80%E6%9C%89namespace%E6%B5%81%E9%87%8F"><span class="toc-number">2.11.</span> <span class="toc-text">c. 运行所有namespace流量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#c-%E6%8C%87%E5%AE%9A-namespace-%E8%AE%BF%E9%97%AE%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.12.</span> <span class="toc-text">c. 指定 namespace 访问服务</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#d-%E5%85%81%E8%AE%B8%E5%85%B6%E4%BB%96namespace%E7%9A%84%E6%8C%87%E5%AE%9Apod%E7%9A%84%E6%B5%81%E9%87%8F"><span class="toc-number">2.13.</span> <span class="toc-text">d. 允许其他namespace的指定pod的流量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-3-%E5%85%81%E8%AE%B8%E5%A4%96%E7%BD%91%E8%AE%BF%E9%97%AE%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.14.</span> <span class="toc-text">3.3 允许外网访问服务</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-5-%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD"><span class="toc-number">2.15.</span> <span class="toc-text">3.5 高级功能</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#a-%E5%85%81%E8%AE%B8%E5%BA%94%E7%94%A8%E5%9B%BA%E5%AE%9A%E7%AB%AF%E5%8F%A3%E6%B5%81%E9%87%8F"><span class="toc-number">2.16.</span> <span class="toc-text">a. 允许应用固定端口流量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#b-%E5%A4%9A%E6%A0%87%E7%AD%BE%E9%99%90%E5%88%B6"><span class="toc-number">2.17.</span> <span class="toc-text">b. 多标签限制</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-6-%E6%8E%A7%E5%88%B6%E5%87%BA%E5%8F%A3%E6%B5%81%E9%87%8F"><span class="toc-number">2.18.</span> <span class="toc-text">3.6 控制出口流量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#a-%E7%A6%81%E6%AD%A2%E5%BA%94%E7%94%A8%E7%9A%84%E5%87%BA%E5%8F%A3%E6%B5%81%E9%87%8F"><span class="toc-number">2.19.</span> <span class="toc-text">a. 禁止应用的出口流量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#b-%E7%A6%81%E6%AD%A2%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4%E9%9D%9E%E7%99%BD%E5%90%8D%E5%8D%95%E6%B5%81%E9%87%8F"><span class="toc-number">2.20.</span> <span class="toc-text">b. 禁止命名空间非白名单流量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9B%9B%E3%80%81NetworkPolicy-%E5%BC%80%E5%8F%91"><span class="toc-number">2.21.</span> <span class="toc-text">四、NetworkPolicy 开发</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95"><span class="toc-number">2.22.</span> <span class="toc-text">性能测试</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%9C%AA%E6%9D%A5%E5%B1%95%E6%9C%9B"><span class="toc-number">2.23.</span> <span class="toc-text">五、未来展望</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#a-SCTP%E7%89%B9%E6%80%A7"><span class="toc-number">2.24.</span> <span class="toc-text">a. SCTP特性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#b-%E5%BE%85%E5%BC%80%E5%8F%91"><span class="toc-number">2.25.</span> <span class="toc-text">b. 待开发</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3"><span class="toc-number">2.26.</span> <span class="toc-text">六、参考文档</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/d6be75a2/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/d6be75a2/&text=一文搞懂Kubernetes网络策略"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/d6be75a2/&title=一文搞懂Kubernetes网络策略"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/d6be75a2/&is_video=false&description=一文搞懂Kubernetes网络策略"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=一文搞懂Kubernetes网络策略&body=Check out this article: https://zoues.com/posts/d6be75a2/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/d6be75a2/&title=一文搞懂Kubernetes网络策略"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/d6be75a2/&title=一文搞懂Kubernetes网络策略"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/d6be75a2/&title=一文搞懂Kubernetes网络策略"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/d6be75a2/&title=一文搞懂Kubernetes网络策略"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/d6be75a2/&name=一文搞懂Kubernetes网络策略&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/d6be75a2/&t=一文搞懂Kubernetes网络策略"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zouyee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

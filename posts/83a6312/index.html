@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="如何为代码选择开源许可证，这是一个问题。 世界上的开源许可证，大概有上百种。很少有人搞得清楚它们的区别。千言万语，比不上一张图：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常见的开源许可证">
+<meta property="og:url" content="https://zoues.com/posts/83a6312/index.html">
+<meta property="og:site_name" content="zouyee">
+<meta property="og:description" content="如何为代码选择开源许可证，这是一个问题。 世界上的开源许可证，大概有上百种。很少有人搞得清楚它们的区别。千言万语，比不上一张图：">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/blog/image/jpg/1135650364a1ffda02o.jpg">
+<meta property="og:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/blog/image/jpg/11356503627da387f0o.jpg">
+<meta property="article:published_time" content="2015-06-30T07:18:41.000Z">
+<meta property="article:modified_time" content="2024-01-20T12:01:27.480Z">
+<meta property="article:author" content="zouyee">
+<meta property="article:tag" content="笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://7xkj6q.com1.z0.glb.clouddn.com/blog/image/jpg/1135650364a1ffda02o.jpg">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>常见的开源许可证</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="zouyee" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/posts/518ae459/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/83a6312/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/83a6312/&text=常见的开源许可证"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/83a6312/&title=常见的开源许可证"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/83a6312/&is_video=false&description=常见的开源许可证"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=常见的开源许可证&body=Check out this article: https://zoues.com/posts/83a6312/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/83a6312/&title=常见的开源许可证"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/83a6312/&title=常见的开源许可证"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/83a6312/&title=常见的开源许可证"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/83a6312/&title=常见的开源许可证"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/83a6312/&name=常见的开源许可证&description=&lt;p&gt;如何为代码选择开源许可证，这是一个问题。&lt;/p&gt;
+&lt;p&gt;世界上的开源许可证，大概有上百种。很少有人搞得清楚它们的区别。千言万语，比不上一张图：&lt;/p&gt;
+&lt;img src=&#34;http://7xkj6q.com1.z0.glb.clouddn.com/blog/image/jpg/1135650364a1ffda02o.jpg&#34; class=&#34;full-image&#34;&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/83a6312/&t=常见的开源许可证"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#GPL-License"><span class="toc-number">1.</span> <span class="toc-text">GPL License</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BSD-License"><span class="toc-number">2.</span> <span class="toc-text">BSD License</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MIT-License"><span class="toc-number">3.</span> <span class="toc-text">MIT License</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Creative-Commons"><span class="toc-number">4.</span> <span class="toc-text">Creative Commons</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Apache-License"><span class="toc-number">5.</span> <span class="toc-text">Apache License</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LGPL-License"><span class="toc-number">6.</span> <span class="toc-text">LGPL License</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        常见的开源许可证
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zouyee</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2015-06-30T07:18:41.000Z" class="dt-published" itemprop="datePublished">2015-06-30</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Notes/">Notes</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E7%AC%94%E8%AE%B0/" rel="tag">笔记</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>如何为代码选择开源许可证，这是一个问题。</p>
+<p>世界上的开源许可证，大概有上百种。很少有人搞得清楚它们的区别。千言万语，比不上一张图：</p>
+<img src="http://7xkj6q.com1.z0.glb.clouddn.com/blog/image/jpg/1135650364a1ffda02o.jpg" class="full-image">
+
+<span id="more"></span>
+
+<p>以下是常见的六种开源协议：</p>
+<ul>
+<li><h2 id="GPL-License"><a href="#GPL-License" class="headerlink" title="GPL License"></a><a target="_blank" rel="noopener" href="http://www.gnu.org/licenses/gpl.html">GPL License</a></h2></li>
+</ul>
+<blockquote>
+<p>GPL协议的主要内容是只要在一个软件中使用(“使用”指类库引用，修改后的代码或者衍生代码)GPL 协议的产品，则该软件产品必须也采用GPL协议，既必须也是开源和免费。这就是所谓的”传染性”。GPL协议的产品作为一个单独的产品使用没有任何问题，还可以享受免费的优势。</p>
+</blockquote>
+<blockquote>
+<p><strong>由于GPL严格要求使用了GPL类库的软件产品必须使用GPL协议，对于使用GPL协议的开源代码，商业软件或者对代码有保密要求的部门就不适合集成&#x2F;采用作为类库和二次开发的基础。</strong></p>
+</blockquote>
+<ul>
+<li><h2 id="BSD-License"><a href="#BSD-License" class="headerlink" title="BSD License"></a><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/BSD_licenses">BSD License</a></h2></li>
+</ul>
+<blockquote>
+<p>BSD开源协议是一个给于使用者很大自由的协议。基本上使用者可以”为所欲为”,可以自由的使用，修改源代码，也可以将修改后的代码作为开源或者专有软件再发布。</p>
+</blockquote>
+<blockquote>
+<p>但”为所欲为”的前提当你发布使用了BSD协议的代码，或则以BSD协议代码为基础做二次开发自己的产品时，需要满足三个条件：</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>如果再发布的产品中包含源代码，则在源代码中必须带有原来代码中的BSD协议。</li>
+<li>如果再发布的只是二进制类库&#x2F;软件，则需要在类库&#x2F;软件的文档和版权声明中包含原来代码中的BSD协议。</li>
+<li>不可以用开源代码的作者&#x2F;机构名字和原来产品的名字做市场推广。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p><strong>BSD 代码鼓励代码共享，但需要尊重代码作者的著作权。BSD由于允许使用者修改和重新发布代码，也允许使用或在BSD代码上开发商业软件发布和销售，因此是对商业集成很友好的协议。而很多的公司企业在选用开源产品的时候都首选BSD协议，因为可以完全控制这些第三方的代码，在必要的时候可以修改或者二次开发。</strong></p>
+</blockquote>
+<ul>
+<li><h2 id="MIT-License"><a href="#MIT-License" class="headerlink" title="MIT License"></a><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/MIT_License">MIT License</a></h2></li>
+</ul>
+<blockquote>
+<p>在所有常用的开源许可证中，MIT许可证最为简短，可能也最为广泛。它的条款非常松散，比起大部分其它许可证来说更加宽松。它的基本前提如下：</p>
+</blockquote>
+<blockquote>
+<ul>
+<li><pre><code>该许可免费授予任何获得本软件及相关文档（合称为“软件包”）的人，许可其无限制地应用软件，包括不受限地使用、拷贝、修改、合并、出版、分发、再授权、和/或出售软件的拷贝。被许可者获取软件包提供的权利须基于以下条件：
+</code></pre>
+</li>
+</ul>
+</blockquote>
+<blockquote>
+<p><strong>以上版权声明和本许可声明必须包含在软件包的全部拷贝或实质性部分中。</strong></p>
+</blockquote>
+<blockquote>
+<ul>
+<li>你可以任意使用、拷贝和修改软件。没人能够限制你将软件用于任何项目、以你喜欢的格式拷贝软件任意多次、或以任何方式收费。</li>
+<li>你可以免费分发软件或者出售软件，你分发软件的方式不受限制。</li>
+<li>唯一的限制是软件必须附带许可协议。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>MIT许可证是限制最少的许可证，它基本上是说，只要附带许可证，任何人都可以利用该许可证授权的软件做任何想做的事。</p>
+</blockquote>
+<ul>
+<li><h2 id="Creative-Commons"><a href="#Creative-Commons" class="headerlink" title="Creative Commons"></a><a target="_blank" rel="noopener" href="http://creativecommons.org/">Creative Commons</a></h2></li>
+</ul>
+<blockquote>
+<p>知识共享（Creative Commons，简称CC）许可证并非完全的开源许可证，但设计类项目也常常使用。有各种不同的CC许可证可供使用，每种授予特定的权利。一个CC许可证包含四个基本部分，每部分即可单独生效，又可联合使用。简述如下：</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>署名</li>
+</ul>
+</blockquote>
+<blockquote>
+<p><em>必须按照作者指定的方式对作品进行署名。除此之外，作品可被复制、分发、拷贝以及以其它方式使用</em></p>
+</blockquote>
+<blockquote>
+<ul>
+<li>相同方式共享</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>只能基于相同的CC许可证对作品进行修改、分发等。*</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>非商业性</li>
+</ul>
+</blockquote>
+<blockquote>
+<p><em>作品可被修改、分发等，但不得以商业为目的进行。关于什么构成商业行为，许可证条款并未提供清晰的定义，因此你可能需要在自己的项目里给予澄清。比如说，有人认为“非商业”只是简单地意味着你不能出售作品，也有人认为你不能把作品放到一个带广告的网站上，还有人认为只有当牟利发生时才能称为“商业”。</em></p>
+</blockquote>
+<blockquote>
+<ul>
+<li>禁止衍生</li>
+</ul>
+</blockquote>
+<blockquote>
+<p><em>你可以拷贝和分发授权作品，但你不得以任何方式修改、或基于原作进行创作。</em></p>
+</blockquote>
+<blockquote>
+<p><strong>如前所述，CC许可证的各个部分可以联合使用。最为严格的许可证为“署名-非商业-禁止衍生”许可证，即你可以自由分享作品，但不得修改或收费，同时你必须按照作者指定的方式为作品署名。这对那些一方面希望发布作品，另一方面又希望多多少少保留对作品使用方式的控制权的作者来说，颇为不错。限制最少的CC许可证是“署名”许可证，即只要按照作者指定的方式为作品署名，就可以用作品做任何事。</strong></p>
+</blockquote>
+<ul>
+<li><h2 id="Apache-License"><a href="#Apache-License" class="headerlink" title="Apache License"></a><a target="_blank" rel="noopener" href="http://www.apache.org/licenses/LICENSE-2.0">Apache License</a></h2></li>
+</ul>
+<blockquote>
+<p>Apache许可证（2.0版）授予用户大量权利，这些权利适用于版权和专利权。由于有的许可证只适用于版权、不适用于专利权，Apache许可证的这一灵活性使其成为专利开发者的首选。</p>
+</blockquote>
+<blockquote>
+<p>Apache许可证特点：</p>
+<ul>
+<li>权利的永久性</li>
+</ul>
+</blockquote>
+<blockquote>
+<p><em>一旦许可证被授予，你就可以无限期使用。</em></p>
+</blockquote>
+<blockquote>
+<ul>
+<li>权利的世界性</li>
+</ul>
+</blockquote>
+<blockquote>
+<p><em>如果许可证在某一国授予，那么它同时也授予给其它所有国家。例如，如果你在美国，而原始许可证在印度颁发，那么，你在许可证授权下使用代码并无限制。</em></p>
+</blockquote>
+<blockquote>
+<ul>
+<li>获取权利的免费性</li>
+</ul>
+</blockquote>
+<blockquote>
+<p><em>你不用预先支付任何使用费，也不用为每次使用或基于其它方式而付费。</em></p>
+</blockquote>
+<blockquote>
+<ul>
+<li>权利的非排他性</li>
+</ul>
+</blockquote>
+<blockquote>
+<p><em>你能使用经授权的软件，任何其他人也能使用。</em></p>
+</blockquote>
+<blockquote>
+<ul>
+<li>权利的不可撤回性</li>
+</ul>
+</blockquote>
+<blockquote>
+<p><em>权利一旦授予，无人能撤回。换句话说，你无需担心将来的某个时候，当你创造出授权代码的优秀衍生产品时，有人会跳出来说：“抱歉，你再也不能使用这些代码了” （许可证有条款指出，如果你就许可证授权下的任何内容起诉他人，你的许可证授权即告终结。但这仅仅适用于有专利的软件，并且只要你不起诉软件相关的任何人，你就不必担心）.</em></p>
+</blockquote>
+<blockquote>
+<p><strong>Apache许可证对分发代码也有特殊要求，主要是有关给予代码作者以适当荣誉，以及保持许可证的一致性。</strong></p>
+</blockquote>
+<ul>
+<li><h2 id="LGPL-License"><a href="#LGPL-License" class="headerlink" title="LGPL License"></a><a target="_blank" rel="noopener" href="http://www.gnu.org/copyleft/lesser.html">LGPL License</a></h2></li>
+</ul>
+<blockquote>
+<p>LGPL允许商业软件通过类库引用(link)方式使用LGPL类库而不需要开源商业软件的代码。这使得采用LGPL协议的开源代码可以被商业软件作为类库引用并发布和销售。</p>
+</blockquote>
+<blockquote>
+<p>但是如果修改LGPL协议的代码或者衍生，则所有修改的代码，涉及修改部分的额外代码和衍生的代码都必须采用LGPL协议。因此LGPL协议的开源代码很适合作为第三方类库被商业软件引用，但不适合希望以LGPL协议代码为基础，通过修改和衍生的方式做二次开发的商业软件采用。</p>
+</blockquote>
+<blockquote>
+<p><strong>GPL&#x2F;LGPL都保障原作者的知识产权，避免有人利用开源代码复制并开发类似的产品</strong></p>
+</blockquote>
+<p>不难看出，即便是在这六种许可协议中作出选择，也是比较困难的。</p>
+<p><a target="_blank" rel="noopener" href="http://paulmillr.com/posts/simple-description-of-popular-software-licenses/">乌克兰程序员Paul Bagwell</a>，画了一张分析图，说明应该怎么选择。这是我见过的最简单的讲解，只用两分钟，你就能搞清楚这六种许可证之间的最大区别。</p>
+<p>以下为汉化版本，感谢<a target="_blank" rel="noopener" href="http://blog.csdn.net/wadefelix/article/details/6384317">wadefelix</a>的制作：</p>
+<img src="http://7xkj6q.com1.z0.glb.clouddn.com/blog/image/jpg/11356503627da387f0o.jpg"  class="full-image">
+
+
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/categories/">Category</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#GPL-License"><span class="toc-number">1.</span> <span class="toc-text">GPL License</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BSD-License"><span class="toc-number">2.</span> <span class="toc-text">BSD License</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MIT-License"><span class="toc-number">3.</span> <span class="toc-text">MIT License</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Creative-Commons"><span class="toc-number">4.</span> <span class="toc-text">Creative Commons</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Apache-License"><span class="toc-number">5.</span> <span class="toc-text">Apache License</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LGPL-License"><span class="toc-number">6.</span> <span class="toc-text">LGPL License</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/83a6312/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/83a6312/&text=常见的开源许可证"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/83a6312/&title=常见的开源许可证"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/83a6312/&is_video=false&description=常见的开源许可证"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=常见的开源许可证&body=Check out this article: https://zoues.com/posts/83a6312/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/83a6312/&title=常见的开源许可证"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/83a6312/&title=常见的开源许可证"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/83a6312/&title=常见的开源许可证"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/83a6312/&title=常见的开源许可证"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/83a6312/&name=常见的开源许可证&description=&lt;p&gt;如何为代码选择开源许可证，这是一个问题。&lt;/p&gt;
+&lt;p&gt;世界上的开源许可证，大概有上百种。很少有人搞得清楚它们的区别。千言万语，比不上一张图：&lt;/p&gt;
+&lt;img src=&#34;http://7xkj6q.com1.z0.glb.clouddn.com/blog/image/jpg/1135650364a1ffda02o.jpg&#34; class=&#34;full-image&#34;&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/83a6312/&t=常见的开源许可证"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zouyee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

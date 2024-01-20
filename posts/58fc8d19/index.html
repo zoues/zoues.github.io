@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="With the announcement of CentOS discontinuation by the CentOS community , along with the set dates for service termination, we have put the switch to a new container operating system on our agenda. Ba">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Embracing Cgroup V2:Best Practices for Migrating Kubernetes Clusters to AlmaLinux">
+<meta property="og:url" content="https://zoues.com/posts/58fc8d19/index.html">
+<meta property="og:site_name" content="zouyee">
+<meta property="og:description" content="With the announcement of CentOS discontinuation by the CentOS community , along with the set dates for service termination, we have put the switch to a new container operating system on our agenda. Ba">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-01-20T05:40:08.000Z">
+<meta property="article:modified_time" content="2024-01-20T12:01:27.467Z">
+<meta property="article:author" content="zouyee">
+<meta property="article:tag" content="kubernetes">
+<meta property="article:tag" content="cncf">
+<meta property="article:tag" content="almalinux">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Embracing Cgroup V2:Best Practices for Migrating Kubernetes Clusters to AlmaLinux</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="zouyee" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/posts/a78d5062/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/912f3650/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/58fc8d19/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/58fc8d19/&text=Embracing Cgroup V2:Best Practices for Migrating Kubernetes Clusters to AlmaLinux"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/58fc8d19/&title=Embracing Cgroup V2:Best Practices for Migrating Kubernetes Clusters to AlmaLinux"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/58fc8d19/&is_video=false&description=Embracing Cgroup V2:Best Practices for Migrating Kubernetes Clusters to AlmaLinux"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Embracing Cgroup V2:Best Practices for Migrating Kubernetes Clusters to AlmaLinux&body=Check out this article: https://zoues.com/posts/58fc8d19/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/58fc8d19/&title=Embracing Cgroup V2:Best Practices for Migrating Kubernetes Clusters to AlmaLinux"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/58fc8d19/&title=Embracing Cgroup V2:Best Practices for Migrating Kubernetes Clusters to AlmaLinux"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/58fc8d19/&title=Embracing Cgroup V2:Best Practices for Migrating Kubernetes Clusters to AlmaLinux"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/58fc8d19/&title=Embracing Cgroup V2:Best Practices for Migrating Kubernetes Clusters to AlmaLinux"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/58fc8d19/&name=Embracing Cgroup V2:Best Practices for Migrating Kubernetes Clusters to AlmaLinux&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/58fc8d19/&t=Embracing Cgroup V2:Best Practices for Migrating Kubernetes Clusters to AlmaLinux"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Why-Cgroup-v2"><span class="toc-number">1.</span> <span class="toc-text">Why Cgroup v2?</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#What-issues-were-encountered%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">What issues were encountered？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-applications"><span class="toc-number">1.2.</span> <span class="toc-text">Java applications</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Kubernetes"><span class="toc-number">1.3.</span> <span class="toc-text">Kubernetes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Systemd-with-cilium"><span class="toc-number">1.4.</span> <span class="toc-text">Systemd with cilium</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">2.</span> <span class="toc-text">Conclusion</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Embracing Cgroup V2:Best Practices for Migrating Kubernetes Clusters to AlmaLinux
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zouyee</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-01-20T05:40:08.000Z" class="dt-published" itemprop="datePublished">2024-01-20</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/almalinux/" rel="tag">almalinux</a>, <a class="p-category" href="/tags/cncf/" rel="tag">cncf</a>, <a class="p-category" href="/tags/kubernetes/" rel="tag">kubernetes</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>With the announcement of CentOS discontinuation by the CentOS community , along with the set dates for service termination, we have put the switch to a new container operating system on our agenda. Based on factors such as migration cost, smoothness of transition, and maintenance difficulty, we have chosen AlmaLinux from the RHEL series as an alternative solution.</p>
+<p>NOTE: AlmaLinux is just one of the replacement options available within the RHEL ecosystem. Our choice is based on our specific production needs and does not necessarily apply to everyone.</p>
+<p>AlmaLinux 9 defaults to using cgroup v2, and this configuration affects some underlying components. Therefore, certain adaptations and compatibility work need to be done. This article presents the best practices for migrating Kubernetes cluster nodes from CentOS to AlmaLinux which involves removing dockershim and utilizing cgroup v2 for node resource management.</p>
+<h2 id="Why-Cgroup-v2"><a href="#Why-Cgroup-v2" class="headerlink" title="Why Cgroup v2?"></a>Why Cgroup v2?</h2><p>Effective resource management is a critical aspect of Kubernetes. This involves managing the finite resources in your nodes, such as CPU, memory, and storage.</p>
+<p><em>cgroups</em> are a Linux kernel capability that establish resource management functionality like limiting CPU usage or setting memory limits for running processes.</p>
+<p>When you use the resource management capabilities in Kubernetes, such as configuring requests and limits for Pods and containers, Kubernetes uses cgroups to enforce your resource requests and limits.</p>
+<p>The Linux kernel offers two versions of cgroups: cgroup v1 and v2.</p>
+<p>Here is our comparison between the two versions based on our research:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>cgroup v1</th>
+<th>cgroup v2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Maintainability</td>
+<td>deprecate and systemd community intend to remove cgroup v1 support from systemd release after the end of 2023</td>
+<td>Many recent releases of Linux distributions have switched over to cgroup v2 by default</td>
+</tr>
+<tr>
+<td>Compatibility</td>
+<td>support</td>
+<td>1. Components such as kubelet need to be adapted for cgroup v2 2. Business applications require JDK version upgrades, which can be achieved by replacing the base image</td>
+</tr>
+<tr>
+<td>hierarchy</td>
+<td>multiple hierarchies，it wasn’t useful and complicated in practice</td>
+<td>single unified hierarchy</td>
+</tr>
+<tr>
+<td>resource allocation management</td>
+<td>basic</td>
+<td>more powerful、dynamic and enhanced resource allocation management，such as the following： • Unified accounting for different types of memory allocations (network and kernel memory, etc) • Accounting for non-immediate resource changes such as page cache write backs • Safer sub-tree delegation to containers</td>
+</tr>
+<tr>
+<td>Performance</td>
+<td>support for multiple hierarchies came at a steep cost</td>
+<td>better</td>
+</tr>
+<tr>
+<td>Scalability</td>
+<td>it seemed to provide a high level of flexibility,  but it wasn’t useful in practice</td>
+<td>provide a high level of flexibility ，new features like PSI</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>the known CVEs, such as cve-2022-0492、cve-2021-4154</td>
+<td>support rootless container</td>
+</tr>
+</tbody></table>
+<p>cgroup v2 has been in development in the Linux Kernel since 2016 and in recent years has matured across the container ecosystem. With Kubernetes 1.25, cgroup v2 support has graduated to general availability.</p>
+<h3 id="What-issues-were-encountered？"><a href="#What-issues-were-encountered？" class="headerlink" title="What issues were encountered？"></a>What issues were encountered？</h3><h3 id="Java-applications"><a href="#Java-applications" class="headerlink" title="Java applications"></a>Java applications</h3><p><a target="_blank" rel="noopener" href="https://bugs.openjdk.org/browse/JDK-8146115">JDK-8146115</a> added Hotspot runtime support for JVMs running in Docker containers. At the time Docker used cgroups v1 and, hence, runtime support only includes cgroup v1 controllers.</p>
+<p>JDK-8230305 extended functionality of <a target="_blank" rel="noopener" href="https://bugs.openjdk.org/browse/JDK-8146115">JDK-8146115</a> to also detect cgroups v2. That is iff cgroups v2 unified hierarchy is available only, use the cgroups v2 backend. Otherwise fall back to existing cgroups v1 container support.</p>
+<p>require version：jdk8u372, 11.0.16, 15 and later</p>
+<h3 id="Kubernetes"><a href="#Kubernetes" class="headerlink" title="Kubernetes"></a>Kubernetes</h3><p>Currently,  the version of Kubernetes in production is 1.19 and enabling cgroup v2 support for kubelet is proving to be challenging. While a comprehensive upgrade of Kubernetes is being researched and prepared, we are currently focusing on implementing cgroup v2 support specifically for kubelet. This approach allows for a shorter implementation time while laying the foundation for the subsequent comprehensive upgrade.</p>
+<p>To enable cgroup v2 support, several adjustments need to be made to various components:</p>
+<ol>
+<li>Kernel Version: We are currently using kernel version 5.15, which meets the minimum requirement for cgroup v2 (4.14). However, it is recommended to use kernel version 5.2 or newer due to the lack of freezer support in older versions.</li>
+<li>Systemd and Runc: It is highly recommended to run runc with the systemd cgroup driver (<code>runc --systemd-cgroup</code>), although it is not mandatory. To ensure compatibility, it is recommended to use systemd version 244 or later, as older versions do not support delegation of the <code>cpuset</code> controller.</li>
+<li>Kubelet : The vendor for kubelet needs to upgrade the runc version. Currently, the latest fully supported version of runc for cgroup v2 is rc93. To minimize changes, we have chosen rc94 and modified the kubelet code to internally maintain runc rc94. This allows us to merge the necessary cgroup v2-related pull requests. However, in rc95, there are significant changes to the cgroup.Manager interface, which does not align with the principle of minimal changes.</li>
+</ol>
+<p>metrics-server retrieves resource usage information of nodes and pods using kubelet summary and other interfaces. This data is crucial for Horizontal Pod Autoscaling (HPA) based on resource scaling. To eliminate dockershim, the kubelet should utilize the systemd cgroup driver and configure the runtime accordingly.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--container-runtime=remote --container-runtime-endpoint=unix:///run/containerd/containerd.sock</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>Containerd : starting from version 1.4, containerd supports cgroup v2. We have successfully validated the removal of dockershim and conducted thorough testing of business operations in the testing environment. With the successful testing, we will proceed with the production rollout. Similar to kubelet, containerd also requires the systemd cgroup driver. Use the following configuration for the systemd cgroup driver:</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[plugins.<span class="string">&quot;io.containerd.grpc.v1.cri&quot;</span>.containerd.runtimes.runc]</span><br><span class="line">  ...</span><br><span class="line">  [plugins.<span class="string">&quot;io.containerd.grpc.v1.cri&quot;</span>.containerd.runtimes.runc.options]</span><br><span class="line">    SystemdCgroup = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>The configuration of the sandbox image and registry can be customized based on specific requirements.</p>
+<h3 id="Systemd-with-cilium"><a href="#Systemd-with-cilium" class="headerlink" title="Systemd with cilium"></a>Systemd with cilium</h3><p>SystemD versions greater than 245 automatically set the rp_filter value to 1 for all network interfaces. This conflicts with Cilium, which requires rp_filter to be 0 on its interfaces, leading to a disruption in out-of-node IPv4 traffic.</p>
+<p>Therefore, it is crucial to exercise caution before upgrading SystemD, as demonstrated by the failure experienced by Datadog, which served as a significant warning.</p>
+<p>on March 8, 2023, at 06:00 UTC, a security update to systemd was automatically applied to several VMs, which caused a latent adverse interaction in the network stack (on Ubuntu 22.04 via systemd v249) to manifest upon systemd-networkd restarting.Namely, <code>systemd-networkd</code> forcibly deleted the routes managed by the Container Network Interface (CNI) plugin (Cilium) we use for communication between containers. This caused the affected nodes to go offline.</p>
+<p>Additionally, when container runtimes are configured with cgroup v2, the Cilium agent pod is deployed in a separate cgroup namespace. For example, Docker container runtime with cgroupv2 support defaults to private cgroup namespace mode. Due to cgroup namespaces, the Cilium pod’s cgroup filesystem points to a virtualized hierarchy instead of the host cgroup root. Consequently, BPF programs are attached to the nested cgroup root, rendering socket load balancing ineffective for other pods. To address this limitation, work is being done in the Cilium project  to revisit assumptions made around cgroup hierarchies and enable socket load balancing in different environments.</p>
+<p>Don’t worry, these issues have already been fixed by the community.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>During the testing process of Cgroup V2 and removing dockershim in our testing environment, we conducted extensive adaptation and stability tests. Our long-term analysis revealed that the benefits of adopting this technology roadmap far outweigh the initial investment. As part of our plan, we intend to promote the adoption of Cgroup V2-based machines in production. This will involve a meticulous testing and validation process, followed by a gradual rollout in production environments. We will start with offline applications such as logging and big data applications.</p>
+<p>The Cloud Native Computing Foundation’s flagship conference gathers adopters and technologists from leading open source and cloud native communities in Shanghai, China from 26-28 September, 2023.  We are considering submitting a proposal for a presentation at KubeCon 2023, where we will have the opportunity to share the latest developments and insights with the conference attendees.</p>
+<p><a target="_blank" rel="noopener" href="https://bugs.openjdk.org/browse/JDK-8230305">https://bugs.openjdk.org/browse/JDK-8230305</a></p>
+<p><a target="_blank" rel="noopener" href="https://kubernetes.io/blog/2022/08/31/cgroupv2-ga-1-25/">https://kubernetes.io/blog/2022/08/31/cgroupv2-ga-1-25/</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html">https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/cilium/cilium/issues/10645">https://github.com/cilium/cilium/issues/10645</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/categories/">Category</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Why-Cgroup-v2"><span class="toc-number">1.</span> <span class="toc-text">Why Cgroup v2?</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#What-issues-were-encountered%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">What issues were encountered？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-applications"><span class="toc-number">1.2.</span> <span class="toc-text">Java applications</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Kubernetes"><span class="toc-number">1.3.</span> <span class="toc-text">Kubernetes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Systemd-with-cilium"><span class="toc-number">1.4.</span> <span class="toc-text">Systemd with cilium</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">2.</span> <span class="toc-text">Conclusion</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/58fc8d19/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/58fc8d19/&text=Embracing Cgroup V2:Best Practices for Migrating Kubernetes Clusters to AlmaLinux"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/58fc8d19/&title=Embracing Cgroup V2:Best Practices for Migrating Kubernetes Clusters to AlmaLinux"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/58fc8d19/&is_video=false&description=Embracing Cgroup V2:Best Practices for Migrating Kubernetes Clusters to AlmaLinux"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Embracing Cgroup V2:Best Practices for Migrating Kubernetes Clusters to AlmaLinux&body=Check out this article: https://zoues.com/posts/58fc8d19/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/58fc8d19/&title=Embracing Cgroup V2:Best Practices for Migrating Kubernetes Clusters to AlmaLinux"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/58fc8d19/&title=Embracing Cgroup V2:Best Practices for Migrating Kubernetes Clusters to AlmaLinux"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/58fc8d19/&title=Embracing Cgroup V2:Best Practices for Migrating Kubernetes Clusters to AlmaLinux"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/58fc8d19/&title=Embracing Cgroup V2:Best Practices for Migrating Kubernetes Clusters to AlmaLinux"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/58fc8d19/&name=Embracing Cgroup V2:Best Practices for Migrating Kubernetes Clusters to AlmaLinux&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/58fc8d19/&t=Embracing Cgroup V2:Best Practices for Migrating Kubernetes Clusters to AlmaLinux"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zouyee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

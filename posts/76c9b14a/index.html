@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="CloudEvents是一种以通用方式描述事件数据的规范。CloudEvents旨在简化跨服务，平台及其他方面的事件声明和发送。CloudEvents　最初由　CNCFSeverless 工作组提出。CloudEvents 的 HTTP 协议绑定定义了如何将事件映射到 HTTP 1.1 请求和响应消息。  一、简介CloudEvents是事件的结构和元数据描述的标准化且与协议无关的定义。该规范定义">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CloudEvents核心规范之二">
+<meta property="og:url" content="https://zoues.com/posts/76c9b14a/index.html">
+<meta property="og:site_name" content="zouyee">
+<meta property="og:description" content="CloudEvents是一种以通用方式描述事件数据的规范。CloudEvents旨在简化跨服务，平台及其他方面的事件声明和发送。CloudEvents　最初由　CNCFSeverless 工作组提出。CloudEvents 的 HTTP 协议绑定定义了如何将事件映射到 HTTP 1.1 请求和响应消息。  一、简介CloudEvents是事件的结构和元数据描述的标准化且与协议无关的定义。该规范定义">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-06-16T13:40:08.000Z">
+<meta property="article:modified_time" content="2024-01-20T12:01:27.426Z">
+<meta property="article:author" content="zouyee">
+<meta property="article:tag" content="serverless">
+<meta property="article:tag" content="cloudnative">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>CloudEvents核心规范之二</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="zouyee" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/posts/34952747/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/4d499fe3/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/76c9b14a/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/76c9b14a/&text=CloudEvents核心规范之二"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/76c9b14a/&title=CloudEvents核心规范之二"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/76c9b14a/&is_video=false&description=CloudEvents核心规范之二"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CloudEvents核心规范之二&body=Check out this article: https://zoues.com/posts/76c9b14a/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/76c9b14a/&title=CloudEvents核心规范之二"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/76c9b14a/&title=CloudEvents核心规范之二"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/76c9b14a/&title=CloudEvents核心规范之二"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/76c9b14a/&title=CloudEvents核心规范之二"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/76c9b14a/&name=CloudEvents核心规范之二&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/76c9b14a/&t=CloudEvents核心规范之二"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">一、简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8EHTTP%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-number">1.1.</span> <span class="toc-text">与HTTP的关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AE%B9%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">内容模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E6%A0%BC%E5%BC%8F"><span class="toc-number">1.3.</span> <span class="toc-text">事件格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E5%85%A8"><span class="toc-number">1.4.</span> <span class="toc-text">安全</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81CloudEvents-%E5%B1%9E%E6%80%A7%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">二、CloudEvents 属性的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#datacontententtype-%E5%B1%9E%E6%80%A7"><span class="toc-number">2.1.</span> <span class="toc-text">datacontententtype 属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#data"><span class="toc-number">2.2.</span> <span class="toc-text">data</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81HTTP%E6%B6%88%E6%81%AF%E6%98%A0%E5%B0%84"><span class="toc-number">3.</span> <span class="toc-text">三、HTTP消息映射</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%86%85%E5%AE%B9%E6%A8%A1%E5%BC%8F"><span class="toc-number">3.1.</span> <span class="toc-text">二进制内容模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP%E5%86%85%E5%AE%B9%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.2.</span> <span class="toc-text">HTTP内容类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E6%95%B0%E6%8D%AE%E7%BC%96%E7%A0%81"><span class="toc-number">3.3.</span> <span class="toc-text">事件数据编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#metadata-header"><span class="toc-number">3.4.</span> <span class="toc-text">metadata header</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">3.5.</span> <span class="toc-text">示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%B9%E9%87%8F%E5%86%85%E5%AE%B9%E6%A8%A1%E5%BC%8F"><span class="toc-number">3.6.</span> <span class="toc-text">批量内容模式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81json%E4%BA%8B%E4%BB%B6%E6%A0%BC%E5%BC%8F"><span class="toc-number">4.</span> <span class="toc-text">四、json事件格式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7"><span class="toc-number">4.1.</span> <span class="toc-text">属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Envelope"><span class="toc-number">4.2.</span> <span class="toc-text">Envelope</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">5.</span> <span class="toc-text">参考资料</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        CloudEvents核心规范之二
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zouyee</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-06-16T13:40:08.000Z" class="dt-published" itemprop="datePublished">2020-06-16</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/cloudnative/" rel="tag">cloudnative</a>, <a class="p-category" href="/tags/serverless/" rel="tag">serverless</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>CloudEvents是一种以通用方式描述事件数据的规范。CloudEvents旨在简化跨服务，平台及其他方面的事件声明和发送。CloudEvents　最初由　CNCF<br>Severless 工作组提出。CloudEvents 的 HTTP 协议绑定定义了如何将事件映射到 HTTP 1.1 请求和响应消息。</p>
+<hr>
+<h2 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h2><p>CloudEvents是事件的结构和元数据描述的标准化且与协议无关的定义。该规范定义了如何在HTTP 1.1请求和响应消息中使用CloudEvents规范中定义的元素。</p>
+<h3 id="与HTTP的关系"><a href="#与HTTP的关系" class="headerlink" title="与HTTP的关系"></a>与HTTP的关系</h3><p>本规范没有规定约束特定HTTP方法的使用或处理规则，也没有约束用于传输或请求事件的HTTP目标资源。</p>
+<p>事件可以通过所有支持有效载荷体传输的标准或应用程序定义的HTTP请求方法来传输。事件也可以在HTTP响应中以及与允许有效载荷体传输的所有HTTP状态码一起传输。</p>
+<p>这里所有显示HTTP方法、HTTP目标URI和HTTP状态码的例子都是非规范性的说明。</p>
+<p>本规范也同样适用于与 HTTP 1.1语义兼容的 HTTP&#x2F;2（RFC7540）。</p>
+<blockquote>
+<p>也适用于HTTP&#x2F;2</p>
+</blockquote>
+<h3 id="内容模式"><a href="#内容模式" class="headerlink" title="内容模式"></a>内容模式</h3><p>本规范定义了传输事件的三种内容模式：二进制（binary）、结构化（structured）和批量（batched）。每个符合规范的实现都应该支持二进制（binary）和结</p>
+<p>构化（structured）模式。</p>
+<ul>
+<li>在二进制内容模式下，事件 data 的值被放置到HTTP请求或响应的主体（body）中，并在HTTP Content-Type header中以 datacontenttype属性的值声明其</li>
+</ul>
+<p>媒体类型；所有其他事件属性都被映射到HTTP头。</p>
+<ul>
+<li><p>在结构化内容模式下，事件元数据属性和事件数据被放置到HTTP请求或响应body中，使用事件格式。</p>
+</li>
+<li><p>在批量内容模式中，多个事件使用支持批量的事件格式，分批放入单个HTTP请求或响应body中。</p>
+</li>
+</ul>
+<h3 id="事件格式"><a href="#事件格式" class="headerlink" title="事件格式"></a>事件格式</h3><p>与结构化内容模式一起使用的事件格式，定义了事件如何以特定的数据格式表达。本规范的所有实现必须支持非批处理的JSON事件格式，但也可以支持任何其他格式，包括专有格式。</p>
+<p>事件格式可以额外定义事件批处理的表达方式。这些格式可以与批处理内容模式一起使用。</p>
+<h3 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h3><p>本规范没有为HTTP引入任何新的安全特性，也没有规定要使用特定的现有特性。本规范同样适用于TLS上的HTTP。</p>
+<hr>
+<h2 id="二、CloudEvents-属性的使用"><a href="#二、CloudEvents-属性的使用" class="headerlink" title="二、CloudEvents 属性的使用"></a>二、CloudEvents 属性的使用</h2><p>本规范没有进一步定义任何核心 CloudEvents 事件属性。</p>
+<p>此映射是为了防止变化（包括事件属性的添加和删除），并适应供应商对事件元数据的扩展。</p>
+<h3 id="datacontententtype-属性"><a href="#datacontententtype-属性" class="headerlink" title="datacontententtype 属性"></a>datacontententtype 属性</h3><p>datacontententtype属性被认为包含一个符合RFC2046的媒体类型表达式。</p>
+<h3 id="data"><a href="#data" class="headerlink" title="data"></a>data</h3><p>data 被假定为包含由 datacontenttype 属性声明的不透明的应用数据。</p>
+<p>应用程序可以自由地以其选择的任何内存中的表示方式来保存信息，但是由于该值是按照本规范中的定义被转接到HTTP中的，因此假设 data 的值是以字节序列的形式</p>
+<p>提供的。</p>
+<p>例如，如果声明的 datacontenttype 为 application&#x2F;json;charset&#x3D;utf-8，则期望 data 值以 UTF-8 编码的JSON文本形式提供给HTTP。</p>
+<hr>
+<h2 id="三、HTTP消息映射"><a href="#三、HTTP消息映射" class="headerlink" title="三、HTTP消息映射"></a>三、HTTP消息映射</h2><p>HTTP请求和响应消息的事件绑定是相同的。</p>
+<p>内容模式是由事件的发送方选择的，发送方可以是请求方或响应方。可能允许使用特定模式请求事件的手势可能是由应用程序定义的，但这里没有定义。除非被邀约，</p>
+<p>否则不能使用批量模式，而且手势应该允许接收方选择最大的批处理量。</p>
+<p>事件的接收方可以通过检查 Content-Type header 的值来区分这三种模式。如果该值前缀为 CloudEvents 媒体类型 application&#x2F;cloudevents，表示使</p>
+<p>用已知的事件格式，则接收方使用结构化模式。如果该值前缀为 application&#x2F;cloudevents-batch，则接收器使用批处理模式。否则，则默认为二进制模式。</p>
+<blockquote>
+<p>默认是使用二进制模式</p>
+</blockquote>
+<p>如果接收器检测到 CloudEvents 媒体类型，但它无法处理的事件格式（例如 application&#x2F;cloudevents+avro），它仍然可以将事件作为二进制模式处理，并</p>
+<p>将其转发到另一方。</p>
+<h3 id="二进制内容模式"><a href="#二进制内容模式" class="headerlink" title="二进制内容模式"></a>二进制内容模式</h3><p>二进制的内容模式可以容纳任何形状的事件数据，并允许高效传输，无需转码。</p>
+<p><em><strong>HTTP Content Type</strong></em></p>
+<p>对于二进制模式，HTTP Content-Type header值对应于（必须从 CloudEvents datacontenttype 属性中填充或写入）CloudEvents datacontenttype </p>
+<p>属性。请注意 ce-datacontenttype HTTP 标头不能也存在于消息中。</p>
+<p><em><strong>事件数据编码</strong></em></p>
+<p>data 字节序列作为HTTP报文Body。</p>
+<p><em><strong>Metadata headers</strong></em></p>
+<p>所有其他 CloudEvents 属性（包括扩展）必须单独映射到不同的 HTTP 消息头，并从不同的 HTTP 消息头中映射。</p>
+<p>定义了自己属性的 CloudEvents 扩展可以为这些属性定义二级映射到 HTTP 头，特别是当特定属性需要与 HTTP 特性或其他有明确 HTTP 头绑定的规范保持一致</p>
+<p>时。请注意，这些属性还必须作为带有 ce 前缀的 HTTP 标头出现在 HTTP 报文中，如 HTTP 标头名称中所述。</p>
+<p><em><strong>HTTP Header Names</strong></em></p>
+<p>除注明的情况外，所有 CloudEvents 上下文属性（包括扩展）都必须映射到与属性名称相同但前缀为 ce 的 HTTP header中。</p>
+<p>示例:</p>
+<ul>
+<li><code>time</code> maps to <code>ce-time</code></li>
+<li><code>id</code> maps to <code>ce-id</code></li>
+<li><code>specversion</code> maps to <code>ce-specversion</code></li>
+</ul>
+<blockquote>
+<p>根据HTTP规范，header name是不区分大小写的</p>
+</blockquote>
+<p><em><strong>HTTP header值</strong></em></p>
+<p>每个 HTTP header的值由相应属性类型的标准字符串表示法构建。</p>
+<p>某些 CloudEvents 元数据属性可包含任意 UTF-8 字符串内容，HTTP 标头必须仅使用 US-ASCII 字符集中的可打印字符，并由 CRLF 序列终止，标头值周围</p>
+<p>有可选的空白。中描述的 header 编码规则之前，必须按照RFC3986，第2.4节中描述的百分比编码，对字符串值进行百分比编码。</p>
+<p>将 HTTP 报文解码为 CloudEvent 时，必须反向应用这些规则 – RFC7230 第 3.2.6 节对 ASCII 字符串进行解码，然后按照 RFC3986 第 2.4 节中的描</p>
+<p>述进行单轮百分比解码，以生成有效的 UTF-8 字符串。(注意，应用百分比解码的次数不正确可能导致报文损坏或安全问题)。</p>
+<p><em><strong>Examples</strong></em></p>
+<p>这个例子显示了带有HTTP POST请求的事件与的二进制模式映射：</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">POST /someresource HTTP/1.1</span><br><span class="line">Host: webhook.example.com</span><br><span class="line">ce-specversion: 1.0</span><br><span class="line">ce-type: com.example.someevent</span><br><span class="line">ce-time: 2018-04-05T03:56:24Z</span><br><span class="line">ce-id: 1234-1234-1234</span><br><span class="line">ce-source: /mycontext/subcontext</span><br><span class="line">    .... further attributes ...</span><br><span class="line">Content-Type: application/json; charset=utf-8</span><br><span class="line">Content-Length: nnnn</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    ... application data ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个例子显示了包含事件的响应：</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">ce-specversion: 1.0</span><br><span class="line">ce-type: com.example.someevent</span><br><span class="line">ce-time: 2018-04-05T03:56:24Z</span><br><span class="line">ce-id: 1234-1234-1234</span><br><span class="line">ce-source: /mycontext/subcontext</span><br><span class="line">    .... further attributes ...</span><br><span class="line">Content-Type: application/json; charset=utf-8</span><br><span class="line">Content-Length: nnnn</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    ... application data ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>结构化内容模式</strong></em><br>结构化的内容模式将事件元数据和数据保持在有效载荷中，使得同一事件可以在多个路由跳转、多协议之间简单转发。</p>
+<h3 id="HTTP内容类型"><a href="#HTTP内容类型" class="headerlink" title="HTTP内容类型"></a>HTTP内容类型</h3><p>HTTP内容类型头必须设置为事件格式的媒体类型。</p>
+<blockquote>
+<p>JSON 格式的示例。</p>
+</blockquote>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Content-Type: application/cloudevents+json; charset=UTF-8</span><br></pre></td></tr></table></figure>
+
+<h3 id="事件数据编码"><a href="#事件数据编码" class="headerlink" title="事件数据编码"></a>事件数据编码</h3><p>所选择的事件格式定义了所有属性和数据的表示方式。</p>
+<p>然后按照事件格式规范对事件元数据和数据进行渲染，最后得到的数据成为HTTP报文body。</p>
+<h3 id="metadata-header"><a href="#metadata-header" class="headerlink" title="metadata header"></a>metadata header</h3><p>实现可以包含与二进制模式定义的相同的 HTTP 标头。</p>
+<p>所有 CloudEvents 元数据属性都必须映射到有效载荷（Payload）中，即使它们也已经映射到 HTTP header中了。</p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>这个例子显示了一个JSON事件格式编码的事件，用PUT请求发送：</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">PUT /myresource HTTP/1.1</span><br><span class="line">Host: webhook.example.com</span><br><span class="line">Content-Type: application/cloudevents+json; charset=utf-8</span><br><span class="line">Content-Length: nnnn</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;specversion&quot; : &quot;1.0&quot;,</span><br><span class="line">    &quot;type&quot; : &quot;com.example.someevent&quot;,</span><br><span class="line"></span><br><span class="line">    ... further attributes omitted ...</span><br><span class="line"></span><br><span class="line">    &quot;data&quot; : &#123;</span><br><span class="line">        ... application data ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个例子显示了一个响应中返回的JSON编码的事件：</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Content-Type: application/cloudevents+json; charset=utf-8</span><br><span class="line">Content-Length: nnnn</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;specversion&quot; : &quot;1.0&quot;,</span><br><span class="line">    &quot;type&quot; : &quot;com.example.someevent&quot;,</span><br><span class="line"></span><br><span class="line">    ... further attributes omitted ...</span><br><span class="line"></span><br><span class="line">    &quot;data&quot; : &#123;</span><br><span class="line">        ... application data ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="批量内容模式"><a href="#批量内容模式" class="headerlink" title="批量内容模式"></a>批量内容模式</h3><p>在批量内容模式下，多个事件被批量到一个HTTP请求或响应体中。选择的事件格式必须定义如何表示一个批次。基于JSON格式（任何兼容的实现都必须支持JSON格式），</p>
+<p>JSON Batch格式是一种支持批处理的事件格式。</p>
+<p><em><strong>HTTP 内容类型</strong></em></p>
+<p>HTTP Content-Type头必须设置为事件格式的媒体类型。</p>
+<p>JSON Batch 格式的示例。</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Content-Type: application/cloudevents-batch+json; charset=UTF-8</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>事件数据编码</strong></em></p>
+<p>所选的事件格式定义了一批事件和所有事件属性和数据的表示方式。</p>
+<p>然后根据事件格式规范对事件批进行渲染，结果数据将成为HTTP消息主体。</p>
+<p>该批事件可以是空的。所有批处理的 CloudEvents 必须具有相同的 specversion 属性。其他属性可能不同，包括 datacontententtype 属性。</p>
+<p><em><strong>示例</strong></em></p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">PUT /myresource HTTP/1.1</span><br><span class="line">Host: webhook.example.com</span><br><span class="line">Content-Type: application/cloudevents-batch+json; charset=utf-8</span><br><span class="line">Content-Length: nnnn</span><br><span class="line"></span><br><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;specversion&quot; : &quot;1.0&quot;,</span><br><span class="line">        &quot;type&quot; : &quot;com.example.someevent&quot;,</span><br><span class="line"></span><br><span class="line">        ... further attributes omitted ...</span><br><span class="line"></span><br><span class="line">        &quot;data&quot; : &#123;</span><br><span class="line">            ... application data ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;specversion&quot; : &quot;1.0&quot;,</span><br><span class="line">        &quot;type&quot; : &quot;com.example.someotherevent&quot;,</span><br><span class="line"></span><br><span class="line">        ... further attributes omitted ...</span><br><span class="line"></span><br><span class="line">        &quot;data&quot; : &#123;</span><br><span class="line">            ... application data ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>返回</p>
+<figure class="highlight shell"><figcaption><span>script</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Content-Type: application/cloudevents-batch+json; charset=utf-8</span><br><span class="line">Content-Length: nnnn</span><br><span class="line"></span><br><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;specversion&quot; : &quot;1.0&quot;,</span><br><span class="line">        &quot;type&quot; : &quot;com.example.someevent&quot;,</span><br><span class="line"></span><br><span class="line">        ... further attributes omitted ...</span><br><span class="line"></span><br><span class="line">        &quot;data&quot; : &#123;</span><br><span class="line">            ... application data ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;specversion&quot; : &quot;1.0&quot;,</span><br><span class="line">        &quot;type&quot; : &quot;com.example.someotherevent&quot;,</span><br><span class="line"></span><br><span class="line">        ... further attributes omitted ...</span><br><span class="line"></span><br><span class="line">        &quot;data&quot; : &#123;</span><br><span class="line">            ... application data ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="四、json事件格式"><a href="#四、json事件格式" class="headerlink" title="四、json事件格式"></a>四、json事件格式</h2><h3 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h3><p>本节定义了 CloudEvents 属性如何映射到 JSON。本规范没有明确映射每个属性，但提供了一个通用映射模型，该模型适用于所有当前和未来的 CloudEvents </p>
+<p>属性（包括扩展）。</p>
+<p>为明确起见，扩展属性使用与规范定义的属性相同的规则进行序列化。这包括其语法和在 JSON 对象中的位置。特别是，扩展作为顶层 JSON 属性放置。扩展必须被</p>
+<p>序列化为顶层JSON属性。</p>
+<p><em><strong>Type System Mapping</strong></em></p>
+<p>扩展规范可以为其定义的属性值定义二次映射规则，但必须包括之前定义的主映射。</p>
+<p>例如，属性值可能是在 CloudEvents 以外的标准中定义的数据结构，具有正式的 JSON 映射，如果不保留原始格式，可能会有翻译错误或信息丢失的风险。</p>
+<p>定义了 JSON 次要映射规则的扩展规范，以及对该规范的任何修订，都必须为提交或修订时属于 CloudEvents 核心的所有其他事件格式定义明确的映射规则。</p>
+<p>如果需要，例如在解码地图时，CloudEvents 类型可以通过使用映射表中的规则进行推理来确定，其中唯一潜在的模糊 JSON 数据类型是字符串。当满足映射规则时，</p>
+<p>该值与相应的 CloudEvents 类型兼容。</p>
+<h3 id="Envelope"><a href="#Envelope" class="headerlink" title="Envelope"></a>Envelope</h3><p>每个 CloudEvents 事件可以完全表示为一个 JSON 对象。</p>
+<p>这种表示方式必须使用媒体类型 application&#x2F;cloudevents+json。</p>
+<p>给定事件中的所有 REQUIRED 和所有未省略的 OPTIONAL 属性必须成为 JSON 对象的成员，相应的 JSON 对象成员名称与属性名称相匹配，并且成员的类型和值</p>
+<p>使用类型系统映射。</p>
+<p><em><strong>对 “data”的处理</strong></em></p>
+<p>在采取行动之前，JSON序列化器必须首先确定数据内容的运行时数据类型。</p>
+<p>如果实现确定数据类型为二进制，则必须将值表示为包含Base64编码的二进制值的JSON字符串表达式，并使用成员名data_base64将其存储在JSON对象中。</p>
+<p>对于任何其他类型，实现必须将数据值转换为JSON值，并使用成员名data_base64来存储在JSON对象中。</p>
+<p>由此可见，在 JSON 序列化的 CloudEvent 中，数据和 data_base64 成员的使用是相互排斥的。</p>
+<p>当从 JSON 中解串化 CloudEvents 时，data_base64 成员的存在清楚地表明该值是 Base64 编码的二进制数据，序列化器必须将其解码为二进制的运行时数据</p>
+<p>类型。当数据成员存在时，它将使用默认的JSON类型映射来解码，用于使用的运行时。</p>
+<p>与属性不同的是，根据类型系统映射，值类型被限制为字符串，而产生的数据成员JSON值是不受限制的，可以包含任何有效的JSON。</p>
+<hr>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.bookstack.cn/read/serverless-handbook/core-function-code.md">function</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/categories/">Category</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">一、简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8EHTTP%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-number">1.1.</span> <span class="toc-text">与HTTP的关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AE%B9%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">内容模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E6%A0%BC%E5%BC%8F"><span class="toc-number">1.3.</span> <span class="toc-text">事件格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E5%85%A8"><span class="toc-number">1.4.</span> <span class="toc-text">安全</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81CloudEvents-%E5%B1%9E%E6%80%A7%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">二、CloudEvents 属性的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#datacontententtype-%E5%B1%9E%E6%80%A7"><span class="toc-number">2.1.</span> <span class="toc-text">datacontententtype 属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#data"><span class="toc-number">2.2.</span> <span class="toc-text">data</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81HTTP%E6%B6%88%E6%81%AF%E6%98%A0%E5%B0%84"><span class="toc-number">3.</span> <span class="toc-text">三、HTTP消息映射</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%86%85%E5%AE%B9%E6%A8%A1%E5%BC%8F"><span class="toc-number">3.1.</span> <span class="toc-text">二进制内容模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP%E5%86%85%E5%AE%B9%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.2.</span> <span class="toc-text">HTTP内容类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E6%95%B0%E6%8D%AE%E7%BC%96%E7%A0%81"><span class="toc-number">3.3.</span> <span class="toc-text">事件数据编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#metadata-header"><span class="toc-number">3.4.</span> <span class="toc-text">metadata header</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">3.5.</span> <span class="toc-text">示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%B9%E9%87%8F%E5%86%85%E5%AE%B9%E6%A8%A1%E5%BC%8F"><span class="toc-number">3.6.</span> <span class="toc-text">批量内容模式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81json%E4%BA%8B%E4%BB%B6%E6%A0%BC%E5%BC%8F"><span class="toc-number">4.</span> <span class="toc-text">四、json事件格式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7"><span class="toc-number">4.1.</span> <span class="toc-text">属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Envelope"><span class="toc-number">4.2.</span> <span class="toc-text">Envelope</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">5.</span> <span class="toc-text">参考资料</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/76c9b14a/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/76c9b14a/&text=CloudEvents核心规范之二"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/76c9b14a/&title=CloudEvents核心规范之二"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/76c9b14a/&is_video=false&description=CloudEvents核心规范之二"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CloudEvents核心规范之二&body=Check out this article: https://zoues.com/posts/76c9b14a/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/76c9b14a/&title=CloudEvents核心规范之二"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/76c9b14a/&title=CloudEvents核心规范之二"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/76c9b14a/&title=CloudEvents核心规范之二"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/76c9b14a/&title=CloudEvents核心规范之二"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/76c9b14a/&name=CloudEvents核心规范之二&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/76c9b14a/&t=CloudEvents核心规范之二"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zouyee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

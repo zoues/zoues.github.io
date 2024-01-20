@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="本文介绍当前serverless框架的函数概念，Serverless框架还允许用户监视代码存储库中的更改（例如代码触发器等），并在每次提交时自动构建函数镜像。函数代码、依赖项和&#x2F;或二进制文件可以驻留在外部存储库（例如S3对象存储桶或Git存储库）中，或由用户直接提供。如果代码在外部存储库中，则用户需要指定路径和接入凭证。函数可能依赖于外部库或二进制文件，这些需要由用户提供，包括描述其构建">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Serverless函数小解">
+<meta property="og:url" content="https://zoues.com/posts/206eed5e/index.html">
+<meta property="og:site_name" content="zouyee">
+<meta property="og:description" content="本文介绍当前serverless框架的函数概念，Serverless框架还允许用户监视代码存储库中的更改（例如代码触发器等），并在每次提交时自动构建函数镜像。函数代码、依赖项和&#x2F;或二进制文件可以驻留在外部存储库（例如S3对象存储桶或Git存储库）中，或由用户直接提供。如果代码在外部存储库中，则用户需要指定路径和接入凭证。函数可能依赖于外部库或二进制文件，这些需要由用户提供，包括描述其构建">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-06-12T13:40:08.000Z">
+<meta property="article:modified_time" content="2024-01-20T12:01:27.453Z">
+<meta property="article:author" content="zouyee">
+<meta property="article:tag" content="serverless">
+<meta property="article:tag" content="cloudnative">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Serverless函数小解</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="zouyee" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/posts/4d499fe3/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/501c76bd/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/206eed5e/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/206eed5e/&text=Serverless函数小解"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/206eed5e/&title=Serverless函数小解"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/206eed5e/&is_video=false&description=Serverless函数小解"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Serverless函数小解&body=Check out this article: https://zoues.com/posts/206eed5e/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/206eed5e/&title=Serverless函数小解"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/206eed5e/&title=Serverless函数小解"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/206eed5e/&title=Serverless函数小解"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/206eed5e/&title=Serverless函数小解"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/206eed5e/&name=Serverless函数小解&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/206eed5e/&t=Serverless函数小解"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%87%BD%E6%95%B0%E5%AE%9A%E4%B9%89"><span class="toc-number">1.</span> <span class="toc-text">一、函数定义</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E5%AE%9A%E4%B9%89"><span class="toc-number">1.1.</span> <span class="toc-text">函数定义</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%85%83%E6%95%B0%E6%8D%AE"><span class="toc-number">2.</span> <span class="toc-text">二、元数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%95%B0%E6%8D%AE%E7%BB%91%E5%AE%9A"><span class="toc-number">3.</span> <span class="toc-text">三、数据绑定</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%87%BD%E6%95%B0%E8%BE%93%E5%85%A5"><span class="toc-number">4.</span> <span class="toc-text">四、函数输入</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%87%BD%E6%95%B0%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="toc-number">5.</span> <span class="toc-text">五、函数上下文</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%87%BD%E6%95%B0%E8%BE%93%E5%87%BA"><span class="toc-number">6.</span> <span class="toc-text">五、函数输出</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">7.</span> <span class="toc-text">参考资料</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Serverless函数小解
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zouyee</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-06-12T13:40:08.000Z" class="dt-published" itemprop="datePublished">2020-06-12</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/cloudnative/" rel="tag">cloudnative</a>, <a class="p-category" href="/tags/serverless/" rel="tag">serverless</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>本文介绍当前serverless框架的函数概念，Serverless框架还允许用户监视代码存储库中的更改（例如代码触发器等），并在每次提交时自动构建函数镜像。函数代码、依赖项和&#x2F;或二进制文件可以驻留在外部存储库（例如S3对象存储桶或Git存储库）中，或由用户直接提供。如果代码在外部存储库中，则用户需要指定路径和接入凭证。函数可能依赖于外部库或二进制文件，这些需要由用户提供，包括描述其构建过程的方式（例如，使用 Dockerfile、Zip等）。另外，可以通过一些二进制打包（例如OCI镜像）将函数提供给框架。</p>
+<p>接下来让我们介绍一下serverless函数概念。</p>
+<hr>
+<h4 id="一、函数定义"><a href="#一、函数定义" class="headerlink" title="一、函数定义"></a>一、函数定义</h4><p>函数代码、依赖项或二进制文件可以驻留在外部存储库（例如S3对象存储桶或Git存储库）中，或由用户直接提供。如果代码在外部存储库中，则用户需要指定路径和凭据。Serverless 框架还允许用户 watch 代码存储库中的更改（例如，使 Webhook），并在每次提交时自动构建函数镜像&#x2F;二进制文件。函数可能依赖于外部库或二进制文件，这些需要由用户提供，包括描述其构建过程的方式（例如，使用 Dockerfile、Zip）。另外，可以通过一些二进制打包（例如OCI镜像）将函数提供给框架。</p>
+<h5 id="函数定义"><a href="#函数定义" class="headerlink" title="函数定义"></a>函数定义</h5><p>Serverless 函数定义可能包含以下规范和元数据，该函数定义：</p>
+<ul>
+<li>唯一ID</li>
+<li>名称</li>
+<li>说明</li>
+<li>Label（或tag）</li>
+<li>版本ID&#x2F;或版本别名</li>
+<li>版本创建时间</li>
+<li>上次修改时间（函数定义）</li>
+<li>函数处理程序</li>
+<li>运行时语言</li>
+<li>代码 + 依赖关系或代码路径和凭据</li>
+<li>环境变量</li>
+<li>执行角色和密钥</li>
+<li>资源（所需的 CPU、内存）</li>
+<li>执行超时处理</li>
+<li>日志记录失败（Dead Letter Queue，）</li>
+<li>网络策略&#x2F;VPC</li>
+<li>数据绑定</li>
+<li>网关接入等</li>
+</ul>
+<blockquote>
+<p>Dead Letter Queue<br>中文译作“死信队列”，在消息队列中，死信队列是一种服务实现，用于存储满足以下一个或多个条件的消息： 发送到不存在的队列的消息。 超出队列长度限制。 超<br>出了邮件长度限制。 消息被另一个队列交换拒绝。 消息达到阈值读取计数器编号，因为它没有被消耗。有时这被称为“退出队列”。 存储这些消息的死信队列允许<br>开发人员查找常见模式和潜在的软件问题。</p>
+</blockquote>
+<hr>
+<h4 id="二、元数据"><a href="#二、元数据" class="headerlink" title="二、元数据"></a>二、元数据</h4><p>函数框架可能包括以下函数元数据：</p>
+<ul>
+<li>版本：每个函数版本应具有唯一的标识符，此外，可以使用一个或多个别名（例如“latest”、“production”、“beta”）来标记版本。API 网关和事件源会将流<br>量&#x2F;事件路由到特定的函数版本。</li>
+<li>环境变量：用户可以指定在运行时将提供给函数的环境变量。环境变量也可以从机密和加密的内容派生，也可以从平台变量派生（例如，像Kubernetes EnvVar定<br>义）。环境变量使开发人员能够控制函数行为和参数，而无需修改代码和&#x2F;或重建函数，从而获得更好的开发人员体验和函数重用。</li>
+<li>执行角色：该函数应在特定的用户或角色身份下运行，以授予和审核其对平台资源的访问权限。</li>
+<li>资源：定义所需或最大的硬件资源，例如函数使用的内存和CPU。</li>
+<li>超时：指定函数调用在平台终止之前可以运行的最长时间。</li>
+<li>故障日志（死信队列）：队列或流的路径，它将存储具有适当详细信息的失败函数执行列表。</li>
+<li>网络策略：分配给函数的网络域和策略（函数与外部服务&#x2F;资源进行通信）。</li>
+<li>执行语义：指定应如何执行函数（例如，每个事件至少执行一次，最多执行一次，恰好一次）。</li>
+</ul>
+<hr>
+<h4 id="三、数据绑定"><a href="#三、数据绑定" class="headerlink" title="三、数据绑定"></a>三、数据绑定</h4><p>某些 Serverless 框架允许用户指定函数使用的输入&#x2F;输出数据资源，这使开发变得更简单，性能更高（在执行期间保留数据连接，可以预取数据等）以及更好的安全<br>性（数据资源凭据是上下文的一部分，而不是代码）。</p>
+<p>绑定数据可以采用文件、对象、记录、消息等形式，函数说明可以包括一组数据绑定定义，每个定义都指定数据资源、其凭证和使用参数。数据绑定可以引用事件数据<br>（例如，DB 键是从事件 “username” 字段派生的）</p>
+<hr>
+<h4 id="四、函数输入"><a href="#四、函数输入" class="headerlink" title="四、函数输入"></a>四、函数输入</h4><p>函数输入包括事件数据和元数据，并且可以包括上下文对象。</p>
+<p><em><strong>事件数据和元数据</strong></em></p>
+<p>事件详细信息应传递给函数处理程序，不同的事件可能具有不同的元数据，因此希望函数能够确定事件的类型并轻松解析公共和特定于事件的元数据。</p>
+<p>可能需要将事件类与实现分离，例如：不管流存储是 Kafka 还是 Kinesis，处理消息流的函数都可以运行。在这两种情况下，它将接收消息正文和事件元数据，消</p>
+<p>息可能在不同框架之间路由。</p>
+<p>事件可以包括单个记录（例如，在请求&#x2F;响应模型中），也可以接受多个记录或微批处理（例如，在流模式中）。</p>
+<p>FaaS 解决方案使用的常见事件数据和元数据的示例：</p>
+<ul>
+<li>Event Class&#x2F;Kind</li>
+<li>版本</li>
+<li>事件 ID</li>
+<li>Event Source&#x2F;Origin</li>
+<li>来源身份</li>
+<li>内容类型</li>
+<li>邮件正文</li>
+<li>时间戳记</li>
+</ul>
+<p>事件&#x2F;记录特定元数据的示例</p>
+<ul>
+<li>HTTP：Path、Method、Header、查询参数</li>
+<li>消息队列：Topic、Header</li>
+<li>记录流（Record Stream）：表、键、操作、修改时间、旧字段、新字段</li>
+</ul>
+<p>事件源结构的示例：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://docs.aws.amazon.com/lambda/latest/dg/eventsources.html">http://docs.aws.amazon.com/lambda/latest/dg/eventsources.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/azure/azure-functions/functions-triggers-bindings">https://docs.microsoft.com/zh-cn/azure/azure-functions/functions-triggers-bindings</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.google.com/functions/docs/concepts/events-triggers">https://cloud.google.com/functions/docs/concepts/events-triggers</a></li>
+</ul>
+<p>一些实现将 JSON 视为将事件信息传递给函数的机制。对于高速函数（例如，流处理）或低能耗设备（IoT），这可能会增加大量的序列化&#x2F;反序列化开销。在这些情况</p>
+<p>下，可能值得考虑使用本地语言结构或其他序列化机制。</p>
+<hr>
+<h4 id="五、函数上下文"><a href="#五、函数上下文" class="headerlink" title="五、函数上下文"></a>五、函数上下文</h4><p>调用函数时，框架可能希望提供对跨多个函数调用的平台资源或常规属性的访问，而不是将所有静态数据放入事件中或强制该函数在每次调用时初始化平台服务。上下文（Context）可以是一组输入属性、环境变量或全局变量。有的实现将这三者结合使用。</p>
+<p>上下文示例：</p>
+<ul>
+<li>函数名称、版本、ARN</li>
+<li>内存限制</li>
+<li>请求 ID</li>
+<li>Cloud Region</li>
+<li>环境变量</li>
+<li>安全密钥&#x2F;令牌</li>
+<li>运行时&#x2F;绑定路径</li>
+<li>日志</li>
+<li>数据绑定</li>
+</ul>
+<p>有的实现初始化日志对象（例如， AWS 中的全局变量或 Azure 中的部分上下文），用户可以使用平台集成的工具查看日志来跟踪函数执行。除了传统的日志记录，未来的实现可能会将计数器&#x2F;监控和跟踪活动抽象为平台上下文的一部分，以进一步提高函数的可用性。数据绑定是函数上下文的一部分，平台根据用户配置启动与外部数据资源的连接，并且这些连接可以在多个函数调用之间重用。</p>
+<hr>
+<h4 id="五、函数输出"><a href="#五、函数输出" class="headerlink" title="五、函数输出"></a>五、函数输出</h4><p>当函数退出时，它可能：</p>
+<ul>
+<li>将值返回给调用方（例如，在 HTTP 请求&#x2F;响应示例中）</li>
+<li>将结果传递到工作流程中的下一个执行阶段</li>
+<li>将输出写入日志</li>
+</ul>
+<p>应该有确定的方式通过返回的错误值或退出代码来知道函数是成功还是失败。</p>
+<p>函数输出可以是结构化的（例如 HTTP 响应对象）或非结构化的（例如某些输出字符串）。</p>
+<hr>
+<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://www.bookstack.cn/read/serverless-handbook/core-function-code.md">function</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/categories/">Category</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%87%BD%E6%95%B0%E5%AE%9A%E4%B9%89"><span class="toc-number">1.</span> <span class="toc-text">一、函数定义</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E5%AE%9A%E4%B9%89"><span class="toc-number">1.1.</span> <span class="toc-text">函数定义</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%85%83%E6%95%B0%E6%8D%AE"><span class="toc-number">2.</span> <span class="toc-text">二、元数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%95%B0%E6%8D%AE%E7%BB%91%E5%AE%9A"><span class="toc-number">3.</span> <span class="toc-text">三、数据绑定</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%87%BD%E6%95%B0%E8%BE%93%E5%85%A5"><span class="toc-number">4.</span> <span class="toc-text">四、函数输入</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%87%BD%E6%95%B0%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="toc-number">5.</span> <span class="toc-text">五、函数上下文</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%87%BD%E6%95%B0%E8%BE%93%E5%87%BA"><span class="toc-number">6.</span> <span class="toc-text">五、函数输出</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">7.</span> <span class="toc-text">参考资料</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/206eed5e/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/206eed5e/&text=Serverless函数小解"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/206eed5e/&title=Serverless函数小解"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/206eed5e/&is_video=false&description=Serverless函数小解"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Serverless函数小解&body=Check out this article: https://zoues.com/posts/206eed5e/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/206eed5e/&title=Serverless函数小解"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/206eed5e/&title=Serverless函数小解"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/206eed5e/&title=Serverless函数小解"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/206eed5e/&title=Serverless函数小解"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/206eed5e/&name=Serverless函数小解&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/206eed5e/&t=Serverless函数小解"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zouyee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

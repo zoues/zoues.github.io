@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="今天zouyee先带各位盘点CNCF上周的一些有趣的事情：  Kubernetes社区GB代表选举结束 Paris Pittman当选  CNCF孵化项目OPA进入毕业流程  上周helm项目发布v3.5.0功能性版本  CoreDNS项目通过Docker镜像仓库放开拉取限制的申请   书接上文《Kubernetes调度系统由浅入深系列：初探》，今天zouyee为大家带来《kuberneter调度">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes调度由浅入深：框架">
+<meta property="og:url" content="https://zoues.com/posts/27bb006d/index.html">
+<meta property="og:site_name" content="zouyee">
+<meta property="og:description" content="今天zouyee先带各位盘点CNCF上周的一些有趣的事情：  Kubernetes社区GB代表选举结束 Paris Pittman当选  CNCF孵化项目OPA进入毕业流程  上周helm项目发布v3.5.0功能性版本  CoreDNS项目通过Docker镜像仓库放开拉取限制的申请   书接上文《Kubernetes调度系统由浅入深系列：初探》，今天zouyee为大家带来《kuberneter调度">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s3.ax1x.com/2021/01/19/sgNXVJ.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/01/19/sg2Jns.png">
+<meta property="article:published_time" content="2021-01-19T13:40:08.000Z">
+<meta property="article:modified_time" content="2024-01-20T12:01:27.437Z">
+<meta property="article:author" content="zouyee">
+<meta property="article:tag" content="cloudnative">
+<meta property="article:tag" content="kubernetes">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s3.ax1x.com/2021/01/19/sgNXVJ.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Kubernetes调度由浅入深：框架</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="zouyee" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/posts/aa6cf752/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/d6be75a2/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/27bb006d/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/27bb006d/&text=Kubernetes调度由浅入深：框架"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/27bb006d/&title=Kubernetes调度由浅入深：框架"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/27bb006d/&is_video=false&description=Kubernetes调度由浅入深：框架"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Kubernetes调度由浅入深：框架&body=Check out this article: https://zoues.com/posts/27bb006d/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/27bb006d/&title=Kubernetes调度由浅入深：框架"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/27bb006d/&title=Kubernetes调度由浅入深：框架"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/27bb006d/&title=Kubernetes调度由浅入深：框架"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/27bb006d/&title=Kubernetes调度由浅入深：框架"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/27bb006d/&name=Kubernetes调度由浅入深：框架&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/27bb006d/&t=Kubernetes调度由浅入深：框架"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%89%8D%E6%96%87%E5%9B%9E%E9%A1%BE"><span class="toc-number">1.</span> <span class="toc-text">一、前文回顾</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%A1%86%E6%9E%B6%E8%83%8C%E6%99%AF"><span class="toc-number">1.1.</span> <span class="toc-text">二、框架背景</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%A1%86%E6%9E%B6%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text">三、框架原理</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E7%82%B9%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.3.</span> <span class="toc-text">扩展点介绍</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.4.</span> <span class="toc-text">四、使用场景</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">1.5.</span> <span class="toc-text">五、参考资料</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Kubernetes调度由浅入深：框架
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zouyee</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-01-19T13:40:08.000Z" class="dt-published" itemprop="datePublished">2021-01-19</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Kubernetes-GO/">Kubernetes GO</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/cloudnative/" rel="tag">cloudnative</a>, <a class="p-category" href="/tags/kubernetes/" rel="tag">kubernetes</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>今天zouyee先带各位盘点CNCF上周的一些有趣的事情：</p>
+<ol>
+<li><p>Kubernetes社区GB代表选举结束 Paris Pittman当选</p>
+</li>
+<li><p>CNCF孵化项目OPA进入毕业流程</p>
+</li>
+<li><p>上周<code>helm</code>项目发布v3.5.0功能性版本</p>
+</li>
+<li><p>CoreDNS项目通过Docker镜像仓库放开拉取限制的申请</p>
+</li>
+</ol>
+<p>书接上文《Kubernetes调度系统由浅入深系列：初探》，今天zouyee为大家带来《kuberneter调度由浅入深：框架》，该系列对应版本为<code>1.20.+</code>.</p>
+<hr>
+<h4 id="一、前文回顾"><a href="#一、前文回顾" class="headerlink" title="一、前文回顾"></a>一、前文回顾</h4><p>在《Kubernetes调度系统由浅入深系列：初探》中，给出整体的交互图，来构建Pod调度的直观感受，我们拓展了一下交互图，如下所示。</p>
+<p>注：该交互图非专业UML，还请谅解。</p>
+<p><img src="https://s3.ax1x.com/2021/01/19/sgNXVJ.png" alt="图1 交互流程图"></p>
+<p>上述以创建一个Pod为例，简要介绍调度流程：</p>
+<ol>
+<li><p>用户通过命令行创建Pod(选择直接创建Pod而不是其他workload，是为了省略kube-controller-manager)</p>
+</li>
+<li><p>kube-apiserver经过对象校验、admission、quota等准入操作，写入etcd</p>
+</li>
+<li><p>kube-apiserver将结果返回给用户</p>
+</li>
+<li><p>同时kube-scheduler一直监听节点、Pod事件等（流程1）</p>
+</li>
+<li><p><strong>kube-scheduler将spec.nodeName的pod加入到调度队列中，调度系统选择pod，进入调度周期（本文介绍内容）（流程2-3）</strong></p>
+</li>
+<li><p>kube-scheduler将pod与得分最高的节点进行binding操作（流程4）</p>
+</li>
+<li><p>kube-apiserver将binding信息写入etcd</p>
+</li>
+<li><p>kubelet监听分配给自己的Pod，调用CRI接口进行Pod创建（该部分内容后续出系列，进行介绍）</p>
+</li>
+<li><p>kubelet创建Pod后，更新Pod状态等信息，并向kube-apiserver上报</p>
+</li>
+<li><p>kube-apiserver写入数据</p>
+</li>
+</ol>
+<h5 id="二、框架背景"><a href="#二、框架背景" class="headerlink" title="二、框架背景"></a>二、框架背景</h5><p>​	Kubernetes 随着功能的增多，代码与逻辑也日益复杂。代码体量及复杂度的提升必然带来维护成本的增加，隐形的增加错误定位和修复的难度。旧版本的Kubernetes调度程序（<strong>1.16前</strong>）提供了webhooks进行扩展。但有以下缺陷：</p>
+<ul>
+<li><p>用户可以扩展的点比较有限，位置比较固定，无法支持灵活的扩展与调配，例如只能在执行完默认的 Filter 策略后才能调用。</p>
+</li>
+<li><p>调用扩展接口使用 HTTP 请求，其受到网络影响，性能远低于本地的函数调用。同时每次调用都需要将 Pod 和 Node 的信息进行 序列化与反序列化 操作，会进一步降低性能。</p>
+</li>
+<li><p>Pod当前的相关信息，无法及时传递（利用调度Cache）。</p>
+</li>
+</ul>
+<p>为了解决上述问题，使调度系统代码精简、扩展性更好，社区从<code> Kubernetes 1.16</code> 版本开始, 引入了一种新的调度框架- Scheduling Framework 。</p>
+<p>Scheduling Framework 在原有调度流程的基础之上, 定义了丰富的扩展点接口，开发者可以通过实现扩展点所定义的接口来实现插件，将插件注册到扩展点。Scheduling Framework 在执行调度流程时，运行到相应的扩展点时，执行用户注册的插件，生成当前阶段的结果。通过这种方式来将用户的调度逻辑集成到 Scheduling Framework 中。Scheduling Framework明确了以下目标：</p>
+<ul>
+<li>扩展性：调度更具扩展性</li>
+<li>维护性：将调度器的一些特性移到插件中</li>
+<li>功能性<ul>
+<li>框架提供扩展</li>
+<li>提供一种机制来接收插件结果并根据接收到的结果继续或终止</li>
+<li>提供一种机制处理错误与插件通信</li>
+</ul>
+</li>
+</ul>
+<h5 id="三、框架原理"><a href="#三、框架原理" class="headerlink" title="三、框架原理"></a>三、框架原理</h5><p>​	Framework 的调度流程是分为两个阶段：</p>
+<ul>
+<li>调度阶段是同步执行的，同一个周期内只有一个 scheduling cycle，线程安全</li>
+<li>绑定阶段(gouroutine)是异步执行的，同一个周期内可能会有多个 binding cycle在运行，线程不安全</li>
+</ul>
+<p>在介绍Framework 的调度流程之前，先介绍上图的调度流程，即schedulerOne的处理逻辑：</p>
+<p><strong>a. 调度阶段</strong></p>
+<pre><code> 1. **过滤**操作即findNodesThatFitPod函数
+ - 执行PreFilterPlugins
+ - 执行FilterPlugins
+ - 执行扩展 Filter
+ - 若出现FitError，执行PostFilter
+ 2. **评分**操作即prioritizeNodes函数
+     - 执行PreScorePlugins
+     - 执行ScorePlugins
+     - 执行扩展Prioritize
+ 3. 挑选节点即select函数（符合条件节点，按照评分排序及采样选择）
+ 4. 节点预分配即assume（只是预先分配，可收回）
+ 5. 相关调度数据缓存即RunReservePlugins，从该节点开始，后续阶段发生错误，需要调用UnReserve，进行回滚（类似事务）
+ 6.  执行准入操作即RunPermitPlugins
+</code></pre>
+<p><strong>b. 绑定阶段</strong></p>
+<pre><code>1. 执行WaitOnPermit，失败时调用RunReservePluginsUnreserve
+ 2. 执行预绑定即RunPreBindPlugins，失败时调用RunReservePluginsUnreserve
+ 3. 执行扩展bingding即extendersBinding，失败时调用RunReservePluginsUnreserve
+ 4. 执行绑定收尾工作即RunPostBindPlugins
+</code></pre>
+<h5 id="扩展点介绍"><a href="#扩展点介绍" class="headerlink" title="扩展点介绍"></a>扩展点介绍</h5><p>上述涉及到的各类Plugins（图中紫色部分），针对下图，各位应该看了很多篇了，需要注意的是Unreserve的时机，各插件功能说明如下：</p>
+<p><code>pkg/scheduler/framework/interface.go</code></p>
+<p><img src="https://s3.ax1x.com/2021/01/19/sg2Jns.png"></p>
+<table>
+<thead>
+<tr>
+<th>扩展点</th>
+<th>用途说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>QueueSort</td>
+<td>用来支持自定义 Pod 的排序。如果指定 QueueSort 的排序算法，在调度队列里面就会按照指定的排序算法来进行排序，只能enable一个</td>
+</tr>
+<tr>
+<td>Prefilter</td>
+<td>对 Pod 信息的预处理，比如 Pod 的缓存等</td>
+</tr>
+<tr>
+<td>Filter</td>
+<td>对应旧式的Predicate ，过滤不满足要求的节点</td>
+</tr>
+<tr>
+<td>PostFilter</td>
+<td>用于处理当 Pod 在 Filter 阶段失败后的操作，例如抢占等行为</td>
+</tr>
+<tr>
+<td>PreScore</td>
+<td>用于在 Score 之前进行一些信息生成，也可以在此处生成一些日志或者监控信息</td>
+</tr>
+<tr>
+<td>Score</td>
+<td>对应旧式的Priority，根据 扩展点定义的评分策略挑选出最优的节点(打分与归一化处理)</td>
+</tr>
+<tr>
+<td>Reserver</td>
+<td>调度阶段的最后一个插件, 防止调度成功后资源的竞争, 确保集群的资源信息的准确性</td>
+</tr>
+<tr>
+<td>Permit</td>
+<td>主要提供了Pod绑定的拦截功能，根据条件对pod进行allow、reject或者wait。</td>
+</tr>
+<tr>
+<td>PreBind</td>
+<td>在真正 bind node 之前，执行一些操作</td>
+</tr>
+<tr>
+<td>Bind</td>
+<td>一个 Pod 只会被一个 BindPlugin 处理，创建Bind对象</td>
+</tr>
+<tr>
+<td>PostBind</td>
+<td>bind 成功之后执行的逻辑</td>
+</tr>
+<tr>
+<td>Unreserve</td>
+<td>在 Permit 到 Bind 这几个阶段只要报错就回滚数据至初始状态，类似事务。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h5 id="四、使用场景"><a href="#四、使用场景" class="headerlink" title="四、使用场景"></a>四、使用场景</h5><p>​	下述为一些关于如何使用调度框架来解决常见调度场景的示例。</p>
+<ol>
+<li><p>联合调度</p>
+<p>类似<code>kube-batch</code>，允许调度以一定数量的Pod为整体的任务。其能够将一个训练任务的多个worker当做一个整体进行调度，只有当任务所有worker的资源都满足，才会将容器在节点上启动。</p>
+</li>
+<li><p>集群资源的动态绑定</p>
+<p> Volume topology-aware调度可以通过filter和prebind方式实现。</p>
+</li>
+<li><p>调度拓展</p>
+<p>该框架允许自定义插件，以main函数封装scheduler方式运行。</p>
+</li>
+</ol>
+<p>关于框架部分，该文就介绍到此处，接下里将进入源码阶段，后续内容为调度配置及第三方调度集成的相关内容，敬请关注。</p>
+<h5 id="五、参考资料"><a href="#五、参考资料" class="headerlink" title="五、参考资料"></a>五、参考资料</h5><pre><code>1. https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/
+ 2. https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/
+ 3. https://github.com/kubernetes/enhancements/blob/master/keps/sig-scheduling/624-scheduling-framework/README.md
+</code></pre>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/categories/">Category</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%89%8D%E6%96%87%E5%9B%9E%E9%A1%BE"><span class="toc-number">1.</span> <span class="toc-text">一、前文回顾</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%A1%86%E6%9E%B6%E8%83%8C%E6%99%AF"><span class="toc-number">1.1.</span> <span class="toc-text">二、框架背景</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%A1%86%E6%9E%B6%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text">三、框架原理</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E7%82%B9%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.3.</span> <span class="toc-text">扩展点介绍</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.4.</span> <span class="toc-text">四、使用场景</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">1.5.</span> <span class="toc-text">五、参考资料</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/27bb006d/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/27bb006d/&text=Kubernetes调度由浅入深：框架"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/27bb006d/&title=Kubernetes调度由浅入深：框架"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/27bb006d/&is_video=false&description=Kubernetes调度由浅入深：框架"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Kubernetes调度由浅入深：框架&body=Check out this article: https://zoues.com/posts/27bb006d/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/27bb006d/&title=Kubernetes调度由浅入深：框架"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/27bb006d/&title=Kubernetes调度由浅入深：框架"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/27bb006d/&title=Kubernetes调度由浅入深：框架"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/27bb006d/&title=Kubernetes调度由浅入深：框架"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/27bb006d/&name=Kubernetes调度由浅入深：框架&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/27bb006d/&t=Kubernetes调度由浅入深：框架"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zouyee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="当前大多数公司在运营应用产品时，无论是选择公有云还是自建的数据中心，都会面临服务器数量预估、存储容量规划和数据库的选型等问题。同时需要在基础设施之上部署依赖软件，以运行应用程序。当前是否存在一种简单的架构模型能够满足我们这种应用场景？当然，这个架构已经存在许久，它就是今天软件架构世界中很热门的一个话题——Serverless。 值得关注的是，在最近的几年里，微服务逐渐成为了一种新潮且实用的架构方案">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Serverless当打之年">
+<meta property="og:url" content="https://zoues.com/posts/781ac508/index.html">
+<meta property="og:site_name" content="zouyee">
+<meta property="og:description" content="当前大多数公司在运营应用产品时，无论是选择公有云还是自建的数据中心，都会面临服务器数量预估、存储容量规划和数据库的选型等问题。同时需要在基础设施之上部署依赖软件，以运行应用程序。当前是否存在一种简单的架构模型能够满足我们这种应用场景？当然，这个架构已经存在许久，它就是今天软件架构世界中很热门的一个话题——Serverless。 值得关注的是，在最近的几年里，微服务逐渐成为了一种新潮且实用的架构方案">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-04-09T12:40:08.000Z">
+<meta property="article:modified_time" content="2024-01-20T12:01:27.459Z">
+<meta property="article:author" content="zouyee">
+<meta property="article:tag" content="serverless">
+<meta property="article:tag" content="cloudnative">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Serverless当打之年</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="zouyee" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/posts/95b080c1/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/f3786f7a/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/781ac508/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/781ac508/&text=Serverless当打之年"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/781ac508/&title=Serverless当打之年"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/781ac508/&is_video=false&description=Serverless当打之年"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Serverless当打之年&body=Check out this article: https://zoues.com/posts/781ac508/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/781ac508/&title=Serverless当打之年"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/781ac508/&title=Serverless当打之年"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/781ac508/&title=Serverless当打之年"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/781ac508/&title=Serverless当打之年"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/781ac508/&name=Serverless当打之年&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/781ac508/&t=Serverless当打之年"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%88%9D%E8%AF%86Serverless"><span class="toc-number">1.</span> <span class="toc-text">一、初识Serverless</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%BA%91%E7%9A%84%E5%BE%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">二、云的征程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IaaS"><span class="toc-number">3.</span> <span class="toc-text">IaaS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PaaS"><span class="toc-number">4.</span> <span class="toc-text">PaaS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Serverless"><span class="toc-number">5.</span> <span class="toc-text">Serverless</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E5%AF%B9%E6%AF%94"><span class="toc-number"></span> <span class="toc-text">技术对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number"></span> <span class="toc-text">使用场景</span></a>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Serverless当打之年
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zouyee</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-04-09T12:40:08.000Z" class="dt-published" itemprop="datePublished">2020-04-09</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/cloudnative/" rel="tag">cloudnative</a>, <a class="p-category" href="/tags/serverless/" rel="tag">serverless</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>当前大多数公司在运营应用产品时，无论是选择公有云还是自建的数据中心，都会面临服务器数量预估、存储容量规划和数据库的选型等问题。同时需要在基础设施之上部署依赖软件，以运行应用程序。当前是否存在一种简单的架构模型能够满足我们这种应用场景？当然，这个架构已经存在许久，它就是今天软件架构世界中很热门的一个话题——Serverless。</p>
+<p>值得关注的是，在最近的几年里，微服务逐渐成为了一种新潮且实用的架构方案。微服务从2014年开始流行，如下图所示：</p>
+<hr>
+<h3 id="一、初识Serverless"><a href="#一、初识Serverless" class="headerlink" title="一、初识Serverless"></a>一、初识Serverless</h3><p>Serverless的理念是从2016年开始兴起，从其发展趋势来看，它在两三年后，可能对微服务架构的地位构成一定的挑战。</p>
+<p>我们可以知道这么几点：</p>
+<ul>
+<li>开发者专注于业务，摆脱运维的负担</li>
+<li>Serverless按需使用</li>
+<li>Serverless运行时间计费</li>
+<li>Serverless应用严重依赖于特定的云平台、第三方服务</li>
+</ul>
+<p>在一个基于AWS产品开发的Serverless应用里，由以下组件构成：</p>
+<ul>
+<li>API Gateway来处理并发请求，其包括认证、流量管理、授权和访问控制、监控等功能</li>
+<li>计算服务Lambda来进行代码相关的一切计算工作，诸如授权验证、请求、输出等等</li>
+<li>基础设施管理CloudFormation创建和配置 AWS 基础设施部署，诸如所使用的S3存储桶的名称等</li>
+<li>静态存储S3存储前端代码和静态资源</li>
+<li>数据库DynamoDB存储应用的相关数据</li>
+</ul>
+<p>因此，Serverless 并不意味着没有服务器，只是服务器以不同功能的第三方服务的形式存在。<br>在这种情况下，模块的分层演变为不同的服务。在现今的微服务设计中，每一个领域或者子域都是一个服务。而在Serverless应用中，这些领域及子域根据他们的功能，又可能会进一步切分成不同的Serverless函数。</p>
+<hr>
+<h3 id="二、云的征程"><a href="#二、云的征程" class="headerlink" title="二、云的征程"></a>二、云的征程</h3><p>很久之前，我们开发的软件由C&#x2F;S和MVC的架构，转变为SOA，直到最近几年的微服务架构，更近一点就是Cloud Native（云原生）应用，企业应用从单体架构，到服务化，再到更细粒度的微服务化，应用开发之初就是为了应对业务的特有的高并发、容错等特性，需要很高的性能及可扩展性，人们对软件开发的追求孜孜不倦，希望力求在软件开发的复杂度和效率之间达到一个平衡。但可惜的是，没有银弹！几十年前（1975年）Fred Brooks就在The Mythical Man-Month中就写到了这句话。那么Serverlss会是那颗银弹吗？</p>
+<p>云改变了我们对操作系统的认知，原来一个系统的计算资源、存储和网络是可以分离配置的，而且还可以弹性扩展，但是长久以来，我们在开发应用时始终没有摆脱的服务器的束缚，应用必须运行在服务器上（不论是实体还是虚拟的），并且必须经过部署、配置、初始化才可以运行，还需要对服务器和应用进行监控和管理，同时需要保证数据的安全性，当前的云产品能解放我们吗？</p>
+<p>Serverless架构是云的延伸，为了理解serverless，我们有必要回顾一下云计算的发展。</p>
+<h3 id="IaaS"><a href="#IaaS" class="headerlink" title="IaaS"></a>IaaS</h3><p>2006年AWS推出EC2（Elastic Compute Cloud），作为第一代IaaS（Infrastructure as a Service），用户可以通过AWS快速的申请到计算资源，并在上面部署自己的互联网服务。IaaS从本质上讲是服务器租赁并提供基础设施外包服务。就比如我们用的水和电一样，我们不会自己去引入自来水和发电，而是直接从自来水公司和电网公司购入，并根据实际使用付费。</p>
+<p>EC2真正对IT的改变是硬件的虚拟化（更细粒度的虚拟化），而EC2给用户带来了以下五个好处：</p>
+<ul>
+<li>降低劳动力成本：减少了企业本身雇佣IT人员的成本</li>
+<li>降低风险：不用再像自己运维物理机那样，担心各种意外风险，EC2有主机损坏，再申请一个就好了。</li>
+<li>降低基础设施成本：可以按小时、周、月或者年为周期租用EC2。</li>
+<li>扩展性：不必过早的预期基础设施采购，因为通过云厂商可以很快的获取。</li>
+<li>节约时间成本：快速的获取资源开展业务实验。</li>
+</ul>
+<p>有利有弊，我们将在后面讨论。</p>
+<h3 id="PaaS"><a href="#PaaS" class="headerlink" title="PaaS"></a>PaaS</h3><p>PaaS（Platform as a Service）是构建在IaaS之上的一种平台服务，提供操作系统安装、监控和服务发现等功能，用户只需要部署自己的应用即可，最早的一代是Heroku。Heroko是商业的PaaS，还有一个开源的PaaS——Cloud Foundry，用户可以基于它来构建私有PaaS，如果同时使用公有云和私有云，如果能在两者之间构建一个统一的PaaS，那就是“混合云”了。<br>在PaaS上的卓越贡献者当属docker了，因为docker理念的横空出世，推动了PaaS技术的发展，从mesos、swarm与kubernetes的群雄逐鹿到后来kubernetes一家独大，再到CNCF的成立，这些我们后续再慢慢道来。因为使用容器的轻量、隔离型，推进了应用的容器化日程。管理云上的容器，可以称为是CaaS（Container as a Service），如GCE（Google Container Engine）。也可以基于Kubernetes、Mesos这类开源软件构件自己的CaaS，不论是直接在IaaS构建还是基于PaaS。<br>PaaS是对软件的一个更高的抽象层次，已经接触到应用程序的运行环境本身，可以由开发者自定义，而不必接触更底层的操作系统。</p>
+<h3 id="Serverless"><a href="#Serverless" class="headerlink" title="Serverless"></a>Serverless</h3><p>当然，Serverless不如IaaS和PaaS那么好理解，因为它通常包含了两个方面BaaS（Backend as a Service）和FaaS（Function as a Service）。</p>
+<p><em><strong>BaaS</strong></em></p>
+<p>BaaS（Backend as a Service）后端即服务，一般是一个个的API调用后端或别人已经实现好的程序逻辑，比如身份验证服务Auth0，这些BaaS通常会用来管理数据，还有很多公有云上提供的我们常用的开源软件的商用服务，比如亚马逊的RDS可以替代我们自己部署的MySQL，还有各种其它数据库、中间价和存储服务等。</p>
+<p><em><strong>FaaS</strong></em></p>
+<p>FaaS（Functions as a Service）函数即服务，FaaS是无服务器计算的额一种形式，当前使用最广泛的是AWS的Lambada。<br>现在当大家讨论Serverless的时候首先想到的就是FaaS。FaaS本质上是一种事件驱动的由消息触发的服务，FaaS服务商一般会集成各种同步和异步的事件源，通过订阅这些事件源，可以突发或者定期的触发函数运行。<br>与传统的服务器端软件的不同是经应用程序部署到拥有操作系统的虚拟机或者容器中，一般需要长时间驻留在操作系统中运行，而FaaS是直接将程序部署上到平台上即可，当有事件到来时触发执行，执行完了就可以杀死。</p>
+<p>根据MF网站的无服务器架构定义，FaaS是：</p>
+<ul>
+<li><p>从根本上说，FaaS是关于运行后端代码而无需管理自己的服务器系统或您自己的长期驻留long-lived的服务器应用程序。与容器和PaaS（平台即服务）等其他现代架构趋势进行比较时，第二个子句 - 长期驻留（long-lived）的服务器应用程序是一个关键的区别。（FaaS不是长期驻留的普通API）</p>
+</li>
+<li><p>FaaS产品不需要对特定框架或库进行编码。FaaS函数是语言和环境的常规应用程序。例如，AWS Lambda函数可以在Javascript，Python，Go，任何JVM语言（Java，Clojure，Scala等）或任何.NET语言中实现。但是，Lambda函数还可以执行与其部署工件捆绑在一起的另一个进程，因此您实际上可以使用任何可以编译为Unix进程的语言。</p>
+</li>
+<li><p>部署与传统系统有很大不同，因为我们没有自己运行的服务器应用程序。在FaaS环境中，我们将函数功能的代码上传到FaaS提供商，提供商执行配置资源，实例化VM，管理流程等所需的一切。</p>
+</li>
+<li><p>水平扩展是完全自动的，弹性的，并由提供者管理。如果您的系统需要并行处理100个请求，则提供商将处理该请求而无需您进行任何额外配置。函数的执行是一个“计算容器”，运行是短暂的，FaaS提供者实现容器的创建和销毁完全是由运行时需求驱动。最重要的是，使用FaaS ，供应商可以处理所有底层资源配置和分配 - 用户根本不需要集群或VM管理。(容器+FaaS是Serverless重要的机制，只有容器或FaaS都是片面的，两者分别是静态和动态的)</p>
+</li>
+<li><p>FaaS中的函数通常由提供程序定义的事件类型触发。</p>
+</li>
+<li><p>大多数提供程序还允许触发函数作为对入站HTTP请求的响应; 在AWS中，通常通过使用API网关来实现这一点。函数也可以通过平台提供的API直接调用，无论是在外部还是在同一个云环境中，但这是一种相对不常见的用法。</p>
+</li>
+</ul>
+<hr>
+<h2 id="技术对比"><a href="#技术对比" class="headerlink" title="技术对比"></a>技术对比</h2><p><em><strong>Serverless与FaaS</strong></em></p>
+<p>微服务（MicroService）是软件架构领域业另一个热门的话题。如果说微服务是以专注于单一责任与功能的小型功能块为基础，利用模组化的方式组合出复杂的大型应用程序，那么我们还可以进一步认为Serverless架构可以提供一种更加“代码碎片化”的软件架构范式，我们称之为Function as a Services（FaaS）。而所谓的“函数”（Function）提供的是相比微服务更加细小的程序单元。例如，可以通过微服务代表为某个客户执行所有CRUD操作所需的代码，而FaaS中的“函数”可以代表客户所要执行的每个操作：创建、读取、更新，以及删除。当触发“创建账户”事件后，将通过AWS Lambda函数的方式执行相应的“函数”。从这一层意思来说，我们可以简单地将Serverless架构与FaaS概念等同起来。</p>
+<p><em><strong>FaaS与PaaS的比较</strong></em></p>
+<p>乍看起来，FaaS与PaaS的概念在某些方面有许多相似的地方。人们甚至认为FaaS就是另一种形式的PaaS。但是Intent Media的工程副总裁Mike Roberts有自己的不同看法：“大部分PaaS应用无法针对每个请求启动和停止整个应用程序，而FaaS平台生来就是为了实现这样的目的。”<br>FaaS和PaaS在运维方面最大的差异在于缩放能力。对于大部分PaaS平台，用户依然需要考虑缩放。但是对于FaaS应用，这种问题完全是透明的。就算将PaaS应用设置为自动缩放，依然无法在具体请求的层面上进行缩放，而FaaS应用在成本方面效益就高多了。AWS云架构战略副总裁Adrian Cockcroft曾经针对两者的界定给出了一个简单的方法：“如果你的PaaS能够有效地在20毫秒内启动实例并运行半秒,那么就可以称之为Serverless”。</p>
+<p><em><strong>Serverless 的优势</strong></em></p>
+<p>a、降低运营成本<br>Serverless是非常简单的外包解决方案。它可以让您委托服务提供商管理服务器、数据库和应用程序甚至逻辑，否则您就不得不自己来维护。由于这个服务使用者的数量会非常庞大，于是就会产生规模经济效应。在降低成本上包含了两个方面，即基础设施的成本和人员（运营&#x2F;开发）的成本。</p>
+<p>b、降低开发成本<br>IaaS和PaaS存在的前提是，服务器和操作系统管理可以商品化。Serverless作为另一种服务的结果是整个应用程序组件被商品化。</p>
+<p>c、扩展能力<br>Serverless架构一个显而易见的优点即“横向扩展是完全自动的、有弹性的、且由服务提供者所管理”。从基本的基础设施方面受益最大的好处是，您只需支付您所需要的计算能力。</p>
+<p>d、便捷管理<br>Serverless架构明显比其他架构更简单。更少的组件，就意味着您的管理开销会更少。</p>
+<p>e、绿色计算<br>按照《福布斯》杂志的统计，在商业和企业数据中心的典型服务器仅提供5%～15%的平均最大处理能力的输出。这无疑是一种资源的巨大浪费。随着Serverless架构的出现，让服务提供商提供我们的计算能力最大限度满足实时需求。这将使我们更有效地利用计算资源。</p>
+<p>f、更快的开发速度<br>由于 Serverless 服务提供者，已经准备好了一系列的基础服务。作为开发人员的我们，只需要关注于如何更好去实现业务，而非技术上的一些限制。服务提供者已经向我们准备，并测试好了这一系列的服务。它们基本上是稳定、可靠的，不会遇上特别大的问题。事实上，当我们拥有足够强大的代码，如使用测试来保证健壮性，那么结合持续集成，我们就可以在 PUSH 代码的时候，直接部署到生产环境。当然，可能不需要这么麻烦，我们只需要添加一个 predeploy 的 hook，在这个 hook 里做一些自动测试的工作，就可以在本地直接发布新的版本。<br>这个过程里，我们并不需要考虑太多的发布事宜。</p>
+<p>g、系统安全性更高<br>依我维护我博客的经验来看，要保持服务器一直运行不是一件容易的事。在不经意的时候，总会发现有 Cracker 在攻击你网站。我们需要防范不同类型的攻击，如在我的服务器里一直有黑客在尝试密码登录，可是我的博客的服务器是要密钥才能登录的。在一次神奇的尝试登录攻击后，我的 SSH 守护进程崩溃了。这意味着，我只能从 EC2 后台重启服务器。有了 Serverless，我不再需要担心有人尝试登录系统，因为我都不知道怎么登录服务器。</p>
+<p>h、适应微服务架构<br>如我们所见在最近几年里看到的那样，微服务并没有大量地替换掉单体应用——毕竟使用新的架构来替换旧的系统，在业务上的价值并不大。因此，对于很多企业来说，并没有这样的强烈需求及紧迫性。活着，才是一件更紧迫的事。而 Serverless 天生就与微服务架构是相辅相成的。一个 Serverless 应用拥有自己的网关、数据库、接口，你可还以使用自己喜欢的语言（受限于服务提供者）来开发服务。换句话来说，在这种情形下，一个 Serverless 可能是一个完美的微服务实例。<br>在可见的一二年里，Serverless 将替换到某些系统中的一些组件、服务。</p>
+<p><em><strong>Serverless的问题</strong></em></p>
+<p>作为一个运行时，才启动的应用来说，Serverless 也存在着一个个我们所需要的问题。</p>
+<p>a、不适合长时间运行应用<br>Serverless 在请求到来时才运行。这意味着，当应用不运行的时候就会进入 “休眠状态”，下次当请求来临时，应用将会需要一个启动时间，即冷启动。这个时候，可以结合 CRON 的方式或者 CloudWatch 来定期唤醒应用。<br>如果你的应用需要一直长期不间断的运行、处理大量的请求，那么你可能就不适合采用 Serverless 架构。在这种情况下，采用 EC2 这样的云服务器往往是一种更好的选择。因为 EC2 从价格上来说，更加便宜。</p>
+<p>b、完全依赖于第三方服务<br>是的，当你决定使用某个云服务的时候，也就意味着你可能走了一条不归路。在这种情况下，只能将不重要的 API 放在 Serverless 上。当你已经有大量的基础设施的时候，Serverless 对于你来说，并不是一个好东西。当我们采用 Serverless 架构的时候，我们就和特别的服务供应商绑定了。我们使用了 AWS 家的服务，那么我们再将服务迁到 Google Cloud 上就没有那么容易了。<br>我们需要修改一下系列的底层代码，能采取的应对方案，便是建立隔离层。这意味着，在设计应用的时候，就需要：</p>
+<ul>
+<li>隔离 API 网关</li>
+<li>隔离数据库层，考虑到市面上还没有成熟的 ORM 工具，让你即支持 Firebase，又支持 DynamoDB</li>
+<li>等等</li>
+</ul>
+<p>这些也将带给我们一些额外的成本，可能带来的问题会比解决的问题多。</p>
+<p>c、冷启动时间<br>如上所说，Serverless 应用存在一个冷启动时间的问题。</p>
+<p>d、缺乏调试和开发工具<br>当使用 Serverless Framework 的时候，遇到了这样的问题：缺乏调试和开发工具。<br>并且，对于日志系统来说，这仍然是一个艰巨的挑战。每次你调试的时候，你需要一遍又一遍地上传代码。而每次上传的时候，你就好像是在部署服务器。然后 Fuck 了，我并不能总是快速地定位出问题在哪。于是，我修改了一下代码，添加了一行 console.log，然后又一次地部署了下代码。问题解决了，挺好的，我删了一下 console.log，然后又一次地部署了下代码。</p>
+<p>e、构建复杂<br>Serverless 很便宜，但是这并不意味着它很简单。</p>
+<p>两者都为我们的计算资源提供了弹性的保障，BaaS其实依然是服务外包，而FaaS使我们更加关注应用程序的逻辑，两者使我们不需要关注应用程序所在的服务器，但实际上服务器依然是客观存在的。<br>当我们将应用程序迁移到容器和虚拟机中时，其实对于应用程序本身的体系结构并没有多少改变，只不过有些流程和规定需要遵守，比如12因素应用守则，但是serverlss对应用程序的体系结构来说就是一次颠覆了，通常我们需要考虑事件驱动模型，更加细化的不熟形式，以及在FaaS组件之外保持状态的需求。</p>
+<hr>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p>通过将 Serverless 的理念与当前 Serverless 实现的技术特点相结合，Serverless 架构可以适用于各种业务场景。</p>
+<p>1.Web应用<br>Serverless 架构可以很好地支持各类静态和动态Web应用。如 RESTful API 的各类请求动作（GET、POST、PUT及DELETE等）可以很好地映射成 FaaS 的一个个函数，功能和函数之间能建立良好的对应关系。通过 FaaS 的自动弹性扩展功能，Serverless Web 应用可以很快速地构建出能承载高访问量的站点。</p>
+<p>2.移动互联网<br>Serverless 应用通过 BaaS 对接后端不同的服务而满足业务需求，提高应用开发的效率。前端通过FaaS提供的自动弹性扩展对接移动端的流量，开发者可以更轻松地应对突发的流量增长。在 FaaS 的架构下，应用以函数的形式存在。各个函数逻辑之间相对独立，应用更新变得更容易，使新功能的开发、测试和上线的时间更短。</p>
+<p>3.物联网（Internet of Things，IoT）<br>物联网（Internet of Things，IoT）应用需要对接各种不同的数量庞大的设备。不同的设备需要持续采集并传送数据至服务端。Serverless 架构可以帮助物联网应用对接不同的数据输入源。</p>
+<p>4.多媒体处理<br>视频和图片网站需要对用户上传的图片和视频信息进行加工和转换。但是这种多媒体转换的工作并不是无时无刻都在进行的，只有在一些特定事件发生时才需要被执行，比如用户上传或编辑图片和视频时。通过 Serverless 的事件驱动机制，用户可以在特定事件发生时触发处理逻辑，从而节省了空闲时段计算资源的开销，最终降低了运维的成本。</p>
+<p>5.数据及事件流处理<br>Serverless 可以用于对一些持续不断的事件流和数据流进行实时分析和处理，对事件和数据进行实时的过滤、转换和分析，进而触发下一步的处理。比如，对各类系统的日志或社交媒体信息进行实时分析，针对符合特定特征的关键信息进行记录和告警。</p>
+<p>6.系统集成<br>Serverless 应用的函数式架构非常适合用于实现系统集成。用户无须像过去一样为了某些简单的集成逻辑而开发和运维一个完整的应用，用户可以更专注于所需的集成逻辑，只编写和集成相关的代码逻辑，而不是一个完整的应用。函数应用的分散式的架构，使得集成逻辑的新增和变更更加灵活。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/categories/">Category</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%88%9D%E8%AF%86Serverless"><span class="toc-number">1.</span> <span class="toc-text">一、初识Serverless</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%BA%91%E7%9A%84%E5%BE%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">二、云的征程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IaaS"><span class="toc-number">3.</span> <span class="toc-text">IaaS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PaaS"><span class="toc-number">4.</span> <span class="toc-text">PaaS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Serverless"><span class="toc-number">5.</span> <span class="toc-text">Serverless</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E5%AF%B9%E6%AF%94"><span class="toc-number"></span> <span class="toc-text">技术对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number"></span> <span class="toc-text">使用场景</span></a>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/781ac508/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/781ac508/&text=Serverless当打之年"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/781ac508/&title=Serverless当打之年"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/781ac508/&is_video=false&description=Serverless当打之年"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Serverless当打之年&body=Check out this article: https://zoues.com/posts/781ac508/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/781ac508/&title=Serverless当打之年"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/781ac508/&title=Serverless当打之年"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/781ac508/&title=Serverless当打之年"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/781ac508/&title=Serverless当打之年"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/781ac508/&name=Serverless当打之年&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/781ac508/&t=Serverless当打之年"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zouyee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

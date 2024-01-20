@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="CloudEvents是一种以通用方式描述事件数据的规范。CloudEvents旨在简化跨服务，平台及其他方面的事件声明和发送。CloudEvents最初由CNCF Severless工作组提出。  一、概述事件无处不在。然而，事件生产者往往会以不同的方式来描述事件。 缺乏描述事件的常用方法意味着开发人员必须不断重新学习如何接收事件。这也限制了库，工具和基础设施的可能性，以帮助跨环境（如SDK，事">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CloudEvents核心规范之一">
+<meta property="og:url" content="https://zoues.com/posts/4d499fe3/index.html">
+<meta property="og:site_name" content="zouyee">
+<meta property="og:description" content="CloudEvents是一种以通用方式描述事件数据的规范。CloudEvents旨在简化跨服务，平台及其他方面的事件声明和发送。CloudEvents最初由CNCF Severless工作组提出。  一、概述事件无处不在。然而，事件生产者往往会以不同的方式来描述事件。 缺乏描述事件的常用方法意味着开发人员必须不断重新学习如何接收事件。这也限制了库，工具和基础设施的可能性，以帮助跨环境（如SDK，事">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-06-15T13:40:08.000Z">
+<meta property="article:modified_time" content="2024-01-20T12:01:27.422Z">
+<meta property="article:author" content="zouyee">
+<meta property="article:tag" content="serverless">
+<meta property="article:tag" content="cloudnative">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>CloudEvents核心规范之一</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="zouyee" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/posts/76c9b14a/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/206eed5e/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/4d499fe3/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/4d499fe3/&text=CloudEvents核心规范之一"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/4d499fe3/&title=CloudEvents核心规范之一"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/4d499fe3/&is_video=false&description=CloudEvents核心规范之一"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CloudEvents核心规范之一&body=Check out this article: https://zoues.com/posts/4d499fe3/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/4d499fe3/&title=CloudEvents核心规范之一"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/4d499fe3/&title=CloudEvents核心规范之一"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/4d499fe3/&title=CloudEvents核心规范之一"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/4d499fe3/&title=CloudEvents核心规范之一"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/4d499fe3/&name=CloudEvents核心规范之一&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/4d499fe3/&t=CloudEvents核心规范之一"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">一、概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E7%9B%AE%E6%A0%87"><span class="toc-number">1.1.</span> <span class="toc-text">设计目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E7%9B%AE%E6%A0%87"><span class="toc-number">1.2.</span> <span class="toc-text">非目标</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%AC%A6%E5%8F%B7%E5%92%8C%E6%9C%AF%E8%AF%AD"><span class="toc-number">2.</span> <span class="toc-text">二、符号和术语</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%A6%E5%8F%B7"><span class="toc-number">2.1.</span> <span class="toc-text">符号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B1%9E%E6%80%A7"><span class="toc-number">2.2.</span> <span class="toc-text">上下文属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%85%E9%A1%BB%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="toc-number">2.3.</span> <span class="toc-text">必须的属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E9%80%89%E5%B1%9E%E6%80%A7"><span class="toc-number">2.4.</span> <span class="toc-text">可选属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B1%9E%E6%80%A7"><span class="toc-number">2.5.</span> <span class="toc-text">扩展上下文属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E6%89%A9%E5%B1%95"><span class="toc-number">2.6.</span> <span class="toc-text">定义扩展</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9A%90%E7%A7%81%E5%92%8C%E5%AE%89%E5%85%A8"><span class="toc-number">2.7.</span> <span class="toc-text">隐私和安全</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B"><span class="toc-number">2.8.</span> <span class="toc-text">实例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">3.</span> <span class="toc-text">参考资料</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        CloudEvents核心规范之一
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zouyee</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-06-15T13:40:08.000Z" class="dt-published" itemprop="datePublished">2020-06-15</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/cloudnative/" rel="tag">cloudnative</a>, <a class="p-category" href="/tags/serverless/" rel="tag">serverless</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>CloudEvents是一种以通用方式描述事件数据的规范。CloudEvents旨在简化跨服务，平台及其他方面的事件声明和发送。CloudEvents最初由CNCF Severless工作组提出。</p>
+<hr>
+<h2 id="一、概述"><a href="#一、概述" class="headerlink" title="一、概述"></a>一、概述</h2><p>事件无处不在。然而，事件生产者往往会以不同的方式来描述事件。</p>
+<p>缺乏描述事件的常用方法意味着开发人员必须不断重新学习如何接收事件。这也限制了库，工具和基础设施的可能性，以帮助跨环境（如SDK，事件路由器或跟踪系统）发送事件数据。我们可以从事件数据中实现的可移植性和生产力总体上受到阻碍。</p>
+<p>CloudEvents 是一种用通用格式描述事件数据的规范，以提供跨服务、平台和系统的互操作性。事件格式指定了如何用特定的编码格式对 CloudEvents 进行序列化。支持这些编码的 CloudEvents 实现必须遵守相应事件格式中指定的编码规则。所有实现都必须支持 JSON 格式。</p>
+<h3 id="设计目标"><a href="#设计目标" class="headerlink" title="设计目标"></a>设计目标</h3><p>CloudEvents通常用于分布式系统，以允许服务在开发期间松散耦合，独立部署，以后可以连接以创建新应用程序。</p>
+<p>CloudEvents规范的目标是定义事件系统的互操作性，这些事件系统允许服务生成或消费事件，其中生产者和消费者可以独立开发和部署。生产者可以在消费者收听之前生成事件，并且消费者可以表达对尚未生成的事件或事件类别的兴趣。</p>
+<p>为此，规范将包括促进互操作性的事件的公共元数据属性，而事件不包含可能用于发送事件的消费者或传输的任何细节。</p>
+<h3 id="非目标"><a href="#非目标" class="headerlink" title="非目标"></a>非目标</h3><p>以下内容不在规范中：</p>
+<ul>
+<li>函数构建和调用过程</li>
+<li>特定于语言的运行时API</li>
+<li>选择单一身份&#x2F;访问控制系统</li>
+</ul>
+<hr>
+<h2 id="二、符号和术语"><a href="#二、符号和术语" class="headerlink" title="二、符号和术语"></a>二、符号和术语</h2><h3 id="符号"><a href="#符号" class="headerlink" title="符号"></a>符号</h3><p>为了清楚起见，当一个功能被标记为 “可选&#x2F;OPTIONAL “时，这意味着消息的生产者和消费者都可以选择支持该功能。换句话说，如果生产者愿意，可以选择将该功能包含在消息中，如果消费者愿意，可以选择支持该功能。那么不支持该功能的消费者就会默默地忽略消息中的那部分内容。生产者需要为消费者忽略该功能的情况做好准备。中间人应该转发选择性属性。</p>
+<p><em><strong>产生</strong></em></p>
+<p>“发生&#x2F;occurrence”是指在软件系统运行过程中捕捉到的事实陈述。这可能是由于系统引发的信号或系统观察到的信号、状态变化、计时器过期或任何其他值得注意的活动而发生。例如，设备可能因为电池电量不足而进入警报状态，或者虚拟机即将执行预定的重启。</p>
+<p><em><strong>Event</strong></em></p>
+<p>“事件&#x2F;event”是表示发生(occurrence)及其上下文的数据记录。事件被从事件生产者（源）路由到感兴趣的事件消费者。可以根据事件中包含的信息进行路由，但事件不会确定具体的路由目的地。事件将包含两类信息：事件数据（Event Data）代表发生(occurrence)，而上下文元数据（Context metadata）提供关于发生(occurrence)的上下文信息。一个发生(occurrence)可能会产生多个事件。</p>
+<p><em><strong>生产者</strong></em></p>
+<p>“Producer&#x2F;生产者”是特定实例、过程或设备，用于创建描述 CloudEvent 的数据结构。</p>
+<p><em><strong>来源</strong></em></p>
+<p>“Source&#x2F;来源”是指发生(occurrence)出现的上下文。在一个分布式系统中，它可能由多个Producer组成。如果一个源不知道CloudEvents，外部生产者代表源创建CloudEvents。</p>
+<p><em><strong>Consumer&#x2F;消费者</strong></em></p>
+<p>“Consumer&#x2F;消费者”接收到事件，并对其采取行动。它使用上下文和数据来执行一些逻辑，这可能导致新事件的发生。</p>
+<p><em><strong>中介机构</strong></em></p>
+<p>“中介机构&#x2F;Intermediary”接收包含事件的消息，目的是将其转发给下一个接收者，而这个接收者可能是另一个中间人或消费者。中间人的一个典型任务是根据上下<br>文中的信息将事件转发到接收者。</p>
+<p><em><strong>上下文</strong></em></p>
+<p>上下文元数据将被封装在上下文属性(Context Attributes)中。工具和应用程序代码可以使用这些信息来识别事件与系统的各个方面或与其他事件的关系。</p>
+<p><em><strong>数据</strong></em></p>
+<p>有关事件（即payload&#x2F;有效载荷）的特定领域信息。这可能包括有关发生(occurrence)的信息、有关被更改的数据的详细信息或更多信息。有关更多信息，请参阅事件数据(Event Data)部分。</p>
+<p><em><strong>事件格式 &#x2F; Event Format</strong></em></p>
+<p>事件格式指定了如何将 CloudEvent 序列化为字节序列。独立的事件格式（如 JSON 格式）可指定独立于任何协议或存储介质的序列化。协议绑定可以定义依赖于协议的格式。</p>
+<p><em><strong>Message&#x2F;消息</strong></em></p>
+<p>事件通过消息从源（Source）传输到目的地（Destination）。</p>
+<p>“结构化模式报文&#x2F;structured-mode message” 是指使用独立的事件格式对事件进行完全编码并存储在消息主体中。</p>
+<p>“二进制模式报文&#x2F;binary-mode message” 是指事件数据（event data）存储在消息体中，事件属性作为消息元数据的一部分存储。</p>
+<p><em><strong>数据</strong></em></p>
+<p>关于发生&#x2F;occurrence（如有效载荷）的领域特定信息。这可能包括有关发生的信息，有关已更改数据的详细信息或更多。</p>
+<p><em><strong>协议</strong></em></p>
+<p>消息可以通过各种行业标准协议（例如HTTP，AMQP，MQTT，SMTP），开源协议（例如Kafka，NATS）或平台&#x2F;供应商特定协议（AWS Kinesis，Azure Event Grid）来传递。</p>
+<p><em><strong>协议绑定</strong></em></p>
+<p>协议绑定描述了事件如何通过给定协议发送和接收事件，特别是事件如何映射到该协议中的消息。</p>
+<h3 id="上下文属性"><a href="#上下文属性" class="headerlink" title="上下文属性"></a>上下文属性</h3><p>符合本规范的每个 CloudEvent 必须包含上下文属性，而且要指定为 REQUIRED，可以包含一个或多个 OPTIONAL 上下文属性，也可以包含一个或多个扩展属性。这些属性在描述事件的同时，被设计为可以 独立于事件数据进行序列化。这使得它们可以在目的地被检查，而不需要对事件数据进行反序列化。</p>
+<p><em><strong>属性命名约定</strong></em></p>
+<p>CloudEvents 规范定义了对各种协议和编码的映射，随附的 CloudEvents SDK 针对各种运行时和语言。其中有些将元数据元素视为大小写敏感，而另一些则不敏感，而且单个 CloudEvents 可能会通过多个跳转来实现，中间涉及协议、编码和运行时。因此，本规范限制了所有属性的可用字符集，以防止大小写敏感问题或与通用语言中标识符的允许字符集冲突。</p>
+<p>CloudEvents 属性名称必须由 ASCII 字符集中的小写字母（’a’至’z’）或数字（’0’至’9’）组成。属性名称应具有描述性和简洁性，长度不得超过 20 个字符。</p>
+<p><em><strong>类型系统</strong></em></p>
+<p>以下是可用于属性中的抽象数据类型。这些类型中的每个类型都可以由不同的事件格式和协议元数据字段来表示。本规范为每个类型定义了一个标准的字符串编码，所有的实现都必须支持。</p>
+<ul>
+<li>Boolean - 值为 “true “或 “false “的布尔值。<br>字符串编码：大小写敏感的 “true “或 “false” 值。</li>
+<li>Integer -2,147,483,648到+2,147,483,647之间的整数。这是一个有符号的、32位的、二进制编码的范围。事件格式不一定要使用这个编码，但它们必须只<br>使用这个范围内的整数值。<br>字符串编码: 根据RFC 7159，第6节，JSON号码的整数部分。</li>
+<li>String - 允许的Unicode字符序列。以下字符不允许使用。</li>
+</ul>
+<ul>
+<li>U+0000-U+001F 和 U+007F-U+009F (两个范围都包括在内)中的 “控制字符”，因为大多数字符没有约定的含义，有些字符，如 U+000A (换行符)，在HTTP头等上下文中不能使用。</li>
+<li>代码点被Unicode识别为非字符。</li>
+<li>U+D800-U+DBFF和U+DC00-U+DFFF，这两个范围都包括在内，除非正确地成对使用。因此，（在JSON符号中）”\uDEAD “是无效的，因为它是一个未配对的代<br> 名词，</li>
+</ul>
+<p>而”\uD800\uDEAD “是合法的。</p>
+<ul>
+<li>Binary - 字节序列。</li>
+</ul>
+<ul>
+<li>字符串编码: Base64 编码，按照 RFC4648 的规定进行编码。</li>
+</ul>
+<ul>
+<li>URI–绝对统一的资源标识符。</li>
+</ul>
+<ul>
+<li>字符串编码：RFC4648中定义的绝对统一资源标识符。字符串编码：RFC 3986 第 4.3 节中定义的绝对 URI。</li>
+</ul>
+<ul>
+<li>URI-reference - 统一资源标识符引用。</li>
+</ul>
+<ul>
+<li>字符串编码：RFC 3986 第4.3 节中定义的URI-reference。URI-reference - RFC 3986 第4.1 节中定义的URI-reference。</li>
+</ul>
+<ul>
+<li>Timestamp - 使用Gregorian Calendar的日期和时间表达式。</li>
+</ul>
+<ul>
+<li>字符串编码：RFC 3339。</li>
+</ul>
+<p>所有的上下文属性值必须是上面列出的类型之一。属性值可以以本地类型或标准字符串的形式呈现。表示 CloudEvent 或任何扩展的强类型编程模型必须能够将常规字符串编码转换为最适合抽象类型的运行时&#x2F;语言原生类型。</p>
+<p>例如，在给定的实现中，时间属性可以用语言的本机日期时间类型来表示，但必须提供 RFC3339 字符串，并且在映射到 HTTP 消息的报文头时，必须可转换为 RFC3339 字符串。</p>
+<p>同样，CloudEvents 协议绑定或事件格式实现也必须能够在编码或协议元数据字段中将标准字符串编码转换为相应的数据类型。时间戳类型的属性值确实可以作为一个字符串通过多次跳转，并且只在生产者和最终消费者那里以本地运行时&#x2F;语言类型的形式实现。时间戳也可能被路由为本地协议类型，并可能在生产者和消费者端被映射到&#x2F;从各自的语言&#x2F;运行时类型，而永远不会以字符串的形式实现。</p>
+<p>序列化机制的选择将决定上下文属性和事件数据的序列化方式。例如，在JSON序列化的情况下，上下文属性和事件数据可能同时出现在同一个JSON对象中。</p>
+<h3 id="必须的属性"><a href="#必须的属性" class="headerlink" title="必须的属性"></a>必须的属性</h3><p>以下属性必须在所有 CloudEvents 中出现。</p>
+<p><em><strong>id</strong></em></p>
+<ul>
+<li>Type: String</li>
+<li>描述: 标示事件。生产者必须确保 source + id 对于每个独立的事件都是唯一的。如果一个重复的事件被重新发送（例如，由于网络错误），它可能有相同的<br> id。消费者可能会认为 source 和 id 相同的事件是重复的。</li>
+<li>Examples:<ul>
+<li>由生产者维护的事件计数器</li>
+<li>UUID</li>
+</ul>
+</li>
+<li>Constraints:<ul>
+<li>REQUIRED</li>
+<li>必须是一个非空字符串</li>
+<li>必须在生产者范围内是唯一的</li>
+</ul>
+</li>
+</ul>
+<p><em><strong>source</strong></em></p>
+<ul>
+<li><p>Type: URI-reference</p>
+</li>
+<li><p>Description: 标示事件发生的上下文。通常包括事件源的类型、发布事件的组织或产生事件的过程等信息。URI 中编码的数据背后的确切语法和语义由事件生<br>  产者定义。</p>
+</li>
+</ul>
+<p>  生产者必须确保 source + id 对于每个独立的事件都是唯一的。</p>
+<p>  应用程序可以为每个独立的生产者分配一个唯一的source，这样就很容易产生唯一的ID，因为没有其他生产者会有相同的source。应用程序可以使用 UUIDs、URNs、</p>
+<p>  DNS 权限或特定于应用程序的方案来创建唯一的source标识符。</p>
+<p>  一个源也可以包括多个的生产者。在这种情况下，生产者必须合作，确保 source + id 对于每个独立的事件都是唯一的。</p>
+<ul>
+<li>Constraints:</li>
+</ul>
+<ul>
+<li>REQUIRED</li>
+<li>非空URI-reference</li>
+<li>推荐使用绝对URI<br>  Examples</li>
+</ul>
+<ul>
+<li>全网唯一的URI，具有DNS权限。<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/cloudevents">https://github.com/cloudevents</a></li>
+<li>mailto:<a href="mailto:&#x63;&#x6e;&#99;&#x66;&#x2d;&#x77;&#x67;&#x2d;&#115;&#101;&#x72;&#118;&#x65;&#x72;&#x6c;&#x65;&#x73;&#115;&#x40;&#x6c;&#105;&#115;&#116;&#115;&#x2e;&#99;&#110;&#x63;&#x66;&#x2e;&#x69;&#111;">&#x63;&#x6e;&#99;&#x66;&#x2d;&#x77;&#x67;&#x2d;&#115;&#101;&#x72;&#118;&#x65;&#x72;&#x6c;&#x65;&#x73;&#115;&#x40;&#x6c;&#105;&#115;&#116;&#115;&#x2e;&#99;&#110;&#x63;&#x66;&#x2e;&#x69;&#111;</a></li>
+</ul>
+</li>
+<li>通用唯一的URN与UUID<ul>
+<li>urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66</li>
+</ul>
+</li>
+<li>应用特定的标识符<ul>
+<li>&#x2F;cloudevents&#x2F;spec&#x2F;pull&#x2F;123</li>
+<li>&#x2F;sensors&#x2F;tn-1234567&#x2F;alerts</li>
+<li>1-555-123-4567</li>
+</ul>
+</li>
+</ul>
+<p><em><strong>specversion</strong></em></p>
+<ul>
+<li>Type: String</li>
+<li>Description: 事件所使用的 CloudEvents 规范的版本。该版本可用于解释上下文。兼容的事件制作者在引用此版本的规范时，必须使用 1.0 的值。</li>
+<li>Constraints:<ul>
+<li>REQUIRED</li>
+<li>MUST be a non-empty string</li>
+</ul>
+</li>
+</ul>
+<p><em><strong>type</strong></em></p>
+<ul>
+<li>Type: String</li>
+<li>Description: 该属性包含一个描述事件类型的值，描述与起源事件相关的事件类型。该属性通常用于路由、可观察性、策略执行等。该属性的格式是由生产者<br>  定义的，可能包括类型的版本等信息–更多信息请参见Primer中的属性版本化。</li>
+<li>Constraints:<ul>
+<li>REQUIRED</li>
+<li>MUST be a non-empty string</li>
+<li>应该以一个反转的DNS名称为前缀。前缀域决定了定义这个事件类型的语义的组织。<br>Examples</li>
+<li>com.github.pull.create</li>
+<li>com.example.object.delete.v2</li>
+</ul>
+</li>
+</ul>
+<h3 id="可选属性"><a href="#可选属性" class="headerlink" title="可选属性"></a>可选属性</h3><p>以下为可在 CloudEvents 中出现的可选属性。有关 OPTIONAL 定义的更多信息，请参阅 Notational Conventions 部分。</p>
+<p><em><strong>datacontenttype</strong></em></p>
+<ul>
+<li>ype: String per RFC 2046</li>
+<li>Description: data 值的内容类型。该属性使数据可以携带任何类型的内容，其格式和编码可能与所选事件格式不同。例如，使用JSON信封格式渲染的事件<br>   可能会携带一个XML有效载荷的数据，这个属性被设置为 “application&#x2F;xml “就会通知消费者。不同的数据内容如何渲染不同的数据内容类型值的规则在事件<br>   格式规范中定义了；例如，JSON事件格式在3.1节中定义了这种关系。</li>
+</ul>
+<p>对于一些二进制模式的协议绑定，该字段直接映射到各自协议的内容类型元数据属性。二进制模式和内容类型元数据映射的规范性规则可以在相应的协议中找到。</p>
+<p>在某些事件格式中，datacontententtype属性可能会被省略。例如，如果一个JSON格式的事件没有datacontententtype属性，那么就意味着数据是符合 </p>
+<p>“application&#x2F;json “媒体类型的JSON值。换句话说：一个没有datacontententtype的JSON格式事件与一个datacontenttype&#x3D;“application&#x2F;json “</p>
+<p>的事件完全等同。</p>
+<p>当将一个没有datacontenttype属性的事件消息翻译成不同的格式或协议绑定时，目标datacontenttype应该明确地设置为源的隐含datacontenttype。</p>
+<ul>
+<li>Constraints:<br>* OPTIONAL<br>* 如果存在，必须遵守RFC 2046中规定的格式。</li>
+</ul>
+<p><em><strong>dataschema</strong></em></p>
+<ul>
+<li>Type: URI<br>指明 data 所遵循的 schema。对模式的不兼容的更改应该通过不同的URI来反映。更多信息请参见Primer中的属性版本化。</li>
+<li>Constraints:<br>* OPTIONAL<br>* If present, MUST be a non-empty URI</li>
+</ul>
+<p><em><strong>subject</strong></em></p>
+<ul>
+<li><p>Type: String</p>
+</li>
+<li><p>Description: 描述了事件生产者（通过 source 标识）上下文中的事件主题。在发布-订阅场景中，订阅者通常会订阅由源发出的事件，但如果源上下文有<br>   内部子结构，仅有源标识符可能不足以作为任何特定事件的限定符。</p>
+</li>
+</ul>
+<p>   在上下文元数据中识别事件的主体（而不是仅在 data 有效载荷中），这在中间件无法解释 data 内容的通用订阅过滤场景中特别有帮助。在上面的例子中，订<br>    阅者可能只对以’.jpg’或’.jpeg’结尾的blob感兴趣，而主题属性允许为该事件的子集构造一个简单有效的字符串后缀过滤器。</p>
+<ul>
+<li><p>Constraints:</p>
+<ul>
+<li>OPTIONAL</li>
+<li>If present, MUST be a non-empty string</li>
+<li>Example:<br>当在blob-存储容器内创建新的blob时，订阅者可能会注册兴趣。在这种情况下，事件 source 标识了订阅范围（存储容器），type 标识了“blob创建“<br>事件，id唯一标识了事件实例，以区分已创建的相同名称的blob的单独出现；新创建的blob的名称在 subject中携带。<ul>
+<li>source：<a target="_blank" rel="noopener" href="https://example.com/storage/tenant/container">https://example.com/storage/tenant/container</a></li>
+<li>subject: mynewfile.jpg</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><em><strong>time</strong></em></p>
+<ul>
+<li>Type: Timestamp</li>
+<li>Description: 事件发生的时间戳。如果无法确定事件发生的时间，则该属性可以由 CloudEvents 生产者设置为其他时间（如当前时间），但同一源的所有<br>   生产者在这方面必须保持一致。换句话说，它们要么都使用实际发生的时间，要么都使用相同的算法来确定所使用的值。</li>
+<li>Constraints:<ul>
+<li>OPTIONAL</li>
+<li>If present, MUST adhere to the format specified in RFC 3339</li>
+</ul>
+</li>
+</ul>
+<h3 id="扩展上下文属性"><a href="#扩展上下文属性" class="headerlink" title="扩展上下文属性"></a>扩展上下文属性</h3><p>CloudEvent 可包含任意数量的具有不同名称的附加上下文属性，称为 “扩展属性”。扩展属性必须遵循与标准属性相同的命名惯例，并使用与标准属性相同的类型系<br>统。扩展属性在本规范中没有定义的含义，它们允许外部系统将元数据附加到事件中，就像HTTP自定义头一样。</p>
+<p>扩展属性总是按照与标准属性一样的绑定规则进行序列化。然而，本规范并不妨碍扩展将事件属性值复制到消息的其他部分，以便与同样处理消息的非CloudEvents<br>系统进行交互。这样做的扩展规范应该指定如果复制的值与 cloud event 序列化的值不同，接收者应该如何解释消息。</p>
+<h3 id="定义扩展"><a href="#定义扩展" class="headerlink" title="定义扩展"></a>定义扩展</h3><p>扩展的定义应该完全定义属性的所有方面，例如，其名称、类型、语义和可能的值。新的扩展定义应该使用一个描述性足够强的名称，以减少与其他扩展名称碰撞的</p>
+<p>可能性。特别是，扩展作者应该检查文档中的扩展文档中的已知扩展集–不仅仅是检查可能的名称冲突，还应该检查可能感兴趣的扩展。</p>
+<p>许多协议支持发送者包含附加元数据的能力，例如作为 HTTP 头文件。虽然 CloudEvents 接收方没有被强制要求处理和传递这些元数据，但建议他们通过某种机制</p>
+<p>来处理和传递这些元数据，以表明它们是非 CloudEvents 元数据。</p>
+<p>下面是一个例子，说明了对附加属性的需求。在许多 IoT 和企业用例中，一个事件可以在无服务器的应用程序中使用，该事件可以在多个类型的事件中执行操作。为了</p>
+<p>支持这样的用例，事件生产者需要在 “上下文属性 “中添加额外的身份属性，事件消费者可以使用这些属性将该事件与其他事件关联起来。如果这种身份属性恰好是事件 </p>
+<p>“数据 “的一部分，事件生产者也将把身份属性添加到 “上下文属性 “中，这样，事件消费者就可以方便地访问这些信息，而不需要解码和检查事件数据。这样的身份属</p>
+<p>性也可以用来帮助中间网关确定如何路由事件。</p>
+<p><em><strong>事件数据</strong></em></p>
+<p>正如术语 “Data “所定义的那样，CloudEvents 可包括与事件发生相关的领域特定信息。如果存在，此信息将被封装在 data 中。</p>
+<ul>
+<li>描述：事件有效载荷（Payload）。本规范不对该信息的类型进行任何限制。它被编码成由datacontententtype属性指定的媒体格式（例如：application&#x2F;json），<br>   并且当这些相应的属性存在时，它将遵循dataschema格式。</li>
+<li>Constraints:</li>
+<li>OPTIONAL</li>
+</ul>
+<p><em><strong>大小限制</strong></em></p>
+<p>在许多场景中，CloudEvents 将通过一个或多个通用中间人转发，每个中间人都可能会对转发事件的大小进行限制。CloudEvents 也可能会被转发到消费者，比如</p>
+<p>嵌入式设备，这些设备受存储或内存限制，因此在处理大的单一事件时可能会很吃力。</p>
+<p>事件的 “大小”是指事件的线上（wire-size）大小，包括事件的线上传输的每一个比特：协议帧元数据、事件元数据和事件数据，基于所选的事件格式和所选的协议</p>
+<p>绑定。如果应用配置要求在不同的协议之间转发事件，或要求对事件进行重新编码，则应考虑应用所使用的最有效的协议和编码，以符合这些大小限制。</p>
+<ul>
+<li>中间商必须转发大小为64KByte或以下的事件。</li>
+<li>消费者应接受至少64 KByte大小的事件。</li>
+</ul>
+<p>实际上，这些规则将允许生产者安全地发布大小不超过64KB的事件。这里的 “安全 “指的是，一般来说，期望事件被所有中间人接受并转发是合理的。出于本地的考虑，</p>
+<p>它是否愿意接受或拒绝该大小的事件，是在任何特定消费者的控制范围内。</p>
+<p>一般来说，CloudEvents 发布者应该通过避免在事件有效载荷中嵌入大型数据项来保持事件的紧凑性，而是使用事件有效载荷链接到这些数据项。从访问控制的角度</p>
+<p>来看，这种方法还可以让事件的分布范围更广，因为通过解析链接访问事件相关的细节，可以实现差异化的访问控制和选择性的披露，而不是直接将敏感细节嵌入事件中。</p>
+<h3 id="隐私和安全"><a href="#隐私和安全" class="headerlink" title="隐私和安全"></a>隐私和安全</h3><p>互操作性是本规范背后的主要驱动力，要实现这样的行为，需要将一些信息公开，导致信息泄露的可能性。请考虑以下几点，以防止不经意间的泄漏，特别是在利用第三方平台和通信网络时。</p>
+<ul>
+<li><p>上下文属性</p>
+<p>敏感信息不应在上下文属性中携带或表示。</p>
+<p>CloudEvent 生产者、消费者和中间人可以审查并记录上下文属性。</p>
+</li>
+<li><p>Data</p>
+<p>领域特定 event data 应进行加密，以限制受信任方的可见性。用于这种加密的机制是生产者和消费者之间的协议，因此不属于本规范的范围。</p>
+</li>
+<li><p>Protocol Bindings</p>
+<p>应采用协议级的安全性，以确保CloudEvents的可信和安全交换。</p>
+</li>
+</ul>
+<h3 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h3><p>下面的示例展示了一个被序列化为JSON的CloudEvent：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;specversion&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;1.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;type&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;com.github.pull.create&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;source&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;https://github.com/cloudevents/spec/pull&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;subject&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;123&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;id&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;A234-1234-1234&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;time&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;2018-04-05T17:31:00Z&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;comexampleextension1&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;value&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;comexampleothervalue&quot;</span> <span class="punctuation">:</span> <span class="number">5</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;datacontenttype&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;text/xml&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;data&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;&lt;much wow=\&quot;xml\&quot;/&gt;&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.bookstack.cn/read/serverless-handbook/core-function-code.md">function</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/categories/">Category</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">一、概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E7%9B%AE%E6%A0%87"><span class="toc-number">1.1.</span> <span class="toc-text">设计目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E7%9B%AE%E6%A0%87"><span class="toc-number">1.2.</span> <span class="toc-text">非目标</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%AC%A6%E5%8F%B7%E5%92%8C%E6%9C%AF%E8%AF%AD"><span class="toc-number">2.</span> <span class="toc-text">二、符号和术语</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%A6%E5%8F%B7"><span class="toc-number">2.1.</span> <span class="toc-text">符号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B1%9E%E6%80%A7"><span class="toc-number">2.2.</span> <span class="toc-text">上下文属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%85%E9%A1%BB%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="toc-number">2.3.</span> <span class="toc-text">必须的属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E9%80%89%E5%B1%9E%E6%80%A7"><span class="toc-number">2.4.</span> <span class="toc-text">可选属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B1%9E%E6%80%A7"><span class="toc-number">2.5.</span> <span class="toc-text">扩展上下文属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E6%89%A9%E5%B1%95"><span class="toc-number">2.6.</span> <span class="toc-text">定义扩展</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9A%90%E7%A7%81%E5%92%8C%E5%AE%89%E5%85%A8"><span class="toc-number">2.7.</span> <span class="toc-text">隐私和安全</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B"><span class="toc-number">2.8.</span> <span class="toc-text">实例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">3.</span> <span class="toc-text">参考资料</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/4d499fe3/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/4d499fe3/&text=CloudEvents核心规范之一"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/4d499fe3/&title=CloudEvents核心规范之一"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/4d499fe3/&is_video=false&description=CloudEvents核心规范之一"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CloudEvents核心规范之一&body=Check out this article: https://zoues.com/posts/4d499fe3/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/4d499fe3/&title=CloudEvents核心规范之一"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/4d499fe3/&title=CloudEvents核心规范之一"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/4d499fe3/&title=CloudEvents核心规范之一"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/4d499fe3/&title=CloudEvents核心规范之一"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/4d499fe3/&name=CloudEvents核心规范之一&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/4d499fe3/&t=CloudEvents核心规范之一"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zouyee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
