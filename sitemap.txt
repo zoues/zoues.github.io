@@ -1,5 +1,6 @@
-https://zoues.com/categories/index.html
 https://zoues.com/about/index.html
+https://zoues.com/posts/58fc8d19/
+https://zoues.com/categories/index.html
 https://zoues.com/tags/index.html
 https://zoues.com/posts/35342369/
 https://zoues.com/posts/4bd8a9b/
@@ -16,7 +17,6 @@ https://zoues.com/posts/d6be75a2/
 https://zoues.com/posts/95b080c1/
 https://zoues.com/posts/911a61ad/
 https://zoues.com/posts/5941d835/
-https://zoues.com/posts/58fc8d19/
 https://zoues.com/posts/14c9c4cb/
 https://zoues.com/posts/ad1f6ce2/
 https://zoues.com/posts/384ced4/
