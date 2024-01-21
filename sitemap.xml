@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://zoues.com/posts/423bdf96/</loc>
+    
+    <lastmod>2024-01-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://zoues.com/posts/4d499fe3/</loc>
     
     <lastmod>2024-01-21</lastmod>
@@ -484,6 +493,13 @@
   </url>
   
   <url>
+    <loc>https://zoues.com/tags/kubernetes/</loc>
+    <lastmod>2024-01-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://zoues.com/tags/CloudNative/</loc>
     <lastmod>2024-01-21</lastmod>
     <changefreq>weekly</changefreq>
@@ -492,13 +508,6 @@
   
   <url>
     <loc>https://zoues.com/tags/containerd/</loc>
-    <lastmod>2024-01-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://zoues.com/tags/kubernetes/</loc>
     <lastmod>2024-01-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -534,6 +543,13 @@
   
   <url>
     <loc>https://zoues.com/tags/zig/</loc>
+    <lastmod>2024-01-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://zoues.com/tags/almalinux/</loc>
     <lastmod>2024-01-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -581,13 +597,6 @@
     <priority>0.2</priority>
   </url>
   
-  <url>
-    <loc>https://zoues.com/tags/almalinux/</loc>
-    <lastmod>2024-01-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
 
   
   <url>
@@ -626,6 +635,13 @@
   </url>
   
   <url>
+    <loc>https://zoues.com/categories/cgroupv2/</loc>
+    <lastmod>2024-01-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://zoues.com/categories/Notes/</loc>
     <lastmod>2024-01-21</lastmod>
     <changefreq>weekly</changefreq>
@@ -634,13 +650,6 @@
   
   <url>
     <loc>https://zoues.com/categories/%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2024-01-21</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://zoues.com/categories/cgroupv2/</loc>
     <lastmod>2024-01-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
