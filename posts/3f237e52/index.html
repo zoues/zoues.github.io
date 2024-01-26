@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="在Almalinux替换CentOS的过程中，我们通过kubectl top nodes命令观察到了两个相同规格的节点（只有cgroup版本不同）。在分别调度两个相同的Pod后，我们预期它们的内存使用量应该相近。然而，我们发现使用了cgroupv2的节点的内存使用量比使用了cgroupv1的节点多了约280Mi。 初步分析表明，可能是cAdvisor在统计cgroupv1和v2的内存使用量时存在逻">
+<meta property="og:type" content="article">
+<meta property="og:title" content="揭开K8s适配CgroupV2内存虚高的迷局">
+<meta property="og:url" content="https://zoues.com/posts/3f237e52/index.html">
+<meta property="og:site_name" content="zouyee">
+<meta property="og:description" content="在Almalinux替换CentOS的过程中，我们通过kubectl top nodes命令观察到了两个相同规格的节点（只有cgroup版本不同）。在分别调度两个相同的Pod后，我们预期它们的内存使用量应该相近。然而，我们发现使用了cgroupv2的节点的内存使用量比使用了cgroupv1的节点多了约280Mi。 初步分析表明，可能是cAdvisor在统计cgroupv1和v2的内存使用量时存在逻">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-01-27T12:40:08.000Z">
+<meta property="article:modified_time" content="2024-01-26T23:17:17.760Z">
+<meta property="article:author" content="zouyee">
+<meta property="article:tag" content="cloudnative">
+<meta property="article:tag" content="kubernetes">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>揭开K8s适配CgroupV2内存虚高的迷局</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="zouyee" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/423bdf96/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/3f237e52/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/3f237e52/&text=揭开K8s适配CgroupV2内存虚高的迷局"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/3f237e52/&title=揭开K8s适配CgroupV2内存虚高的迷局"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/3f237e52/&is_video=false&description=揭开K8s适配CgroupV2内存虚高的迷局"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=揭开K8s适配CgroupV2内存虚高的迷局&body=Check out this article: https://zoues.com/posts/3f237e52/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/3f237e52/&title=揭开K8s适配CgroupV2内存虚高的迷局"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/3f237e52/&title=揭开K8s适配CgroupV2内存虚高的迷局"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/3f237e52/&title=揭开K8s适配CgroupV2内存虚高的迷局"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/3f237e52/&title=揭开K8s适配CgroupV2内存虚高的迷局"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/3f237e52/&name=揭开K8s适配CgroupV2内存虚高的迷局&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/3f237e52/&t=揭开K8s适配CgroupV2内存虚高的迷局"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E8%83%8C%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">技术背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%BB%E6%A0%B9%E6%BA%AF%E6%BA%90"><span class="toc-number">2.</span> <span class="toc-text">寻根溯源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">3.</span> <span class="toc-text">结论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">4.</span> <span class="toc-text">参考文献</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        揭开K8s适配CgroupV2内存虚高的迷局
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zouyee</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-01-27T12:40:08.000Z" class="dt-published" itemprop="datePublished">2024-01-27</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F%E9%9D%A2%E8%AF%95%E6%A1%88%E4%BE%8B50%E7%AF%87/">云原生面试案例50篇</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/cloudnative/" rel="tag">cloudnative</a>, <a class="p-category" href="/tags/kubernetes/" rel="tag">kubernetes</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>在Almalinux替换CentOS的过程中，我们通过kubectl top nodes命令观察到了两个相同规格的节点（只有cgroup版本不同）。在分别调度两个相同的Pod后，我们预期它们的内存使用量应该相近。然而，我们发现使用了cgroupv2的节点的内存使用量比使用了cgroupv1的节点多了约280Mi。</p>
+<p>初步分析表明，可能是cAdvisor在统计cgroupv1和v2的内存使用量时存在逻辑上的不一致。</p>
+<p>理论上，无论使用cgroupv1还是cgroupv2，两个相同配置的节点的内存使用量应该相近。实际上，在比较&#x2F;proc&#x2F;meminfo时，我们发现了总内存使用量近似的情况。那么问题出在哪里呢？</p>
+<p>我们发现，这个问题只影响了节点级别的内存统计数据，而不影响Pod级别的统计数据。</p>
+<p>问题的根本原因是cAdvisor调用了runc的接口，其计算root cgroup的内存数据方面存在差异。在cgroupv2中，root cgroup不存在memory.current这个文件，但在cgroupv1中root cgroup是存在memory.usage_in_bytes文件的。这导致了在统计cgroupv2内存使用量时出现了不一致的情况。</p>
+<p>这个问题可能需要在cAdvisor或runc的逻辑中进行修复，以确保在cgroupv1和cgroupv2中的内存统计一致性。下面我们基于社区issue展开介绍。</p>
+<p>v1.28.3 commit:a8a1abc25cad87333840cd7d54be2efaf31a3177</p>
+<blockquote>
+<p>NOTE: Containerd:1.6.21，K8s:1.28, Kernel:5.15.0<br>(同步以前的文章)</p>
+</blockquote>
+<hr>
+<h2 id="技术背景"><a href="#技术背景" class="headerlink" title="技术背景"></a>技术背景</h2><p>在Kubernetes中，Google的cAdvisor项目被用于节点上容器资源和性能指标的收集。在kubelet server中，cAdvisor被集成用于监控该节点上kubepods（默认cgroup名称，systemd模式下会加上.slice后缀） cgroup下的所有容器。从1.29.0-alpha.2版本中可以看到，kubelet目前还是提供了以下两种配置选项（但是现在useLegacyCadvisorStats为false）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">if kubeDeps.useLegacyCadvisorStats &#123;</span><br><span class="line">klet.StatsProvider = stats.NewCadvisorStatsProvider(</span><br><span class="line">klet.cadvisor,</span><br><span class="line">klet.resourceAnalyzer,</span><br><span class="line">klet.podManager,</span><br><span class="line">klet.runtimeCache,</span><br><span class="line">klet.containerRuntime,</span><br><span class="line">klet.statusManager,</span><br><span class="line">hostStatsProvider)</span><br><span class="line">&#125; else &#123;</span><br><span class="line">klet.StatsProvider = stats.NewCRIStatsProvider(</span><br><span class="line">klet.cadvisor,</span><br><span class="line">klet.resourceAnalyzer,</span><br><span class="line">klet.podManager,</span><br><span class="line">klet.runtimeCache,</span><br><span class="line">kubeDeps.RemoteRuntimeService,</span><br><span class="line">kubeDeps.RemoteImageService,</span><br><span class="line">hostStatsProvider,</span><br><span class="line">utilfeature.DefaultFeatureGate.Enabled(features.PodAndContainerStatsFromCRI))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>kubelet以Prometheus指标格式在<code>/stats/</code>暴露所有相关运行时指标，如下图所示，Kubelet内置了cadvisor服务</p>
+<p>图片</p>
+<p>从 Kubernetes 1.12 版本开始，kubelet 直接从 cAdvisor 暴露了多个接口。包括以下接口：</p>
+<ul>
+<li>cAdvisor 的 Prometheus 指标位于 <code>/metrics/cadvisor</code>。</li>
+<li>cAdvisor v1 Json API 位于 <code>/stats/</code>、<code>/stats/container</code>、<code>/stats/&#123;podName&#125;/&#123;containerName&#125;</code> 和 <code>/stats/&#123;namespace&#125;/&#123;podName&#125;/&#123;uid&#125;/&#123;containerName&#125;</code>。</li>
+<li>cAdvisor 的机器信息位于 &#x2F;spec。</li>
+</ul>
+<p>此外，kubelet还暴露了<code>summary API</code>，其中cAdvisor 是该接口指标来源之一。在社区的监控架构文档中描述了“核心”指标和“监控”指标的定义。这个文档中规定了一组核心指标及其用途，并且目标是通过拆分监控架构来实现以下两个目标：</p>
+<ul>
+<li><p>减小核心指标的统计收集性能影响，允许更频繁地收集这些指标。</p>
+</li>
+<li><p>使监控方案可替代且可扩展。</p>
+</li>
+</ul>
+<p>因此移除cadvisor的接口，成了一项长期目标，目前进度如下(进度状态的标记略为滞后)：</p>
+<ul>
+<li><p>[1.13] 引入 Kubelet 的 pod-resources gRPC 端点；KEP: 支持设备监控社区#2454</p>
+</li>
+<li><p>[1.14] 引入 Kubelet 资源指标 API</p>
+</li>
+<li><p>[1.15] 通过添加和弃用 <code>--enable-cadvisor-json-endpoints</code> 标志，废弃“直接” cAdvisor API 端点</p>
+</li>
+<li><p>[1.18] 默认将 –enable-cadvisor-json-endpoints 标志设置为禁用</p>
+</li>
+<li><p>[1.21] 移除 <code>--enable-cadvisor-json-endpoints</code> 标志</p>
+</li>
+<li><p>[1.21] 将监控服务器过渡到 Kubelet 资源指标 API（需要3个版本的差异）</p>
+</li>
+<li><p>[TBD] 为 kubelet 监控端点提出外部替代方案</p>
+</li>
+<li><p>[TBD] 通过添加和废弃 <code>--enable-container-monitoring-endpoints</code> 标志，废弃摘要 API 和 cAdvisor Prometheus 端点</p>
+</li>
+<li><p>[TBD+2] 移除“直接”的 cAdvisor API 端点</p>
+</li>
+<li><p>[TBD+2] 默认将 –enable-container-monitoring-endpoints 标志设置为禁用</p>
+</li>
+<li><p>[TBD+4] 移除摘要 API、cAdvisor Prometheus 指标和移除 –enable-container-monitoring-endpoints 标志。</p>
+</li>
+</ul>
+<p>当前版本的cadvisor接口已经做了部分废弃，例如<code>/spec及/stats/*</code>等<br><a target="_blank" rel="noopener" href="https://pic.imgdb.cn/item/65b43ba0871b83018ac66a1f.png"></a></p>
+<h2 id="寻根溯源"><a href="#寻根溯源" class="headerlink" title="寻根溯源"></a>寻根溯源</h2><p>kubelet 使用 cadvisor 来获取节点级别的统计信息（无论是使用 cri 还是通过cadvisor 来统计提供程序来获取 pod 的统计信息）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">kubernetes/pkg/kubelet/stats/provider.go</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// NewCRIStatsProvider returns a Provider that provides the node stats</span><br><span class="line">// from cAdvisor and the container stats from CRI.</span><br><span class="line">func NewCRIStatsProvider(</span><br><span class="line">cadvisor cadvisor.Interface,</span><br><span class="line">resourceAnalyzer stats.ResourceAnalyzer,</span><br><span class="line">podManager PodManager,</span><br><span class="line">runtimeCache kubecontainer.RuntimeCache,</span><br><span class="line">runtimeService internalapi.RuntimeService,</span><br><span class="line">imageService internalapi.ImageManagerService,</span><br><span class="line">hostStatsProvider HostStatsProvider,</span><br><span class="line">podAndContainerStatsFromCRI bool,</span><br><span class="line">) *Provider &#123;</span><br><span class="line">return newStatsProvider(cadvisor, podManager, runtimeCache, newCRIStatsProvider(cadvisor, resourceAnalyzer,</span><br><span class="line">runtimeService, imageService, hostStatsProvider, podAndContainerStatsFromCRI))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// NewCadvisorStatsProvider returns a containerStatsProvider that provides both</span><br><span class="line">// the node and the container stats from cAdvisor.</span><br><span class="line">func NewCadvisorStatsProvider(</span><br><span class="line">cadvisor cadvisor.Interface,</span><br><span class="line">resourceAnalyzer stats.ResourceAnalyzer,</span><br><span class="line">podManager PodManager,</span><br><span class="line">runtimeCache kubecontainer.RuntimeCache,</span><br><span class="line">imageService kubecontainer.ImageService,</span><br><span class="line">statusProvider status.PodStatusProvider,</span><br><span class="line">hostStatsProvider HostStatsProvider,</span><br><span class="line">) *Provider &#123;</span><br><span class="line">return newStatsProvider(cadvisor, podManager, runtimeCache, newCadvisorStatsProvider(cadvisor, resourceAnalyzer, imageService, statusProvider, hostStatsProvider))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以通过下述两种方式获取节点的内存使用情况</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kubectl top node</span><br><span class="line">kubectl get --raw /api/v1/nodes/foo/proxy/stats/summary | jq -C .node.memory</span><br></pre></td></tr></table></figure>
+<p>结果显示cgroupv2节点的内存使用量比相同节点配置但使用 cgroupv1的高一些。kubectl top node 获取节点信息的逻辑在：<a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/metrics-server/blob/master/pkg/storage/node.go#L40">https://github.com/kubernetes-sigs/metrics-server/blob/master/pkg/storage/node.go#L40</a></p>
+<p>kubelet使用 cadvisor 来获取 cgroup 统计信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">kubernetes/pkg/kubelet/server/stats/summary.go</span><br><span class="line"></span><br><span class="line">rootStats, err := sp.provider.GetCgroupCPUAndMemoryStats(&quot;/&quot;, false)</span><br><span class="line">if err != nil &#123;</span><br><span class="line">return nil, fmt.Errorf(&quot;failed to get root cgroup stats: %v&quot;, err)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里GetCgroupCPUAndMemoryStats调用以下cadvisor逻辑</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">kubernetes/pkg/kubelet/stats/helper.go</span><br><span class="line"></span><br><span class="line">infoMap, err := cadvisor.ContainerInfoV2(containerName, cadvisorapiv2.RequestOptions&#123;</span><br><span class="line">IdType:    cadvisorapiv2.TypeName,</span><br><span class="line">Count:     2, // 2 samples are needed to compute &quot;instantaneous&quot; CPU</span><br><span class="line">Recursive: false,</span><br><span class="line">MaxAge:    maxAge,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>cadvisor 基于 cgroup v1&#x2F;v2 获取不同 cgroup manager接口实现，然后调用GetStats()获取监控信息。</p>
+<p>这些实现在计算root cgroup 的内存使用方面存在差异。</p>
+<ul>
+<li><p>v1 使用来自 memory.usage_in_bytes 的内存使用情况：<a target="_blank" rel="noopener" href="https://github.com/opencontainers/runc/blob/92c71e725fc6421b6375ff128936a23c340e2d16/libcontainer/cgroups/fs/memory.go#L204-L224">https://github.com/opencontainers/runc/blob/92c71e725fc6421b6375ff128936a23c340e2d16/libcontainer/cgroups/fs/memory.go#L204-L224</a></p>
+</li>
+<li><p>v2 使用 &#x2F;proc&#x2F;meminfo 并计算使用情况为总内存 - 空闲内存：<a target="_blank" rel="noopener" href="https://github.com/opencontainers/runc/blob/92c71e725fc6421b6375ff128936a23c340e2d16/libcontainer/cgroups/fs2/memory.go#L217">https://github.com/opencontainers/runc/blob/92c71e725fc6421b6375ff128936a23c340e2d16/libcontainer/cgroups/fs2/memory.go#L217</a></p>
+</li>
+</ul>
+<p>usage_in_bytes 大致等于 RSS + Cache。workingset是 usage - 非活动文件。</p>
+<p>在 cadvisor 中，在workingset中排除了非活动文件：<a target="_blank" rel="noopener" href="https://github.com/google/cadvisor/blob/8164b38067246b36c773204f154604e2a1c962dc/container/libcontainer/handler.go#L835-L844">https://github.com/google/cadvisor/blob/8164b38067246b36c773204f154604e2a1c962dc/container/libcontainer/handler.go#L835-L844</a>“</p>
+<p>因此可以判断在cgroupv2计算内存使用使用了total-free，这里面包含了inactive_anon，而内核以及cgroupv1计算内存使用量时不会计入 inactive_anon：<a target="_blank" rel="noopener" href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/mm/memcontrol.c#n3720">https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/mm/memcontrol.c#n3720</a></p>
+<p>通过下面的测试中，inactive_anon 解释数据看到了差异。</p>
+<p>下述分别为cgroupv1及cgroupv2的两个集群</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">~ # kubectl top node</span><br><span class="line">NAME    CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%</span><br><span class="line">node1   98m          2%     1512Mi          12%</span><br><span class="line">node2   99m          2%     1454Mi          11%</span><br><span class="line">node3   94m          2%     1448Mi          11%</span><br></pre></td></tr></table></figure>
+<p>其中cgroupv1节点的root cgroup内存使用如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">~ # cat /sys/fs/cgroup/memory/memory.usage_in_bytes</span><br><span class="line">6236864512</span><br><span class="line">~ # cat /sys/fs/cgroup/memory/memory.stat</span><br><span class="line">cache 44662784</span><br><span class="line">rss 3260416</span><br><span class="line">rss_huge 2097152</span><br><span class="line">shmem 65536</span><br><span class="line">mapped_file 11083776</span><br><span class="line">dirty 135168</span><br><span class="line">writeback 0</span><br><span class="line">pgpgin 114774</span><br><span class="line">pgpgout 103506</span><br><span class="line">pgfault 165891</span><br><span class="line">pgmajfault 99</span><br><span class="line">inactive_anon 135168</span><br><span class="line">active_anon 3645440</span><br><span class="line">inactive_file 5406720</span><br><span class="line">active_file 39333888</span><br><span class="line">unevictable 0</span><br><span class="line">hierarchical_memory_limit 9223372036854771712</span><br><span class="line">total_cache 5471584256</span><br><span class="line">total_rss 767148032</span><br><span class="line">total_rss_huge 559939584</span><br><span class="line">total_shmem 1921024</span><br><span class="line">total_mapped_file 605687808</span><br><span class="line">total_dirty 270336</span><br><span class="line">total_writeback 0</span><br><span class="line">total_pgpgin 51679194</span><br><span class="line">total_pgpgout 50291069</span><br><span class="line">total_pgfault 97383769</span><br><span class="line">total_pgmajfault 5610</span><br><span class="line">total_inactive_anon 1081344</span><br><span class="line">total_active_anon 772235264</span><br><span class="line">total_inactive_file 4648124416</span><br><span class="line">total_active_file 820551680</span><br><span class="line">total_unevictable 0</span><br></pre></td></tr></table></figure>
+
+<p>meminfo文件如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">~ # cat /proc/meminfo</span><br><span class="line">MemTotal:       16393244 kB</span><br><span class="line">MemFree:         9744148 kB</span><br><span class="line">MemAvailable:   15020900 kB</span><br><span class="line">Buffers:          132344 kB</span><br><span class="line">Cached:          5207356 kB</span><br><span class="line">SwapCached:            0 kB</span><br><span class="line">Active:          1557252 kB</span><br><span class="line">Inactive:        4526668 kB</span><br><span class="line">Active(anon):     745916 kB</span><br><span class="line">Inactive(anon):      792 kB</span><br><span class="line">Active(file):     811336 kB</span><br><span class="line">Inactive(file):  4525876 kB</span><br><span class="line">Unevictable:           0 kB</span><br><span class="line">Mlocked:               0 kB</span><br><span class="line">SwapTotal:             0 kB</span><br><span class="line">SwapFree:              0 kB</span><br><span class="line">Dirty:               636 kB</span><br><span class="line">Writeback:             0 kB</span><br><span class="line">AnonPages:        618992 kB</span><br><span class="line">Mapped:           624384 kB</span><br><span class="line">Shmem:              2496 kB</span><br><span class="line">KReclaimable:     285824 kB</span><br><span class="line">Slab:             423600 kB</span><br><span class="line">SReclaimable:     285824 kB</span><br><span class="line">SUnreclaim:       137776 kB</span><br><span class="line">KernelStack:        8400 kB</span><br><span class="line">PageTables:         9060 kB</span><br><span class="line">NFS_Unstable:          0 kB</span><br><span class="line">Bounce:                0 kB</span><br><span class="line">WritebackTmp:          0 kB</span><br><span class="line">CommitLimit:     8196620 kB</span><br><span class="line">Committed_AS:    2800016 kB</span><br><span class="line">VmallocTotal:   34359738367 kB</span><br><span class="line">VmallocUsed:       40992 kB</span><br><span class="line">VmallocChunk:          0 kB</span><br><span class="line">Percpu:             4432 kB</span><br><span class="line">HardwareCorrupted:     0 kB</span><br><span class="line">AnonHugePages:    270336 kB</span><br><span class="line">ShmemHugePages:        0 kB</span><br><span class="line">ShmemPmdMapped:        0 kB</span><br><span class="line">FileHugePages:         0 kB</span><br><span class="line">FilePmdMapped:         0 kB</span><br><span class="line">CmaTotal:              0 kB</span><br><span class="line">CmaFree:               0 kB</span><br><span class="line">HugePages_Total:       0</span><br><span class="line">HugePages_Free:        0</span><br><span class="line">HugePages_Rsvd:        0</span><br><span class="line">HugePages_Surp:        0</span><br><span class="line">Hugepagesize:       2048 kB</span><br><span class="line">Hugetlb:               0 kB</span><br><span class="line">DirectMap4k:      302344 kB</span><br><span class="line">DirectMap2M:     3891200 kB</span><br><span class="line">DirectMap1G:    14680064 kB</span><br></pre></td></tr></table></figure>
+
+<p>当前的计算</p>
+<p>memory.current - memory.stat.total_inactive_file &#x3D; 6236864512 - 4648124416 &#x3D; 1515 Mi -&gt; kubelet 报告的结果</p>
+<p>cgroupv2 集群</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">~ # kubectl top node</span><br><span class="line">NAME    CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%</span><br><span class="line">node1   113m         2%     2196Mi          17%</span><br><span class="line">node2   112m         2%     2171Mi          17%</span><br><span class="line">node3   113m         2%     2180Mi          17%</span><br></pre></td></tr></table></figure>
+
+<p>其中一节点的meminfo文件如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">MemTotal:       16374584 kB</span><br><span class="line">MemFree:         9505980 kB</span><br><span class="line">MemAvailable:   14912544 kB</span><br><span class="line">Buffers:          155164 kB</span><br><span class="line">Cached:          5335576 kB</span><br><span class="line">SwapCached:            0 kB</span><br><span class="line">Active:           872420 kB</span><br><span class="line">Inactive:        5399340 kB</span><br><span class="line">Active(anon):       2568 kB</span><br><span class="line">Inactive(anon):   791340 kB</span><br><span class="line">Active(file):     869852 kB</span><br><span class="line">Inactive(file):  4608000 kB</span><br><span class="line">Unevictable:       30740 kB</span><br><span class="line">Mlocked:           27668 kB</span><br><span class="line">SwapTotal:             0 kB</span><br><span class="line">SwapFree:              0 kB</span><br><span class="line">Dirty:               148 kB</span><br><span class="line">Writeback:             0 kB</span><br><span class="line">AnonPages:        716552 kB</span><br><span class="line">Mapped:           608424 kB</span><br><span class="line">Shmem:              6320 kB</span><br><span class="line">KReclaimable:     274360 kB</span><br><span class="line">Slab:             355976 kB</span><br><span class="line">SReclaimable:     274360 kB</span><br><span class="line">SUnreclaim:        81616 kB</span><br><span class="line">KernelStack:        8064 kB</span><br><span class="line">PageTables:         7692 kB</span><br><span class="line">NFS_Unstable:          0 kB</span><br><span class="line">Bounce:                0 kB</span><br><span class="line">WritebackTmp:          0 kB</span><br><span class="line">CommitLimit:     8187292 kB</span><br><span class="line">Committed_AS:    2605012 kB</span><br><span class="line">VmallocTotal:   34359738367 kB</span><br><span class="line">VmallocUsed:       48092 kB</span><br><span class="line">VmallocChunk:          0 kB</span><br><span class="line">Percpu:             3472 kB</span><br><span class="line">HardwareCorrupted:     0 kB</span><br><span class="line">AnonHugePages:    409600 kB</span><br><span class="line">ShmemHugePages:        0 kB</span><br><span class="line">ShmemPmdMapped:        0 kB</span><br><span class="line">FileHugePages:         0 kB</span><br><span class="line">FilePmdMapped:         0 kB</span><br><span class="line">HugePages_Total:       0</span><br><span class="line">HugePages_Free:        0</span><br><span class="line">HugePages_Rsvd:        0</span><br><span class="line">HugePages_Surp:        0</span><br><span class="line">Hugepagesize:       2048 kB</span><br><span class="line">Hugetlb:               0 kB</span><br><span class="line">DirectMap4k:      271624 kB</span><br><span class="line">DirectMap2M:     8116224 kB</span><br><span class="line">DirectMap1G:    10485760 kB</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">usage = total - free = 16374584 - 9505980</span><br><span class="line"></span><br><span class="line">workingset = 总内存 - 空闲内存 - 非活动文件 = 16374584 - 9505980 - 4608000 = 2207 Mi（kubelet 报告的结果）</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>如上所述，在Linux kernel及runc cgroupv1计算内存使用为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mem_cgroup_usage =NR_FILE_PAGES + NR_ANON_MAPPED + nr_swap_pages (如果swap启用的话)</span><br><span class="line"></span><br><span class="line">// - rss (NR_ANON_MAPPED)</span><br><span class="line">// - cache (NR_FILE_PAGES)</span><br></pre></td></tr></table></figure>
+<p>但是runc在cgroupv2计算使用了total-free，因此在相似负载下，同一台机器上v1和v2版本的节点级别报告确实会相差约250-750Mi，为了让cgroup v2的内存使用计算更接近 cgroupv1，  cgroup v2调整计算内存使用量方式为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">stats.MemoryStats.Usage.Usage = stats.MemoryStats.Stats[&quot;anon&quot;] + stats.MemoryStats.Stats[&quot;file&quot;]</span><br></pre></td></tr></table></figure>
+<p>当然，我们同时还需要处理cadvisor的woringset的处理逻辑</p>
+<p>由于笔者时间、视野、认知有限，本文难免出现错误、疏漏等问题，期待各位读者朋友、业界专家指正交流，上述排障信息已修改为社区内容。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>1.<a target="_blank" rel="noopener" href="https://github.com/torvalds/linux/blob/06c2afb862f9da8dc5efa4b6076a0e48c3fbaaa5/mm/memcontrol.c#L3673-L3680">https://github.com/torvalds/linux/blob/06c2afb862f9da8dc5efa4b6076a0e48c3fbaaa5/mm/memcontrol.c#L3673-L3680</a><br>2.<a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/issues/68522">https://github.com/kubernetes/kubernetes/issues/68522</a><br>3.<a target="_blank" rel="noopener" href="https://kubernetes.io/docs/reference/instrumentation/cri-pod-container-metrics/">https://kubernetes.io/docs/reference/instrumentation/cri-pod-container-metrics/</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/categories/">Category</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E8%83%8C%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">技术背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%BB%E6%A0%B9%E6%BA%AF%E6%BA%90"><span class="toc-number">2.</span> <span class="toc-text">寻根溯源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">3.</span> <span class="toc-text">结论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">4.</span> <span class="toc-text">参考文献</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/3f237e52/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/3f237e52/&text=揭开K8s适配CgroupV2内存虚高的迷局"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/3f237e52/&title=揭开K8s适配CgroupV2内存虚高的迷局"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/3f237e52/&is_video=false&description=揭开K8s适配CgroupV2内存虚高的迷局"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=揭开K8s适配CgroupV2内存虚高的迷局&body=Check out this article: https://zoues.com/posts/3f237e52/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/3f237e52/&title=揭开K8s适配CgroupV2内存虚高的迷局"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/3f237e52/&title=揭开K8s适配CgroupV2内存虚高的迷局"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/3f237e52/&title=揭开K8s适配CgroupV2内存虚高的迷局"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/3f237e52/&title=揭开K8s适配CgroupV2内存虚高的迷局"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/3f237e52/&name=揭开K8s适配CgroupV2内存虚高的迷局&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/3f237e52/&t=揭开K8s适配CgroupV2内存虚高的迷局"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zouyee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
