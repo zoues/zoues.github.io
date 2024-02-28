@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="问题描述年前，同事升级K8s调度器至1.28.3，观察到内存异常现象，帮忙一起看看，在集群pod及node随业务潮汐变动的情况下，内存呈现不断上升的趋势，直至OOM  下面数据均为社区公开信息    触发场景有以下两种(社区还有其他复现方式)：  case 1  1234567for (( ; ; ))do    kubectl scale deployment nginx-test --repl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="探索Kubernetes 1.28调度器OOM的根源">
+<meta property="og:url" content="https://zoues.com/posts/e46bd846/index.html">
+<meta property="og:site_name" content="zouyee">
+<meta property="og:description" content="问题描述年前，同事升级K8s调度器至1.28.3，观察到内存异常现象，帮忙一起看看，在集群pod及node随业务潮汐变动的情况下，内存呈现不断上升的趋势，直至OOM  下面数据均为社区公开信息    触发场景有以下两种(社区还有其他复现方式)：  case 1  1234567for (( ; ; ))do    kubectl scale deployment nginx-test --repl">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://pic.imgdb.cn/item/65dc98699f345e8d03f7c855.png">
+<meta property="og:image" content="https://pic.imgdb.cn/item/65dc98699f345e8d03f7c8e8.png">
+<meta property="article:published_time" content="2024-02-25T12:25:08.000Z">
+<meta property="article:modified_time" content="2024-02-28T12:17:50.049Z">
+<meta property="article:author" content="zouyee">
+<meta property="article:tag" content="cloudnative">
+<meta property="article:tag" content="kubernetes">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic.imgdb.cn/item/65dc98699f345e8d03f7c855.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>探索Kubernetes 1.28调度器OOM的根源</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="zouyee" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/3f237e52/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/e46bd846/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/e46bd846/&text=探索Kubernetes 1.28调度器OOM的根源"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/e46bd846/&title=探索Kubernetes 1.28调度器OOM的根源"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/e46bd846/&is_video=false&description=探索Kubernetes 1.28调度器OOM的根源"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=探索Kubernetes 1.28调度器OOM的根源&body=Check out this article: https://zoues.com/posts/e46bd846/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/e46bd846/&title=探索Kubernetes 1.28调度器OOM的根源"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/e46bd846/&title=探索Kubernetes 1.28调度器OOM的根源"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/e46bd846/&title=探索Kubernetes 1.28调度器OOM的根源"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/e46bd846/&title=探索Kubernetes 1.28调度器OOM的根源"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/e46bd846/&name=探索Kubernetes 1.28调度器OOM的根源&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/e46bd846/&t=探索Kubernetes 1.28调度器OOM的根源"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E8%83%8C%E6%99%AF"><span class="toc-number">2.</span> <span class="toc-text">技术背景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E5%BA%A6%E5%99%A8%E7%AE%80%E4%BB%8B"><span class="toc-number">2.1.</span> <span class="toc-text">调度器简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#QueueingHint"><span class="toc-number">2.2.</span> <span class="toc-text">QueueingHint</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9C%80%E6%B1%82%E8%83%8C%E6%99%AF"><span class="toc-number">2.2.1.</span> <span class="toc-text">需求背景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E7%9B%AE%E6%A0%87"><span class="toc-number">2.2.2.</span> <span class="toc-text">实现目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BD%9C%E5%9C%A8%E9%A3%8E%E9%99%A9"><span class="toc-number">2.2.3.</span> <span class="toc-text">潜在风险</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#QueueingHints%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.2.4.</span> <span class="toc-text">QueueingHints设计</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Golang%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8"><span class="toc-number">2.3.</span> <span class="toc-text">Golang双向链表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%85%E6%9E%90%E4%B8%80%E7%95%AA"><span class="toc-number">3.</span> <span class="toc-text">浅析一番</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E7%94%A8"><span class="toc-number">4.</span> <span class="toc-text">引用</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        探索Kubernetes 1.28调度器OOM的根源
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zouyee</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-02-25T12:25:08.000Z" class="dt-published" itemprop="datePublished">2024-02-25</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F%E9%9D%A2%E8%AF%95%E6%A1%88%E4%BE%8B50%E7%AF%87/">云原生面试案例50篇</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/cloudnative/" rel="tag">cloudnative</a>, <a class="p-category" href="/tags/kubernetes/" rel="tag">kubernetes</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>年前，同事升级K8s调度器至1.28.3，观察到内存异常现象，帮忙一起看看，在集群pod及node随业务潮汐变动的情况下，内存呈现不断上升的趋势，直至OOM</p>
+<blockquote>
+<p>下面数据均为社区公开信息</p>
+</blockquote>
+<img src="https://pic.imgdb.cn/item/65dc98699f345e8d03f7c855.png" alt="K8s 1.28 scheduler OOM" style="zoom:50%;" />
+
+<p>触发场景有以下两种(社区还有其他复现方式)：</p>
+<ul>
+<li>case 1</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">for (( ; ; ))</span><br><span class="line">do</span><br><span class="line">    kubectl scale deployment nginx-test --replicas=0 </span><br><span class="line">    sleep 30</span><br><span class="line">    kubectl scale deployment nginx-test --replicas=50</span><br><span class="line">    sleep 30</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>case 2</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1. Create a Pod with NodeAffinity under the situation where no Node can accommodate the Pod.</span><br><span class="line">2. Create a new Node.</span><br></pre></td></tr></table></figure>
+
+<p>我们在社区的发现多起类似内存异常场景，复现方式不尽相同，关于上述问题的结论是：</p>
+<blockquote>
+<blockquote>
+<p>Kubernetes社区在1.28版本中默认开启了调度特性SchedulerQueueingHints，导致调度组件内存异常。为了临时解决内存等问题，社区在1.28.5中将该特性调整为默认关闭。因为问题并未完全修复，所以建议审慎开启该特性。</p>
+</blockquote>
+</blockquote>
+<h2 id="技术背景"><a href="#技术背景" class="headerlink" title="技术背景"></a>技术背景</h2><p>该章节介绍以下内容：</p>
+<ul>
+<li>介绍K8s调度器相关结构体</li>
+<li>介绍K8s调度器QueueingHint</li>
+<li>golang的双向链表</li>
+</ul>
+<h3 id="调度器简介"><a href="#调度器简介" class="headerlink" title="调度器简介"></a>调度器简介</h3><p>PriorityQueue是SchedulingQueue的接口实现。它的头部存放着优先级最高的待调度Pod。PriorityQueue包含以下重要字段：</p>
+<ol>
+<li>activeQ：存放准备好调度的Pod。新添加的Pod会被放入该队列。调度队列需要执行调度时，会从该队列中获取Pod。activeQ由堆来实现。</li>
+<li>backoffQ：存放因各种原因（比如未满足节点要求）而被判定为无法调度的Pod。这些Pod会在一段退避时间后，被移到activeQ以尝试再次调度。backoffQ也由堆来实现。</li>
+<li>unschedulablePods：存放因各种原因无法调度的Pod，是一个map数据结构。这些Pod被认定为无法调度，不会直接放入backoffQ，而是被记录在这里。待条件满足时，它们将被移到activeQ或者backoffQ中，调度队列会定期清理unschedulablePods 中的 Pod。</li>
+<li>inFlightEvents：用于保存调度队列接收到的事件（entry的值是clusterEvent），以及正在处理中的Pod（entry的值是*v1.Pod），基于golang内部实现的双向链表</li>
+<li>inFlightPods：保存了所有已经Pop，但尚未调用Done的Pod的UID，换句话说，所有当前正在处理中的Pod（正在调度、在admit中或在绑定周期中）。</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">// PriorityQueue implements a scheduling queue.</span><br><span class="line">type PriorityQueue struct &#123;</span><br><span class="line">	</span><br><span class="line">	...</span><br><span class="line">	inFlightPods map[types.UID]*list.Element</span><br><span class="line"></span><br><span class="line">	inFlightEvents *list.List</span><br><span class="line"></span><br><span class="line">	activeQ *heap.Heap</span><br><span class="line">	</span><br><span class="line">	podBackoffQ *heap.Heap</span><br><span class="line">	// unschedulablePods holds pods that have been tried and determined unschedulable.</span><br><span class="line">	unschedulablePods *UnschedulablePods</span><br><span class="line">	// schedulingCycle represents sequence number of scheduling cycle and is incremented</span><br><span class="line">	// when a pod is popped.</span><br><span class="line">	...</span><br><span class="line"></span><br><span class="line">	// preEnqueuePluginMap is keyed with profile name, valued with registered preEnqueue plugins.</span><br><span class="line">	preEnqueuePluginMap map[string][]framework.PreEnqueuePlugin</span><br><span class="line">	...</span><br><span class="line"></span><br><span class="line">	// isSchedulingQueueHintEnabled indicates whether the feature gate for the scheduling queue is enabled.</span><br><span class="line">	isSchedulingQueueHintEnabled bool</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>关于K8s完整介绍，参看<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI1MzE0NTI0NQ==&mid=2650490396&idx=1&sn=c59b2252a833c7a215a606598f907f5c&chksm=f1d71feec6a096f81f54b2af3830a7e49aaf11ce118c4fda4928bfff5229dbce334610561b3d&token=232089518&lang=zh_CN#rd">kuberneter调度由浅入深：框架</a>，后续会更新最新的K8s调度器梳理</p>
+</blockquote>
+<h3 id="QueueingHint"><a href="#QueueingHint" class="headerlink" title="QueueingHint"></a>QueueingHint</h3><p>K8s调度器引入了<code>QueueingHint</code>特性，通过从每个插件获取有关Pod重新入队的建议，以减少不必要的调度重试，从而提升调度吞吐量。同时，在适当情况下跳过退避，进一步提高Pod调度效率。</p>
+<h4 id="需求背景"><a href="#需求背景" class="headerlink" title="需求背景"></a>需求背景</h4><p>当前，每个插件可以通过EventsToRegister定义何时重试调度被插件拒绝的Pod。</p>
+<p>比如，NodeAffinity会在节点添加或更新时重试调度Pod，因为新添加或更新的节点可能具有与Pod上的NodeAffinity匹配的标签。然而，实际上，在集群中会发生大量节点更新事件，这并不能保证之前被NodeAffinity拒绝的Pod能够成功调度。</p>
+<p>为了解决这个问题，调度器引入了更精细的回调函数，以过滤掉无关的事件，从而在下一个调度周期中仅重试可能成功调度的Pod。</p>
+<p>另外，DRA（动态资源分配）调度插件有时需要拒绝Pod以等待来自设备驱动程序的状态更新。因此，某些Pod可能需要经过几个调度周期才能完成调度。针对这种情况，与等待设备驱动程序状态更新相比，回退等待的时间更长。因此，希望能够使插件在特定情况下跳过回退以改善调度性能。</p>
+<h4 id="实现目标"><a href="#实现目标" class="headerlink" title="实现目标"></a>实现目标</h4><p>为了提高调度吞吐量，社区提出以下改进：</p>
+<ol>
+<li><strong>引入QueueingHint</strong><ul>
+<li>将 <code>QueueingHint</code> 引入到 <code>EventsToRegister</code> 机制中，允许插件提供针对Pods重新入队的建议</li>
+</ul>
+</li>
+<li><strong>增强 Pod 跟踪和重新入队机制</strong>：<ul>
+<li>优化追踪调度队列内正在处理的 Pods实现</li>
+<li>实现一种机制，将被拒绝的 Pods 重新入队到适当的队列</li>
+<li>优化被拒绝的Pods的退避策略，能够使插件在特定情况下跳过回退，从而提高调度吞吐量。</li>
+</ul>
+</li>
+</ol>
+<h4 id="潜在风险"><a href="#潜在风险" class="headerlink" title="潜在风险"></a>潜在风险</h4><p><em><strong>1. 实现中的错误可能导致 Pod 在 unschedulablePods 中长时间无法被调度</strong></em></p>
+<p>如果一个插件配置了 QueueingHint，但它错过了一些可以让 Pod 可调度的事件， 被该插件拒绝的 Pod 可能会长期困在 unschedulablePods 中。</p>
+<p>虽然调度队列会定期清理unschedulablePods 中的 Pod。（默认为 5 分钟，可配）</p>
+<p><em><strong>2. 内存使用量的增加</strong></em></p>
+<p>因为调度队列需要保留调度过程中发生的事件，kube-scheduler的内存使用量会增加。 所以集群越繁忙，它可能需要的内存就越多。</p>
+<p>虽然无法完全消除内存增长，但如果能够尽快释放缓存的事件，就可以延缓内存增长的速度。</p>
+<p><em><strong>3.<code>EnqueueExtension</code> 中 <code>EventsToRegister</code> 中的重大变更</strong></em></p>
+<p>自定义调度器插件的开发者需要进行兼容性升级， <code>EnqueueExtension</code> 中的 <code>EventsToRegister</code> 将返回值从 <code>ClusterEvent</code> 更改为 <code>ClusterEventWithHint</code>。<code>ClusterEventWithHint</code> 允许每个插件通过名为 <code>QueueingHintFn</code> 的回调函数过滤更多无用的事件。</p>
+<p>社区为了简化迁移工作，空的 <code>QueueingHintFn</code> 被视为始终返回 <code>Queue</code>。 因此，如果他们只想保持现有行为，他们只需要将 <code>ClusterEvent</code> 更改为 <code>ClusterEventWithHint</code> 并不需要注册任何 <code>QueueingHintFn</code>。</p>
+<h4 id="QueueingHints设计"><a href="#QueueingHints设计" class="headerlink" title="QueueingHints设计"></a>QueueingHints设计</h4><p>EventsToRegister 方法的返回类型已更改为 []ClusterEventWithHint</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// EnqueueExtensions 是一个可选接口，插件可以实现在内部调度队列中移动无法调度的 Pod。可以导</span><br><span class="line">// 致Pod无法调度（例如，Filter 插件）的插件可以实现此接口。</span><br><span class="line">type EnqueueExtensions interface &#123;</span><br><span class="line">	Plugin</span><br><span class="line">	...</span><br><span class="line">	EventsToRegister() []ClusterEventWithHint</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>每个 ClusterEventWithHint结构体包含一个 ClusterEvent 和一个 QueueingHintFn，当事件发生时执行 QueueingHintFn，并确定事件是否可以让 Pod满足调度。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">type ClusterEventWithHint struct &#123;</span><br><span class="line">	Event ClusterEvent</span><br><span class="line"></span><br><span class="line">	QueueingHintFn QueueingHintFn</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type QueueingHintFn func(logger klog.Logger, pod *v1.Pod, oldObj, newObj interface&#123;&#125;) (QueueingHint, error)</span><br><span class="line"></span><br><span class="line">type QueueingHint int</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	// QueueSkip implies that the cluster event has no impact on</span><br><span class="line">	// scheduling of the pod.</span><br><span class="line">	QueueSkip QueueingHint = iota</span><br><span class="line"></span><br><span class="line">	// Queue implies that the Pod may be schedulable by the event.</span><br><span class="line">	Queue</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>类型 QueueingHintFn 是一个函数，其返回类型为 (QueueingHint, error)。其中，QueueingHint 是一个枚举类型，可能的值有 QueueSkip 和 Queue。QueueingHintFn 调用时机位于将 Pod 从 unschedulableQ 移动到 backoffQ 或 activeQ 之前，如果返回错误，将把调用方返回的 QueueingHint 处理为 <code>QueueAfterBackoff</code>，这种处理无论返回的结果是什么，都可以防止 Pod 永远待在unschedulableQ 队列中。</p>
+<p><em><strong>何时跳过&#x2F;不跳过 backoff</strong></em></p>
+<p>BackoffQ 通过防止“长期无法调度”的 Pod 阻塞队列以保持高吞吐量的轻量级队列。</p>
+<p>Pod 在调度周期中被拒绝的次数越多，Pod 需要等待的时间就越长，即在BackoffQ 待得时间就越长。</p>
+<p>例如，当 NodeAffinity 拒绝了 Pod，后来在其 QueueingHintFn 中返回 Queue 时，Pod 需要等待 backoff 后才能重试调度。</p>
+<p>但是，某些插件的设计本身就需要在调度周期中经历一些失败。比如内置插件DRA（动态资源分配），在 Reserve extension处，它告诉资源驱动程序调度结果，并拒绝 Pod 一次以等待资源驱动程序的响应。针对这种拒绝情况，不能将其视作调度周期的浪费，尽管特定调度周期失败了，但基于该周期的调度结果可以促进 Pod 的调度。因此，由于这种原因被拒绝的 Pod 不需要受到惩罚（backoff）。</p>
+<p>为了支持这种情况，我们引入了一个新的状态 Pending。当 DRA 插件使用 Pending 拒绝 Pod，并且后续在其 QueueingHintFn 中返回 Queue 时，Pod 跳过 backoff，Pod 被重新调度。</p>
+<p><em><strong>QueueingHint 如何工作</strong></em></p>
+<p>当K8s集群事件发生时，调度队列将执行在之前调度周期中拒绝 Pod 的那些插件的 QueueingHintFn。</p>
+<p>通过下述几个场景，描述一下它们如何被执行以及如何移动 Pod。</p>
+<p>a. Pod被一个或多个插件拒绝</p>
+<p>假设有三个节点。当 Pod 进入调度周期时，一个节点由于资源不足拒绝了Pod，其他两个节因为Pod 的 NodeAffinity不匹配拒绝了Pod。</p>
+<p>在这种情况下，Pod 被 NodeResourceFit 和 NodeAffinity 插件拒绝，最终被放到 unschedulableQ 中。</p>
+<p>此后，每当注册在这些插件中的集群事件发生时，调度队列通过 QueueingHint 通知它们。如果来自 NodeResourceFit 或 NodeAffinity 的任何一个的 QueueingHintFn 返回 Queue，则将 Pod 移动到 activeQ或者backoffQ中。 （例如，当 NodeAdded 事件发生时，NodeResourceFit 的 QueueingHint 返回 Queue，因为 Pod 可能可调度到该新节点。）</p>
+<p>它是移动到 activeQ 还是 backoffQ，这取决于此 Pod 在unschedulableQ 中停留的时间有多长。如果在unschedulableQ 停留的时间超过了预期的 Pod 的 backoff 延迟时间，则它将直接移动到 activeQ。否则，它将移动到 backoffQ。</p>
+<p>b. Pod因 Pending 状态而被拒绝 </p>
+<p>当 DRA 插件在 Reserve extension 阶段针对Pod返回 Pending时，调度队列将 DRA 插件添加到 Pod 的pendingPlugins 字典中的同时，Pod 返回调度队列。</p>
+<p>当 DRA 插件的 QueueingHint 之后的调用中返回 Queue 时，调度队列将此 Pod 直接放入 activeQ。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// Reserve reserves claims for the pod.</span><br><span class="line">func (pl *dynamicResources) Reserve(ctx context.Context, cs *framework.CycleState, pod *v1.Pod, nodeName string) *framework.Status &#123;</span><br><span class="line">	</span><br><span class="line">	...</span><br><span class="line"></span><br><span class="line">	if numDelayedAllocationPending == 1 || numClaimsWithStatusInfo == numDelayedAllocationPending &#123;</span><br><span class="line">		...</span><br><span class="line">		schedulingCtx.Spec.SelectedNode = nodeName</span><br><span class="line">		logger.V(5).Info(&quot;start allocation&quot;, &quot;pod&quot;, klog.KObj(pod), &quot;node&quot;, klog.ObjectRef&#123;Name: nodeName&#125;)</span><br><span class="line">		...</span><br><span class="line">		return statusUnschedulable(logger, &quot;waiting for resource driver to allocate resource&quot;, &quot;pod&quot;, klog.KObj(pod), &quot;node&quot;, klog.ObjectRef&#123;Name: nodeName&#125;)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	...</span><br><span class="line">	return statusUnschedulable(logger, &quot;waiting for resource driver to provide information&quot;, &quot;pod&quot;, klog.KObj(pod))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>c. 跟踪调度队列中正在处理的 Pod</p>
+<p>通过引入 QueueingHint，我们只能在特定事件发生时重试调度。但是，如果这些事件发生在Pod 的调度期间呢？</p>
+<p>调度器对集群数据进行快照，并根据快照调度 Pod。每次启动调度周期时都会更新快照，换句话说，相同的快照在相同的调度周期中使用。</p>
+<p>考虑到这样一个情景，比如，在调度一个 Pod 时，由于没有任何节点符合 Pod 的节点亲和性(NodeAffinity)，因此被拒绝，但是在调度过程中加入了一个新的节点，它与 Pod 的节点亲和性匹配。</p>
+<p>如前所述，这个新节点在本次调度周期内不被视为候选节点，因此 Pod 仍然被节点亲和性插件拒绝。问题在于，如果调度队列将 Pod 放入unschedulableQ中，那么即使已经有一个节点匹配了 Pod 的节点亲和性要求，该 Pod 仍需要等待另一个事件。</p>
+<p>为了避免类似Pod 在调度过程中错过事件的场景，调度队列会记录 Pod 调度期间发生的事件，并根据这些事件和QueueingHint来决定Pod 入队的位置。</p>
+<p>因此，调度队列会缓存自 Pod 离开调度队列直到 Pod 返回调度队列或被调度的所有事件。当不再需要缓存的事件时，缓存的事件将被丢弃。</p>
+<h3 id="Golang双向链表"><a href="#Golang双向链表" class="headerlink" title="Golang双向链表"></a>Golang双向链表</h3><p><code>*list.List</code> 是 Go 语言标准库 <code>container/list</code> 包中的一种数据结构，表示一个双向链表。在 Go 中，双向链表是一种常见的数据结构，用于在元素的插入、删除和遍历等操作上提供高效性能。</p>
+<p>以下是 <code>*list.List</code> 结构的简要介绍：</p>
+<ul>
+<li><strong>定义</strong>：<code>*list.List</code> 是一个指向双向链表的指针，它包含了链表的头部和尾部指针，以及链表的长度信息。</li>
+<li><strong>特性</strong>：双向链表中的每个节点都包含指向前一个节点和后一个节点的指针，这使得在链表中插入和删除元素的操作效率很高。</li>
+<li><strong>用途</strong>：<code>*list.List</code> 常用于需要频繁插入和删除操作的场景，尤其是当元素的数量不固定或顺序可能经常变化时。</li>
+</ul>
+<p>演示了如何在 Go 中使用 <code>*list.List</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">    &quot;container/list&quot;</span><br><span class="line">    &quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    // 创建一个新的双向链表</span><br><span class="line">    l := list.New()</span><br><span class="line"></span><br><span class="line">    // 在链表尾部添加元素</span><br><span class="line">    l.PushBack(1)</span><br><span class="line">    l.PushBack(2)</span><br><span class="line">    l.PushBack(3)</span><br><span class="line"></span><br><span class="line">    // 遍历链表并打印元素</span><br><span class="line">    for e := l.Front(); e != nil; e = e.Next() &#123;</span><br><span class="line">        fmt.Println(e.Value)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>PushBack</code> 方法会向链表的尾部添加一个新元素，并返回表示新元素的 <code>*list.Element</code> 指针。这个指针可以用于后续对该元素的操作，例如删除或修改。</p>
+<p><code>*list.Element</code> 结构体包含了指向链表中前一个和后一个元素的指针，以及一个存储元素值的字段。通过返回 <code>*list.Element</code> 指针，我们可以方便地在需要时访问到新添加的元素，以便进行进一步的操作。要从双向链表中删除元素，你可以使用<code>list.Remove()</code>方法。这个方法需要传入一个链表元素，然后会将该元素从链表中移除。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;container/list&quot;</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	// 创建一个新的双向链表</span><br><span class="line">	myList := list.New()</span><br><span class="line"></span><br><span class="line">	// 在链表尾部添加元素</span><br><span class="line">	myList.PushBack(1)</span><br><span class="line">	myList.PushBack(2)</span><br><span class="line">	myList.PushBack(3)</span><br><span class="line"></span><br><span class="line">	// 找到要删除的元素</span><br><span class="line">	elementToRemove := myList.Front().Next()</span><br><span class="line"></span><br><span class="line">	// 从链表中移除该元素</span><br><span class="line">	myList.Remove(elementToRemove)</span><br><span class="line"></span><br><span class="line">	// 打印剩余的元素</span><br><span class="line">	for element := myList.Front(); element != nil; element = element.Next() &#123;</span><br><span class="line">		fmt.Println(element.Value)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这段代码会输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+
+<p>在这个例子中，我们移除了链表中第二个元素（值为2）。</p>
+<h2 id="浅析一番"><a href="#浅析一番" class="headerlink" title="浅析一番"></a>浅析一番</h2><p>直接上pprof来分析一下内存使用情况,部分pprof列表，如下所示：</p>
+<p><img src="https://pic.imgdb.cn/item/65dc98699f345e8d03f7c8e8.png" alt="K8s 1.28 scheduler OOM pprof"></p>
+<p>这里可以发现，内存主要集中在protobuf的Decode，在不具体分析pprof的前提下，我们的思路有三点：</p>
+<ul>
+<li>grpc-go是否有内存问题</li>
+<li>go本身是否问题</li>
+<li>K8s内存问题</li>
+</ul>
+<p>针对第一个的假设，可以捞一下grpc-go的相关issue，可以发现近期未见相关内存异常的报告，go本身的问题，看起来也不太像，但倒是找到一个THP的相关问题，以后可以简单介绍一下，那么只剩一个结果，就是K8s本身存在问题，但其中<code>(*FieldsV1).Unmarshal</code>5年没动了，大概率不会存在问题，那么我们深入分析一下pprof吧</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">k8s.io/apimachinery/pkg/apis/meta/v1.(*FieldsV1).Unmarshal</span><br><span class="line">vendor/k8s.io/apimachinery/pkg/apis/meta/v1/generated.pb.go</span><br><span class="line"></span><br><span class="line">  Total:      309611     309611 (flat, cum)  2.62%</span><br><span class="line">   6502            .          .           			if postIndex &gt; l &#123; </span><br><span class="line">   6503            .          .           				return io.ErrUnexpectedEOF </span><br><span class="line">   6504            .          .           			&#125; </span><br><span class="line">   6505       309611     309611           			m.Raw = append(m.Raw[:0], dAtA[iNdEx:postIndex]...) </span><br><span class="line">   6506            .          .           			if m.Raw == nil &#123; </span><br><span class="line">   6507            .          .           				m.Raw = []byte&#123;&#125; </span><br><span class="line">   6508            .          .           			&#125; </span><br></pre></td></tr></table></figure>
+
+<p>过段时间：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">k8s.io/apimachinery/pkg/apis/meta/v1.(*FieldsV1).Unmarshal</span><br><span class="line">vendor/k8s.io/apimachinery/pkg/apis/meta/v1/generated.pb.go</span><br><span class="line"></span><br><span class="line">  Total:     2069705    2069705 (flat, cum)  2.49%</span><br><span class="line">   6502            .          .           			if postIndex &gt; l &#123; </span><br><span class="line">   6503            .          .           				return io.ErrUnexpectedEOF </span><br><span class="line">   6504            .          .           			&#125; </span><br><span class="line">   6505      2069705    2069705           			m.Raw = append(m.Raw[:0], dAtA[iNdEx:postIndex]...) </span><br><span class="line">   6506            .          .           			if m.Raw == nil &#123; </span><br><span class="line">   6507            .          .           				m.Raw = []byte&#123;&#125; </span><br><span class="line">   6508            .          .           			&#125; </span><br></pre></td></tr></table></figure>
+
+<p>在持续增长的 Pod 列表中，发现了一些未释放的数据似乎与先前使用 pprof 分析的结果吻合，仅发现 Pod 是持续变更的对象。因此，我尝试了另一种排查方法，验证社区是否已解决此问题。我使用 minikube 在本地启动了 Kubernetes 1.18.5 版本进行排查。幸运的是，我未能复现这一现象，表明问题可能在 1.18.5 版本后已修复。</p>
+<p>为了进一步缩小排查范围，我让同事检查了这三个小版本之间的提交记录。最终发现了一个关闭了 SchedulerQueueingHints 特性的 PR。正如在技术背景中提到的，SchedulerQueueingHints 特性可能导致内存增长问题。</p>
+<p>通过PriorityQueue结构体可以发现其通过isSchedulingQueueHintEnabled来控制特性的逻辑处理，如果开启了<code>QueueingHint</code> 特性，那么在执行Pop方法来调度Pod时，需要为inFlightPods对应pod的UID填充相同inFlightEvents的链表</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">func (p *PriorityQueue) Pop(logger klog.Logger) (*framework.QueuedPodInfo, error) &#123;</span><br><span class="line">	p.lock.Lock()</span><br><span class="line">	defer p.lock.Unlock()</span><br><span class="line">	</span><br><span class="line">	obj, err := p.activeQ.Pop()</span><br><span class="line">	...</span><br><span class="line">	// In flight, no concurrent events yet.</span><br><span class="line">	if p.isSchedulingQueueHintEnabled &#123;</span><br><span class="line">		p.inFlightPods[pInfo.Pod.UID] = p.inFlightEvents.PushBack(pInfo.Pod)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	...</span><br><span class="line"></span><br><span class="line">	return pInfo, nil</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么链表字段何时移除？我们可以观察到移除的唯一时间点在pod完成调度周期时，也就是调用Done方法时</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">func (p *PriorityQueue) Done(pod types.UID) &#123;</span><br><span class="line">	p.lock.Lock()</span><br><span class="line">	defer p.lock.Unlock()</span><br><span class="line"></span><br><span class="line">	p.done(pod)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (p *PriorityQueue) done(pod types.UID) &#123;</span><br><span class="line">	if !p.isSchedulingQueueHintEnabled &#123;</span><br><span class="line">		// do nothing if schedulingQueueHint is disabled.</span><br><span class="line">		// In that case, we don&#x27;t have inFlightPods and inFlightEvents.</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line">	inFlightPod, ok := p.inFlightPods[pod]</span><br><span class="line">	if !ok &#123;</span><br><span class="line">		// This Pod is already done()ed.</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line">	delete(p.inFlightPods, pod)</span><br><span class="line"></span><br><span class="line">	// Remove the pod from the list.</span><br><span class="line">	p.inFlightEvents.Remove(inFlightPod)</span><br><span class="line"></span><br><span class="line">	</span><br><span class="line">	for &#123;</span><br><span class="line">		...</span><br><span class="line">		p.inFlightEvents.Remove(e)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里可以发现如何done的时机越晚，内存的增长将越明显，并且如果Pod的事件被忽视或者遗漏，链表的内存同样会出现异常增加的现象，可以看到针对上述场景的一些修复：</p>
+<ul>
+<li>出现了call Done() as soon as possible这样的PR，参看PR#120586</li>
+<li>NodeAffinity&#x2F;NodeUnschedulable插件的QueueingHint 遗漏相关Node事件，参看PR#122284</li>
+</ul>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/issues/122725">https://github.com/kubernetes/kubernetes/issues/122725</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/issues/122284">https://github.com/kubernetes/kubernetes/issues/122284</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/pull/122289">https://github.com/kubernetes/kubernetes/pull/122289</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/issues/118893">https://github.com/kubernetes/kubernetes/issues/118893</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/kubernetes/enhancements/blob/cf6ee34e37f00d838872d368ec66d7a0b40ee4e6/keps/sig-scheduling/4247-queueinghint/README.md?plain=1#L579">https://github.com/kubernetes/enhancements/blob/cf6ee34e37f00d838872d368ec66d7a0b40ee4e6/keps/sig-scheduling/4247-queueinghint/README.md?plain=1#L579</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/issues/122661">https://github.com/kubernetes/kubernetes/issues/122661</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/pull/120586">https://github.com/kubernetes/kubernetes/pull/120586</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/issues/118059">https://github.com/kubernetes/kubernetes/issues/118059</a></li>
+</ol>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/categories/">Category</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E8%83%8C%E6%99%AF"><span class="toc-number">2.</span> <span class="toc-text">技术背景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E5%BA%A6%E5%99%A8%E7%AE%80%E4%BB%8B"><span class="toc-number">2.1.</span> <span class="toc-text">调度器简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#QueueingHint"><span class="toc-number">2.2.</span> <span class="toc-text">QueueingHint</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9C%80%E6%B1%82%E8%83%8C%E6%99%AF"><span class="toc-number">2.2.1.</span> <span class="toc-text">需求背景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E7%9B%AE%E6%A0%87"><span class="toc-number">2.2.2.</span> <span class="toc-text">实现目标</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BD%9C%E5%9C%A8%E9%A3%8E%E9%99%A9"><span class="toc-number">2.2.3.</span> <span class="toc-text">潜在风险</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#QueueingHints%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.2.4.</span> <span class="toc-text">QueueingHints设计</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Golang%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8"><span class="toc-number">2.3.</span> <span class="toc-text">Golang双向链表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%85%E6%9E%90%E4%B8%80%E7%95%AA"><span class="toc-number">3.</span> <span class="toc-text">浅析一番</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E7%94%A8"><span class="toc-number">4.</span> <span class="toc-text">引用</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/e46bd846/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/e46bd846/&text=探索Kubernetes 1.28调度器OOM的根源"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/e46bd846/&title=探索Kubernetes 1.28调度器OOM的根源"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/e46bd846/&is_video=false&description=探索Kubernetes 1.28调度器OOM的根源"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=探索Kubernetes 1.28调度器OOM的根源&body=Check out this article: https://zoues.com/posts/e46bd846/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/e46bd846/&title=探索Kubernetes 1.28调度器OOM的根源"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/e46bd846/&title=探索Kubernetes 1.28调度器OOM的根源"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/e46bd846/&title=探索Kubernetes 1.28调度器OOM的根源"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/e46bd846/&title=探索Kubernetes 1.28调度器OOM的根源"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/e46bd846/&name=探索Kubernetes 1.28调度器OOM的根源&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/e46bd846/&t=探索Kubernetes 1.28调度器OOM的根源"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zouyee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
