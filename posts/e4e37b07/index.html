@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Before the new year, a colleague upgraded the Kubernetes scheduler to version 1.28.3 and observed abnormal memory behavior. Let’s take a look together. In the context of fluctuating business tidal cha">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Exploring the Root Cause of Kubernetes 1.28 Scheduler OOM">
+<meta property="og:url" content="https://zoues.com/posts/e4e37b07/index.html">
+<meta property="og:site_name" content="zouyee">
+<meta property="og:description" content="Before the new year, a colleague upgraded the Kubernetes scheduler to version 1.28.3 and observed abnormal memory behavior. Let’s take a look together. In the context of fluctuating business tidal cha">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://pic.imgdb.cn/item/65dc98699f345e8d03f7c855.png">
+<meta property="og:image" content="https://pic.imgdb.cn/item/65dc98699f345e8d03f7c8e8.png">
+<meta property="article:published_time" content="2024-03-01T09:13:10.000Z">
+<meta property="article:modified_time" content="2024-03-01T09:17:23.304Z">
+<meta property="article:author" content="zouyee">
+<meta property="article:tag" content="cloudnative, kubernetes, container, ziglang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic.imgdb.cn/item/65dc98699f345e8d03f7c855.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Exploring the Root Cause of Kubernetes 1.28 Scheduler OOM</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="zouyee" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/e46bd846/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/e4e37b07/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/e4e37b07/&text=Exploring the Root Cause of Kubernetes 1.28 Scheduler OOM"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/e4e37b07/&title=Exploring the Root Cause of Kubernetes 1.28 Scheduler OOM"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/e4e37b07/&is_video=false&description=Exploring the Root Cause of Kubernetes 1.28 Scheduler OOM"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Exploring the Root Cause of Kubernetes 1.28 Scheduler OOM&body=Check out this article: https://zoues.com/posts/e4e37b07/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/e4e37b07/&title=Exploring the Root Cause of Kubernetes 1.28 Scheduler OOM"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/e4e37b07/&title=Exploring the Root Cause of Kubernetes 1.28 Scheduler OOM"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/e4e37b07/&title=Exploring the Root Cause of Kubernetes 1.28 Scheduler OOM"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/e4e37b07/&title=Exploring the Root Cause of Kubernetes 1.28 Scheduler OOM"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/e4e37b07/&name=Exploring the Root Cause of Kubernetes 1.28 Scheduler OOM&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/e4e37b07/&t=Exploring the Root Cause of Kubernetes 1.28 Scheduler OOM"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Issue"><span class="toc-number">1.</span> <span class="toc-text">Issue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Technical-Background"><span class="toc-number">2.</span> <span class="toc-text">Technical Background</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#K8s-Scheduler-Introduction"><span class="toc-number">2.1.</span> <span class="toc-text">K8s-Scheduler Introduction</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#QueueingHint"><span class="toc-number">2.2.</span> <span class="toc-text">QueueingHint</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Background"><span class="toc-number">2.3.</span> <span class="toc-text">Background</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Implementation-Goals"><span class="toc-number">2.4.</span> <span class="toc-text">Implementation Goals</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Potential-Risks"><span class="toc-number">2.5.</span> <span class="toc-text">Potential Risks</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-Errors-in-Implementation-Leading-to-Pods-Being-Unschedulable-in-unschedulablePods-for-Extended-Periods"><span class="toc-number">2.5.1.</span> <span class="toc-text">1. Errors in Implementation Leading to Pods Being Unschedulable in unschedulablePods for Extended Periods</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-Increase-in-Memory-Usage"><span class="toc-number">2.5.2.</span> <span class="toc-text">2. Increase in Memory Usage</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-Significant-Changes-in-EventsToRegister-in-EnqueueExtension"><span class="toc-number">2.5.3.</span> <span class="toc-text">3. Significant Changes in EventsToRegister in EnqueueExtension</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Design-of-QueueingHints"><span class="toc-number">2.6.</span> <span class="toc-text">Design of QueueingHints</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#When-to-Skip-Not-Skip-Backoff"><span class="toc-number">2.7.</span> <span class="toc-text">When to Skip&#x2F;Not Skip Backoff</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#How-QueueingHint-Works"><span class="toc-number">2.8.</span> <span class="toc-text">How QueueingHint Works</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Tracking-Pods-Being-Processed-in-the-Scheduling-Queue"><span class="toc-number">2.8.1.</span> <span class="toc-text">Tracking Pods Being Processed in the Scheduling Queue</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Golang-Doubly-Linked-List"><span class="toc-number">3.</span> <span class="toc-text">Golang Doubly Linked List</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#A-brief-analysis"><span class="toc-number">4.</span> <span class="toc-text">A brief analysis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">5.</span> <span class="toc-text">Reference</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Exploring the Root Cause of Kubernetes 1.28 Scheduler OOM
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zouyee</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-03-01T09:13:10.000Z" class="dt-published" itemprop="datePublished">2024-03-01</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>Before the new year, a colleague upgraded the Kubernetes scheduler to version 1.28.3 and observed abnormal memory behavior. Let’s take a look together. In the context of fluctuating business tidal changes affecting both pods and nodes in the cluster, memory usage shows a continuous upward trend until reaching Out Of Memory (OOM) conditions.</p>
+<h2 id="Issue"><a href="#Issue" class="headerlink" title="Issue"></a>Issue</h2><blockquote>
+<p>The following data is all publicly available information from the community.</p>
+</blockquote>
+<img src="https://pic.imgdb.cn/item/65dc98699f345e8d03f7c855.png" alt="K8s 1.28 scheduler OOM" style="zoom:50%;" />
+
+<p>The triggering scenarios include the following two types (there are also other reproduction methods in the community):</p>
+<ul>
+<li>case 1</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">for (( ; ; ))</span><br><span class="line">do</span><br><span class="line">    kubectl scale deployment nginx-test --replicas=0 </span><br><span class="line">    sleep 30</span><br><span class="line">    kubectl scale deployment nginx-test --replicas=60</span><br><span class="line">    sleep 30</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>case 2</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1. Create a Pod with NodeAffinity under the situation where no Node can accommodate the Pod.</span><br><span class="line">2. Create a new Node.</span><br></pre></td></tr></table></figure>
+
+<p>Our findings in the community revealed multiple instances of similar memory anomaly scenarios, with various methods of reproduction. The conclusion regarding the above issue is as follows:</p>
+<blockquote>
+<p>The Kubernetes community defaulted to enabling the scheduling feature SchedulerQueueingHints in version 1.28, which led to memory anomalies in the scheduler component. To temporarily address memory-related issues, the community adjusted this feature to default to disabled in version 1.28.5. However, as the problem has not been completely resolved, it is advisable to exercise caution when enabling this feature.</p>
+</blockquote>
+<h2 id="Technical-Background"><a href="#Technical-Background" class="headerlink" title="Technical Background"></a>Technical Background</h2><p>This section introduces the following content:</p>
+<ul>
+<li>Introduction to Kubernetes scheduler related data structures</li>
+<li>Introduction to Kubernetes scheduler QueueingHint</li>
+<li>Doubly linked lists in Golang</li>
+</ul>
+<h3 id="K8s-Scheduler-Introduction"><a href="#K8s-Scheduler-Introduction" class="headerlink" title="K8s-Scheduler Introduction"></a>K8s-Scheduler Introduction</h3><p>The PriorityQueue is an interface implementation of the SchedulingQueue. It holds the highest priority pod ready for scheduling at its head. PriorityQueue contains the following important fields:</p>
+<ol>
+<li>activeQ: This queue holds pods ready for scheduling. Newly added pods are placed into this queue. When the scheduling queue needs to perform scheduling, it fetches pods from this queue. activeQ is implemented using a heap.</li>
+<li>backoffQ: This queue holds pods that have been determined to be unschedulable for various reasons (such as not meeting node requirements). These pods will be moved to activeQ to attempt scheduling again after a certain backoff period. backoffQ is also implemented using a heap.</li>
+<li>unschedulablePods: This map data structure holds pods that cannot be scheduled for various reasons. Instead of directly placing them in backoffQ, they are recorded here. When conditions are met, they will be moved to activeQ or backoffQ. The scheduling queue periodically cleans up pods in unschedulablePods.</li>
+<li>inFlightEvents: This is used to store events received by the scheduling queue (with the entry value as clusterEvent) and pods that are currently being processed (with the entry value as *v1.Pod). It’s based on a doubly linked list implemented in Go.</li>
+<li>inFlightPods: This holds the UIDs of all pods that have been popped but have not yet had Done called on them. In other words, it keeps track of all pods that are currently being processed (i.e., in scheduling, in admit, or in binding phases).</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">// PriorityQueue implements a scheduling queue.</span><br><span class="line">type PriorityQueue struct &#123;</span><br><span class="line">	</span><br><span class="line">	...</span><br><span class="line">	inFlightPods map[types.UID]*list.Element</span><br><span class="line"></span><br><span class="line">	inFlightEvents *list.List</span><br><span class="line"></span><br><span class="line">	activeQ *heap.Heap</span><br><span class="line">	</span><br><span class="line">	podBackoffQ *heap.Heap</span><br><span class="line">	// unschedulablePods holds pods that have been tried and determined unschedulable.</span><br><span class="line">	unschedulablePods *UnschedulablePods</span><br><span class="line">	// schedulingCycle represents sequence number of scheduling cycle and is incremented</span><br><span class="line">	// when a pod is popped.</span><br><span class="line">	...</span><br><span class="line"></span><br><span class="line">	// preEnqueuePluginMap is keyed with profile name, valued with registered preEnqueue plugins.</span><br><span class="line">	preEnqueuePluginMap map[string][]framework.PreEnqueuePlugin</span><br><span class="line">	...</span><br><span class="line"></span><br><span class="line">	// isSchedulingQueueHintEnabled indicates whether the feature gate for the scheduling queue is enabled.</span><br><span class="line">	isSchedulingQueueHintEnabled bool</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p> For a comprehensive introduction to Kubernetes, please refer to <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI1MzE0NTI0NQ==&mid=2650490396&idx=1&sn=c59b2252a833c7a215a606598f907f5c&chksm=f1d71feec6a096f81f54b2af3830a7e49aaf11ce118c4fda4928bfff5229dbce334610561b3d&token=232089518&lang=zh_CN#rd">An In-depth Introduction to Kubernetes Scheduling: Framework</a>. Updates on the latest Kubernetes scheduler will be provided subsequently.</p>
+</blockquote>
+<h3 id="QueueingHint"><a href="#QueueingHint" class="headerlink" title="QueueingHint"></a>QueueingHint</h3><p>Kubernetes scheduler introduced the <code>QueueingHint</code> feature to provide recommendations for re-queueing pods from each plugin. This aims to reduce unnecessary scheduling retries, thereby enhancing scheduling throughput. Additionally, it skips backoff under appropriate circumstances to further improve pod scheduling efficiency.</p>
+<h3 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h3><p>Currently, each plugin can define when to retry scheduling pods that have been rejected by the plugin through the <code>EventsToRegister</code> mechanism.</p>
+<p>For example, the <code>NodeAffinity</code> plugin may retry scheduling pods when nodes are added or updated because newly added or updated nodes may have labels that match the node affinity on the pod. However, in practice, a large number of node update events occur in the cluster, which does not guarantee successful scheduling of pods previously rejected by <code>NodeAffinity</code>.</p>
+<p>To address this issue, the scheduler introduced more refined callback functions to filter out irrelevant events, thereby only retrying pods that are likely to be successfully scheduled in the next scheduling cycle.</p>
+<p>Furthermore, the Dynamic Resource Allocation (DRA) scheduling plugin sometimes needs to reject pods to wait for status updates from device drivers. Therefore, certain pods may require several scheduling cycles to be scheduled. For this scenario, the wait time for fallback is longer compared to waiting for device driver status updates. Hence, there is a need to allow plugins to skip fallback in specific cases to improve scheduling performance.</p>
+<h3 id="Implementation-Goals"><a href="#Implementation-Goals" class="headerlink" title="Implementation Goals"></a>Implementation Goals</h3><p>To improve scheduling throughput, the community proposed the following enhancements:</p>
+<ol>
+<li>Introduction of QueueingHint<ul>
+<li>Introducing <code>QueueingHint</code> into the <code>EventsToRegister</code> mechanism, allowing plugins to provide recommendations for re-queuing pods.</li>
+</ul>
+</li>
+<li>Enhancement of Pod Tracking and Re-queueing Mechanism<ul>
+<li>Optimizing the implementation for tracking pods currently being processed in the scheduling queue.</li>
+<li>Implementing a mechanism to re-queue rejected pods to appropriate queues.</li>
+<li>Optimizing the backoff strategy for rejected pods, allowing plugins to skip backoff in specific cases to improve scheduling throughput.</li>
+</ul>
+</li>
+</ol>
+<h3 id="Potential-Risks"><a href="#Potential-Risks" class="headerlink" title="Potential Risks"></a>Potential Risks</h3><blockquote>
+<h4 id="1-Errors-in-Implementation-Leading-to-Pods-Being-Unschedulable-in-unschedulablePods-for-Extended-Periods"><a href="#1-Errors-in-Implementation-Leading-to-Pods-Being-Unschedulable-in-unschedulablePods-for-Extended-Periods" class="headerlink" title="1. Errors in Implementation Leading to Pods Being Unschedulable in unschedulablePods for Extended Periods"></a>1. Errors in Implementation Leading to Pods Being Unschedulable in unschedulablePods for Extended Periods</h4></blockquote>
+<p>If a plugin is configured with QueueingHint but misses some events that could make pods schedulable, pods rejected by that plugin may remain stuck in unschedulablePods for a long time.</p>
+<p>Although the scheduling queue periodically cleans up pods in unschedulablePods (default is 5 minutes, configurable).</p>
+<blockquote>
+<h4 id="2-Increase-in-Memory-Usage"><a href="#2-Increase-in-Memory-Usage" class="headerlink" title="2. Increase in Memory Usage"></a>2. Increase in Memory Usage</h4></blockquote>
+<p>As the scheduling queue needs to retain events occurring during scheduling, the memory usage of kube-scheduler will increase. Therefore, the busier the cluster, the more memory it may require.</p>
+<p>Although it’s not possible to completely eliminate memory growth, releasing cached events as soon as possible can slow down the rate of memory growth.</p>
+<blockquote>
+<h4 id="3-Significant-Changes-in-EventsToRegister-in-EnqueueExtension"><a href="#3-Significant-Changes-in-EventsToRegister-in-EnqueueExtension" class="headerlink" title="3. Significant Changes in EventsToRegister in EnqueueExtension"></a>3. Significant Changes in <code>EventsToRegister</code> in <code>EnqueueExtension</code></h4></blockquote>
+<p>Developers of custom scheduler plugins need to perform compatibility upgrades, as the return type of <code>EventsToRegister</code> in <code>EnqueueExtension</code> has changed from <code>ClusterEvent</code> to <code>ClusterEventWithHint</code>. <code>ClusterEventWithHint</code> allows each plugin to filter out more useless events through a callback function called <code>QueueingHintFn</code>.</p>
+<p>To simplify the migration work, an empty <code>QueueingHintFn</code> is considered to always return <code>Queue</code>. Thus, if they only want to maintain the existing behavior, they only need to change <code>ClusterEvent</code> to <code>ClusterEventWithHint</code> without registering any <code>QueueingHintFn</code>.</p>
+<h3 id="Design-of-QueueingHints"><a href="#Design-of-QueueingHints" class="headerlink" title="Design of QueueingHints"></a>Design of QueueingHints</h3><p>The return type of the <code>EventsToRegister</code> method has been changed to <code>[]ClusterEventWithHint</code>.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">type EnqueueExtensions interface &#123;</span><br><span class="line">	Plugin</span><br><span class="line">	...</span><br><span class="line">	EventsToRegister() []ClusterEventWithHint</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Each <code>ClusterEventWithHint</code> structure consists of a <code>ClusterEvent</code> and a <code>QueueingHintFn</code>. When an event occurs, the <code>QueueingHintFn</code> is executed to determine whether the event can make the pod eligible for scheduling.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">type ClusterEventWithHint struct &#123;</span><br><span class="line">	Event ClusterEvent</span><br><span class="line"></span><br><span class="line">	QueueingHintFn QueueingHintFn</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type QueueingHintFn func(logger klog.Logger, pod *v1.Pod, oldObj, newObj interface&#123;&#125;) (QueueingHint, error)</span><br><span class="line"></span><br><span class="line">type QueueingHint int</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	// QueueSkip implies that the cluster event has no impact on</span><br><span class="line">	// scheduling of the pod.</span><br><span class="line">	QueueSkip QueueingHint = iota</span><br><span class="line"></span><br><span class="line">	// Queue implies that the Pod may be schedulable by the event.</span><br><span class="line">	Queue</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>The type <code>QueueingHintFn</code> is a function with a return type of <code>(QueueingHint, error)</code>. Here, <code>QueueingHint</code> is an enumeration type with possible values of <code>QueueSkip</code> and <code>Queue</code>. The invocation of <code>QueueingHintFn</code> occurs before moving pods from <code>unschedulableQ</code> to <code>backoffQ</code> or <code>activeQ</code>. If an error is returned, the <code>QueueingHint</code> provided by the caller will be treated as <code>QueueAfterBackoff</code>, which ensures that the pod does not remain indefinitely in the <code>unschedulableQ</code> queue, regardless of the returned result.</p>
+<h3 id="When-to-Skip-Not-Skip-Backoff"><a href="#When-to-Skip-Not-Skip-Backoff" class="headerlink" title="When to Skip&#x2F;Not Skip Backoff"></a>When to Skip&#x2F;Not Skip Backoff</h3><p>The <code>backoffQ</code> prevents pods that are “long-term unschedulable” from blocking the queue, maintaining a lightweight queue with high throughput.</p>
+<p>The longer a pod is rejected during the scheduling cycle, the longer it waits in the <code>backoffQ</code>.</p>
+<p>For example, when <code>NodeAffinity</code> rejects a pod, and later returns <code>Queue</code> in its <code>QueueingHintFn</code>, the pod needs to wait for backoff before retrying scheduling.</p>
+<p>However, certain plugins are designed to experience some failures during the scheduling cycle itself. For instance, the built-in DRA (Dynamic Resource Allocation) plugin, at the Reserve extension, informs the resource driver of the scheduling result and rejects the pod once to wait for a response from the resource driver. For such rejection scenarios, it should not be considered wasted scheduling cycles. Although a specific scheduling cycle fails, the scheduling result based on that cycle can facilitate pod scheduling. Therefore, pods rejected for this reason do not need to be penalized (backoff).</p>
+<p>To support this scenario, we introduce a new state, <code>Pending</code>. When the DRA plugin rejects a pod using <code>Pending</code> and later returns <code>Queue</code> in its <code>QueueingHintFn</code>, the pod skips backoff and is rescheduled.</p>
+<h3 id="How-QueueingHint-Works"><a href="#How-QueueingHint-Works" class="headerlink" title="How QueueingHint Works"></a>How QueueingHint Works</h3><p>When Kubernetes cluster events occur, the scheduling queue executes the <code>QueueingHintFn</code> of those plugins that rejected pods in the previous scheduling cycle.</p>
+<p>The following scenarios describe how they are executed and how pods are moved:</p>
+<blockquote>
+<p>Pod Rejected by One or More Plugins</p>
+</blockquote>
+<p>Suppose there are three nodes. When a pod enters the scheduling cycle, one node rejects the pod due to insufficient resources, and the other two nodes reject it due to mismatching node affinity.</p>
+<p>In this scenario, the pod is rejected by the <code>NodeResourceFit</code> and <code>NodeAffinity</code> plugins and is eventually placed in <code>unschedulableQ</code>.</p>
+<p>Subsequently, whenever cluster events registered in these plugins occur, the scheduling queue notifies them via <code>QueueingHint</code>. If any <code>QueueingHintFn</code> from <code>NodeResourceFit</code> or <code>NodeAffinity</code> returns <code>Queue</code>, the pod is moved to <code>activeQ</code> or <code>backoffQ</code>. (For example, when a <code>NodeAdded</code> event occurs, <code>QueueingHint</code> from <code>NodeResourceFit</code> returns <code>Queue</code> because the pod may be schedulable to the new node.)</p>
+<p>Whether it moves to <code>activeQ</code> or <code>backoffQ</code> depends on how long the pod has been in <code>unschedulableQ</code>. If the time spent in <code>unschedulableQ</code> exceeds the expected pod backoff delay time, it is moved directly to <code>activeQ</code>. Otherwise, it is moved to <code>backoffQ</code>.</p>
+<blockquote>
+<p>Pod Rejected due to Pending State</p>
+</blockquote>
+<p>When the DRA plugin returns <code>Pending</code> for a pod during the Reserve extension phase, the scheduling queue adds the DRA plugin to the pod’s <code>pendingPlugins</code> dictionary and returns the pod.</p>
+<p>When a call to the <code>QueueingHint</code> of the DRA plugin returns <code>Queue</code> in subsequent invocations, the scheduling queue places the pod directly into <code>activeQ</code>.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// Reserve reserves claims for the pod.</span><br><span class="line">func (pl *dynamicResources) Reserve(ctx context.Context, cs *framework.CycleState, pod *v1.Pod, nodeName string) *framework.Status &#123;</span><br><span class="line">	</span><br><span class="line">	...</span><br><span class="line"></span><br><span class="line">	if numDelayedAllocationPending == 1 || numClaimsWithStatusInfo == numDelayedAllocationPending &#123;</span><br><span class="line">		...</span><br><span class="line">		schedulingCtx.Spec.SelectedNode = nodeName</span><br><span class="line">		logger.V(5).Info(&quot;start allocation&quot;, &quot;pod&quot;, klog.KObj(pod), &quot;node&quot;, klog.ObjectRef&#123;Name: nodeName&#125;)</span><br><span class="line">		...</span><br><span class="line">		return statusUnschedulable(logger, &quot;waiting for resource driver to allocate resource&quot;, &quot;pod&quot;, klog.KObj(pod), &quot;node&quot;, klog.ObjectRef&#123;Name: nodeName&#125;)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	...</span><br><span class="line">	return statusUnschedulable(logger, &quot;waiting for resource driver to provide information&quot;, &quot;pod&quot;, klog.KObj(pod))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Tracking-Pods-Being-Processed-in-the-Scheduling-Queue"><a href="#Tracking-Pods-Being-Processed-in-the-Scheduling-Queue" class="headerlink" title="Tracking Pods Being Processed in the Scheduling Queue"></a>Tracking Pods Being Processed in the Scheduling Queue</h4><p>By introducing <code>QueueingHint</code>, we can only retry scheduling when specific events occur. But what if these events happen during pod scheduling?</p>
+<p>The scheduler takes a snapshot of the cluster data and schedules pods based on the snapshot. The snapshot is updated each time a scheduling cycle is initiated, meaning the same snapshot is used within the same scheduling cycle.</p>
+<p>Consider a scenario where, during the scheduling of a pod, it is rejected due to no nodes meeting the pod’s node affinity, but a new node matching the pod’s node affinity is added during the scheduling process.</p>
+<p>As mentioned earlier, this new node is not considered a candidate node within the current scheduling cycle. Therefore, the pod is still rejected by the node affinity plugin. The issue arises if the scheduling queue puts the pod into <code>unschedulableQ</code>, as the pod would still need to wait for another event even though a node matching the pod’s node affinity requirement is available.</p>
+<p>To prevent scenarios where pods miss events during scheduling, the scheduling queue records events occurring during pod scheduling and determines the pod’s queueing position based on these events and <code>QueueingHint</code>.</p>
+<p>Therefore, the scheduling queue caches events from the time a pod leaves the scheduling queue until it returns to the scheduling queue or is scheduled. When the cached events are no longer needed, they are discarded.</p>
+<h2 id="Golang-Doubly-Linked-List"><a href="#Golang-Doubly-Linked-List" class="headerlink" title="Golang Doubly Linked List"></a>Golang Doubly Linked List</h2><p><code>*list.List</code> is a data structure in Go’s standard library <code>container/list</code> package, representing a doubly linked list. In Go, doubly linked lists are a common data structure used to provide efficient performance for operations like element insertion, deletion, and traversal.</p>
+<p>Here’s a brief overview of the <code>*list.List</code> structure:</p>
+<ul>
+<li><strong>Definition</strong>: <code>*list.List</code> is a pointer to a doubly linked list. It contains pointers to the head and tail of the list, as well as information about the length of the list.</li>
+<li><strong>Features</strong>: Each node in the doubly linked list contains pointers to the previous and next nodes, making operations like inserting and deleting elements in the list efficient.</li>
+<li><strong>Usage</strong>: <code>*list.List</code> is commonly used in scenarios where frequent insertion and deletion operations are required, especially when the number of elements is not fixed or the order may change frequently.</li>
+</ul>
+<p>Here’s a demonstration of how to use <code>*list.List</code> in Go:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">goCopy codepackage main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">    &quot;container/list&quot;</span><br><span class="line">    &quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">    // Create a new doubly linked list</span><br><span class="line">    l := list.New()</span><br><span class="line"></span><br><span class="line">    // Add elements to the end of the list</span><br><span class="line">    l.PushBack(1)</span><br><span class="line">    l.PushBack(2)</span><br><span class="line">    l.PushBack(3)</span><br><span class="line"></span><br><span class="line">    // Iterate over the list and print elements</span><br><span class="line">    for e := l.Front(); e != nil; e = e.Next() &#123;</span><br><span class="line">        fmt.Println(e.Value)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>The <code>PushBack</code> method adds a new element to the end of the list and returns a pointer to the new element (<code>*list.Element</code>). This pointer can be used for further operations on the element, such as removal or modification.</p>
+<p>The <code>*list.Element</code> structure contains pointers to the previous and next elements in the list, as well as a field for storing the element’s value. By returning a <code>*list.Element</code> pointer, we can conveniently access the newly added element when needed for further operations. To remove an element from the doubly linked list, you can use the <code>list.Remove()</code> method. This method takes a list element as input and removes the element from the list.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;container/list&quot;</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	</span><br><span class="line">	myList := list.New()</span><br><span class="line"></span><br><span class="line">	myList.PushBack(1)</span><br><span class="line">	myList.PushBack(2)</span><br><span class="line">	myList.PushBack(3)</span><br><span class="line"></span><br><span class="line">	elementToRemove := myList.Front().Next()</span><br><span class="line"></span><br><span class="line">	myList.Remove(elementToRemove)</span><br><span class="line"></span><br><span class="line">	for element := myList.Front(); element != nil; element = element.Next() &#123;</span><br><span class="line">		fmt.Println(element.Value)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>outputs：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+
+<p>In this example, we remove the second element (with a value of 2) from the linked list.</p>
+<h2 id="A-brief-analysis"><a href="#A-brief-analysis" class="headerlink" title="A brief analysis"></a>A brief analysis</h2><p>Let’s dive straight into analyzing the memory usage using pprof. Here’s a partial list of pprof profiles:</p>
+<p><img src="https://pic.imgdb.cn/item/65dc98699f345e8d03f7c8e8.png" alt="K8s 1.28 scheduler OOM pprof"></p>
+<p>Here, we can observe that memory usage is primarily concentrated in protobuf’s <code>Decode</code>. Without delving into specific pprof analysis, we can consider three potential factors:</p>
+<ul>
+<li>Whether grpc-go has memory issues</li>
+<li>Whether there are issues with Go itself</li>
+<li>Whether Kubernetes has memory issues</li>
+</ul>
+<p>Regarding the first assumption, we can check related issues in grpc-go. However, recent reports do not indicate any memory anomalies. As for issues with Go itself, it doesn’t seem likely, although we did find a related Transparent Huge Pages (THP) issue, which we can briefly discuss later. Thus, the most probable cause would be an issue within Kubernetes itself. However, considering that <code>(*FieldsV1).Unmarshal</code> hasn’t been modified for 5 years, it’s highly unlikely to be the source of the problem. Therefore, let’s delve deeper into analyzing pprof.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">k8s.io/apimachinery/pkg/apis/meta/v1.(*FieldsV1).Unmarshal</span><br><span class="line">vendor/k8s.io/apimachinery/pkg/apis/meta/v1/generated.pb.go</span><br><span class="line"></span><br><span class="line">  Total:      309611     309611 (flat, cum)  2.62%</span><br><span class="line">   6502            .          .           			if postIndex &gt; l &#123; </span><br><span class="line">   6503            .          .           				return io.ErrUnexpectedEOF </span><br><span class="line">   6504            .          .           			&#125; </span><br><span class="line">   6505       309611     309611           			m.Raw = append(m.Raw[:0], dAtA[iNdEx:postIndex]...) </span><br><span class="line">   6506            .          .           			if m.Raw == nil &#123; </span><br><span class="line">   6507            .          .           				m.Raw = []byte&#123;&#125; </span><br><span class="line">   6508            .          .           			&#125; </span><br></pre></td></tr></table></figure>
+
+<p>过段时间：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">k8s.io/apimachinery/pkg/apis/meta/v1.(*FieldsV1).Unmarshal</span><br><span class="line">vendor/k8s.io/apimachinery/pkg/apis/meta/v1/generated.pb.go</span><br><span class="line"></span><br><span class="line">  Total:     2069705    2069705 (flat, cum)  2.49%</span><br><span class="line">   6502            .          .           			if postIndex &gt; l &#123; </span><br><span class="line">   6503            .          .           				return io.ErrUnexpectedEOF </span><br><span class="line">   6504            .          .           			&#125; </span><br><span class="line">   6505      2069705    2069705           			m.Raw = append(m.Raw[:0], dAtA[iNdEx:postIndex]...) </span><br><span class="line">   6506            .          .           			if m.Raw == nil &#123; </span><br><span class="line">   6507            .          .           				m.Raw = []byte&#123;&#125; </span><br><span class="line">   6508            .          .           			&#125; </span><br></pre></td></tr></table></figure>
+
+<p>In the continuously growing list of pods, I noticed some unreleased data that seemed to align with the results of my previous analysis using pprof. Interestingly, pods are the only continuously changing objects. Therefore, I attempted another troubleshooting method to verify if the community had resolved this issue. I used minikube to launch Kubernetes version 1.18.5 locally for investigation. Fortunately, I couldn’t reproduce the issue, indicating that the problem might have been fixed after version 1.18.5.</p>
+<p>To narrow down the investigation further, I asked my colleagues to inspect the commit history between these three minor versions. Eventually, we found a PR that closed the <code>SchedulerQueueingHints</code> feature. As mentioned in the technical background, the <code>SchedulerQueueingHints</code> feature could potentially lead to memory growth issues.</p>
+<p>By examining the <code>PriorityQueue</code> structure, it was evident that the logic handling the feature was controlled by <code>isSchedulingQueueHintEnabled</code>. If the <code>QueueingHint</code> feature is enabled, when executing the <code>Pop</code> method to schedule pods, the UID of the corresponding pod in <code>inFlightPods</code> needs to be populated with the same linked list as <code>inFlightEvents</code>.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">func (p *PriorityQueue) Pop(logger klog.Logger) (*framework.QueuedPodInfo, error) &#123;</span><br><span class="line">	p.lock.Lock()</span><br><span class="line">	defer p.lock.Unlock()</span><br><span class="line">	</span><br><span class="line">	obj, err := p.activeQ.Pop()</span><br><span class="line">	...</span><br><span class="line">	// In flight, no concurrent events yet.</span><br><span class="line">	if p.isSchedulingQueueHintEnabled &#123;</span><br><span class="line">		p.inFlightPods[pInfo.Pod.UID] = p.inFlightEvents.PushBack(pInfo.Pod)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	...</span><br><span class="line"></span><br><span class="line">	return pInfo, nil</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>So, when are the linked list fields removed? We can observe that the only time they are removed is when the pod completes its scheduling cycle, that is, when the <code>Done</code> method is called.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">func (p *PriorityQueue) Done(pod types.UID) &#123;</span><br><span class="line">	p.lock.Lock()</span><br><span class="line">	defer p.lock.Unlock()</span><br><span class="line"></span><br><span class="line">	p.done(pod)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (p *PriorityQueue) done(pod types.UID) &#123;</span><br><span class="line">	if !p.isSchedulingQueueHintEnabled &#123;</span><br><span class="line">		// do nothing if schedulingQueueHint is disabled.</span><br><span class="line">		// In that case, we don&#x27;t have inFlightPods and inFlightEvents.</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line">	inFlightPod, ok := p.inFlightPods[pod]</span><br><span class="line">	if !ok &#123;</span><br><span class="line">		// This Pod is already done()ed.</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line">	delete(p.inFlightPods, pod)</span><br><span class="line"></span><br><span class="line">	// Remove the pod from the list.</span><br><span class="line">	p.inFlightEvents.Remove(inFlightPod)</span><br><span class="line"></span><br><span class="line">	</span><br><span class="line">	for &#123;</span><br><span class="line">		...</span><br><span class="line">		p.inFlightEvents.Remove(e)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Here, it can be observed that the later the timing of <code>Done</code>, the more pronounced the memory growth, and if pod events are ignored or missed, abnormal memory growth in the linked list can also occur. Some fixes for the above scenario can be seen:</p>
+<ul>
+<li>A PR, such as #120586, which emphasizes calling <code>Done()</code> as soon as possible.</li>
+<li>The <code>QueueingHint</code> of the NodeAffinity&#x2F;NodeUnschedulable plugins missed relevant Node events, as seen in PR#122284.</li>
+</ul>
+<p>Despite these modifications, such issues are far from over.</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/issues/122725">https://github.com/kubernetes/kubernetes/issues/122725</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/issues/122284">https://github.com/kubernetes/kubernetes/issues/122284</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/pull/122289">https://github.com/kubernetes/kubernetes/pull/122289</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/issues/118893">https://github.com/kubernetes/kubernetes/issues/118893</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/kubernetes/enhancements/blob/cf6ee34e37f00d838872d368ec66d7a0b40ee4e6/keps/sig-scheduling/4247-queueinghint/README.md?plain=1#L579">https://github.com/kubernetes/enhancements/blob/cf6ee34e37f00d838872d368ec66d7a0b40ee4e6/keps/sig-scheduling/4247-queueinghint/README.md?plain=1#L579</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/issues/122661">https://github.com/kubernetes/kubernetes/issues/122661</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/pull/120586">https://github.com/kubernetes/kubernetes/pull/120586</a></li>
+<li><a target="_blank" rel="noopener" href="https://openai.com/">https://openai.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/issues/118059">https://github.com/kubernetes/kubernetes/issues/118059</a></li>
+</ol>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/categories/">Category</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Issue"><span class="toc-number">1.</span> <span class="toc-text">Issue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Technical-Background"><span class="toc-number">2.</span> <span class="toc-text">Technical Background</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#K8s-Scheduler-Introduction"><span class="toc-number">2.1.</span> <span class="toc-text">K8s-Scheduler Introduction</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#QueueingHint"><span class="toc-number">2.2.</span> <span class="toc-text">QueueingHint</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Background"><span class="toc-number">2.3.</span> <span class="toc-text">Background</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Implementation-Goals"><span class="toc-number">2.4.</span> <span class="toc-text">Implementation Goals</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Potential-Risks"><span class="toc-number">2.5.</span> <span class="toc-text">Potential Risks</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-Errors-in-Implementation-Leading-to-Pods-Being-Unschedulable-in-unschedulablePods-for-Extended-Periods"><span class="toc-number">2.5.1.</span> <span class="toc-text">1. Errors in Implementation Leading to Pods Being Unschedulable in unschedulablePods for Extended Periods</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-Increase-in-Memory-Usage"><span class="toc-number">2.5.2.</span> <span class="toc-text">2. Increase in Memory Usage</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-Significant-Changes-in-EventsToRegister-in-EnqueueExtension"><span class="toc-number">2.5.3.</span> <span class="toc-text">3. Significant Changes in EventsToRegister in EnqueueExtension</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Design-of-QueueingHints"><span class="toc-number">2.6.</span> <span class="toc-text">Design of QueueingHints</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#When-to-Skip-Not-Skip-Backoff"><span class="toc-number">2.7.</span> <span class="toc-text">When to Skip&#x2F;Not Skip Backoff</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#How-QueueingHint-Works"><span class="toc-number">2.8.</span> <span class="toc-text">How QueueingHint Works</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Tracking-Pods-Being-Processed-in-the-Scheduling-Queue"><span class="toc-number">2.8.1.</span> <span class="toc-text">Tracking Pods Being Processed in the Scheduling Queue</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Golang-Doubly-Linked-List"><span class="toc-number">3.</span> <span class="toc-text">Golang Doubly Linked List</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#A-brief-analysis"><span class="toc-number">4.</span> <span class="toc-text">A brief analysis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">5.</span> <span class="toc-text">Reference</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/e4e37b07/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/e4e37b07/&text=Exploring the Root Cause of Kubernetes 1.28 Scheduler OOM"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/e4e37b07/&title=Exploring the Root Cause of Kubernetes 1.28 Scheduler OOM"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/e4e37b07/&is_video=false&description=Exploring the Root Cause of Kubernetes 1.28 Scheduler OOM"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Exploring the Root Cause of Kubernetes 1.28 Scheduler OOM&body=Check out this article: https://zoues.com/posts/e4e37b07/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/e4e37b07/&title=Exploring the Root Cause of Kubernetes 1.28 Scheduler OOM"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/e4e37b07/&title=Exploring the Root Cause of Kubernetes 1.28 Scheduler OOM"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/e4e37b07/&title=Exploring the Root Cause of Kubernetes 1.28 Scheduler OOM"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/e4e37b07/&title=Exploring the Root Cause of Kubernetes 1.28 Scheduler OOM"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/e4e37b07/&name=Exploring the Root Cause of Kubernetes 1.28 Scheduler OOM&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/e4e37b07/&t=Exploring the Root Cause of Kubernetes 1.28 Scheduler OOM"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zouyee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
