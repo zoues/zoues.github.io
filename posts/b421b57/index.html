@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="在这篇文章中，我们将深入分析Kubernetes中的退出码127与137，解释它们是什么，K8s和Docker中常见的原因是什么，以及如何修复它们！ 我们将涵盖以下内容：  退出码的历史   退出码 127  退出码 137   退出码的历史进程退出码的历史可以追溯到Unix操作系统的早期。在Unix系统中，进程退出码是进程终止时向其父进程传递的一个整数值，用于表示进程的终止状态。这个整数值通常在">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解读Kubernetes常见错误码">
+<meta property="og:url" content="https://zoues.com/posts/b421b57/index.html">
+<meta property="og:site_name" content="zouyee">
+<meta property="og:description" content="在这篇文章中，我们将深入分析Kubernetes中的退出码127与137，解释它们是什么，K8s和Docker中常见的原因是什么，以及如何修复它们！ 我们将涵盖以下内容：  退出码的历史   退出码 127  退出码 137   退出码的历史进程退出码的历史可以追溯到Unix操作系统的早期。在Unix系统中，进程退出码是进程终止时向其父进程传递的一个整数值，用于表示进程的终止状态。这个整数值通常在">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-03-02T12:23:48.000Z">
+<meta property="article:modified_time" content="2024-03-02T13:36:42.964Z">
+<meta property="article:author" content="zouyee">
+<meta property="article:tag" content="cloudnative, kubernetes, container, ziglang">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>解读Kubernetes常见错误码</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="zouyee" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/e4e37b07/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/b421b57/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/b421b57/&text=解读Kubernetes常见错误码"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/b421b57/&title=解读Kubernetes常见错误码"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/b421b57/&is_video=false&description=解读Kubernetes常见错误码"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=解读Kubernetes常见错误码&body=Check out this article: https://zoues.com/posts/b421b57/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/b421b57/&title=解读Kubernetes常见错误码"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/b421b57/&title=解读Kubernetes常见错误码"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/b421b57/&title=解读Kubernetes常见错误码"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/b421b57/&title=解读Kubernetes常见错误码"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/b421b57/&name=解读Kubernetes常见错误码&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/b421b57/&t=解读Kubernetes常见错误码"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%80%E5%87%BA%E7%A0%81%E7%9A%84%E5%8E%86%E5%8F%B2"><span class="toc-number">1.</span> <span class="toc-text">退出码的历史</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%80%E5%87%BA%E7%A0%81127"><span class="toc-number">2.</span> <span class="toc-text">退出码127</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%8E%92%E6%9F%A5"><span class="toc-number">2.1.</span> <span class="toc-text">如何排查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%BF%AE%E5%A4%8D"><span class="toc-number">2.2.</span> <span class="toc-text">如何修复</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%80%E5%87%BA%E7%A0%81137"><span class="toc-number">3.</span> <span class="toc-text">退出码137</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#OOMKiller"><span class="toc-number">3.1.</span> <span class="toc-text">OOMKiller</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%8E%92%E6%9F%A5-1"><span class="toc-number">3.2.</span> <span class="toc-text">如何排查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%BF%AE%E5%A4%8D-1"><span class="toc-number">3.3.</span> <span class="toc-text">如何修复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%A2%84%E9%98%B2"><span class="toc-number">3.4.</span> <span class="toc-text">如何预防</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%93%BE%E6%8E%A5"><span class="toc-number">4.</span> <span class="toc-text">链接</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        解读Kubernetes常见错误码
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zouyee</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-03-02T12:23:48.000Z" class="dt-published" itemprop="datePublished">2024-03-02</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F%E9%9D%A2%E8%AF%95%E6%A1%88%E4%BE%8B50%E7%AF%87/">云原生面试案例50篇</a>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>在这篇文章中，我们将深入分析Kubernetes中的退出码127与137，解释它们是什么，K8s和Docker中常见的原因是什么，以及如何修复它们！</p>
+<p>我们将涵盖以下内容：</p>
+<ol>
+<li><p>退出码的历史 </p>
+</li>
+<li><p>退出码 127</p>
+</li>
+<li><p>退出码 137</p>
+</li>
+</ol>
+<h2 id="退出码的历史"><a href="#退出码的历史" class="headerlink" title="退出码的历史"></a>退出码的历史</h2><p>进程退出码的历史可以追溯到Unix操作系统的早期。在Unix系统中，进程退出码是进程终止时向其父进程传递的一个整数值，用于表示进程的终止状态。这个整数值通常在0到255之间，其中0表示进程成功终止，其他值通常用来表示不同的错误或异常情况。</p>
+<p>进程退出码最初被设计用于提供一种简单的机制，使父进程能够了解子进程的执行结果。这使得父进程能够根据子进程的退出码来采取适当的行动，比如处理错误情况或继续执行其他操作。</p>
+<p>在Unix系统中，特定的退出码值通常具有特定的含义，例如：</p>
+<ul>
+<li>0：表示成功执行，没有错误。</li>
+<li>1：通常表示通用的错误。</li>
+<li>2：表示命令的语法错误。</li>
+<li>127：表示命令未找到。</li>
+</ul>
+<p>随着时间的推移，Unix操作系统的发展和不同的实现，进程退出码的含义可能有所不同，但基本的概念保持不变。</p>
+<p>在Linux系统中，进程退出码的使用与Unix系统类似。Linux继承了Unix的进程管理机制，并在其基础上进行了扩展和改进。因此，Linux中的进程退出码仍然是一个重要的概念，用于帮助理解和诊断进程的执行状态。</p>
+<p>进程退出码的历史可以追溯到早期的Unix系统，是Unix和Linux操作系统中的一个重要概念，为进程间通信提供了一种简单而有效的机制。当应用程序或命令因致命错误而终止或执行失败时，将产生 128 系列退出码（<code>128+n</code>），其中 <code>n</code> 为信号编号。<code>n</code> 包括所有类型的终止代码，如 <code>SIGTERM</code>、<code>SIGKILL</code> 等。</p>
+<h2 id="退出码127"><a href="#退出码127" class="headerlink" title="退出码127"></a>退出码127</h2><p>退出码 127 不是特定于 Kubernetes 的错误代码，而是 Linux 和类 Unix 操作系统中使用的标准退出码。当然，我们在Kubernetes中经常看到它，并且通常表示容器内执行的命令或二进制文件找不到。</p>
+<p>一些标准的退出码包括：</p>
+<table>
+<thead>
+<tr>
+<th>退出码</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>命令成功执行</td>
+</tr>
+<tr>
+<td>1</td>
+<td>通用错误</td>
+</tr>
+<tr>
+<td>2</td>
+<td>命令（参数）使用不当</td>
+</tr>
+<tr>
+<td>126</td>
+<td>权限被拒绝、无法执行</td>
+</tr>
+<tr>
+<td>127</td>
+<td>未找到命令行、PATH错误</td>
+</tr>
+<tr>
+<td>128+n</td>
+<td>命令被信号从外部终止、遇到致命错误</td>
+</tr>
+<tr>
+<td>&gt;255</td>
+<td>退出码超过255范围的，会重新计算（mod 256）</td>
+</tr>
+</tbody></table>
+<p>让我们看一下退出码 127 的一些常见原因：</p>
+<ol>
+<li><p>命令或二进制文件未安装 </p>
+<p>Kubernetes 容器的 command 字段中指定的可执行文件未安装在容器的文件系统中。需要确保所需的二进制文件或命令可用。</p>
+</li>
+<li><p>路径或命令不正确</p>
+<p>Pod 定义中指定的命令不正确或在指定的路径中不存在。这是错误的最常见原因之一，通常是由于 Dockerfile 或 pod  spec中的entrypoint或command输入不正确造成的。</p>
+</li>
+<li><p>缺少依赖</p>
+<p>在容器内运行的应用程序或脚本未安装相关依赖。需要确保所有必需的依赖项包含在容器映像中。</p>
+</li>
+<li><p>shell 解释器</p>
+<p>如果指定了脚本作为命令，需要确保脚本有效 （例如#!&#x2F;bin&#x2F;bash），且在容器中可用。</p>
+</li>
+<li><p>shell 脚本语法错误</p>
+<p>如果 shell 脚本退出码是127，请检查脚本是否存有语法错误或可能阻止其执行的问题。</p>
+</li>
+<li><p>权限不足</p>
+<p>在容器内运行命令的用户可能没有执行指定命令所需的必要权限。确保容器以适当的特权运行。</p>
+</li>
+<li><p>镜像兼容性问题</p>
+<p>确保使用的容器镜像与宿主机架构和操作系统兼容。不匹配的映像可能导致命令找不到，比如x86的镜像运行在arm的机器上</p>
+</li>
+<li><p>卷挂载</p>
+<p>如果命令是卷挂载的文件，请检查卷挂载是否配置正确，且所需的文件可以被访问到。</p>
+</li>
+<li><p>环境变量</p>
+<p>一些命令可能依赖于特定的环境变量。确保必需的环境变量设置正确。</p>
+</li>
+<li><p>Kubernetes RBAC 策略</p>
+<p> 如果启用了RBAC，需要确保具有执行指定命令所需的权限。</p>
+</li>
+</ol>
+<h3 id="如何排查"><a href="#如何排查" class="headerlink" title="如何排查"></a>如何排查</h3><p>要排除问题，可以使用以下命令检查 Pod 的日志：</p>
+<p><code>kubectl logs -f &lt;pod-name&gt; </code></p>
+<p>还可以检查 Pod 状态，该状态提供有关 Pod 的详细信息，包括其当前状态、最近事件和任何错误消息。</p>
+<p><code>kubectl describe pod &lt;pod-name&gt; </code></p>
+<p>还可以为把调试容器attach到Pod 中，该容器包括一个 shell（例如 BusyBox）。这允许您进入容器并手动检查环境、路径和命令的可用性。</p>
+<p>使用 BusyBox 进行调试的示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">containers:</span><br><span class="line">  - name: my-container</span><br><span class="line">    image: my-image:latest</span><br><span class="line">    command: [&quot;/bin/sleep&quot;, &quot;infinity&quot;]</span><br><span class="line">  - name: debug-container</span><br><span class="line">    image: busybox:latest</span><br><span class="line">    command: [&quot;/bin/sh&quot;]</span><br><span class="line">    tty: true</span><br><span class="line">    stdin: true</span><br></pre></td></tr></table></figure>
+
+<p>如果是高版本K8s，也可以使用Ephemeral Containers，它就是一个临时容器。这是一个自Kubernetes v1.16中作为alpha引入的新功能，启用临时容器的特性也非常简单，在kubernetes v1.16之后的版本中将启动参数<code>--feature-gates=EphemeralContainers=true</code>配置到kube-api和kubelet服务上重启即可。</p>
+<p>通过仔细查看日志并排查上述几个方向，应该能够确定退出码 127 问题的原因。</p>
+<h3 id="如何修复"><a href="#如何修复" class="headerlink" title="如何修复"></a>如何修复</h3><p> 我们知道了退出码 127 的常见原因以及排查方式，现在让我们看看如何修复它们。</p>
+<ol>
+<li>命令或二进制文件未安装</li>
+</ol>
+<p>如果所需的命令或二进制文件丢失，则可能需要在容器镜像中安装。修改 Dockerfile 或构建过程安装所需软件。</p>
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine:latest </span><br><span class="line">RUN apk --no-cache add &lt;package-name&gt; </span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>路径或命令不正确</li>
+</ol>
+<p>在 Pod 定义中指定命令时，考虑使用二进制文件的绝对路径。这有助于确保不受当前工作目录的影响， runtime可以找到二进制文件。</p>
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">containers:</span><br><span class="line">  - name: my-container</span><br><span class="line">    image: my-image:latest</span><br><span class="line">    command: [&quot;/usr/local/bin/my-command&quot;]</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>缺少依赖项</li>
+</ol>
+<p>导致命令无法运行的原因可能是容器镜像需要安装额外的软件。如果命令需要额外的设置或安装步骤，可以使用init容器在主容器启动之前执行这些任务。</p>
+<p>示例（使用init容器安装软件包）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">initContainers:</span><br><span class="line">  - name: install-package</span><br><span class="line">    image: alpine:latest</span><br><span class="line">    command: [&quot;apk&quot;, &quot;--no-cache&quot;, &quot;add&quot;, &quot;&lt;package-name&gt;&quot;]</span><br><span class="line">    volumeMounts:</span><br><span class="line">    - name: shared-data</span><br><span class="line">      mountPath: /data</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="4">
+<li>shell解释器</li>
+</ol>
+<p>如果指定了脚本作为命令，需要确保脚本有效 （例如#!&#x2F;bin&#x2F;bash），且在容器中可用。</p>
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>卷挂载</li>
+</ol>
+<p>检查Pod的配置，确保卷已正确挂载。验证卷名称、挂载路径和 subPaths是否正确。</p>
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">volumes:</span><br><span class="line">  - name: my-volume</span><br><span class="line">    emptyDir: &#123;&#125;</span><br><span class="line">containers:</span><br><span class="line">  - name: my-container</span><br><span class="line">    image: my-image:latest</span><br><span class="line">    volumeMounts:</span><br><span class="line">    - name: my-volume</span><br><span class="line">      mountPath: /path/in/container</span><br></pre></td></tr></table></figure>
+
+<p>同时我们需要确认Pod 定义指定的卷存在且可用。如果是持久卷（PV），需要检查其状态。如果是 emptyDir 或其他类型的卷，需要验证其是否正确创建和挂载。如果在卷挂载中使用了 subPaths，需要确保源目录或文件中存在指定的 subPaths。</p>
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">volumeMounts:</span><br><span class="line">  - name: my-volume</span><br><span class="line">    mountPath: /path/in/container</span><br><span class="line">    subPath: my-file.txt</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="退出码137"><a href="#退出码137" class="headerlink" title="退出码137"></a>退出码137</h2><p>在Kubernetes中，137退出码表示进程被强制终止。在Unix和Linux系统中，当进程由于信号而终止时，退出码由信号编号加上128确定。信号编号为9，意味着“SIGKILL”，因此将9加上128，得到137退出码。</p>
+<p>当Kubernetes集群中容器超出其内存限制时，它可能会被Kubernetes系统终止，并显示“OOMKilled”错误，这表示进程因内存不足而被终止。此错误的退出码为137OOM代表“内存耗尽（out-of-memory）”。</p>
+<p>如果Pod状态将显示为“OOMKilled”，你可以使用以下命令查看：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl describe pod &lt;podname&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="OOMKiller"><a href="#OOMKiller" class="headerlink" title="OOMKiller"></a>OOMKiller</h3><p>OOMKiller是Linux内核中的一种机制，它负责通过终止消耗过多内存的进程来防止系统耗尽内存。当系统内存耗尽时，内核会调用OOMKiller来选择一个要终止的进程，以释放内存并保持系统运行。</p>
+<p>内核中有两种不同的OOM Killer；一种是全局的OOM Killer，另一种是基于cgroup内存控制器的OOM Killer，可以是cgroup v1或cgroup v2。</p>
+<p>简单来说是，当内核在分配物理内存页面时遇到问题时，全局的OOM Killer 会触发。当内核尝试分配内存页面（无论是用于内核使用还是用于需要页面的进程），并且最初失败时，它将尝试各种方式来回收和整理内存。如果这种尝试成功或者至少取得了一些进展，内核将继续重试分配（从代码中我可以看到）；如果无法释放页面或者取得进展，它将在许多情况下触发OOM Killer。</p>
+<p>一旦OOMKiller选择要终止的进程，它会向该进程发送信号，要求其优雅地终止。如果进程不响应信号，则内核会强制终止该进程并释放其内存。</p>
+<p>注意：由于内存问题而被终止的Pod不一定会被节点驱逐，如果其设置的重启策略设置为“Always”，它将尝试重新启动Pod。</p>
+<p>在系统层面，Linux内核为运行在主机上的每个进程维护一个oom_score。进程被终止的机率取决于分数有多高。</p>
+<p>oom_score_adj值允许用户自定义OOM进程，并定义何时应终止进程。Kubernetes在定义Pod的Quality of Service（QoS）时使用oom_score_adj值。</p>
+<p>K8s针对Pod定义了三种QoS，每个类型具有对应的oom_score_adj值：</p>
+<ul>
+<li>Guaranteed: -997</li>
+<li>BestEffort: 1000</li>
+<li>Burstable: <em>min(max(2, 1000 — (1000 * memoryRequestBytes) &#x2F; machineMemoryCapacityBytes), 999)</em></li>
+</ul>
+<p>其中Pod为Guaranteed QoS，则其oom_score_adj的值是-997，因此它们在节点内存不足时最后一个被终止。BestEffort Pod配置的是1000，所以它们第一个被被终止。</p>
+<p>要查看Pod的QoS，可以通过下述命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pod -o jsonpath=&#x27;&#123;.status.qosClass&#125;&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>下面是定义Pod<code>Guaranteed</code> QoS 类型的计算策略：</p>
+<ul>
+<li>Pod 中的每个容器必须有内存 limit 和内存 request。</li>
+<li>对于 Pod 中的每个容器，内存 limit 必须等于内存 request。</li>
+<li>Pod 中的每个容器必须有 CPU limit 和 CPU request。</li>
+<li>对于 Pod 中的每个容器，CPU limit 必须等于 CPU request。</li>
+</ul>
+<p>退出码137通常有两种情况：</p>
+<ul>
+<li><p>首先，也是最常见的原因是与资源限制相关。在这种情况下，通常情况下，Kubernetes超出了容器的分配内存限制，当发生这种情况时，它将终止容器以确保节点的稳定性。 </p>
+</li>
+<li><p>另一种情况是手动干预 - 用户或脚本可能会向容器进程发送“SIGKILL”信号，导致此退出码。 OOMKilled（退出码137）</p>
+</li>
+</ul>
+<h3 id="如何排查-1"><a href="#如何排查-1" class="headerlink" title="如何排查"></a>如何排查</h3><ol>
+<li>检查Pod日志</li>
+</ol>
+<p>诊断OOMKilled错误的第一步是检查Pod日志，查看是否有任何指示内存问题的错误消息。描述命令的事件部分将提供进一步的确认以及发生错误的时间&#x2F;日期。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">kubectl describe pod &lt;podname&gt;</span><br><span class="line">State:          Running</span><br><span class="line">       Started:      Fri, 12 May 2023 11:14:13 +0200</span><br><span class="line">       Last State:   Terminated</span><br><span class="line">       Reason:       OOMKilled</span><br><span class="line">       Exit Code:    137</span><br><span class="line">       ...</span><br></pre></td></tr></table></figure>
+
+<p>您还可以查询Pod日志：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /var/log/pods/&lt;podname&gt;</span><br></pre></td></tr></table></figure>
+
+<p>当然也可以通过(标准输出)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl logs -f &lt;podname&gt;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>监视内存使用情况</li>
+</ol>
+<p>使用监视系统（如Prometheus或Grafana）监视Pod和容器中的内存使用情况。这可以帮助我们确定哪些容器消耗了过多的内存从而触发了OOMKilled错误，也可以在容器宿主机使用dmesg查看当时oomkiller的现场</p>
+<ol start="3">
+<li>使用内存分析器</li>
+</ol>
+<p>使用内存分析器（如pprof）来识别可能导致过多内存使用的内存泄漏或低效代码。</p>
+<h3 id="如何修复-1"><a href="#如何修复-1" class="headerlink" title="如何修复"></a>如何修复</h3><p>以下是OOMKilled Kubernetes错误的常见原因及其解决方法。</p>
+<ol>
+<li>容器内存限制已达到</li>
+</ol>
+<p>这可能是由于在容器指定的内存限制值设置不当导致的。解决方法是增加内存限制的值，或者调查导致负载增加的根本原因并进行纠正。导致这种情况的常见原因包括大文件上传，因为上传大文件可能会消耗大量内存资源，特别是当多个容器在一个Pod内运行时，以及突然增加的流量量。</p>
+<ol start="2">
+<li>因为应用程序内存泄漏,容器内存使用达到上限</li>
+</ol>
+<p>需要调试应用程序来定位内存泄漏的原因，</p>
+<ol start="3">
+<li>所有Pod使用的总内存大于节点可用内存</li>
+</ol>
+<p>通过增加节点可用内存来增加节点内存，或者将Pod迁移到内存更多的节点。当然也可以调整运行在节点上的Pod的内存限制，使其符合内存限制，注意你还应该注意内存请求设置，它指定了Pod应该使用的最小内存量。如果设置得太高，可能不是有效利用可用内存，关于资源配置相关的建议，可以参看VPA组件</p>
+<p>在调整内存请求和限制时，当节点过载时，Kubernetes按照以下优先级顺序终止Pod：</p>
+<ul>
+<li><p>没有请求或限制的Pod。 </p>
+</li>
+<li><p>具有请求但没有限制的Pod。</p>
+</li>
+<li><p>使用超过其内存请求值的内存 - 指定的最小内存值 - 但低于其内存限制的Pod。 </p>
+</li>
+<li><p>使用超过其内存限制的Pod。</p>
+</li>
+</ul>
+<h3 id="如何预防"><a href="#如何预防" class="headerlink" title="如何预防"></a>如何预防</h3><p>有几种方法可以防止OOMKilled的发生：</p>
+<ol>
+<li>设置适当的内存限制</li>
+</ol>
+<p>通过压测及监控来确定应用程序的内存使用，通过上述方式配置容器允许使用的最大内存量。过度保守可能会导致因资源利用率低效而造成资金的浪费，同时低估会导致频繁出现OOMKilled现象。</p>
+<ol start="2">
+<li>HPA</li>
+</ol>
+<p>最佳做法是利用K8s提供的HPA机制，当应用程序的内存使用升高时自动增加Pod副本数量。</p>
+<ol start="3">
+<li>节点资源分配</li>
+</ol>
+<p>确保节点具有足够的资源来处理业务。</p>
+<ol start="4">
+<li>优化应用程序内存使用</li>
+</ol>
+<p>监视应用程序并进行适当优化，以减少内存消耗。</p>
+<ol start="5">
+<li>避免应用程序中的内存泄漏</li>
+</ol>
+<p>从应用程序来看，需要长期检查并修复内存泄漏。</p>
+<h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><ul>
+<li><p><a target="_blank" rel="noopener" href="https://spacelift.io/blog/oomkilled-exit-code-137">https://spacelift.io/blog/oomkilled-exit-code-137</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://spacelift.io/blog/exit-code-127">https://spacelift.io/blog/exit-code-127</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/news/1152344">https://cloud.tencent.com/developer/news/1152344</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://utcc.utoronto.ca/~cks/space/blog/linux/OOMKillerWhen">https://utcc.utoronto.ca/~cks/space/blog/linux/OOMKillerWhen</a></p>
+</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/categories/">Category</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%80%E5%87%BA%E7%A0%81%E7%9A%84%E5%8E%86%E5%8F%B2"><span class="toc-number">1.</span> <span class="toc-text">退出码的历史</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%80%E5%87%BA%E7%A0%81127"><span class="toc-number">2.</span> <span class="toc-text">退出码127</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%8E%92%E6%9F%A5"><span class="toc-number">2.1.</span> <span class="toc-text">如何排查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%BF%AE%E5%A4%8D"><span class="toc-number">2.2.</span> <span class="toc-text">如何修复</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%80%E5%87%BA%E7%A0%81137"><span class="toc-number">3.</span> <span class="toc-text">退出码137</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#OOMKiller"><span class="toc-number">3.1.</span> <span class="toc-text">OOMKiller</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%8E%92%E6%9F%A5-1"><span class="toc-number">3.2.</span> <span class="toc-text">如何排查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%BF%AE%E5%A4%8D-1"><span class="toc-number">3.3.</span> <span class="toc-text">如何修复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%A2%84%E9%98%B2"><span class="toc-number">3.4.</span> <span class="toc-text">如何预防</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%93%BE%E6%8E%A5"><span class="toc-number">4.</span> <span class="toc-text">链接</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/b421b57/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/b421b57/&text=解读Kubernetes常见错误码"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/b421b57/&title=解读Kubernetes常见错误码"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/b421b57/&is_video=false&description=解读Kubernetes常见错误码"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=解读Kubernetes常见错误码&body=Check out this article: https://zoues.com/posts/b421b57/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/b421b57/&title=解读Kubernetes常见错误码"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/b421b57/&title=解读Kubernetes常见错误码"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/b421b57/&title=解读Kubernetes常见错误码"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/b421b57/&title=解读Kubernetes常见错误码"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/b421b57/&name=解读Kubernetes常见错误码&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/b421b57/&t=解读Kubernetes常见错误码"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zouyee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
