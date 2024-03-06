@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Interpreting common exit codes in KubernetesIn this article, we will delve into Kubernetes exit codes 127 and 137, explaining what they are, common causes in K8s and Docker, and how to fix them! We wi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Interpreting common exit codes in Kubernetes You Need to Know">
+<meta property="og:url" content="https://zoues.com/posts/45fc99a8/index.html">
+<meta property="og:site_name" content="zouyee">
+<meta property="og:description" content="Interpreting common exit codes in KubernetesIn this article, we will delve into Kubernetes exit codes 127 and 137, explaining what they are, common causes in K8s and Docker, and how to fix them! We wi">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-03-06T12:23:48.000Z">
+<meta property="article:modified_time" content="2024-03-06T10:21:44.158Z">
+<meta property="article:author" content="zouyee">
+<meta property="article:tag" content="cloudnative, kubernetes, container, ziglang">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Interpreting common exit codes in Kubernetes You Need to Know</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="zouyee" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/b421b57/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/45fc99a8/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/45fc99a8/&text=Interpreting common exit codes in Kubernetes You Need to Know"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/45fc99a8/&title=Interpreting common exit codes in Kubernetes You Need to Know"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/45fc99a8/&is_video=false&description=Interpreting common exit codes in Kubernetes You Need to Know"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Interpreting common exit codes in Kubernetes You Need to Know&body=Check out this article: https://zoues.com/posts/45fc99a8/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/45fc99a8/&title=Interpreting common exit codes in Kubernetes You Need to Know"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/45fc99a8/&title=Interpreting common exit codes in Kubernetes You Need to Know"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/45fc99a8/&title=Interpreting common exit codes in Kubernetes You Need to Know"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/45fc99a8/&title=Interpreting common exit codes in Kubernetes You Need to Know"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/45fc99a8/&name=Interpreting common exit codes in Kubernetes You Need to Know&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/45fc99a8/&t=Interpreting common exit codes in Kubernetes You Need to Know"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Interpreting-common-exit-codes-in-Kubernetes"><span class="toc-number">1.</span> <span class="toc-text">Interpreting common exit codes in Kubernetes</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The-History-of-Exit-Codes"><span class="toc-number">2.</span> <span class="toc-text">The History of Exit Codes</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exit-Code-127"><span class="toc-number">3.</span> <span class="toc-text">Exit Code 127</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#How-to-Troubleshoot"><span class="toc-number">3.1.</span> <span class="toc-text">How to Troubleshoot</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#How-to-Fix"><span class="toc-number">3.2.</span> <span class="toc-text">How to Fix</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exit-Code-137"><span class="toc-number">4.</span> <span class="toc-text">Exit Code 137</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#OOMKiller"><span class="toc-number">4.1.</span> <span class="toc-text">OOMKiller</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#How-to-Troubleshoot-1"><span class="toc-number">4.2.</span> <span class="toc-text">How to Troubleshoot</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#How-to-Fix-1"><span class="toc-number">4.3.</span> <span class="toc-text">How to Fix</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">5.</span> <span class="toc-text">References</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Interpreting common exit codes in Kubernetes You Need to Know
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zouyee</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-03-06T12:23:48.000Z" class="dt-published" itemprop="datePublished">2024-03-06</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="Interpreting-common-exit-codes-in-Kubernetes"><a href="#Interpreting-common-exit-codes-in-Kubernetes" class="headerlink" title="Interpreting common exit codes in Kubernetes"></a>Interpreting common exit codes in Kubernetes</h2><p>In this article, we will delve into Kubernetes exit codes 127 and 137, explaining what they are, common causes in K8s and Docker, and how to fix them!</p>
+<p>We will cover:</p>
+<ol>
+<li>History of exit codes</li>
+<li>Exit code 127</li>
+<li>Exit code 137</li>
+</ol>
+<h2 id="The-History-of-Exit-Codes"><a href="#The-History-of-Exit-Codes" class="headerlink" title="The History of Exit Codes"></a>The History of Exit Codes</h2><p>The history of process exit codes can be traced back to the early days of the Unix operating system. In Unix systems, a process exit code is an integer value passed to its parent process upon termination, used to indicate the termination status of the process. This integer value typically falls between 0 and 255, where 0 indicates successful termination, and other values are usually used to represent different errors or exceptional conditions.</p>
+<p>Process exit codes were initially designed to provide a simple mechanism for parent processes to understand the outcome of their child processes’ execution. This allows parent processes to take appropriate actions based on the exit code of the child process, such as handling error conditions or continuing with other operations.</p>
+<p>In Unix systems, specific exit code values often have specific meanings, such as:</p>
+<ul>
+<li>0: Indicates successful execution without errors.</li>
+<li>1: Typically signifies a general error.</li>
+<li>2: Indicates a syntax error in the command.</li>
+<li>127: Indicates command not found.</li>
+</ul>
+<p>Over time, with the development of Unix operating systems and different implementations, the meanings of process exit codes may vary, but the basic concept remains unchanged.</p>
+<p>In Linux systems, the usage of process exit codes is similar to Unix systems. Linux inherits Unix’s process management mechanism and extends and improves upon it. Therefore, process exit codes remain an important concept in Linux, used to aid in understanding and diagnosing the execution status of processes.</p>
+<p>The history of process exit codes can be traced back to the early days of Unix systems and is an important concept in both Unix and Linux operating systems, providing a simple yet effective mechanism for inter-process communication. When an application or command terminates or fails to execute due to a fatal error, it produces exit codes in the 128 series (<code>128+n</code>), where <code>n</code> represents the signal number. <code>n</code> includes all types of termination codes, such as <code>SIGTERM</code>, <code>SIGKILL</code>, etc.</p>
+<h2 id="Exit-Code-127"><a href="#Exit-Code-127" class="headerlink" title="Exit Code 127"></a>Exit Code 127</h2><p>Exit code 127 is not a Kubernetes-specific error code, but rather a standard exit code used in Linux and similar Unix-like operating systems. However, it is frequently encountered in Kubernetes and typically indicates that a command or binary executed within a container could not be found.</p>
+<p>Some standard exit codes include:</p>
+<table>
+<thead>
+<tr>
+<th>Exit Code</th>
+<th>Explanation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>Command executed successfully</td>
+</tr>
+<tr>
+<td>1</td>
+<td>General error</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Misuse of shell builtins</td>
+</tr>
+<tr>
+<td>126</td>
+<td>Permission denied, command invoked cannot execute</td>
+</tr>
+<tr>
+<td>127</td>
+<td>Command not found, incorrect PATH</td>
+</tr>
+<tr>
+<td>128+n</td>
+<td>Command terminated by signal, fatal error encountered</td>
+</tr>
+<tr>
+<td>&gt;255</td>
+<td>Exit codes beyond 255 will be re-calculated (mod 256)</td>
+</tr>
+</tbody></table>
+<p>Let’s take a look at some common reasons for exit code 127:</p>
+<ol>
+<li><p>Command or binary not installed</p>
+<p>The executable specified in the <code>command</code> field of a Kubernetes container is not installed in the container’s file system. Ensure that the required binary or command is available.</p>
+</li>
+<li><p>Incorrect path or command</p>
+<p>The command specified in the Pod definition is incorrect or does not exist in the specified path. This is one of the most common errors, often caused by incorrect input in the Dockerfile or pod spec’s <code>entrypoint</code> or <code>command</code>.</p>
+</li>
+<li><p>Missing dependencies</p>
+<p>The application or script running inside the container lacks necessary dependencies. Ensure that all required dependencies are included in the container image.</p>
+</li>
+<li><p>Shell interpreter</p>
+<p>If a script is specified as a command, ensure that the script is valid (e.g., <code>#!/bin/bash</code>) and available in the container.</p>
+</li>
+<li><p>Shell script syntax error</p>
+<p>If the shell script exits with code 127, check if there are syntax errors in the script or issues preventing its execution.</p>
+</li>
+<li><p>Insufficient permissions</p>
+<p>The user running the command inside the container may not have the necessary permissions to execute the specified command. Ensure that the container runs with appropriate privileges.</p>
+</li>
+<li><p>Image compatibility issues</p>
+<p>Ensure that the container image used is compatible with the host architecture and operating system. Mismatched images may result in commands not being found, such as running an x86 image on an ARM machine.</p>
+</li>
+<li><p>Volume mounts</p>
+<p>If the command relies on files mounted from a volume, check if the volume mount is configured correctly and the required files are accessible.</p>
+</li>
+<li><p>Environment variables</p>
+<p>Some commands may depend on specific environment variables. Ensure that the necessary environment variables are set correctly.</p>
+</li>
+<li><p>Kubernetes RBAC policies</p>
+<p>If RBAC is enabled, ensure that the necessary permissions are granted to execute the specified command.</p>
+</li>
+</ol>
+<h3 id="How-to-Troubleshoot"><a href="#How-to-Troubleshoot" class="headerlink" title="How to Troubleshoot"></a>How to Troubleshoot</h3><p>To diagnose the issue, you can use the following commands to check the logs of the Pod:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl logs -f </span><br></pre></td></tr></table></figure>
+
+<p>You can also inspect the Pod’s status, which provides detailed information about the Pod, including its current state, recent events, and any error messages.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl describe pod </span><br></pre></td></tr></table></figure>
+
+<p>Additionally, you can attach a debugging container to the Pod, which includes a shell (e.g., BusyBox). This allows you to enter the container and manually check the availability of environment, paths, and commands.</p>
+<p>Example of debugging with BusyBox:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">containers:</span><br><span class="line">  - name: test</span><br><span class="line">    image: test</span><br><span class="line">    command: [&quot;/bin/sleep&quot;, &quot;36000&quot;]</span><br><span class="line">  - name: debug</span><br><span class="line">    image: busybox</span><br><span class="line">    command: [&quot;/bin/sh&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>If you are using a higher version of Kubernetes, you can also utilize Ephemeral Containers, which are temporary containers. This is a new feature introduced as alpha in Kubernetes v1.16, and enabling the feature of Ephemeral Containers is straightforward. Just configure <code>--feature-gates=EphemeralContainers=true</code> in the kube-api and kubelet services, then restart.</p>
+<p>By carefully examining the logs and investigating in the above directions, you should be able to determine the cause of the exit code 127 issue.</p>
+<h3 id="How-to-Fix"><a href="#How-to-Fix" class="headerlink" title="How to Fix"></a>How to Fix</h3><p>Now that we know the common causes of exit code 127 and how to troubleshoot them, let’s see how to fix them.</p>
+<ol>
+<li>Command or binary not installed</li>
+</ol>
+<p>If the required command or binary is missing, it may need to be installed in the container image. Modify the Dockerfile or the build process to install the necessary software.</p>
+<p>Example:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine:latest </span><br><span class="line">RUN apk --no-cache add &lt;package&gt; </span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>Incorrect path or command</li>
+</ol>
+<p>When specifying commands in the Pod definition, consider using the absolute path of the binary. This helps ensure that the binary is found by the runtime, regardless of the current working directory.</p>
+<p>Example:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">containers:</span><br><span class="line">  - name: test</span><br><span class="line">    image: test</span><br><span class="line">    command: [&quot;/usr/bin/command&quot;]</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>Missing dependencies</li>
+</ol>
+<p>The reason for the command not running may be that additional software needs to be installed in the container image. If the command requires additional setup or installation steps, you can use init containers to perform these tasks before the main container starts.</p>
+<p>Example (installing a package using init container):</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">initContainers:</span><br><span class="line">  - name: install-package</span><br><span class="line">    image: alpine:latest</span><br><span class="line">    command: [&quot;apk&quot;, &quot;--no-cache&quot;, &quot;add&quot;, &quot;&lt;package-name&gt;&quot;]</span><br><span class="line">    volumeMounts:</span><br><span class="line">    - name: shared-data</span><br><span class="line">      mountPath: /data</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>Shell interpreter</li>
+</ol>
+<p>If a script is specified as a command, ensure that the script is valid (e.g., <code>#!/bin/bash</code>) and available in the container.</p>
+<p>Example:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>Volume mounts</li>
+</ol>
+<p>Check the Pod’s configuration to ensure that volumes are correctly mounted. Verify that the volume names, mount paths, and subPaths are correct.</p>
+<p>Example:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">volumes:</span><br><span class="line">  - name: test</span><br><span class="line">    emptyDir: &#123;&#125;</span><br><span class="line">containers:</span><br><span class="line">  - name: test</span><br><span class="line">    image: test</span><br><span class="line">    volumeMounts:</span><br><span class="line">    - name: test</span><br><span class="line">      mountPath: /path in container</span><br></pre></td></tr></table></figure>
+
+<p>Additionally, confirm that the volume specified in the Pod definition exists and is accessible. If it’s a persistent volume (PV), check its status. If it’s an emptyDir or other types of volumes, verify that they are created and mounted correctly. If subPaths are used in the volume mount, ensure that the specified subPaths exist in the source directory or file.</p>
+<p>Example:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">volumeMounts:</span><br><span class="line">  - name: test</span><br><span class="line">    mountPath: /path in container</span><br><span class="line">    subPath: my-file.txt</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Exit-Code-137"><a href="#Exit-Code-137" class="headerlink" title="Exit Code 137"></a>Exit Code 137</h2><p>In Kubernetes, the exit code 137 indicates that the process was terminated forcibly. In Unix and Linux systems, when a process is terminated due to a signal, the exit code is determined by adding the signal number to 128. Since the signal number for “SIGKILL” is 9, adding 128 to 9 results in exit code 137.</p>
+<p>When a container exceeds its memory limit in a Kubernetes cluster, it may be terminated by the Kubernetes system with an “OOMKilled” error, indicating that the process was terminated due to insufficient memory. The exit code for this error is 137, where OOM stands for “out-of-memory”.</p>
+<p>If the Pod state shows as “OOMKilled”, you can check it using the following command:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl describe pods PODNAME</span><br></pre></td></tr></table></figure>
+
+<h3 id="OOMKiller"><a href="#OOMKiller" class="headerlink" title="OOMKiller"></a>OOMKiller</h3><p>OOMKiller is a mechanism in the Linux kernel responsible for preventing the system from running out of memory by terminating processes that consume too much memory. When the system runs out of memory, the kernel invokes OOMKiller to select a process to terminate in order to free up memory and keep the system running.</p>
+<p>There are two different OOM Killers in the kernel; one is the global OOM Killer, and the other is the OOM Killer based on cgroup memory control, which can be either cgroup v1 or cgroup v2.</p>
+<p>In summary, when the kernel encounters issues allocating physical memory pages, the global OOM Killer is triggered. When the kernel attempts to allocate memory pages (whether for kernel use or for processes needing pages) and initially fails, it tries various ways to reclaim and consolidate memory. If this attempt is successful or at least makes some progress, the kernel will continue retrying allocation (from the code I can see); if it fails to free pages or make progress, it will often trigger the OOM Killer in many cases.</p>
+<p>Once the OOMKiller selects a process to terminate, it sends a signal to that process requesting it to gracefully terminate. If the process does not respond to the signal, the kernel forcibly terminates the process and releases its memory.</p>
+<p>Note: Pods terminated due to memory issues may not necessarily be evicted from the node; if their restart policy is set to “Always”, they will attempt to restart the Pod.</p>
+<p>At the system level, the Linux kernel maintains an oom_score for each process running on the host. The likelihood of a process being terminated depends on how high the score is.</p>
+<p>The oom_score_adj value allows users to customize OOM processes and define when processes should be terminated. Kubernetes uses the oom_score_adj value when defining the Quality of Service (QoS) of Pods.</p>
+<p>Kubernetes defines three types of QoS for Pods, each with a corresponding oom_score_adj value:</p>
+<ul>
+<li>Guaranteed: -997</li>
+<li>BestEffort: 1000</li>
+<li>Burstable: <em>min(max(2, 1000 — (1000 * memoryRequestBytes) &#x2F; machineMemoryCapacityBytes), 999)</em></li>
+</ul>
+<p>Where Pods of Guaranteed QoS have an oom_score_adj value of -997, so they are the last ones to be terminated when the node runs out of memory. BestEffort Pod configurations have an oom_score_adj value of 1000, so they are the first ones to be terminated.</p>
+<p>To check the QoS of a Pod, you can use the following command:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pod -o jsonpath=&#x27;&#123;.status.qosClass&#125;&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>Here’s the calculation policy for defining Pods of <code>Guaranteed</code> QoS type:</p>
+<ul>
+<li>Each container in the Pod must have memory limits and memory requests.</li>
+<li>For each container in the Pod, the memory limit must be equal to the memory request.</li>
+<li>Each container in the Pod must have CPU limits and CPU requests.</li>
+<li>For each container in the Pod, the CPU limit must be equal to the CPU request.</li>
+</ul>
+<p>Exit code 137 typically has two scenarios:</p>
+<p>First and foremost, the most common cause is related to resource constraints. In this scenario, Kubernetes typically exceeds the memory allocation limit of the container. When this happens, it terminates the container to ensure the stability of the node.</p>
+<p>The other scenario involves manual intervention - a user or a script may send a “SIGKILL” signal to the container process, resulting in this exit code. OOMKilled (exit code 137)</p>
+<h3 id="How-to-Troubleshoot-1"><a href="#How-to-Troubleshoot-1" class="headerlink" title="How to Troubleshoot"></a>How to Troubleshoot</h3><ol>
+<li>Check Pod logs</li>
+</ol>
+<p>The first step in diagnosing OOMKilled errors is to check the Pod logs for any error messages indicating memory issues. The events section of the describe command will provide further confirmation and the time&#x2F;date of the error occurrence.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">kubectl describe pod &lt;podname&gt;</span><br><span class="line">State:          Running</span><br><span class="line">       Started:      Fri, 12 May 2023 11:14:13 +0200</span><br><span class="line">       Last State:   Terminated</span><br><span class="line">       Reason:       OOMKilled</span><br><span class="line">       Exit Code:    137</span><br><span class="line">       ...</span><br></pre></td></tr></table></figure>
+
+<p>You can also query the Pod logs:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /var/log/pods/&lt;podname&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Of course, you can also do it via (standard output)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl logs -f &lt;podname&gt;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>Monitor memory usage</li>
+</ol>
+<p>Monitor memory usage in Pods and containers using monitoring systems like Prometheus or Grafana. This can help us identify which containers are consuming too much memory and triggering OOMKilled errors, and you can use dmesg on the container host to check the scene of the oomkiller.</p>
+<ol start="3">
+<li>Use memory profilers</li>
+</ol>
+<p>Use memory profilers like pprof to identify memory leaks or inefficient code that may be causing excessive memory usage.</p>
+<h3 id="How-to-Fix-1"><a href="#How-to-Fix-1" class="headerlink" title="How to Fix"></a>How to Fix</h3><p>Below are common causes of OOMKilled Kubernetes errors and their solutions.</p>
+<ol>
+<li>Container memory limit reached</li>
+</ol>
+<p>This may be due to improper setting of the memory limit value specified in the container. The solution is to increase the value of the memory limit or investigate the root cause of the increased load and correct it. Common causes of this situation include large file uploads, as uploading large files can consume a significant amount of memory resources, especially when multiple containers are running in a single Pod, and sudden increases in traffic volume.</p>
+<ol start="2">
+<li>Application memory leak, container memory usage reaches the upper limit</li>
+</ol>
+<p>Debug the application to locate the cause of the memory leak.</p>
+<ol start="3">
+<li>Total memory used by all Pods exceeds available node memory</li>
+</ol>
+<p>Increase the available memory of the node by increasing the memory of the node, or migrate Pods to nodes with more memory. Alternatively, adjust the memory limits of Pods running on the node to comply with memory constraints.</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p><a target="_blank" rel="noopener" href="https://spacelift.io/blog/oomkilled-exit-code-137">https://spacelift.io/blog/oomkilled-exit-code-137</a></p>
+<p><a target="_blank" rel="noopener" href="https://spacelift.io/blog/exit-code-127">https://spacelift.io/blog/exit-code-127</a></p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/news/1152344">https://cloud.tencent.com/developer/news/1152344</a></p>
+<p><a target="_blank" rel="noopener" href="https://utcc.utoronto.ca/~cks/space/blog/linux/OOMKillerWhen">https://utcc.utoronto.ca/~cks/space/blog/linux/OOMKillerWhen</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/categories/">Category</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Interpreting-common-exit-codes-in-Kubernetes"><span class="toc-number">1.</span> <span class="toc-text">Interpreting common exit codes in Kubernetes</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The-History-of-Exit-Codes"><span class="toc-number">2.</span> <span class="toc-text">The History of Exit Codes</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exit-Code-127"><span class="toc-number">3.</span> <span class="toc-text">Exit Code 127</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#How-to-Troubleshoot"><span class="toc-number">3.1.</span> <span class="toc-text">How to Troubleshoot</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#How-to-Fix"><span class="toc-number">3.2.</span> <span class="toc-text">How to Fix</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exit-Code-137"><span class="toc-number">4.</span> <span class="toc-text">Exit Code 137</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#OOMKiller"><span class="toc-number">4.1.</span> <span class="toc-text">OOMKiller</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#How-to-Troubleshoot-1"><span class="toc-number">4.2.</span> <span class="toc-text">How to Troubleshoot</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#How-to-Fix-1"><span class="toc-number">4.3.</span> <span class="toc-text">How to Fix</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">5.</span> <span class="toc-text">References</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/45fc99a8/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/45fc99a8/&text=Interpreting common exit codes in Kubernetes You Need to Know"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/45fc99a8/&title=Interpreting common exit codes in Kubernetes You Need to Know"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/45fc99a8/&is_video=false&description=Interpreting common exit codes in Kubernetes You Need to Know"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Interpreting common exit codes in Kubernetes You Need to Know&body=Check out this article: https://zoues.com/posts/45fc99a8/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/45fc99a8/&title=Interpreting common exit codes in Kubernetes You Need to Know"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/45fc99a8/&title=Interpreting common exit codes in Kubernetes You Need to Know"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/45fc99a8/&title=Interpreting common exit codes in Kubernetes You Need to Know"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/45fc99a8/&title=Interpreting common exit codes in Kubernetes You Need to Know"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/45fc99a8/&name=Interpreting common exit codes in Kubernetes You Need to Know&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/45fc99a8/&t=Interpreting common exit codes in Kubernetes You Need to Know"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zouyee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

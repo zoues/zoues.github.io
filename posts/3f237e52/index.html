@@ -14,7 +14,7 @@
 <meta property="og:description" content="在Almalinux替换CentOS的过程中，我们通过kubectl top nodes命令观察到了两个相同规格的节点（只有cgroup版本不同）。在分别调度两个相同的Pod后，我们预期它们的内存使用量应该相近。然而，我们发现使用了cgroupv2的节点的内存使用量比使用了cgroupv1的节点多了约280Mi。 初步分析表明，可能是cAdvisor在统计cgroupv1和v2的内存使用量时存在逻">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-01-27T12:40:08.000Z">
-<meta property="article:modified_time" content="2024-01-26T23:17:25.813Z">
+<meta property="article:modified_time" content="2024-02-03T06:32:45.376Z">
 <meta property="article:author" content="zouyee">
 <meta property="article:tag" content="cloudnative">
 <meta property="article:tag" content="kubernetes">
