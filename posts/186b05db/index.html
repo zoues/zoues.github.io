@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="为了帮助读者深入了解Kubernetes在各种应用场景下所面临的挑战和解决方案，以及如何进行性能优化。我们推出了&lt;&lt;Kubernetes经典案例30篇&gt;&gt;，该系列涵盖了不同的使用场景，从runc到containerd，从K8s到Istio等微服务架构，全面展示了Kubernetes在实际应用中的最佳实践。通过这些案例，读者可以掌握如何应对复杂的技术难题，并提升Kuberne">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶">
+<meta property="og:url" content="https://zoues.com/posts/186b05db/index.html">
+<meta property="og:site_name" content="zouyee">
+<meta property="og:description" content="为了帮助读者深入了解Kubernetes在各种应用场景下所面临的挑战和解决方案，以及如何进行性能优化。我们推出了&lt;&lt;Kubernetes经典案例30篇&gt;&gt;，该系列涵盖了不同的使用场景，从runc到containerd，从K8s到Istio等微服务架构，全面展示了Kubernetes在实际应用中的最佳实践。通过这些案例，读者可以掌握如何应对复杂的技术难题，并提升Kuberne">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-06-08T13:10:08.000Z">
+<meta property="article:modified_time" content="2024-06-09T03:42:40.633Z">
+<meta property="article:author" content="zouyee">
+<meta property="article:tag" content="kubernetes">
+<meta property="article:tag" content="container">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="zouyee" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/5cdbe8ce/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/186b05db/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/186b05db/&text=RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/186b05db/&title=RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/186b05db/&is_video=false&description=RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶&body=Check out this article: https://zoues.com/posts/186b05db/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/186b05db/&title=RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/186b05db/&title=RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/186b05db/&title=RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/186b05db/&title=RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/186b05db/&name=RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/186b05db/&t=RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">问题描述</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#xinetd-slowly"><span class="toc-number">1.1.</span> <span class="toc-text">xinetd slowly</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#yum-hang"><span class="toc-number">1.2.</span> <span class="toc-text">yum hang</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#rpm-slow"><span class="toc-number">1.3.</span> <span class="toc-text">rpm slow</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PtyProcess-spawn-slowdown-in-close-loop"><span class="toc-number">1.4.</span> <span class="toc-text">PtyProcess.spawn slowdown in close() loop</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E8%83%8C%E6%99%AF"><span class="toc-number">2.</span> <span class="toc-text">技术背景</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-RLIMIT-NOFILE"><span class="toc-number">2.1.</span> <span class="toc-text">1. RLIMIT_NOFILE</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-File-Descriptor-Limits"><span class="toc-number">2.2.</span> <span class="toc-text">2. File Descriptor Limits</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#select"><span class="toc-number">2.3.</span> <span class="toc-text">select</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%BB%E6%A0%B9%E6%BA%AF%E6%BA%90"><span class="toc-number">3.</span> <span class="toc-text">寻根溯源</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A2%E7%A9%B6%E8%B5%84%E6%BA%90%E6%B6%88%E8%80%97"><span class="toc-number">3.1.</span> <span class="toc-text">探究资源消耗</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#docker-service%E8%B6%85%E5%87%BA%E9%99%90%E5%88%B6"><span class="toc-number">3.2.</span> <span class="toc-text">docker.service超出限制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#containerd-service%E9%99%90%E5%88%B6%E8%B6%85%E5%87%BA"><span class="toc-number">3.3.</span> <span class="toc-text">containerd.service限制超出</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Systemd-240"><span class="toc-number">4.1.</span> <span class="toc-text">Systemd &lt; 240</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">5.</span> <span class="toc-text">参考链接</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zouyee</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-06-08T13:10:08.000Z" class="dt-published" itemprop="datePublished">2024-06-08</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/container/" rel="tag">container</a>, <a class="p-category" href="/tags/kubernetes/" rel="tag">kubernetes</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>为了帮助读者深入了解Kubernetes在各种应用场景下所面临的挑战和解决方案，以及如何进行性能优化。我们推出了<a href="/Kubernetes%E7%BB%8F%E5%85%B8%E6%A1%88%E4%BE%8B30%E7%AF%87/index.html">&lt;&lt;Kubernetes经典案例30篇&gt;&gt;</a>，该系列涵盖了不同的使用场景，从runc到containerd，从K8s到Istio等微服务架构，全面展示了Kubernetes在实际应用中的最佳实践。通过这些案例，读者可以掌握如何应对复杂的技术难题，并提升Kubernetes集群的性能和稳定性。</p>
+<ol>
+<li><a href="/posts/652176ee/">Containerd CVE-2020–15257细节说明</a></li>
+<li><a href="/posts/1df3dc63/">OpenAI关于Kubernetes集群近万节点的生产实践</a></li>
+<li><a href="/posts/5a8a6c8d/">一条K8s命令行引发的血案</a></li>
+<li><a href="/posts/3f237e52/">揭开K8s适配CgroupV2内存虚高的迷局</a></li>
+<li><a href="/posts/e46bd846/">探索Kubernetes 1.28调度器OOM的根源</a></li>
+<li><a href="/posts/b421b57/">解读Kubernetes常见错误码</a></li>
+<li><a href="/posts/186b05db/">RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶</a></li>
+</ol>
+<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><blockquote>
+<p>针对该问题的信息做了部分加工处理,thanks <strong><a target="_blank" rel="noopener" href="https://github.com/polarathene">polarathene</a></strong></p>
+</blockquote>
+<p>我们在Fedora系统上将containerd.io从1.4.13版本升级到了1.5.10之后，发现多个项目中所有MySQL 容器实例消耗内存暴涨超过20GB，而在此之前它们仅消耗不到300MB。同事直接上了重启大招，但重启后问题依旧存在。最后选择回滚到1.4.13版本，该现象也随之消失。</p>
+<p>值得注意的是，在Ubuntu 18.04.6系统上运行相同版本的containerd和runc时，MySQL 容器实例一切工作正常。只有在Fedora 35系统(配置相同的containerd与runc版本)，出现了内存消耗异常的情况。下面是出现异常的容器组件版本信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">go1.16.15</span><br><span class="line">containerd: 1.5.11</span><br><span class="line">runc: 1.0.3</span><br></pre></td></tr></table></figure>
+
+<p>在Fedora 35上，执行以下命令执行会引发系统崩溃：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm mysql:5.7.36</span><br><span class="line">docker run -it --rm mysql:5.5.62</span><br></pre></td></tr></table></figure>
+
+<p>但是mysql 8.0.29版本在Fedora 35上却运行正常：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm mysql:8.0.29</span><br></pre></td></tr></table></figure>
+
+<p>OOM相关信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">2023-06-06T17:23:24.094275-04:00 laptop kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=user.slice,mems_allowed=0,global_oom,task_memcg=/system.slice/docker-xxx.scope,task=mysqld,pid=38421,uid=0</span><br><span class="line">2023-06-06T17:23:24.094288-04:00 laptop kernel: Out of memory: Killed process 38421 (mysqld) total-vm:16829404kB, anon-rss:12304300kB, file-rss:108kB, shmem-rss:0kB, UID:0 pgtables:28428kB oom_score_adj:0</span><br><span class="line">2022-06-06T17:23:24.094313-04:00 laptop systemd[1]: docker-xxx.scope: A process of this unit has been killed by the OOM killer.</span><br><span class="line">2022-06-06T17:23:24.856029-04:00 laptop systemd[1]: docker-xxx.scope: Deactivated successfully.</span><br></pre></td></tr></table></figure>
+
+<p>原先在空闲状态下，<code>mysql</code>容器使用内存大约在200MB左右；但在某些操作系统上，如RedHat、Arch Linux或Fedora，一旦为容器设置了非常高的打开文件数（<code>nofile</code>）限制，则可能会导致<code>mysql</code>容器异常地占用大量内存。</p>
+<pre><code>cat /proc/$(pgrep dockerd)/limits | grep &quot;Max open files&quot;
+cat /proc/$(pgrep containerd)/limits | grep &quot;Max open files&quot;
+</code></pre>
+<p>如果输出值为1073741816或更高，那么您可能也会遇到类似异常。</p>
+<p>在相关社区，我们发现了类似的案例:</p>
+<h4 id="xinetd-slowly"><a href="#xinetd-slowly" class="headerlink" title="xinetd slowly"></a>xinetd slowly</h4><p>xinetd服务启动极其缓慢，我们查看了dockerd的系统设置如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ cat /proc/$(pidof dockerd)/limits | grep &quot;Max open files&quot;</span><br><span class="line">Max open files            1048576              1048576              files</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl show docker | grep LimitNOFILE</span><br><span class="line">LimitNOFILE=1048576</span><br></pre></td></tr></table></figure>
+
+<p>但是，在容器内部，则是一个非常巨大的数字——1073741816</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --rm ubuntu bash -c &quot;cat /proc/self/limits&quot; | grep  &quot;Max open files&quot;</span><br><span class="line">Max open files            1073741816           1073741816           files</span><br></pre></td></tr></table></figure>
+
+<p><code>xinetd</code>程序在初始化时使用<code>setrlimit(2)</code>设置文件描述符的数量，这会消耗大量的时间及CPU资源去关闭1073741816个文件描述符。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">root@1b3165886528# strace xinetd</span><br><span class="line">execve(&quot;/usr/sbin/xinetd&quot;, [&quot;xinetd&quot;], 0x7ffd3c2882e0 /* 9 vars */) = 0</span><br><span class="line">brk(NULL)                               = 0x557690d7a000</span><br><span class="line">arch_prctl(0x3001 /* ARCH_??? */, 0x7ffee17ce6f0) = -1 EINVAL (Invalid argument)</span><br><span class="line">mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fb14255c000</span><br><span class="line">access(&quot;/etc/ld.so.preload&quot;, R_OK)      = -1 ENOENT (No such file or directory)</span><br><span class="line">close(12024371)                         = -1 EBADF (Bad file descriptor)</span><br><span class="line">close(12024372)                         = -1 EBADF (Bad file descriptor)</span><br><span class="line">close(12024373)                         = -1 EBADF (Bad file descriptor)</span><br><span class="line">close(12024374)                         = -1 EBADF (Bad file descriptor)</span><br><span class="line">close(12024375)                         = -1 EBADF (Bad file descriptor)</span><br><span class="line">close(12024376)                         = -1 EBADF (Bad file descriptor)</span><br><span class="line">close(12024377)                         = -1 EBADF (Bad file descriptor)</span><br><span class="line">close(12024378)                         = -1 EBADF (Bad file descriptor)</span><br></pre></td></tr></table></figure>
+
+<h4 id="yum-hang"><a href="#yum-hang" class="headerlink" title="yum hang"></a>yum hang</h4><p>从docker社区获取Rocky Linux 9对应的Docker版本，在容器中执行yum操作时速度非常缓慢。</p>
+<p>在CentOS 7和Rocky Linux 9宿主机上，我们都进行了以下操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -itd --name centos7 quay.io/centos/centos:centos7</span><br><span class="line">docker exec -it centos7 /bin/bash -c &quot;time yum update -y&quot;</span><br></pre></td></tr></table></figure>
+
+<p>在CentOS 7宿主机上，耗时在2分钟左右； 而在Rocky Linux 9上，一个小时也未能完成。</p>
+<p>复现步骤如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run -itd --name centos7 quay.io/centos/centos:centos7</span><br><span class="line">docker exec -it centos7 /bin/bash -c &quot;time yum update -y&quot;</span><br></pre></td></tr></table></figure>
+
+<h4 id="rpm-slow"><a href="#rpm-slow" class="headerlink" title="rpm slow"></a>rpm slow</h4><p>在宿主机上执行下述命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">time zypper --reposd-dir /workspace/zypper/reposd --cache-dir /workspace/zypper/cache --solv-cache-dir /workspace/zypper/solv --pkg-cache-dir /workspace/zypper/pkg --non-interactive --root /workspace/root install rpm subversion</span><br></pre></td></tr></table></figure>
+
+<p>消耗的各类时间如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">real    0m11.248s</span><br><span class="line">user    0m7.316s</span><br><span class="line">sys     0m1.932s</span><br></pre></td></tr></table></figure>
+
+<p>在容器中执行测试</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm --net=none --log-driver=none -v &quot;/workspace:/workspace&quot; -v &quot;/disks:/disks&quot; opensuse bash -c &quot;time zypper --reposd-dir /workspace/zypper/reposd --cache-dir /workspace/zypper/cache --solv-cache-dir /workspace/zypper/solv --pkg-cache-dir /workspace/zypper/pkg --non-interactive --root /workspace/root install rpm subversion&quot;</span><br></pre></td></tr></table></figure>
+
+<p>消耗的各类时间激增：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">real    0m31.089s</span><br><span class="line">user    0m14.876s</span><br><span class="line">sys     0m12.524s</span><br></pre></td></tr></table></figure>
+
+<p>我们找到了RPM的触发问题的根因，其属于RPM内部POSIX lua库 <a target="_blank" rel="noopener" href="https://github.com/rpm-software-management/rpm/commit/7a7c31f">rpm-software-management&#x2F;rpm@<code>7a7c31f</code></a>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">static int Pexec(lua_State *L) /** exec(path,[args]) */</span><br><span class="line">&#123;</span><br><span class="line">	/* ... */</span><br><span class="line">	open_max = sysconf(_SC_OPEN_MAX);</span><br><span class="line">	if (open_max == -1) &#123;</span><br><span class="line">	    open_max = 1024;</span><br><span class="line">	&#125;</span><br><span class="line">	for (fdno = 3; fdno &lt; open_max; fdno++) &#123;</span><br><span class="line">	    flag = fcntl(fdno, F_GETFD);</span><br><span class="line">	    if (flag == -1 || (flag &amp; FD_CLOEXEC))</span><br><span class="line">		continue;</span><br><span class="line">	    fcntl(fdno, F_SETFD, FD_CLOEXEC);</span><br><span class="line">	&#125;</span><br><span class="line">	/* ... */</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>类似的，如果设置的最大打开文件数限制过高，那么<code>luaext/Pexec()</code>和<code>lib/doScriptExec()</code>在尝试为所有这些文件描述符设置<code>FD_CLOEXEC</code>标志时，会花费过多的时间，从而导致执行如<code>rpm</code>或<code>dnf</code>等命令的时间显著增加。</p>
+<h4 id="PtyProcess-spawn-slowdown-in-close-loop"><a href="#PtyProcess-spawn-slowdown-in-close-loop" class="headerlink" title="PtyProcess.spawn slowdown in close() loop"></a>PtyProcess.spawn slowdown in close() loop</h4><p>ptyprocess存在问题的相关代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># Do not allow child to inherit open file descriptors from parent, </span><br><span class="line"> # with the exception of the exec_err_pipe_write of the pipe </span><br><span class="line"> # and pass_fds. </span><br><span class="line"> # Impose ceiling on max_fd: AIX bugfix for users with unlimited </span><br><span class="line"> # nofiles where resource.RLIMIT_NOFILE is 2^63-1 and os.closerange() </span><br><span class="line"> # occasionally raises out of range error </span><br><span class="line"> max_fd = min(1048576, resource.getrlimit(resource.RLIMIT_NOFILE)[0]) </span><br><span class="line"> spass_fds = sorted(set(pass_fds) | &#123;exec_err_pipe_write&#125;) </span><br><span class="line"> for pair in zip([2] + spass_fds, spass_fds + [max_fd]): </span><br><span class="line">     os.closerange(pair[0]+1, pair[1]) </span><br></pre></td></tr></table></figure>
+
+<p>当处理文件描述符时，为了提高效率，应避免遍历所有可能的文件描述符来关闭它们，尤其是在Linux系统上，因为这会通过<code>close()</code>系统调用消耗大量时间。尤其是当打开文件描述符的限制（可以通过<code>ulimit -n</code>、<code>RLIMIT_NOFILE</code>或<code>SC_OPEN_MAX</code>查看）被设置得非常高时，这种遍历方式将导致数百万次不必要的系统调用，显著增加了处理时间。</p>
+<p>一个更为高效的解决方案是仅关闭那些实际上已打开的文件描述符。在Python 3中，<code>subprocess</code>模块已经实现了这一功能，而对于使用Python 2的用户，<code>subprocess32</code>的兼容库可以作为回退选项。通过利用这些库或类似的技术，我们可以显著减少不必要的系统调用，从而提高程序的运行效率。</p>
+<h3 id="技术背景"><a href="#技术背景" class="headerlink" title="技术背景"></a>技术背景</h3><h4 id="1-RLIMIT-NOFILE"><a href="#1-RLIMIT-NOFILE" class="headerlink" title="1. RLIMIT_NOFILE"></a>1. RLIMIT_NOFILE</h4><blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/systemd/systemd/blob/1742aae2aa8cd33897250d6fcfbe10928e43eb2f/NEWS#L60..L94">https://github.com/systemd/systemd/blob/1742aae2aa8cd33897250d6fcfbe10928e43eb2f/NEWS#L60..L94</a></p>
+</blockquote>
+<p>当前Linux内核对于用户空间进程的RLIMIT_NOFILE资源限制默认设置为1024（软限制）和4096（硬限制）。以前，systemd在派生进程时会直接传递这些未修改的限制。在systemd240版本中，systemd传递的硬限制增加到了512K，其覆盖了内核的默认值，并大大增加了非特权用户空间进程可以同时分配的文件描述符数量。</p>
+<p>注意，为了兼容性考虑，软限制仍保持在1024，传统的UNIX select()调用无法处理大于或等于1024的文件描述符（FD_SET宏不管是否越界以及越界的后果，fd_set也并非严格限制在1024，FD_SET超过1024的值，会造成越界），因此如果全局提升了软限制，那么在使用select()时可能出现异常（在现代编程中，程序不应该再使用select()，而应该选择poll()&#x2F;epoll，但遗憾的是这个调用仍然大规模存在）。</p>
+<p>在较新的内核中，分配大量文件描述符在内存和性能上比以前消耗少得多。Systemd社区中有用户称在实际应用中他们使用了约30万个文件描述符，因此Systemd认为512K作为新的默认值是足够高的。但是需要注意的是，也有报告称使用非常高的硬限制（例如1G）是有问题的，因此，超高硬限制会触发部分应用程序中过大的内存分配。</p>
+<h4 id="2-File-Descriptor-Limits"><a href="#2-File-Descriptor-Limits" class="headerlink" title="2. File Descriptor Limits"></a>2. File Descriptor Limits</h4><p>最初，文件描述符（fd）主要用于引用打开的文件和目录等资源。如今，它们被用来引用Linux用户空间中几乎所有类型的运行时资源，包括打开的设备、内存（<a target="_blank" rel="noopener" href="https://man7.org/linux/man-pages/man2/memfd_create.2.html"><code>memfd_create(2)</code></a>）、定时器（<a target="_blank" rel="noopener" href="https://man7.org/linux/man-pages/man2/timerfd_create.2.html"><code>timefd_create(2)</code></a>）甚至进程（通过新的<a target="_blank" rel="noopener" href="https://man7.org/linux/man-pages/man2/pidfd_open.2.html"><code>pidfd_open(2)</code></a>系统调用）。文件描述符的广泛应用使得“万物皆文件描述符”成为UNIX的座右铭。</p>
+<p>由于文件描述符的普及，现代软件往往需要同时处理更多的文件描述符。与Linux上的大多数运行时资源一样，文件描述符也有其限制：一旦达到通过<a target="_blank" rel="noopener" href="https://man7.org/linux/man-pages/man2/getrlimit.2.html"><code>RLIMIT_NOFILE</code></a>配置的限制，任何进一步的分配尝试都会被拒绝，并返回<code>EMFILE</code>错误，除非关闭一些已经打开的文件描述符。</p>
+<p>以前文件描述符的限制普遍较低。当Linux内核首次调用用户空间时，<code>RLIMIT_NOFILE</code>的默认值设置为软限制1024和硬限制4096。软限制是实际生效的限制，可以通过程序自身调整到硬限制，但超过硬限制则需要更高权限。1024个文件描述符的限制使得文件描述符成为一种稀缺资源，导致开发者在使用时非常谨慎。这也引发了一些次要描述符的使用，例如inotify观察描述符，以及代码中频繁的文件描述符关闭操作（例如<code>ftw()</code>&#x2F;<code>nftw()</code>），以避免达到限制。</p>
+<p>一些操作系统级别的API在设计时只考虑了较低的文件描述符限制，例如BSD&#x2F;POSIX的<a target="_blank" rel="noopener" href="https://man7.org/linux/man-pages/man2/select.2.html"><code>select(2)</code></a>系统调用，它只能处理数字范围在0到1023内的文件描述符。如果文件描述符超出这个范围，<code>select()</code>将越界出现异常。</p>
+<p>Linux中的文件描述符以整数形式暴露，并且通常分配为最低未使用的整数，随着文件描述符用于引用各种资源（例如eBPF程序、cgroup等），确实需要提高这个限制。</p>
+<p>在2019年的systemd v240版本中，采取了一些措施：</p>
+<ul>
+<li>在启动时，自动将两个系统控制参数<code>fs.nr_open</code>和<code>fs.file-max</code>设置为最大值，使其实际上无效，从而简化了配置。</li>
+<li>将<code>RLIMIT_NOFILE</code>的硬限制大幅提高到512K。</li>
+<li>保持<code>RLIMIT_NOFILE</code>的软限制为1024，以避免破坏使用<code>select()</code>的程序。但每个程序可以自行将软限制提高到硬限制，无需特权。</li>
+</ul>
+<p>通过这种方法，文件描述符变得不再稀缺，配置也更简便。程序可以在启动时自行提高软限制，但要确保避免使用<code>select()</code>。</p>
+<p>具体建议如下：</p>
+<ol>
+<li>**不要再使用<code>select()</code>**。使用<code>poll()</code>、<code>epoll</code>、<code>io_uring</code>等更现代的API。</li>
+<li><strong>如果程序需要大量文件描述符</strong>，在启动时将<code>RLIMIT_NOFILE</code>的软限制提高到硬限制，但确保避免使用<code>select()</code>。</li>
+<li><strong>如果程序会fork出其他程序</strong>，在fork之前将<code>RLIMIT_NOFILE</code>的软限制重置为1024，因为子进程可能无法处理高于1024的文件描述符。</li>
+</ol>
+<p>这些建议能帮助你在处理大量文件描述符时避免常见问题。</p>
+<h4 id="select"><a href="#select" class="headerlink" title="select"></a>select</h4><p><strong>supervisord</strong></p>
+<ul>
+<li>在2011年，<a target="_blank" rel="noopener" href="https://github.com/Supervisor/supervisor/issues/26"><code>supervisord</code>报告了一个与<code>select()</code>相关的问题</a>，并在2014年得到修复。这表明<code>supervisord</code>早期版本可能使用了<code>select()</code>，但后续版本已更新。</li>
+</ul>
+<p><strong>Nginx</strong></p>
+<ul>
+<li>Nginx允许用户通过配置提高文件描述符的软限制。2015年的<a target="_blank" rel="noopener" href="https://github.com/nginx/nginx/issues/311">bug报告</a>指出了Nginx在某些情况下使用<code>select()</code>并受限于1024个文件描述符的问题。目前，提供了多种方法来处理高并发场景。</li>
+</ul>
+<p><strong>Redis</strong></p>
+<ul>
+<li>Redis文档建议使用高达2^16的文件描述符数量，具体取决于实际工作负载。<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/redis/redis-py/issues/419#issuecomment-41134427">2013年12月，<code>redis-py</code>的<code>select()</code>问题</a>，在2014年6月修复。</li>
+<li>2015年<a target="_blank" rel="noopener" href="https://github.com/redis/hiredis/issues/385#issue-123387718"><code>redis/hiredis</code>的问题</a>，用户依赖<code>select()</code>。</li>
+<li><a target="_blank" rel="noopener" href="https://blog.pjam.me/posts/select-syscall-in-rust/">2020年11月的文章</a>提到Redis仍将<code>select()</code>作为后备方案，参考了<a target="_blank" rel="noopener" href="https://github.com/redis/redis/blob/e12f2decc1cf7742878d516d89d38af178119b17/src/ae_select.c"><code>ae_select.c</code></a>文件。</li>
+</ul>
+</li>
+</ul>
+<p><strong>Apache HTTP Server</strong></p>
+<ul>
+<li>2002年的<a target="_blank" rel="noopener" href="https://github.com/apache/httpd/commit/d7bff9e33d304ff95e2b888fd1f0e3b56a62e041">commit</a>显示了Apache HTTP Server早期使用<code>select()</code>。尽管Apache后续增加了对其他I&#x2F;O多路复用机制的支持，但在处理较低并发连接时，仍可能使用<code>select()</code>。</li>
+</ul>
+<p><strong>PostgreSQL</strong></p>
+<ul>
+<li>PostgreSQL没有硬限制，以避免对其他运行的软件产生负面影响。在容器化环境中，这个问题不太严重，因为可以为容器设置适当的限制。PostgreSQL提供了一个配置选项<a target="_blank" rel="noopener" href="https://www.postgresql.org/docs/current/runtime-config-resource.html#GUC-MAX-FILES-PER-PROCESS"><code>max_files_per_process</code></a>，限制每个进程可以打开的最大文件数。</li>
+<li>PostgreSQL的源代码中仍然有使用<code>select()</code>的地方。</li>
+</ul>
+<p><strong>MongoDB</strong></p>
+<ul>
+<li>2014年，<a target="_blank" rel="noopener" href="https://narkive.com/CrxObBlI.2">MongoDB仍在使用<code>select()</code></a>。在<a target="_blank" rel="noopener" href="https://github.com/mongodb/mongo/blob/91fc5673cab5d1267fd805f1375577df9072ea1b/src/mongo/util/net/listen.cpp#L252-L270">3.7.5版本</a>中，<code>select()</code>仍在<code>listen.cpp</code>中使用，但在<a target="_blank" rel="noopener" href="https://github.com/mongodb/mongo/commit/55aac9ac800531ad021f18f56d69c69ac5619245">3.7.6版本</a>（<strong>2018年4月</strong>）中被移除。不过，<a target="_blank" rel="noopener" href="https://github.com/mongodb/mongo/blob/8de341d0d2011b51eb1d140fb4820424d29fe510/src/mongo/transport/asio/asio_utils.cpp#L131">MongoDB的源代码</a>中仍然存在<code>select()</code>的调用。</li>
+</ul>
+<h3 id="寻根溯源"><a href="#寻根溯源" class="headerlink" title="寻根溯源"></a>寻根溯源</h3><p>虽然 cgroup 控制器在现代资源管理中起着重要作用，但 <code>ulimit</code> 作为一种传统的资源管理机制，依然不可或缺。</p>
+<p>在容器中，默认的 <code>ulimit</code> 设置是从 <code>containerd</code> 继承的（而非 <code>dockerd</code>），这些设置在 <code>containerd.service</code> 的 systemd 单元文件中被配置为无限制：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ grep ^Limit /lib/systemd/system/containerd.service</span><br><span class="line">LimitNOFILE=infinity</span><br><span class="line">LimitNPROC=infinity</span><br><span class="line">LimitCORE=infinity</span><br></pre></td></tr></table></figure>
+
+<p>虽然这些设置满足 <code>containerd</code> 自身的需求，但对于其运行的容器来说，这样的配置显得过于宽松。相比之下，主机系统上的用户（包括 root 用户）的 <code>ulimit</code> 设置则相当保守（以下是来自 Ubuntu 18.04 的示例）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">sh复制代码$ ulimit -a</span><br><span class="line">core file size          (blocks, -c) 0</span><br><span class="line">data seg size           (kbytes, -d) unlimited</span><br><span class="line">scheduling priority             (-e) 0</span><br><span class="line">file size               (blocks, -f) unlimited</span><br><span class="line">pending signals                 (-i) 62435</span><br><span class="line">max locked memory       (kbytes, -l) 16384</span><br><span class="line">max memory size         (kbytes, -m) unlimited</span><br><span class="line">open files                      (-n) 1024</span><br><span class="line">pipe size            (512 bytes, -p) 8</span><br><span class="line">POSIX message queues     (bytes, -q) 819200</span><br><span class="line">real-time priority              (-r) 0</span><br><span class="line">stack size              (kbytes, -s) 8192</span><br><span class="line">cpu time               (seconds, -t) unlimited</span><br><span class="line">max user processes              (-u) 62435</span><br><span class="line">virtual memory          (kbytes, -v) unlimited</span><br><span class="line">file locks                      (-x) unlimited</span><br></pre></td></tr></table></figure>
+
+<p>这种宽松的容器设置可能会引发一系列问题，例如容器滥用系统资源，甚至导致 DoS 攻击。尽管 cgroup 限制通常用于防止这些问题，但将 <code>ulimit</code> 设置为更合理的值也是必要的。</p>
+<p>特别是 <code>RLIMIT_NOFILE</code>（打开文件的数量限制）被设置为 2^30（即 1073741816），这会导致一些程序运行缓慢，因为这些程序会遍历所有可能打开的文件描述符，并在每次 fork&#x2F;exec 之前关闭这些文件描述符（或设置 CLOEXEC 位）。以下是一些具体情况：</p>
+<ul>
+<li><strong>rpm</strong>：在<a target="_blank" rel="noopener" href="https://github.com/moby/moby/issues/23137">安装 RPM 以创建新的 Docker 镜像时性能缓慢 #23137</a> 和 <a target="_blank" rel="noopener" href="https://bugzilla.redhat.com/show_bug.cgi?id=1537564">Red Hat Bugzilla #1537564</a> 中有报告，修复方案为：<a target="_blank" rel="noopener" href="https://github.com/rpm-software-management/rpm/pull/444">优化并统一在文件描述符上设置 CLOEXEC 的 rpm-software-management&#x2F;rpm#444</a>（在 Fedora 28 中修复）。</li>
+<li><strong>python2</strong>：在 <a target="_blank" rel="noopener" href="https://github.com/docker/for-linux/issues/502">Docker 18.09 上 PTY 进程的创建速度大大降低 #502</a> 中有报告，建议的修复方案为：<a target="_blank" rel="noopener" href="https://github.com/python/cpython/pull/11584">subprocess.Popen: 在 Linux 上优化 close_fds python&#x2F;cpython#11584</a>（由于 python2 已经冻结，所以此修复方案不会被采用）。</li>
+<li><strong>python 的 pexpect&#x2F;ptyprocess 库</strong>：在 <a target="_blank" rel="noopener" href="https://github.com/pexpect/ptyprocess/issues/50">PtyProcess.spawn（以及因此 pexpect）在 close() 循环中速度降低 #50</a> 中有报告。</li>
+</ul>
+<p>逐一解决这些问题既复杂且收益低，其中一些软件已经过时，另外有一些软件难以修复。上述列表并不全面，可能还有更多类似的问题尚未觉察到。</p>
+<h4 id="探究资源消耗"><a href="#探究资源消耗" class="headerlink" title="探究资源消耗"></a>探究资源消耗</h4><p><code>2^16</code>（65k）个<code>busybox</code>容器的预估资源使用情况如下所示：</p>
+<ul>
+<li>在 <code>containerd</code> 中，共需 688k 个任务和 206 GB（192 GiB）的内存（每个容器约需 10.5 个任务和 3 MiB 的内存）。</li>
+<li>至少需要将 <code>containerd.service</code> 的 <code>LimitNOFILE</code> 设置为 262144。</li>
+<li>打开的文件数达到 249 万（其中<code>fs.file-nr</code> 必须低于 <code>fs.file-max</code> 限制），每个容器大约需要 38 个文件描述符。</li>
+<li>容器的 cgroup 需要 25 GiB 的内存（每个容器大约需要 400 KiB）。</li>
+</ul>
+<p>因此<code>LimitNOFILE=524288</code>（自 v240 版本以来，systemd 的默认值）对于大多数系统作为默认值已经足够，其能满足 <code>docker.service</code> 和 <code>containerd.service</code> 支持 65k 个容器的资源需求。</p>
+<p>从GO 1.19开始将隐式地将 <code>fork</code> &#x2F; <code>exec</code> 进程的软限制恢复到默认值。在此之前，Docker 守护进程可以通过配置 <code>default-ulimit</code> 设置来强制容器使用 <code>1024</code> 的软限制。</p>
+<ol>
+<li>测试详情</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Fedora 37 VM 6.1.9 kernel x86_64 (16 GB memory)</span><br><span class="line">Docker v23, containerd 1.6.18, systemd v251</span><br><span class="line"></span><br><span class="line"># Additionally verified with builds before Go 1.19 to test soft limit lower than the hard limit:</span><br><span class="line">dnf install docker-ce-3:20.10.23 docker-ce-cli-1:20.10.23 containerd.io-1.6.8</span><br></pre></td></tr></table></figure>
+
+<p>在Fedora 37 VM上大约有 1800 个文件描述符被打开（<code>sysctl fs.file-nr</code>）。通过 shell 循环运行 <code>busybox</code> 容器直到失败，并调整 <code>docker.service</code> 和 <code>containerd.service</code> 的 <code>LimitNOFILE</code> 来收集测试数据：</p>
+<ul>
+<li><code>docker.service</code> - <code>6:1</code> 的比例（使用 <code>--network=host</code> 时是 <code>5:1</code>），在 <code>LimitNOFILE=5120</code> 下大约能运行 853 个容器（使用主机网络时为 1024）。</li>
+<li><code>containerd.service</code> - <code>4:1</code> 的比例（未验证 <code>--network=host</code> 是否会降低了比例），<code>LimitNOFILE=1024</code> 能支持 256 个容器，前提是 <code>docker.service</code> 的 <code>LimitNOFILE</code> 也足够高（如 <code>LimitNOFILE=2048</code>）。</li>
+</ul>
+<p>每个容器的资源使用模式：</p>
+<ul>
+<li>每个容器的 systemd <code>.scope</code> 有 1 个任务和大约 400 KiB 的内存（<code>alpine</code> 和 <code>debian</code> 稍少）。</li>
+<li>每个容器增加了 10.5 个任务和 3 MiB 的内存。</li>
+<li>每个正在运行的容器大约打开了 38 个文件。</li>
+</ul>
+<p>在 <code>docker.service</code> 中设置 <code>LimitNOFILE=768</code>，然后执行 <code>systemctl daemon-reload &amp;&amp; systemctl restart docker</code>。通过 <code>cat /proc/$(pidof dockerd)/limits</code> 确认该限制是否已应用。</p>
+<p>运行以下命令列出：</p>
+<ul>
+<li>正在运行的容器数量。</li>
+<li>打开的文件数量。</li>
+<li><code>containerd</code> 和 <code>dockerd</code> 守护进程分别使用的任务和内存数量。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># Useful to run before the loop to compare against output after the loop is done</span><br><span class="line">(pgrep containerd-shim | wc -l) &amp;&amp; sysctl fs.file-nr \</span><br><span class="line">  &amp;&amp; (echo &#x27;Containerd service:&#x27; &amp;&amp; systemctl status containerd | grep -E &#x27;Tasks|Memory&#x27;) \</span><br><span class="line">  &amp;&amp; (echo &#x27;Docker service:&#x27; &amp;&amp; systemctl status docker | grep -E &#x27;Tasks|Memory&#x27;)</span><br></pre></td></tr></table></figure>
+
+<p>运行以下循环时，最后几个容器将失败，大约创建 123 个容器：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># When `docker.service` limit is the bottleneck, you may need to `CTRL + C` to exit the loop</span><br><span class="line"># if it stalls while waiting for new FDs once exhausted and outputting errors:</span><br><span class="line">for i in $(seq 1 130); do docker run --rm -d busybox sleep 180; done</span><br></pre></td></tr></table></figure>
+
+<p>可以添加额外的选项：</p>
+<ul>
+<li><code>--network host</code>：避免每次 <code>docker run</code> 时向默认的 Docker 桥接器创建新的 veth 接口（参见 <code>ip link</code>）。</li>
+<li><code>--ulimit &quot;nofile=1023456789&quot;</code>：不会影响内存使用，但在基于 Debian 的发行版中，值高于 <code>fs.nr_open</code>（1048576）将失败，请使用该值或更低的值。</li>
+<li><code>--cgroup-parent=LimitTests.slice</code>：类似 <code>docker stats</code> 但与其他容器隔离，<code>systemd-cgtop</code> 报告内存使用时包括磁盘缓存（可使用 <code>sync &amp;&amp; sysctl vm.drop_caches=3</code> 清除）。</li>
+</ul>
+<p>为更好了解所有创建容器的资源使用情况，创建一个用于测试的临时 slice：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir /sys/fs/cgroup/LimitTests.slice</span><br><span class="line">systemd-cgtop --order=memory LimitTests.slice</span><br></pre></td></tr></table></figure>
+
+<p>显示整个 slice 和每个容器的内存使用情况，一个 <code>busybox</code> 容器大约使用 400 KiB 的内存。</p>
+<ol start="2">
+<li>限制对子进程的影响</li>
+</ol>
+<p>我原以为子进程会继承父进程的文件描述符（FD）限制。然而实际却是，每个进程继承限制但有独立的计数。</p>
+<ul>
+<li>可以通过以下命令观察 <code>dockerd</code> 和 <code>containerd</code> 进程打开的文件描述符数量：<code>ls -1 /proc/$(pidof dockerd)/fd | wc -l</code>。</li>
+<li>这不适用于负责容器的 <code>containerd-shim</code> 进程，所以 <code>ls -1 /proc/$(pgrep --newest --exact containerd-shim)/fd | wc -l</code> 不会有用。</li>
+</ul>
+<p>为了验证这一点，可以运行以下测试容器：<code>docker run --rm -it --ulimit &quot;nofile=1024:1048576&quot; alpine bash</code>。然后尝试以下操作：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建文件夹并添加许多文件：</span></span><br><span class="line"><span class="built_in">mkdir</span> /tmp/test &amp;&amp; <span class="built_in">cd</span> /tmp/test</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建空文件：</span></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> $(<span class="built_in">seq</span> 3 2048); <span class="keyword">do</span> <span class="built_in">touch</span> <span class="string">&quot;<span class="variable">$&#123;x&#125;</span>.tmp&quot;</span>; <span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 打开文件并指定文件描述符：</span></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> $(<span class="built_in">seq</span> 1000 1030); <span class="keyword">do</span> <span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$&#123;x&#125;</span>&quot;</span>; <span class="built_in">eval</span> <span class="string">&quot;exec <span class="variable">$&#123;x&#125;</span>&lt; <span class="variable">$&#123;x&#125;</span>.tmp&quot;</span>; <span class="keyword">done</span></span><br><span class="line"><span class="comment"># 因为软限制在 1024，所以会失败。提高限制：</span></span><br><span class="line"><span class="built_in">ulimit</span> -Sn 2048</span><br><span class="line"></span><br><span class="line"><span class="comment"># 现在前面的循环将成功。</span></span><br><span class="line"><span class="comment"># 你可以覆盖整个初始软限制范围（不包括 FDs 0-2：stdin、stdout、stderr）：</span></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> $(<span class="built_in">seq</span> 3 1024); <span class="keyword">do</span> <span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$&#123;x&#125;</span>&quot;</span>; <span class="built_in">eval</span> <span class="string">&quot;exec <span class="variable">$&#123;x&#125;</span>&lt; <span class="variable">$&#123;x&#125;</span>.tmp&quot;</span>; <span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 多个容器进程/子进程打开尽可能多的文件：</span></span><br><span class="line"><span class="comment"># 可以在新 shell 进程中运行相同的循环 `ash -c &#x27;for ... done&#x27;`</span></span><br><span class="line"><span class="comment"># 或通过另一个终端的 `docker exec` 进入容器并在 `/tmp/test` 再次运行循环。</span></span><br><span class="line"><span class="comment"># 每个进程可以根据其当前软限制打开文件，`dockerd`、`containerd` 或容器的 PID 1 的限制无关。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">############</span></span><br><span class="line"><span class="comment">### 提示 ###</span></span><br><span class="line"><span class="comment">############</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 可以观察当前应用的限制：</span></span><br><span class="line"><span class="built_in">cat</span> /proc/self/limits</span><br><span class="line"><span class="comment"># 如果未达到软限制（由于管道），这将报告已使用的限制：</span></span><br><span class="line"><span class="built_in">ls</span> -1 /proc/self/fd | <span class="built_in">wc</span> -l</span><br><span class="line"><span class="comment"># 否则，若这是唯一运行的 `ash` 进程，可以查询其 PID 获取信息：</span></span><br><span class="line"><span class="built_in">ls</span> -1 /proc/$(pgrep --newest --exact ash)/fd | <span class="built_in">wc</span> -l</span><br><span class="line"></span><br><span class="line"><span class="comment"># 容器中的进程数：</span></span><br><span class="line"><span class="comment"># `docker stats` 列出容器的 PIDs 数量，</span></span><br><span class="line"><span class="comment"># `systemd-cgtop` 的 Tasks 列也报告相同值。</span></span><br><span class="line"><span class="comment"># 或者如果知道 cgroup 名称，如 `docker-&lt;CONTAINER_ID&gt;.scope`：</span></span><br><span class="line"><span class="comment"># （注意：路径可能因 `--cgroup-parent` 不同）</span></span><br><span class="line"><span class="built_in">cat</span> /sys/fs/cgroup/system.slice/docker-&lt;CONTAINER_ID&gt;.scope/pids.current</span><br><span class="line"></span><br><span class="line"><span class="comment"># 列出进程及其 PIDs：</span></span><br><span class="line"><span class="comment"># 对于单个容器，可以可视化进程树：</span></span><br><span class="line">pstree --arguments --show-pids $(pgrep --newest --exact containerd-shim)</span><br><span class="line"><span class="comment"># 或者如果知道 cgroup 名称，如 `docker-&lt;CONTAINER_ID&gt;.scope`：</span></span><br><span class="line">systemd-cgls --unit docker-&lt;CONTAINER_ID&gt;.scope</span><br><span class="line"></span><br><span class="line"><span class="comment"># 观察内存监控中的磁盘缓存，通过创建 1GB 文件：</span></span><br><span class="line"><span class="built_in">dd</span> <span class="keyword">if</span>=/dev/zero of=bigfile bs=1M count=1000</span><br><span class="line">free -h</span><br><span class="line"><span class="comment"># `systemd-cgtop` 会将此容器的内存使用量增加 1GB，</span></span><br><span class="line"><span class="comment"># 而 `docker stats` 仅增加约 30MiB（按比例）。</span></span><br><span class="line"><span class="comment"># 在容器外清除缓存后再次观察内存使用情况：</span></span><br><span class="line"><span class="built_in">sync</span> &amp;&amp; sysctl vm.drop_caches=3</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>结果观察</li>
+</ol>
+<ul>
+<li>每个进程将这些文件描述符添加到 <code>fs.file-nr</code> 返回的打开文件计数中，并在该进程关闭时释放它们。</li>
+<li>重新运行同一进程的循环不会变化，因为文件已经被计算为该进程打开的。</li>
+<li>这涉及到内存成本：<ul>
+<li>每个通过 <code>touch</code> 创建的文件大约占用 <code>2048</code> 字节（仅在打开前占用磁盘缓存）。</li>
+</ul>
+</li>
+<li>每个打开的文件（每个文件描述符引用都会使 <code>fs.file-nr</code> 增加）大约需要 <code>512</code> 字节的内存。<ul>
+<li>以这种方式创建 512k 个文件大约会占用 1.1 GiB 的内存（当至少有一个文件描述符打开时，使用 <code>sysctl vm.drop_caches=3</code> 也不会释放），每个进程打开等量的文件描述符还会额外使用 250 MiB（262 MB）。</li>
+</ul>
+</li>
+</ul>
+<ol start="4">
+<li>错误处理</li>
+</ol>
+<p>这些问题主要与系统服务的文件描述符限制有关，不同服务的限制耗尽会导致不同错误。</p>
+<p>有时这会导致任何<code>docker</code>命令（如<code>docker ps</code>）挂起（守护进程耗尽限制）。常见现象包括：</p>
+<ul>
+<li>容器未运行（*<code>pgrep containerd-shim</code>没有输出，但<code>docker ps</code>列出的容器超出预期的退出时间*）。</li>
+<li>容器在<code>containerd-shim</code>进程中占用内存，即使执行了<code>systemctl stop docker containerd</code>。有时需要<code>pkill containerd-shim</code>来清理，并且<code>systemctl start docker containerd</code>会在<code>journalctl</code>中记录错误，处理已死的shims的清理（<em>根据容器数量，这可能会超时，需要再次启动<code>containerd</code>服务</em>）。</li>
+<li>即使排除了所有这些因素，仍然有额外的几百MB内存使用。由于它似乎不属于任何进程，推测是内核内存。我尝试运行的最大容器数量大约是1600个左右。</li>
+</ul>
+<h4 id="docker-service超出限制"><a href="#docker-service超出限制" class="headerlink" title="docker.service超出限制"></a><code>docker.service</code>超出限制</h4><p>每次<code>docker run</code>时，系统会输出不同的错误：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ERRO[0000] Error waiting for container: container caff476371b6897ef35a95e26429f100d0d929120ff1abecc8a16aa674d692bf: driver &quot;overlay2&quot; failed to remove root filesystem: open /var/lib/docker/overlay2/35f26ec862bb91d7c3214f76f8660938145bbb36eda114f67e711aad2be89578-init/diff/etc: too many open files</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker: Error response from daemon: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error running hook #0: error running hook: exit status 1, stdout: , stderr: time=&quot;2023-03-12T02:26:20Z&quot; level=fatal msg=&quot;failed to create a netlink handle: could not get current namespace while creating netlink socket: too many open files&quot;: unknown.</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker: Error response from daemon: failed to initialize logging driver: open /var/lib/docker/containers/b014a19f7eb89bb909dee158d21f35f001cfeb80c01e0078d6f20aac8151573f/b014a19f7eb89bb909dee158d21f35f001cfeb80c01e0078d6f20aac8151573f-json.log: too many open files.</span><br></pre></td></tr></table></figure>
+
+<h4 id="containerd-service限制超出"><a href="#containerd-service限制超出" class="headerlink" title="containerd.service限制超出"></a><code>containerd.service</code>限制超出</h4><p>我也观察到一些类似的错误：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker: Error response from daemon: failed to start shim: start failed: : pipe2: too many open files: unknown.</span><br></pre></td></tr></table></figure>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li><strong>2023年8月</strong>：在<code>docker.service</code>中<a target="_blank" rel="noopener" href="https://github.com/moby/moby/pull/42373">移除了<code>LimitNOFILE=infinity</code></a>。</li>
+<li><strong>2021年5月</strong>：<code>LimitNOFILE=infinity</code> 和 <code>LimitNPROC=infinity</code> <a target="_blank" rel="noopener" href="https://github.com/moby/moby/pull/42373">重新添加回<code>docker.service</code></a>，以与Docker CE的配置同步。<ul>
+<li>这个PR是一个合并提交，源自<a target="_blank" rel="noopener" href="https://github.com/moby/moby/commit/80039b4699e36ceb0eb81109cd1686aaa805c5ec">2018年9月的提交</a>。</li>
+</ul>
+</li>
+<li><strong>2016年7月</strong>：<a target="_blank" rel="noopener" href="https://github.com/moby/moby/pull/24555"><code>LimitNOFILE=infinity</code>更改为<code>LimitNOFILE=1048576</code></a>。<ul>
+<li>讨论引用了<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/1212925/on-linux-set-maximum-open-files-to-unlimited-possible">2009年StackOverflow上的回答</a>，关于特定发行版&#x2F;内核中<code>infinity</code>被限制为<code>2^20</code>。今天的一些系统上，这个上限可以是1024倍更高（*<code>2^30 == 1073741816</code>，超过10亿*）。</li>
+</ul>
+</li>
+<li><strong>2016年7月</strong>：<a target="_blank" rel="noopener" href="https://github.com/moby/moby/pull/24307"><code>LimitNOFILE</code>和<code>LimitNPROC</code>从<code>1048576</code>更改为<code>infinity</code></a>。<ul>
+<li>这个PR不久后撤回了对<code>LimitNOFILE</code>的更改。</li>
+</ul>
+</li>
+<li><strong>2014年3月</strong>：<a target="_blank" rel="noopener" href="https://github.com/moby/moby/pull/4455#issuecomment-36679884">原始<code>LimitNOFILE</code> + <code>LimitNPROC</code>以<code>1048576</code>添加</a>。<ul>
+<li>链接的PR评论提到这个<code>2^20</code>的值已经高于Docker所需。</li>
+</ul>
+</li>
+</ul>
+<p><strong>当前状态：</strong></p>
+<ul>
+<li>在Docker v25之前，<code>LimitNOFILE=infinity</code>仍然是默认设置，除非将其回退。</li>
+<li><code>containerd</code> 已经<a target="_blank" rel="noopener" href="https://github.com/containerd/containerd/pull/8924">合并了相应的更改</a>，从他们的systemd服务文件中移除了<code>LimitNOFILE</code>设置。</li>
+</ul>
+<h4 id="Systemd-240"><a href="#Systemd-240" class="headerlink" title="Systemd &lt; 240"></a>Systemd &lt; 240</h4><p>在某些systemd版本中，设置<code>LimitNOFILE</code>为无穷大可能导致它被限制为65536。请检查服务配置：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@XXX ~]<span class="comment"># ulimit -n -u</span></span><br><span class="line">open files                      (-n) 1024</span><br><span class="line">max user processes              (-u) 499403</span><br></pre></td></tr></table></figure>
+
+<p>containerd的systemd服务配置如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /usr/lib/systemd/system/containerd.service</span><br><span class="line">[Unit]</span><br><span class="line">Description=containerd container runtime</span><br><span class="line">Documentation=https://containerd.io</span><br><span class="line">After=network.target local-fs.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">ExecStartPre=-/sbin/modprobe overlay</span><br><span class="line">ExecStart=/usr/local/bin/containerd</span><br><span class="line">Type=notify</span><br><span class="line">Delegate=<span class="built_in">yes</span></span><br><span class="line">KillMode=process</span><br><span class="line">Restart=always</span><br><span class="line">RestartSec=5</span><br><span class="line">LimitNPROC=infinity</span><br><span class="line">LimitCORE=infinity</span><br><span class="line">LimitNOFILE=infinity</span><br><span class="line">TasksMax=infinity</span><br><span class="line">OOMScoreAdjust=-999</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+
+<p>查看配置对docker和containerd进程的影响：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@XXX ~]<span class="comment"># cat /proc/$(pidof dockerd)/limits</span></span><br><span class="line">Limit                     Soft Limit           Hard Limit           Units     </span><br><span class="line">Max open files            1048576              1048576              files     </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@XXX ~]<span class="comment"># cat /proc/$(pidof containerd)/limits</span></span><br><span class="line">Limit                     Soft Limit           Hard Limit           Units     </span><br><span class="line">Max open files            1048576              1048576              files     </span><br></pre></td></tr></table></figure>
+
+<p>这个补丁使systemd查看<code>/proc/sys/fs/nr_open</code>来找到内核中编译的当前最大打开文件数，并尝试将<code>RLIMIT_NOFILE</code>的最大值设置为此值。这样做的好处是所选的限制值不太随意，并且改善了在设置了rlimit的容器中systemd的行为。</p>
+<p>详细讨论见：<a target="_blank" rel="noopener" href="https://github.com/systemd/systemd/issues/6559">systemd GitHub issue</a>。</p>
+<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/moby/moby/issues/45838">https://github.com/moby/moby/issues/45838</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/moby/moby/issues/23137">https://github.com/moby/moby/issues/23137</a></li>
+<li><a target="_blank" rel="noopener" href="https://0pointer.net/blog/file-descriptor-limits.html">https://0pointer.net/blog/file-descriptor-limits.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.codenong.com/cs105896693/">https://www.codenong.com/cs105896693/</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/moby/moby/issues/38814">https://github.com/moby/moby/issues/38814</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/cri-o/cri-o/issues/7703">https://github.com/cri-o/cri-o/issues/7703</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/envoyproxy/envoy/issues/31502">https://github.com/envoyproxy/envoy/issues/31502</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html#Process%20Properties">https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html#Process%20Properties</a></li>
+</ol>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/categories/">Category</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">问题描述</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#xinetd-slowly"><span class="toc-number">1.1.</span> <span class="toc-text">xinetd slowly</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#yum-hang"><span class="toc-number">1.2.</span> <span class="toc-text">yum hang</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#rpm-slow"><span class="toc-number">1.3.</span> <span class="toc-text">rpm slow</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PtyProcess-spawn-slowdown-in-close-loop"><span class="toc-number">1.4.</span> <span class="toc-text">PtyProcess.spawn slowdown in close() loop</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E8%83%8C%E6%99%AF"><span class="toc-number">2.</span> <span class="toc-text">技术背景</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-RLIMIT-NOFILE"><span class="toc-number">2.1.</span> <span class="toc-text">1. RLIMIT_NOFILE</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-File-Descriptor-Limits"><span class="toc-number">2.2.</span> <span class="toc-text">2. File Descriptor Limits</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#select"><span class="toc-number">2.3.</span> <span class="toc-text">select</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%BB%E6%A0%B9%E6%BA%AF%E6%BA%90"><span class="toc-number">3.</span> <span class="toc-text">寻根溯源</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A2%E7%A9%B6%E8%B5%84%E6%BA%90%E6%B6%88%E8%80%97"><span class="toc-number">3.1.</span> <span class="toc-text">探究资源消耗</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#docker-service%E8%B6%85%E5%87%BA%E9%99%90%E5%88%B6"><span class="toc-number">3.2.</span> <span class="toc-text">docker.service超出限制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#containerd-service%E9%99%90%E5%88%B6%E8%B6%85%E5%87%BA"><span class="toc-number">3.3.</span> <span class="toc-text">containerd.service限制超出</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Systemd-240"><span class="toc-number">4.1.</span> <span class="toc-text">Systemd &lt; 240</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">5.</span> <span class="toc-text">参考链接</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/186b05db/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/186b05db/&text=RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/186b05db/&title=RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/186b05db/&is_video=false&description=RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶&body=Check out this article: https://zoues.com/posts/186b05db/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/186b05db/&title=RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/186b05db/&title=RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/186b05db/&title=RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/186b05db/&title=RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/186b05db/&name=RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/186b05db/&t=RLIMIT_NOFILE设置陷阱：容器应用高频异常的隐形元凶"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zouyee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
