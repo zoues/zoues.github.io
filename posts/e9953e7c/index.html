@@ -13,20 +13,21 @@
 <meta property="og:site_name" content="zouyee">
 <meta property="og:description" content="为了帮助读者深入了解Kubernetes在各种应用场景下所面临的挑战和解决方案，以及如何进行性能优化。我们推出了&lt;&lt;Kubernetes经典案例30篇&gt;&gt;，该系列涵盖了不同的使用场景，从runc到containerd，从K8s到Istio等微服务架构，全面展示了Kubernetes在实际应用中的最佳实践。通过这些案例，读者可以掌握如何应对复杂的技术难题，并提升Kuberne">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://ask.qcloudimg.com/http-save/yehe-5465588/f5vh6oqueh.png?imageView2/2/w/1620">
+<meta property="og:image" content="https://pic.imgdb.cn/item/6691e507d9c307b7e9943c62.png">
+<meta property="og:image" content="https://pic.imgdb.cn/item/6691e5acd9c307b7e994e785.png">
 <meta property="og:image" content="https://pic2.zhimg.com/80/v2-f4551e163f574dfe4a98dc1847272e05_720w.webp">
 <meta property="og:image" content="https://frankdenneman.nl/wp-content/uploads/2019/10/03-Rome-Chiplet.png">
 <meta property="og:image" content="https://lynnapan.github.io/images/cache/8.png">
-<meta property="og:image" content="https://www.intel.cn/content/dam/www/central-libraries/cn/zh/images/26-3-image3-intel-rdt-kernel-architecture.png.rendition.intel.web.1920.1080.png">
-<meta property="og:image" content="https://www.intel.cn/content/dam/www/central-libraries/cn/zh/images/26-4-image4-intel-rdt-monitoring-and-control-diagram-in-resctrl-file-system.png.rendition.intel.web.1920.1080.png">
+<meta property="og:image" content="https://pic.imgdb.cn/item/6691e693d9c307b7e995d1f8.png">
+<meta property="og:image" content="https://pic.imgdb.cn/item/6691e6c8d9c307b7e9960b0d.png">
 <meta property="og:image" content="https://justadogistaken.github.io/images/cpi-1.png">
 <meta property="og:image" content="https://justadogistaken.github.io/images/cpi-2.png">
 <meta property="article:published_time" content="2024-07-12T23:48:30.000Z">
-<meta property="article:modified_time" content="2024-07-13T00:48:54.351Z">
+<meta property="article:modified_time" content="2024-07-13T02:32:15.895Z">
 <meta property="article:author" content="zouyee">
 <meta property="article:tag" content="cloudnative, kubernetes, container, ziglang">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://ask.qcloudimg.com/http-save/yehe-5465588/f5vh6oqueh.png?imageView2/2/w/1620">
+<meta name="twitter:image" content="https://pic.imgdb.cn/item/6691e507d9c307b7e9943c62.png">
     
     
       
@@ -178,9 +179,7 @@
 <li><a href="/posts/e9953e7c/">容器干扰检测与治理（上篇）</a></li>
 </ol>
 <p>从资源分配视图来看，集群分配相对平衡的，但从实际负载情况来看，已经出现较多的热点，此时容易发生应用间竞争共享资源, 导致核心业务出现性能干扰，应用的响应时间往往会出现长尾现象，导致应用服务质量下降，且会增加其故障的可能性，这种应用间的资源竞争及性能干扰（如noisy neighbor现象）使得应用调度与资源管理变得十分复杂，因此考虑如何降低应用间的性能干扰, 以保障业务的稳定性。</p>
-<blockquote>
-<p>NOTE: 混部(混合部署)，这里的“混”，本质上就是“区分优先级”。狭义上，可以简单的理解为“在线+离线”(在离线)混部，广义上，可以扩展到更广的应用范围：多优先级业务混合部署</p>
-</blockquote>
+<p><img src="https://pic.imgdb.cn/item/6691e507d9c307b7e9943c62.png"></p>
 <p>“noisy neighbor”问题是云基础设施中的一种常见现象，指的是当应用程序所需的资源被同一计算节点中的其他应用程序大量占用时，导致应用程序性能降低，如延迟时间增加。这对业务敏感型应用来说，尤其棘手，但通常难以识别。</p>
 <p>问题的根源在于资源共享时缺乏严格的隔离策略。从资源层面来看，包括CPU、内存（L1&#x2F;L2&#x2F;L3缓存）、网络和块I&#x2F;O等。从硬件拓扑层面来看，则涉及到CPU缓存、内存带宽等。CPU核心紧密连接着其他可共享资源，如最后一级缓存（LLC）和内存带宽。在分配共享资源时，如果没有有效的隔离策略，问题就会出现。例如，同级超线程共享相同的物理CPU核心，不同物理CPU核心上的工作负载共享相同的最后一级缓存、内存控制器和I&#x2F;O总线带宽，甚至不同物理CPU插槽上的工作负载也共享CPU互连带宽、相同的存储设备或I&#x2F;O总线。在这种情况下，”noisy neighbor”往往需要更多的资源，并且需要消耗更多时间才能完成同一任务。这会导致核心应用无法获得所需资源，导致性能下降和stall情况的出现。</p>
 <p>Kubernetes提供了CPU管理器和设备插件管理器，用于硬件资源分配，例如CPU和设备（SR-IOV、GPU）。目前，Kubernetes还提供了拓扑管理器，以实现NUMA拓扑感知，协调资源并保证关键工作负载的最佳性能。然而，这些功能并未直接解决”noisy neighbor”问题。</p>
@@ -195,6 +194,9 @@
 <li><strong>监控和调整</strong>：持续监控应用程序的资源使用情况和性能表现，及时调整资源分配策略，确保关键应用的稳定运行。</li>
 </ol>
 <p>通过实施这些优化策略，可以在很大程度上缓解”noisy neighbor”问题，保障关键应用程序的性能和稳定性,其中隔离策略、优先级和抢占以及numa感知调度都是针对应用场景的资源QoS优化策略，那么我们如何衡量性能干扰？</p>
+<blockquote>
+<p>NOTE: 混部(混合部署)，这里的“混”，本质上就是“区分优先级”。狭义上，可以简单的理解为“在线+离线”(在离线)混部，广义上，可以扩展到更广的应用范围：多优先级业务混合部署</p>
+</blockquote>
 <hr>
 <h2 id="技术背景"><a href="#技术背景" class="headerlink" title="技术背景"></a>技术背景</h2><h3 id="名词解释"><a href="#名词解释" class="headerlink" title="名词解释"></a>名词解释</h3><h4 id="a-CPI"><a href="#a-CPI" class="headerlink" title="a. CPI"></a>a. CPI</h4><p>CPI 即 Cycle Per Instruction 的缩写，它的含义就是<strong>每指令周期数</strong>。此外，在一些场合，也可以经常看到 IPC，即 Instruction Per Cycle，含义为<strong>每周期指令数</strong>。</p>
 <blockquote>
@@ -202,7 +204,7 @@
 </blockquote>
 <p>CPI 和 IPC 的关系为: CPI &#x3D; 1 &#x2F; IPC</p>
 <p><strong>如果具体到单 CPU 的程序执行性能场景</strong>，实际上可以表示为：</p>
-<p><img src="https://ask.qcloudimg.com/http-save/yehe-5465588/f5vh6oqueh.png?imageView2/2/w/1620" alt="img"></p>
+<p><img src="https://pic.imgdb.cn/item/6691e5acd9c307b7e994e785.png" alt="img"></p>
 <p>由于受到硅材料和制造工艺的限制，处理器主频的提高已经面临瓶颈，因此，程序性能的提高，主要的变量在 Instruction Count 和 CPI 这两个方面</p>
 <p>通常情况下，通过 CPI 的取值，我们可以大致判断一个计算密集型任务，到底是 CPU 密集型的还是 Memory 密集型的：</p>
 <ul>
@@ -274,11 +276,11 @@
 <blockquote>
 <p>RDT技术针对的是缓存和内存带宽，分别又分为监控和控制，就形成了4个功能模块，再加上代码和数据优先级(控制技术)，合起来形成5个功能模块。</p>
 </blockquote>
-<img src="https://www.intel.cn/content/dam/www/central-libraries/cn/zh/images/26-3-image3-intel-rdt-kernel-architecture.png.rendition.intel.web.1920.1080.png" alt="英特尔® RDT 内核架构" style="zoom:50%;" />
+<img src="https://pic.imgdb.cn/item/6691e693d9c307b7e995d1f8.png" alt="英特尔® RDT 内核架构" style="zoom:50%;" />
 
 <p>启用 RDT 控制后，可在根目录中创建用户目录（“CG1” 和 “CG2”，见图 4：英特尔® RDT 在 resctrl 文件系统中的分层结构），为每个共享资源指定不同的控制力度。RDT 控制组包含以下文件：“tasks”：读取该文件会显示该群组所有任务的列表。将任务 ID 写入文件会添加任务到群组。“cpus”：读取该文件会显示该群组拥有的逻辑 CPU 的位掩码。将掩码写入文件会添加 CPU 到群组或从群组中移除 CPU。“schemata”：该群组可访问的所有资源的列表。</p>
 <p>启用 RDT 监控功能后，根目录和其他顶层目录会包含 “mon_groups” 目录，在此目录中可以创建用户目录（“M1” 和 “M2”，见图 4：英特尔® RDT 在 resctrl 文件系统中的分层结构），以监控任务群组。“Mon_data” 目录包含一组按照资源域和 RDT 事件组织的文件。这些目录中，每个目录针对每个事件都有一个文件（“llc_occupancy”、“mbm_ total_bytes” 和 “mbm_local_bytes”）。这些文件为群组中的所有任务提供了事件当前值的计数器。</p>
-<img src="https://www.intel.cn/content/dam/www/central-libraries/cn/zh/images/26-4-image4-intel-rdt-monitoring-and-control-diagram-in-resctrl-file-system.png.rendition.intel.web.1920.1080.png" alt="英特尔® RDT 在 resctrl 文件系统中的监测和控制示意图" style="zoom:50%;" />
+<img src="https://pic.imgdb.cn/item/6691e6c8d9c307b7e9960b0d.png" alt="英特尔® RDT 在 resctrl 文件系统中的监测和控制示意图" style="zoom:50%;" />
 
 
 
