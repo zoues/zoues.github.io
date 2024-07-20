@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Original: https:&#x2F;&#x2F;github.com&#x2F;NVIDIA&#x2F;k8s-dra-driver?tab&#x3D;readme-ov-file IntroductionDynamic Resource Allocation (DRA) is an upcoming Kubernetes feature that puts resource scheduling in the hands of 3rd-">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dynamic Resource Allocation (DRA) for GPUs in Kubernetes">
+<meta property="og:url" content="https://zoues.com/posts/11831eff/index.html">
+<meta property="og:site_name" content="zouyee">
+<meta property="og:description" content="Original: https:&#x2F;&#x2F;github.com&#x2F;NVIDIA&#x2F;k8s-dra-driver?tab&#x3D;readme-ov-file IntroductionDynamic Resource Allocation (DRA) is an upcoming Kubernetes feature that puts resource scheduling in the hands of 3rd-">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://pic.imgdb.cn/item/669b5569d9c307b7e917a5e3.png">
+<meta property="og:image" content="https://pic.imgdb.cn/item/669b567fd9c307b7e9197041.png">
+<meta property="og:image" content="https://pic.imgdb.cn/item/669b5833d9c307b7e91b7264.png">
+<meta property="og:image" content="https://pic.imgdb.cn/item/669b5901d9c307b7e91c91fd.png">
+<meta property="og:image" content="https://pic.imgdb.cn/item/669b597cd9c307b7e91d0a1b.png">
+<meta property="og:image" content="https://pic.imgdb.cn/item/669b59bfd9c307b7e91d50c5.png">
+<meta property="article:published_time" content="2024-07-20T05:29:19.000Z">
+<meta property="article:modified_time" content="2024-07-20T06:36:02.419Z">
+<meta property="article:author" content="zouyee">
+<meta property="article:tag" content="kubernetes">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic.imgdb.cn/item/669b5569d9c307b7e917a5e3.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Dynamic Resource Allocation (DRA) for GPUs in Kubernetes</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="zouyee" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/e9953e7c/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/11831eff/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/11831eff/&text=Dynamic Resource Allocation (DRA) for GPUs in Kubernetes"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/11831eff/&title=Dynamic Resource Allocation (DRA) for GPUs in Kubernetes"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/11831eff/&is_video=false&description=Dynamic Resource Allocation (DRA) for GPUs in Kubernetes"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Dynamic Resource Allocation (DRA) for GPUs in Kubernetes&body=Check out this article: https://zoues.com/posts/11831eff/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/11831eff/&title=Dynamic Resource Allocation (DRA) for GPUs in Kubernetes"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/11831eff/&title=Dynamic Resource Allocation (DRA) for GPUs in Kubernetes"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/11831eff/&title=Dynamic Resource Allocation (DRA) for GPUs in Kubernetes"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/11831eff/&title=Dynamic Resource Allocation (DRA) for GPUs in Kubernetes"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/11831eff/&name=Dynamic Resource Allocation (DRA) for GPUs in Kubernetes&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/11831eff/&t=Dynamic Resource Allocation (DRA) for GPUs in Kubernetes"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Facing-API"><span class="toc-number">2.</span> <span class="toc-text">User-Facing API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DRA-Resource-Driver-Architecture"><span class="toc-number">3.</span> <span class="toc-text">DRA Resource Driver Architecture</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Allocating-a-ResourceClaim"><span class="toc-number">4.</span> <span class="toc-text">Allocating a ResourceClaim</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Writing-your-own-DRA-resource-driver"><span class="toc-number">5.</span> <span class="toc-text">Writing your own DRA resource driver</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Status-Future-Work"><span class="toc-number">6.</span> <span class="toc-text">Status &amp; Future Work</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">7.</span> <span class="toc-text">Reference</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Dynamic Resource Allocation (DRA) for GPUs in Kubernetes
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Kevin Klues</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-07-20T05:29:19.000Z" class="dt-published" itemprop="datePublished">2024-07-20</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/kubernetes/" rel="tag">kubernetes</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>Original: <a target="_blank" rel="noopener" href="https://github.com/NVIDIA/k8s-dra-driver?tab=readme-ov-file">https://github.com/NVIDIA/k8s-dra-driver?tab=readme-ov-file</a></p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p><a target="_blank" rel="noopener" href="https://github.com/kubernetes/enhancements/tree/master/keps/sig-node/3063-dynamic-resource-allocation">Dynamic Resource Allocation (DRA)</a> is an upcoming Kubernetes feature that puts resource scheduling in the hands of 3rd-party developers. From an end-user’s perspective, It moves away from the limited “countable” interface for requesting access to resources  (e.g. “<strong>nvidia.com&#x2F;gpu: 2</strong>“), providing an API more akin to that of persistent volumes. Under the hood it uses <a target="_blank" rel="noopener" href="https://github.com/container-orchestrated-devices/container-device-interface">CDI</a> to do its device injection.</p>
+<p>NVIDIA has been working with Intel for the past 2 years on this feature and we are excited to see it finally gain traction within the community. DRA has been <a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/pull/111023">merged</a> as an alpha feature for <a target="_blank" rel="noopener" href="https://www.kubernetes.dev/resources/release/#kubernetes-126">Kubernetes 1.26</a> (released in December 2022). Its graduation to beta and GA will follow soon after.</p>
+<p>In the context of GPUs, this unlocks a host of new features without the need for awkward solutions shoehorned on top of the existing device plugin API.</p>
+<p>These features include:</p>
+<ul>
+<li>Controlled GPU Sharing (both within a pod and across pods)</li>
+<li>Multiple GPU models per node (e.g. T4 and A100)</li>
+<li>Specifying arbitrary constraints for a GPU (min&#x2F;max memory, device model, etc.)</li>
+<li>Natural support for MPS</li>
+<li>Dynamic allocation of MIG devices</li>
+<li>Dynamic repurposing of a GPU from full to MIG mode</li>
+<li>Dynamic repurposing of a GPU for use as Passthrough vs. vGPU</li>
+<li>… the list goes on …</li>
+</ul>
+<p>A reference implementation of our <a target="_blank" rel="noopener" href="https://gitlab.com/nvidia/cloud-native/k8s-dra-driver">DRA resource driver for GPUs</a> is already available and a demo showcasing a subset of the features listed above can be found <a target="_blank" rel="noopener" href="https://drive.google.com/file/d/1iLg2FEAEilb1dcI27TnB19VYtbcvgKhS/view?usp=sharing">here</a>.</p>
+<h2 id="User-Facing-API"><a href="#User-Facing-API" class="headerlink" title="User-Facing API"></a>User-Facing API</h2><p><a target="_blank" rel="noopener" href="https://github.com/kubernetes/enhancements/tree/master/keps/sig-node/3063-dynamic-resource-allocation">Dynamic Resource Allocation (DRA)</a> is a generalization of the <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/storage/persistent-volumes/">Persistent Volumes</a> API for generic resources. As such, it allows one to separate the <em>declaration</em> of a resource to be consumed, from its actual consumption. This allows one to move away from the limited  “countable” API  provided by device-plugins today, to something much more flexible in terms of controlling which resources are consumed (and where).</p>
+<p>Using our reference <a target="_blank" rel="noopener" href="https://gitlab.com/nvidia/cloud-native/k8s-dra-driver">DRA resource driver for GPUs</a> as an example, the table below shows the difference between how one requests access to two <strong>gpus</strong> under the existing device plugin model vs. DRA.</p>
+<table>
+<tr>
+<th>
+Existing device plugin
+</th>
+<th>
+DRA resource driver for GPUs
+</th>
+</tr>
+
+<tr>
+
+<td>
+<pre>
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod
+spec:
+  containers:
+  - name: ctr
+    image: nvidia/cuda
+    command: ["nvidia-smi", "-L"]
+    resources:
+      limits:
+        nvidia.com/gpu: 2
+</pre>
+</td>
+
+<td>
+<pre>
+apiVersion: resource.k8s.io/v1alpha1
+kind: ResourceClaimTemplate
+metadata:
+  name: gpu-template
+spec:
+  spec:
+    resourceClassName: gpu.nvidia.com
+
+<p>––<br>apiVersion: v1<br>kind: Pod<br>metadata:<br>name: pod<br>spec:<br>containers:</p>
+<ul>
+<li>name: ctr<br>image: nvidia&#x2F;cuda<br>command: [“nvidia-smi” “-L”]<br>resources:<br>claims:<ul>
+<li>name: gpu0</li>
+<li>name: gpu1<br>resourceClaims:</li>
+</ul>
+</li>
+<li>name: gpu0<br>source:<br>resourceClaimTemplate: gpu-template</li>
+<li>name: gpu1<br>source:<br>resourceClaimTemplate: gpu-template<br></pre></td></li>
+</ul>
+</tr>
+</table>
+
+<p>Moreover, <strong>ResourceClaims</strong> can be annotated with a set of parameters defined by the developer of the DRA resource driver for a given <strong>ResourceClass</strong>. These parameters allow users to attach additional constraints to their resource requests.</p>
+<p>For example, our reference DRA resource driver for GPUs defines the following two claim parameter objects for use with claims against the <strong>gpu.nvidia.com</strong> resource class:</p>
+<table>
+<tr>
+<th>
+GPU Sharing within a Pod
+</th>
+<th>
+GPU Sharing across Pods
+</th>
+</tr>
+
+<tr>
+
+<td>
+<pre>
+---
+apiVersion: resource.k8s.io/v1alpha1
+kind: ResourceClaimTemplate
+metadata:
+  name: gpu-template
+spec:
+  spec:
+    resourceClassName: gpu.nvidia.com
+
+<p>––<br>apiVersion: v1<br>kind: Pod<br>metadata:<br>name: pod<br>spec:<br>containers:</p>
+<ul>
+<li>name: ctr0<br>image: nvidia&#x2F;cuda<br>command: [“nvidia-smi” “-L”]<br>resources:<br>claims:<ul>
+<li>name: gpu</li>
+</ul>
+</li>
+<li>name: ctr1<br>image: nvidia&#x2F;cuda<br>command: [“nvidia-smi” “-L”]<br>resources:<br>claims:<ul>
+<li>name: gpu<br>resourceClaims:</li>
+</ul>
+</li>
+<li>name: gpu<br>source:<br>resourceClaimTemplate: gpu-template<br></pre></td></li>
+</ul>
+<td>
+<pre>
+–--
+apiVersion: resource.k8s.io/v1alpha1
+kind: ResourceClaim
+metadata:
+  name: shared-gpu
+spec:
+  resourceClassName: gpu.nvidia.com
+
+<hr>
+<p>apiVersion: v1<br>kind: Pod<br>metadata:<br>name: pod0<br>spec:<br>containers:</p>
+<ul>
+<li>name: ctr<br>image: nvidia&#x2F;cuda<br>command: [“nvidia-smi” “-L”]<br>resources:<br>claims:<ul>
+<li>name: gpu<br>resourceClaims:</li>
+</ul>
+</li>
+<li>name: gpu<br>source:<br>resourceClaimName: shared-gpu</li>
+</ul>
+<hr>
+<p>apiVersion: v1<br>kind: Pod<br>metadata:<br>name: pod1<br>spec:<br>containers:</p>
+<ul>
+<li>name: ctr<br>image: nvidia&#x2F;cuda<br>command: [“nvidia-smi” “-L”]<br>resources:<br>claims:<ul>
+<li>name: gpu<br>resourceClaims:</li>
+</ul>
+</li>
+<li>name: gpu<br>source:<br>resourceClaimName: shared-gpu<br></pre></td></li>
+</ul>
+</tr>
+</table>
+
+<p>Moreover, <strong>ResourceClaims</strong> can be annotated with a set of parameters defined by the developer of the DRA resource driver for a given <strong>ResourceClass</strong>. These parameters allow users to attach additional constraints to their resource requests.</p>
+<p>For example, our reference DRA resource driver for GPUs defines the following two claim parameter objects for use with claims against the <strong>gpu.nvidia.com</strong> resource class:</p>
+<table>
+<tr>
+<th>
+
+</th>
+<th>
+
+</th>
+</tr>
+
+<tr>
+
+<td>
+<pre>
+apiVersion: gpu.resource.nvidia.com/v1alpha1
+kind: GpuClaimParameters
+metadata:
+  name: ...
+spec:
+  count: ...
+  migEnabled: ...
+</pre>
+</td>
+
+<td>
+<pre>
+apiVersion: gpu.resource.nvidia.com/v1alpha1
+kind: MigDeviceClaimParameters
+metadata:
+  name: ...
+spec:
+  profile: ...
+  gpuClaimName: ...
+</pre>
+</td>
+
+</tr>
+</table>
+
+
+
+
+<p>The <strong>GpuClaimParameters</strong> object gives users the ability to request more than one GPU from a single resource claim (via the <strong>count</strong> parameter) as well as specify whether they want to receive GPUs that have MIG mode enabled on them or not (via the <strong>migEnabled</strong> parameter) .</p>
+<p>The <strong>MigDeviceClaimParameters</strong> object gives users the ability to specify the profile of a MIG device they would like access to (via the <strong>profile</strong> parameter) as well as an optional reference to the specific GPU they would like their MIG device to be allocated on (via the <strong>gpuClaimName</strong> parameter).</p>
+<p><em><strong>Note:</strong> both of these claim parameter objects are reference implementations, and we plan to extend &#x2F; replace them before they are released. Any feedback on what you would like to see here is greatly appreciated.</em></p>
+<p>An example of using <strong>GpuClaimParameters</strong> to request eight GPUs from a single resource claim can be seen below:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: gpu.resource.nvidia.com/v1alpha1</span><br><span class="line">kind: GpuClaimParameters</span><br><span class="line">metadata:</span><br><span class="line">  name: eight-gpus</span><br><span class="line">spec:</span><br><span class="line">  count: 8</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line">apiVersion: resource.k8s.io/v1alpha1</span><br><span class="line">kind: ResourceClaimTemplate</span><br><span class="line">metadata:</span><br><span class="line">  name: eight-gpus-template</span><br><span class="line">spec:</span><br><span class="line">  spec:</span><br><span class="line">    resourceClassName: gpu.nvidia.com</span><br><span class="line">    parametersRef:</span><br><span class="line">      apiGroup: gpu.resource.nvidia.com</span><br><span class="line">      kind: GpuClaimParameters</span><br><span class="line">      name: eight-gpus</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line">apiVersion: v1</span><br><span class="line">kind: Pod</span><br><span class="line">metadata:</span><br><span class="line">  name: pod</span><br><span class="line">spec:</span><br><span class="line">  containers:</span><br><span class="line">  - name: ctr</span><br><span class="line">    image: nvidia/cuda</span><br><span class="line">    command: [&quot;nvidia-smi&quot; &quot;-L&quot;]</span><br><span class="line">    resources:</span><br><span class="line">      claims:</span><br><span class="line">      - eight-gpus</span><br><span class="line">  resourceClaims:</span><br><span class="line">  - name: eight-gpus</span><br><span class="line">    source:</span><br><span class="line">      resourceClaimTemplate: eight-gpus-template</span><br></pre></td></tr></table></figure>
+
+<p>A more complex example involving both a GpuClaimParameters object and a MigDeviceClaimParameters object can be seen here:</p>
+<p>In this example, we create a single pod with two containers, each of which wants access to its own 3g.40gb MIG device.</p>
+<p><img src="https://pic.imgdb.cn/item/669b5569d9c307b7e917a5e3.png"></p>
+<p>To ensure that the two MIG devices ultimately come from the same underlying GPU, we first create a <strong>GpuClaimParameters</strong> object requesting access to a MIG enabled GPU. We call this claim parameters object <strong>mig-enabled-gpu</strong>.<br>We then create a <strong>ResourceClaimTemplate</strong> also called <strong>mig-enabled-gpu</strong>, which binds the <strong>gpu.nvidia.com</strong> resource class to the <strong>mig-enabled-gpu</strong> claim parameters object.<br>Next we create a <strong>MigDeviceClaimParameters</strong> object specifying the <strong>3g.40gb</strong> profile. This object also includes a forward reference to the (yet-to-be-created) resource claim of the MIG enabled GPU on which this MIG device should be created (<strong>shared-gpu</strong>). Note this is the name of the resource claim itself, <em>not</em> the claim parameters object we called <strong>mig-enabled-gpu</strong>. We call this new claim parameters object <strong>mig-3g.40gb</strong>.<br>We then create a <strong>ResourceClaimTemplate</strong> also called <strong>mig-3g.40gb</strong>, which binds the <strong>gpu.nvidia.com</strong> resource class to the <strong>mig-3g.40gb</strong> claim parameters object.<br>Next we create the actual resource claims themselves inside the pod spec. One resource claim called <strong>shared-gpu</strong>, which references the <strong>mig-enabled-gpu</strong> resource claim template, as well as two other resource claims, each referencing the <strong>mig-3g.40gb</strong> resource claim template. These two resource claims are called <strong>mig-3g-0</strong> and <strong>mig-3g-1</strong>, respectively.<br>Finally, we reference each of these resource claims in the <strong>resources.claims</strong> sections of our two containers. Both containers refer to the same underlying <strong>shared-gpu</strong> claim, with each container pointing to one of <strong>mig-3g-0</strong> or <strong>mig-3g-1</strong>, respectively.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">gpu.resource.nvidia.com/v1alpha1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">GpuClaimParameters</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">mig-enabled-gpu</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">migEnabled:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">resource.k8s.io/v1alpha1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ResourceClaimTemplate</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">mig-enabled-gpu</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">spec:</span></span><br><span class="line">    <span class="attr">resourceClassName:</span> <span class="string">gpu.nvidia.com</span></span><br><span class="line">    <span class="attr">parametersRef:</span></span><br><span class="line">      <span class="attr">apiGroup:</span> <span class="string">gpu.resource.nvidia.com</span></span><br><span class="line">      <span class="attr">kind:</span> <span class="string">GpuClaimParameters</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">mig-enabled-gpu</span></span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">gpu.resource.nvidia.com/v1alpha1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">MigDeviceClaimParameters</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">mig-3g.40gb</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">profile:</span> <span class="string">3g.40gb</span></span><br><span class="line">  <span class="attr">gpuClaimName:</span> <span class="string">shared-gpu</span></span><br><span class="line"></span><br><span class="line"><span class="string">–--</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">resource.k8s.io/v1alpha1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ResourceClaimTemplate</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">mig-3g.40gb</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">spec:</span></span><br><span class="line">    <span class="attr">resourceClassName:</span> <span class="string">gpu.nvidia.com</span></span><br><span class="line">    <span class="attr">parametersRef:</span></span><br><span class="line">      <span class="attr">apiGroup:</span> <span class="string">gpu.resource.nvidia.com</span></span><br><span class="line">      <span class="attr">kind:</span> <span class="string">MigDeviceClaimParameters</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">mig-3g.40gb</span></span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">pod</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">ctr0</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nvidia/cuda</span></span><br><span class="line">    <span class="attr">command:</span> [<span class="string">&quot;nvidia-smi&quot;</span> <span class="string">&quot;-L&quot;</span>]</span><br><span class="line">    <span class="attr">resources:</span></span><br><span class="line">      <span class="attr">claims:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">shared-gpu</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">mig-3g-0</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">ctr1</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nvidia/cuda</span></span><br><span class="line">    <span class="attr">command:</span> [<span class="string">&quot;nvidia-smi&quot;</span> <span class="string">&quot;-L&quot;</span>]</span><br><span class="line">    <span class="attr">resources:</span></span><br><span class="line">      <span class="attr">claims:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">shared-gpu</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">mig-3g-1</span></span><br><span class="line">  <span class="attr">resourceClaims:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">shared-gpu</span></span><br><span class="line">    <span class="attr">source:</span></span><br><span class="line">      <span class="attr">resourceClaimTemplate:</span> <span class="string">mig-enabled-gpu</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">mig-3g-0</span></span><br><span class="line">    <span class="attr">source:</span></span><br><span class="line">      <span class="attr">resourceClaimTemplate:</span> <span class="string">mig-3g.40gb</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">mig-3g-1</span></span><br><span class="line">    <span class="attr">source:</span></span><br><span class="line">      <span class="attr">resourceClaimTemplate:</span> <span class="string">mig-3g.40gb</span></span><br></pre></td></tr></table></figure>
+
+<p>As mentioned previously, <strong>GpuClaimParameters</strong> and <strong>MigDeviceClaimParameters</strong> are just reference specifications, and we plan to iterate on them further before they get released. Any feedback on how you would like to see these evolve would be greatly appreciated.<br>In the following section, we discuss the details of the DRA resource driver architecture and how it interacts with Kubernetes to make the user-facing API described above possible.</p>
+<h2 id="DRA-Resource-Driver-Architecture"><a href="#DRA-Resource-Driver-Architecture" class="headerlink" title="DRA Resource Driver Architecture"></a>DRA Resource Driver Architecture</h2><p>At a high-level, a DRA resource driver is responsible for:</p>
+<ul>
+<li>Defining a ResourceClass associated with a specific type of resource (e.g. gpu.nvidia.com)</li>
+<li>Processing any class parameter objects associated with this ResourceClass</li>
+<li>Watching for incoming ResourceClaims that reference this ResourceClass</li>
+<li>Processing any claim parameter objects associated with this ResourceClaim</li>
+<li>Coordinating with the Kubernetes scheduler to find a node where a given ResourceClaim should be allocated</li>
+<li>Allocating the ResourceClaim on that node</li>
+<li>Cleaning up any allocated ResourceClaims once they get deleted</li>
+</ul>
+<p>To accomplish this, DRA resource drivers consists of two separate-but-coordinating components:</p>
+<ul>
+<li>A centralized controller running with high-availability</li>
+<li>A node-local kubelet plugin running as a daemonset</li>
+</ul>
+<p><img src="https://pic.imgdb.cn/item/669b567fd9c307b7e9197041.png"></p>
+<p>The centralized controller serves to:</p>
+<ol>
+<li>Coordinate with the K8s scheduler to decide which nodes an incoming <strong>ResourceClaim</strong> can be serviced on</li>
+<li>Perform the actual <strong>ResourceClaim</strong> allocation once the scheduler picks a node to allocate it on</li>
+<li>Perform the deallocation of a <strong>ResourceClaim</strong> once it has been deleted</li>
+</ol>
+<p>The node-local <strong>kubelet</strong> plugin serves to:</p>
+<ol>
+<li>Advertise any node-local state required by the centralized controller to make its allocation decisions</li>
+<li>Perform any node-local operations required as part of allocating a <strong>ResourceClaim</strong> on a node</li>
+<li>Pass the set of devices associated with an allocated <strong>ResourceClaim</strong> to the kubelet so it can ultimately be forwarded to the underlying container runtime</li>
+<li>Perform any node-local operations required as part of freeing a <strong>ResourceClaim</strong> on a node</li>
+</ol>
+<p>To help illustrate how these responsibilities are carried out by each component, the following section walks through the process of deploying a DRA resource driver and then allocating a <strong>ResourceClaim</strong> associated with a newly created pod.</p>
+<h2 id="Allocating-a-ResourceClaim"><a href="#Allocating-a-ResourceClaim" class="headerlink" title="Allocating a ResourceClaim"></a>Allocating a ResourceClaim</h2><p>The <a target="_blank" rel="noopener" href="https://github.com/kubernetes/enhancements/tree/master/keps/sig-node/3063-dynamic-resource-allocation">Kubernetes Enhancement Proposal for DRA</a>  is the definitive source for all of the details about how the internals of DRA work. It defines a number of modes of operation, including delayed vs. immediate allocation, shared vs. non-shared resource claims, etc. As the names suggest, immediate allocation occurs as soon as a resource claim is created (i.e. there is no need to wait for a consumer to begin the allocation process), whereas delayed allocation does not occur until a pod that references the resource claim is first created. Likewise, shared resource claims can have multiple pods consuming them, whereas non-shared resource claims can only have one.</p>
+<p>In this section we walk through the process of allocating a shared resource claim with delayed allocation (which is the default). The steps are broken down into phases, with a diagram showing the steps from each phase in action.  The steps themselves are annotated as “1.x” from Phase 1, “2.x”  from Phase 2, etc.</p>
+<p>Phase 1 - Setup:</p>
+<ol>
+<li>Admin registers a <strong>ResourceClass</strong> pointing to a specific DRA resource driver as its owner</li>
+<li>Admin deploys DRA resource driver in the cluster</li>
+<li>Each DRA kubelet plugin begins advertising its node-local state for the centralized controller to pick up on</li>
+</ol>
+<p>Phase 2 - Pod Creation:</p>
+<ol>
+<li>User creates a <strong>ResourceClaim</strong> referencing a registered ResourceClass</li>
+<li>User submits a pod to the API server referencing the <strong>ResourceClaim</strong> in one of its containers</li>
+</ol>
+<p><img src="https://pic.imgdb.cn/item/669b5833d9c307b7e91b7264.png"></p>
+<p>Phase 3 - Node Selection:</p>
+<ol>
+<li>Scheduler picks up a pod from the API server and begins to schedule it on a node</li>
+<li>Scheduler sees the pod’s <strong>ResourceClaim</strong> and its <strong>ResourceClass</strong> pointing to a specific DRA resource driver</li>
+<li>Scheduler provides a list of potential nodes where it is considering scheduling the pod that has a reference to the <strong>ResourceClaim</strong>.  It does this through a special <strong>PodScheduling</strong> object in the API server</li>
+<li>DRA resource driver picks up the <strong>PodScheduling</strong> object</li>
+<li>DRA resource driver narrows down the list of potential nodes to just those where the <strong>ResourceClaim</strong> could possibly be allocated. It writes this back to the <strong>PodScheduling</strong> object</li>
+</ol>
+<p><img src="https://pic.imgdb.cn/item/669b5901d9c307b7e91c91fd.png"></p>
+<p>Phase 4 - Claim Allocation</p>
+<ol>
+<li>Scheduler considers other scheduling constraints in relation to each of the nodes in the narrowed down list</li>
+<li>Scheduler picks a node and sets a field in the  <strong>ResourceClaim</strong> with a reference to it</li>
+<li>DRA resource driver picks up the selected node from the <strong>ResourceClaim</strong></li>
+<li>DRA resource driver allocates the <strong>ResourceClaim</strong> for use on the node</li>
+<li>DRA resource driver  marks the allocation as complete in the <strong>ResourceClaim</strong> object</li>
+<li>Scheduler picks up the allocation completion from the <strong>ResourceClaim</strong> object</li>
+<li>Scheduler schedules the pod on the node</li>
+<li>Scheduler writes the scheduled node back to the Pod object</li>
+</ol>
+<p><img src="https://pic.imgdb.cn/item/669b597cd9c307b7e91d0a1b.png"></p>
+<p>Phase 5 - Container Start:</p>
+<ol>
+<li>Kubelet picks up the pod from the API server and begins creating its containers</li>
+<li>Kubelet calls out to DRA’s kubelet plugin to get the list of CDI devices associated with the <strong>ResourceClaim</strong></li>
+<li>Kubelet passes the CDI devices to the container-runtime via CRI</li>
+<li>Container runtime starts the container with access to the devices associated with the <strong>ResourceClaim</strong></li>
+</ol>
+<p><img src="https://pic.imgdb.cn/item/669b59bfd9c307b7e91d50c5.png"></p>
+<h2 id="Writing-your-own-DRA-resource-driver"><a href="#Writing-your-own-DRA-resource-driver" class="headerlink" title="Writing your own DRA resource driver"></a>Writing your own DRA resource driver</h2><p>As mentioned in the previous section, DRA resource drivers consist of two separate-but-coordinating components: a centralized controller and a daemonset of node-local kubelet plugins. Most of the work required by the centralized controller to coordinate with the scheduler can be handled by boilerplate code. Only the business logic required to actually allocate ResourceClaims against the ResourceClasses owned by the resource driver needs to be customized.  As such, the following package is provide by Kubernetes to include APIs for invoking this boilerplate code as well as a Driver interface that one can implement to provide their custom business logic:</p>
+<pre><code>k8s.io/dynamic-resource-allocation/controller
+</code></pre>
+<p>Likewise, boilerplate code can be used to register the kubelet plugin with the kubelet, as well as start a gRPC server to implement DRA’s kubelet plugin API. The following package is provided for this purpose:</p>
+<p><code>k8s.io/dynamic-resource-allocation/kubeletplugin</code></p>
+<p>The set of functions defined by the controller’s Driver interface can be seen below:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">type Driver interface &#123;</span><br><span class="line">	GetClassParameters()</span><br><span class="line">	GetClaimParameters()</span><br><span class="line">	Allocate()</span><br><span class="line">	Deallocate()</span><br><span class="line">	UnsuitableNodes() </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Likewise, the set of functions defined by the gRPC API for the node-local kubelet plugin are:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">service Node &#123;</span><br><span class="line">  rpc NodePrepareResource (NodePrepareResourceRequest)</span><br><span class="line">    returns (NodePrepareResourceResponse) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  rpc NodeUnprepareResource (NodeUnprepareResourceRequest)</span><br><span class="line">    returns (NodeUnprepareResourceResponse) &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>Examples of implementing these can be found in our reference <a target="_blank" rel="noopener" href="https://gitlab.com/nvidia/cloud-native/k8s-dra-driver">DRA resource driver for GPUs</a>.</p>
+<h2 id="Status-Future-Work"><a href="#Status-Future-Work" class="headerlink" title="Status &amp; Future Work"></a>Status &amp; Future Work</h2><p>mentioned previously, the alpha release of DRA has been <a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/pull/111023">merged</a> as part of <a target="_blank" rel="noopener" href="https://www.kubernetes.dev/resources/release/#kubernetes-126">Kubernetes 1.26</a> in December 2022. Its graduation to beta and GA will follow soon after. Our reference <a target="_blank" rel="noopener" href="https://gitlab.com/nvidia/cloud-native/k8s-dra-driver">DRA resource driver for GPUs</a> is feature-complete in terms of supporting all of the APIs required by DRA, but there is still quite a bit of room for improvement. We plan to continue iterating on this resource driver with an official release to coincide with the beta release of DRA itself. These are still the early days of DRA, and we are excited to see what other technologies this new feature helps unlock.</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/NVIDIA/k8s-dra-driver?tab=readme-ov-file">https://github.com/NVIDIA/k8s-dra-driver?tab=readme-ov-file</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/categories/">Category</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#User-Facing-API"><span class="toc-number">2.</span> <span class="toc-text">User-Facing API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DRA-Resource-Driver-Architecture"><span class="toc-number">3.</span> <span class="toc-text">DRA Resource Driver Architecture</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Allocating-a-ResourceClaim"><span class="toc-number">4.</span> <span class="toc-text">Allocating a ResourceClaim</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Writing-your-own-DRA-resource-driver"><span class="toc-number">5.</span> <span class="toc-text">Writing your own DRA resource driver</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Status-Future-Work"><span class="toc-number">6.</span> <span class="toc-text">Status &amp; Future Work</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-number">7.</span> <span class="toc-text">Reference</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/11831eff/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/11831eff/&text=Dynamic Resource Allocation (DRA) for GPUs in Kubernetes"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/11831eff/&title=Dynamic Resource Allocation (DRA) for GPUs in Kubernetes"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/11831eff/&is_video=false&description=Dynamic Resource Allocation (DRA) for GPUs in Kubernetes"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Dynamic Resource Allocation (DRA) for GPUs in Kubernetes&body=Check out this article: https://zoues.com/posts/11831eff/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/11831eff/&title=Dynamic Resource Allocation (DRA) for GPUs in Kubernetes"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/11831eff/&title=Dynamic Resource Allocation (DRA) for GPUs in Kubernetes"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/11831eff/&title=Dynamic Resource Allocation (DRA) for GPUs in Kubernetes"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/11831eff/&title=Dynamic Resource Allocation (DRA) for GPUs in Kubernetes"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/11831eff/&name=Dynamic Resource Allocation (DRA) for GPUs in Kubernetes&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/11831eff/&t=Dynamic Resource Allocation (DRA) for GPUs in Kubernetes"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zouyee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
