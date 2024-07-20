@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://zoues.com/posts/e9953e7c/</loc>
+    <loc>https://zoues.com/posts/48bcc63c/</loc>
     
     <lastmod>2024-07-20</lastmod>
     
@@ -254,7 +254,7 @@
   </url>
   
   <url>
-    <loc>https://zoues.com/posts/d6be75a2/</loc>
+    <loc>https://zoues.com/posts/9df98a00/</loc>
     
     <lastmod>2024-02-03</lastmod>
     
@@ -263,7 +263,7 @@
   </url>
   
   <url>
-    <loc>https://zoues.com/posts/9df98a00/</loc>
+    <loc>https://zoues.com/posts/d6be75a2/</loc>
     
     <lastmod>2024-02-03</lastmod>
     
@@ -353,7 +353,7 @@
   </url>
   
   <url>
-    <loc>https://zoues.com/posts/14c9c4cb/</loc>
+    <loc>https://zoues.com/posts/501c76bd/</loc>
     
     <lastmod>2024-02-03</lastmod>
     
@@ -362,7 +362,7 @@
   </url>
   
   <url>
-    <loc>https://zoues.com/posts/501c76bd/</loc>
+    <loc>https://zoues.com/posts/14c9c4cb/</loc>
     
     <lastmod>2024-02-03</lastmod>
     
@@ -416,15 +416,6 @@
   </url>
   
   <url>
-    <loc>https://zoues.com/posts/7d135338/</loc>
-    
-    <lastmod>2024-02-03</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://zoues.com/posts/1df3dc63/</loc>
     
     <lastmod>2024-02-03</lastmod>
@@ -435,6 +426,15 @@
   
   <url>
     <loc>https://zoues.com/posts/f44b9c0f/</loc>
+    
+    <lastmod>2024-02-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://zoues.com/posts/7d135338/</loc>
     
     <lastmod>2024-02-03</lastmod>
     
@@ -542,7 +542,7 @@
   </url>
   
   <url>
-    <loc>https://zoues.com/posts/27bb006d/</loc>
+    <loc>https://zoues.com/posts/bafe2904/</loc>
     
     <lastmod>2024-02-03</lastmod>
     
@@ -551,7 +551,7 @@
   </url>
   
   <url>
-    <loc>https://zoues.com/posts/bafe2904/</loc>
+    <loc>https://zoues.com/posts/27bb006d/</loc>
     
     <lastmod>2024-02-03</lastmod>
     
@@ -622,14 +622,7 @@
   </url>
   
   <url>
-    <loc>https://zoues.com/tags/kubevirt/</loc>
-    <lastmod>2024-07-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://zoues.com/tags/cncf/</loc>
+    <loc>https://zoues.com/tags/linux/</loc>
     <lastmod>2024-07-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -643,14 +636,21 @@
   </url>
   
   <url>
-    <loc>https://zoues.com/tags/linux/</loc>
+    <loc>https://zoues.com/tags/container/</loc>
     <lastmod>2024-07-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://zoues.com/tags/container/</loc>
+    <loc>https://zoues.com/tags/cncf/</loc>
+    <lastmod>2024-07-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://zoues.com/tags/kubevirt/</loc>
     <lastmod>2024-07-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
