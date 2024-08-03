@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Ziglang 简明教程 译：https:&#x2F;&#x2F;blog.logrocket.com&#x2F;getting-started-zig-programming-language&#x2F;  在本文中，通过理论与示例相结合的方式来帮助初学者进行Zig语言的学习。 What‘s ZiglangZig是一款开源的规模最小、功能齐全的系统编程语言，其被视作较C更友好的替代品。它具有类似Rust的极简语法，同时保持了C的简单性">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ziglang 简明教程">
+<meta property="og:url" content="https://zoues.com/posts/7ea0589/index.html">
+<meta property="og:site_name" content="zouyee">
+<meta property="og:description" content="Ziglang 简明教程 译：https:&#x2F;&#x2F;blog.logrocket.com&#x2F;getting-started-zig-programming-language&#x2F;  在本文中，通过理论与示例相结合的方式来帮助初学者进行Zig语言的学习。 What‘s ZiglangZig是一款开源的规模最小、功能齐全的系统编程语言，其被视作较C更友好的替代品。它具有类似Rust的极简语法，同时保持了C的简单性">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://pic.imgdb.cn/item/66adfe70d9c307b7e9a7d9e2.png">
+<meta property="og:image" content="https://pic.imgdb.cn/item/66adfe89d9c307b7e9a7ee54.png">
+<meta property="og:image" content="https://pic.imgdb.cn/item/66adfea0d9c307b7e9a80225.png">
+<meta property="article:published_time" content="2024-08-03T08:32:35.000Z">
+<meta property="article:modified_time" content="2024-08-03T09:59:57.746Z">
+<meta property="article:author" content="zouyee">
+<meta property="article:tag" content="ziglang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic.imgdb.cn/item/66adfe70d9c307b7e9a7d9e2.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Ziglang 简明教程</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="zouyee" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/11831eff/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/7ea0589/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/7ea0589/&text=Ziglang 简明教程"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/7ea0589/&title=Ziglang 简明教程"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/7ea0589/&is_video=false&description=Ziglang 简明教程"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Ziglang 简明教程&body=Check out this article: https://zoues.com/posts/7ea0589/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/7ea0589/&title=Ziglang 简明教程"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/7ea0589/&title=Ziglang 简明教程"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/7ea0589/&title=Ziglang 简明教程"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/7ea0589/&title=Ziglang 简明教程"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/7ea0589/&name=Ziglang 简明教程&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/7ea0589/&t=Ziglang 简明教程"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Ziglang-%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">Ziglang 简明教程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#What%E2%80%98s-Ziglang"><span class="toc-number">1.1.</span> <span class="toc-text">What‘s Ziglang</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Zig%E7%9A%84%E7%AA%81%E5%87%BA%E7%89%B9%E7%82%B9"><span class="toc-number">1.1.1.</span> <span class="toc-text">Zig的突出特点</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E7%AE%80%E5%8D%95"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">设计简单</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E5%92%8C%E5%AE%89%E5%85%A8%E6%80%A7"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">性能和安全性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E7%9A%84%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">1.1.1.3.</span> <span class="toc-text">完整的系统编程解决方案</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AD%A6%E4%B9%A0Zig"><span class="toc-number">1.1.2.</span> <span class="toc-text">为什么学习Zig</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%81%E5%9C%A8%E4%BD%BF%E7%94%A8Zig%EF%BC%9F"><span class="toc-number">1.1.3.</span> <span class="toc-text">谁在使用Zig？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0Zig"><span class="toc-number">1.2.</span> <span class="toc-text">学习Zig</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E6%BA%90%E7%9A%84-Zig-%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.3.</span> <span class="toc-text">开源的 Zig 生态系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zig-vs-C-vs-Rust"><span class="toc-number">1.4.</span> <span class="toc-text">Zig vs. C vs. Rust</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">1.5.</span> <span class="toc-text">结论</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Ziglang 简明教程
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zouyee</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-08-03T08:32:35.000Z" class="dt-published" itemprop="datePublished">2024-08-03</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/ziglang/" rel="tag">ziglang</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="Ziglang-简明教程"><a href="#Ziglang-简明教程" class="headerlink" title="Ziglang 简明教程"></a>Ziglang 简明教程</h1><blockquote>
+<p>译：<a target="_blank" rel="noopener" href="https://blog.logrocket.com/getting-started-zig-programming-language/">https://blog.logrocket.com/getting-started-zig-programming-language/</a></p>
+</blockquote>
+<p>在本文中，通过理论与示例相结合的方式来帮助初学者进行Zig语言的学习。</p>
+<h2 id="What‘s-Ziglang"><a href="#What‘s-Ziglang" class="headerlink" title="What‘s Ziglang"></a>What‘s Ziglang</h2><p>Zig是一款开源的规模最小、功能齐全的系统编程语言，其被视作较C更友好的替代品。它具有类似Rust的极简语法，同时保持了C的简单性。</p>
+<p>Zig的目标是通过一种新的、受Rust语法影响的C语法的现代化方法来解决C开发人员面临的问题。它提供了一个高效的C互操作解决方案，让C开发人员可以将他们的C代码迁移到Zig。</p>
+<p>Zig不仅仅是一种语言——其具备是一套完整的、功能齐全的工具链，这也意味着您可以使用Zig来创建、开发、测试和构建程序&#x2F;库，而无需第三方自动化构建工具。Zig工具链还可以交叉编译C&#x2F;C++以及Rust项目，因此您可以有效地使用Zig工具链来构建您现有的C&#x2F;C++项目。Zig被设计为一种低级别、硬件友好的系统编程语言，但其高效、开发者友好的语法和功能使其更适合构建任何现代软件系统。</p>
+<p>Zig项目最初由Andrew Kelley发起，现在由Zig软件基金会（ZSF）维护。</p>
+<h3 id="Zig的突出特点"><a href="#Zig的突出特点" class="headerlink" title="Zig的突出特点"></a>Zig的突出特点</h3><p>Zig致力于成为一个更好的C语言替代品，其不仅适用于低级系统编程，还适用于开发通用软件系统，具有以下突出特点：</p>
+<h4 id="设计简单"><a href="#设计简单" class="headerlink" title="设计简单"></a>设计简单</h4><p>现代化语言的设计目标是提供一套设计良好的语法，而不像汇编语言那样原子化。如果语言的抽象过于接近汇编语言，开发人员可能需要编写冗长的代码。另一方面，当语言被抽象成接近人类可读时，它可能与硬件相距甚远，可能不适合系统编程的需求。</p>
+<p>Zig提供了轻量级的、类Rust的语法，其大多数C提供的能力都已具备，但是它不提供Rust和C++那些复杂的功能集和语法，而是提供了一个像Go那样简单性为先的开发路径。</p>
+<h4 id="性能和安全性"><a href="#性能和安全性" class="headerlink" title="性能和安全性"></a>性能和安全性</h4><p>性能和安全性是选择的关键因素。语言的性能通常取决于其标准库、核心运行时功能的性能，以及编译器生成的二进制文件的质量。同时，安全设计实现边界检查、溢出处理和内存范围，并帮助开发人员减少关键安全漏洞。</p>
+<p>Zig构建系统提供了四种构建模式，开发人员可以根据其性能和安全性要求使用。Zig还可以在编译时理解变量溢出。</p>
+<p>此外，它可以生成带有运行时安全检查的优化二进制文件，就像Rust一样，也可以生成不带运行时安全检查的超轻量级二进制文件，就像C一样。Zig官方文档声称，由于其基于LLVM的优化和改进的未定义行为，Zig在理论上比C更快！</p>
+<h4 id="完整的系统编程解决方案"><a href="#完整的系统编程解决方案" class="headerlink" title="完整的系统编程解决方案"></a>完整的系统编程解决方案</h4><p>大多数编程语言都有一个或多个标准编译器和标准库实现。例如，您可以使用以下编译C：</p>
+<ul>
+<li>GNU C</li>
+<li>Apple Clang</li>
+<li>带有libc、BSD-libc和Microsoft C运行时的MSVC编译器</li>
+</ul>
+<p>但是这两个组件对于现代系统编程需求来说还不够。程序员通常需要建立工具、包管理器和交叉编译工具等。</p>
+<p>因此，在C生态系统中，像CMake、Ninja、Meson这样的构建工具以及类似Conan这样的包管理器逐渐流行，而像Go和Rust这样的现代语言官方内置了包管理器、构建工具及API、交叉编译支持和测试集成等。</p>
+<p>与Go及Rust等现代语言一样，Zig内置了包管理器、构建系统及API、支持交叉编译和测试集成，这提高了Zig成为更好的C的机会，因为它解决了C（和C++）开发人员面临的关键系统编程问题。从语言设计的角度来看，Zig提供了C开发人员期望的现代语言的所有功能，因此C程序员可以逐步将他们的系统迁移到现代Zig，而无需重新编写他们遗留的代码库。</p>
+<h3 id="为什么学习Zig"><a href="#为什么学习Zig" class="headerlink" title="为什么学习Zig"></a>为什么学习Zig</h3><p>虽然编程语言千千万，但只有其中的一小部分能够在开发者社区中流行开来。未来还会有更多的编程语言出现，它们具有各种各样的特性，旨在取代现有的语言。</p>
+<p>我们不需要学习所有开发语言，但是，如果有那么一种语言具有理想中未来语言的意味，并且提供了强有力、有效和经过验证的论据，说明它可以作为现有语言的替代品，那么学习它的内部设计理念无疑比完全忽视它要好。Go 1.0在2012年发布，作为一种新的极简语言，现在已经成为主要技术公司的依赖。在1990年代，Python是一种新的实验性脚本语言，但现在数字世界依赖于它。</p>
+<p>类似地，Zig最初出现于2016年，2017年发布了首个预发布版本，展示了它作为C的现代替代品的能力。Zig甚至提供了一个完整的系统编程工具链，经过几年的积极开发，并确立了一个充满希望的未来。鉴于它与C的相似性和互操作性，它还可以为您打开更广泛的开发机会，包括人工智能开发、游戏开发等领域。</p>
+<p>学习Zig不仅为您的技能组合增加了一种有前途的与C相关的语言，而且由于其聪明、性能安全平衡的设计，还提高了您对系统编程的了解。</p>
+<h3 id="谁在使用Zig？"><a href="#谁在使用Zig？" class="headerlink" title="谁在使用Zig？"></a>谁在使用Zig？</h3><p>以下流行的开源项目和技术公司使用Zig语言及其工具链：</p>
+<ul>
+<li>主要项目</li>
+</ul>
+<p><img src="https://pic.imgdb.cn/item/66adfe70d9c307b7e9a7d9e2.png" alt="image-20240803165637785"></p>
+<ul>
+<li><p>主要公司</p>
+<p><img src="https://pic.imgdb.cn/item/66adfe89d9c307b7e9a7ee54.png" alt="image-20240803165725136"></p>
+</li>
+</ul>
+<h2 id="学习Zig"><a href="#学习Zig" class="headerlink" title="学习Zig"></a>学习Zig</h2><p>现在您已经了解了Zig及其引入原因，让我们通过学习语言语法、概念和特性的方式开始使用Zig进行开发。</p>
+<ol>
+<li>设置开发环境</li>
+</ol>
+<p>与任何其他开源项目一样，您可以从官方网站下载Zig，或者从源代码构建，但最简单、最现代的方法是通过系统软件包管理器安装它。在Ubuntu上使用以下Snap命令（以sudo运行）安装了Zig开发工具链：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">snap install zig --beta --classic</span><br></pre></td></tr></table></figure>
+
+<p>有关Zig安装方法的更多信息，请参阅官方安装指南。</p>
+<p>安装Zig后，请在终端中输入zig验证您的安装状态</p>
+<ol start="2">
+<li>Zig初体验</li>
+</ol>
+<p>我们已经安装了Zig工具链，现在让我们开始在Zig中编写程序。我们将编写一个（经典）的Hello, World!类型的程序，以了解基本的源代码结构和工具链基础知识。</p>
+<p>创建一个名为hello.zig的新文件，并添加以下源代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    std.debug.print(&quot;Hello Zig!\n&quot;, .&#123;&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里，我们在第一行导入了标准库，并将其引用加载到std常量中。然后，main函数（返回void）使用print函数在终端上打印调试消息。</p>
+<p>使用以下命令运行上述代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zig run hello.zig</span><br></pre></td></tr></table></figure>
+
+<p>您将在终端中看到<code>Hello Zig！</code>。print函数提供了类似于C的printf函数的API，让我们通过第二个参数使用格式化字符串：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    std.debug.print(&quot;Hello &#123;s&#125;! &#123;d&#125;\n&quot;, .&#123;&quot;Zig&quot;, 2024&#125;); // Hello Zig! 2024</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>您还可以省略原子的格式类型，如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std.debug.print(&quot;Hello &#123;&#125;\n&quot;, .&#123;2024&#125;); // Hello 2024</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="3">
+<li>编译Zig二进制文件</li>
+</ol>
+<p>任何软件发布都需创建一个二进制文件。Zig提供四种模式构建配置基于性能和安全性需求来交叉编译二进制文件。</p>
+<p>为您的Hello, World!程序创建一个二进制文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zig build-exe --name hello-bin hello.zig</span><br></pre></td></tr></table></figure>
+
+<p>上述命令将使用默认的Debug模式构建生成一个名为hello-bin的调试二进制文件，因此我们可以通过<code>./hello-bin</code>来执行。</p>
+<p>就像 GNU C 一样，默认情况下，Zig 会为当前目标（CPU 和操作系统）生成二进制文件，因此上述命令在我的计算机上为我生成了 x86 Linux 二进制文件。此外，可以使用 -target 标志进行交叉编译二进制文件。</p>
+<p><img src="https://pic.imgdb.cn/item/66adfea0d9c307b7e9a80225.png" alt="image-20240803170630942"></p>
+<p>例如，以下命令会为 x64 Windows 系统交叉编译一个 .exe 文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zig build-exe -target x86_64-windows --name hello-bin.exe hello.zig</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="4">
+<li>使用构建器 API 编译 Zig</li>
+</ol>
+<p>Zig 的编译命令行界面与 GNU C 的命令行标志相同，因此我们可能需要经常重复使用编译命令。在 C 中，我们可以通过编写用于构建过程的 shell 脚本或 CMake来解决这个问题。</p>
+<p>构建系统允许您将编译器标志存储在配置文件中，甚至添加自定义构建步骤。Zig 通过 std 包暴露了一个内置的构建器 API，作为独立的、第三方构建系统。它还提供了 zig build 命令来执行存储在 build.zig 文件中的构建步骤。</p>
+<p>您可以根据自己的喜好使用以下命令搭建一个 Zig 构建项目：</p>
+<ul>
+<li>zig init-exe：初始化一个基于 Zig 构建器的可执行应用程序</li>
+<li>zig init-lib：初始化一个基于 Zig 构建器的库</li>
+</ul>
+<p>之前的演示应用程序是一个可执行类型的应用程序，所以我们可以使用第一个命令来了解 Zig 构建系统：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir zig-exe-demo</span><br><span class="line">cd zig-exe-demo</span><br><span class="line"></span><br><span class="line">zig init-exe</span><br></pre></td></tr></table></figure>
+
+<p>上述命令创建了一个新的可执行程序，其中包含 src&#x2F;main.zig 中的演示源代码。它向 build.zig 文件添加了几个构建步骤，我们可以使用 zig build 命令执行它们，而不是使用 zig run 或 zig build-exe。</p>
+<p>例如，您可以通过执行以下命令来运行程序：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zig build run</span><br></pre></td></tr></table></figure>
+
+<p>您可以使用 install 步骤创建二进制文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">zig build install</span><br><span class="line"></span><br><span class="line">./zig-out/bin/zig-exe</span><br></pre></td></tr></table></figure>
+
+<p>就像在其他构建系统（如 CMake）中所做的那样，您可以通过修改 build.zig 文件来添加更多的构建步骤或中间处理。通过zig build 运行所有的构建自动化步骤，这无疑简化了 Zig 开发过程。</p>
+<p>现在，您知道了如何编写一个基本的 Zig 程序，使用 Zig 编译器进行编译，并使用 Zig 的内置构建系统简化开发过程。让我们开始学习语法和特性吧！</p>
+<ol start="5">
+<li>Zig 基本类型</li>
+</ol>
+<p>与 C 类似，Zig 支持各种形式的整数、浮点数和指针。让我们学习一些您应该了解的基本类型。</p>
+<p>以下代码片段定义了一些整数和浮点数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    var x: i8 = -100;     // 有符号 8 位整数</span><br><span class="line">    var y: u8 = 120;      // 无符号 8 位整数</span><br><span class="line">    var z: f32 = 100.324; // 32 位浮点数</span><br><span class="line"></span><br><span class="line">    std.debug.print(&quot;x=&#123;&#125;\n&quot;, .&#123;x&#125;);        // x=-100</span><br><span class="line">    std.debug.print(&quot;y=&#123;&#125;\n&quot;, .&#123;y&#125;);        // y=120</span><br><span class="line">    std.debug.print(&quot;z=&#123;d:3.2&#125;\n&quot;, .&#123;z&#125;);   // z=100.32</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于上述标识符值永远不会更改，我们可以使用 const 关键字而不是 var：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const x: i8 = -100;</span><br><span class="line">// ...</span><br><span class="line">// ...</span><br></pre></td></tr></table></figure>
+
+<p>作为现代语言，布尔类型也得到了支持：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var initialized: bool = true;</span><br></pre></td></tr></table></figure>
+
+<p>您可以将字符存储在无符号字节（8 位整数）中，如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    const l1: u8 = &#x27;Z&#x27;;</span><br><span class="line">    const l2: u8 = &#x27;i&#x27;;</span><br><span class="line">    const l3: u8 = &#x27;g&#x27;;</span><br><span class="line"></span><br><span class="line">    std.debug.print(&quot;&#123;c&#125;-&#123;c&#125;-&#123;c&#125;\n&quot;, .&#123;l1, l2, l3&#125;); // Z-i-g</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>您还可以定义变量而不写明其数据类型，如下所示。然后，Zig 将使用 comptime 类型将它们存储起来，保证编译时评估：</p>
+<p>Zig 还支持原生 C 类型（即 c_char、c_int 等）。可以在官方文档的表格中查看所有支持的类型。Zig 中没有内置的字符串类型，因此我们必须使用字节数组。我们将在本教程的另一部分讨论数组。</p>
+<ol start="6">
+<li>枚举</li>
+</ol>
+<p>Zig 提供了一个简单的语法来定义和访问枚举。看看以下示例源代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    const LogType = enum &#123;</span><br><span class="line">        info,</span><br><span class="line">        err,</span><br><span class="line">        warn</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    const ltInfo = LogType.info;</span><br><span class="line">    const ltErr = LogType.err;</span><br><span class="line"></span><br><span class="line">    std.debug.print(&quot;&#123;&#125;\n&quot;, .&#123;ltInfo&#125;); // main.main.LogType.info</span><br><span class="line">    std.debug.print(&quot;&#123;&#125;\n&quot;, .&#123;ltErr&#125;);  // main.main.LogType.err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Zig 允许覆盖枚举的序数值，如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const LogType = enum(u32) &#123;</span><br><span class="line">    info = 200,</span><br><span class="line">    err = 500,</span><br><span class="line">    warn = 600</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="7">
+<li>数组和切片</li>
+</ol>
+<p>Zig 建议将数组用于编译时已知值（compile-time-known），切片用于运行时已知值（runtime-known）。例如，我们可以将英语元音存储在常量字符数组中，如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    const vowels = [5]u8&#123;&#x27;a&#x27;, &#x27;e&#x27;, &#x27;i&#x27;, &#x27;o&#x27;, &#x27;u&#x27;&#125;;</span><br><span class="line"></span><br><span class="line">    std.debug.print(&quot;&#123;s&#125;\n&quot;, .&#123;vowels&#125;); // aeiou</span><br><span class="line">    std.debug.print(&quot;&#123;d&#125;\n&quot;, .&#123;vowels.len&#125;); // 5</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里，我们可以省略大小，因为它在编译时已知：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const vowels = [_]u8&#123;&#x27;a&#x27;, &#x27;e&#x27;, &#x27;i&#x27;, &#x27;o&#x27;, &#x27;u&#x27;&#125;; // 注意 &quot;_&quot;</span><br></pre></td></tr></table></figure>
+
+<p>您不需要使用这种方法来定义字符串，因为 Zig 允许您以 C 风格定义字符串，如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    const msg = &quot;Ziglang&quot;;</span><br><span class="line"></span><br><span class="line">    std.debug.print(&quot;&#123;s&#125;\n&quot;, .&#123;msg&#125;); // Zig</span><br><span class="line">    std.debug.print(&quot;&#123;&#125;\n&quot;, .&#123;@TypeOf(msg)&#125;); // *const [7:0]u8</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一旦将硬编码字符串存储在标识符中，Zig 将自动使用空终止数组引用（数组的指针）*const [7:0]u8 来存储元素。在这里，我们使用了 @TypeOf() 内置函数来获取变量的类型。您可以在官方文档中浏览所有支持的内置函数。</p>
+<p>数组可以使用 ** 和 ++ 运算符进行重复或连接：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    const msg1 = &quot;Zig&quot;;</span><br><span class="line">    const msg2 = &quot;lang&quot;;</span><br><span class="line"></span><br><span class="line">    std.debug.print(&quot;&#123;s&#125;\n&quot;, .&#123;msg1 ** 2&#125;); // ZigZig</span><br><span class="line">    std.debug.print(&quot;&#123;s&#125;\n&quot;, .&#123;msg1 ++ msg2&#125;); // Ziglang</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Zig 切片几乎与数组一样，但用于存储在运行时已知而不在编译时已知的值。看看下面的例子，它从数组中创建一个切片：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    const nums = [_]u8&#123;2, 5, 6, 4&#125;;</span><br><span class="line">    var x: usize = 3;</span><br><span class="line">    const slice = nums[1..x];</span><br><span class="line"></span><br><span class="line">    std.debug.print(&quot;&#123;any&#125;\n&quot;, .&#123;slice&#125;);        // &#123; 5, 6 &#125;</span><br><span class="line">    std.debug.print(&quot;&#123;&#125;\n&quot;, .&#123;@TypeOf(slice)&#125;);  // []const u8</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里，如果 x 是一个运行时已知的变量，slice 标识符就会变成一个切片。如果对 x 使用 const，则 slice 将变成一个数组指针（*const [2]u8），因为 x 在编译时已知。我们将在后面的章节中讨论指针。</p>
+<ol start="8">
+<li>结构体和联合体</li>
+</ol>
+<p>结构体是用于存储多个值的有用数据结构，甚至可以用来实现面向对象编程（OOP）概念。</p>
+<p>您可以创建结构体并使用以下语法访问其内部字段：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    const PrintConfig = struct &#123;</span><br><span class="line">        id: *const [4:0] u8,</span><br><span class="line">        width: u8,</span><br><span class="line">        height: u8,</span><br><span class="line">        zoom: f32</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    const pc = PrintConfig &#123;</span><br><span class="line">        .id = &quot;BAX1&quot;,</span><br><span class="line">        .width = 200,</span><br><span class="line">        .height = 100,</span><br><span class="line">        .zoom = 0.234</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    std.debug.print(&quot;ID: &#123;s&#125;\n&quot;, .&#123;pc.id&#125;);  // ID: BAX1</span><br><span class="line">    std.debug.print(&quot;Size: &#123;d&#125;x&#123;d&#125; (zoom: &#123;d:.2&#125;)\n&quot;,</span><br><span class="line">        .&#123;pc.width, pc.height, pc.zoom&#125;);  // Size: 200x100 (zoom: 0.23)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 Zig 中，结构体也可以具有方法，所以当我们讨论函数时，下面将展示一个示例。</p>
+<p>Zig 联合体类似于结构体，但一次只能有一个活动字段。看下面的示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    const ActionResult = union &#123;</span><br><span class="line">        code_int: u8,</span><br><span class="line">        code_float: f32</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    const ar1 = ActionResult &#123; .code_int = 200 &#125;;</span><br><span class="line">    const ar2 = ActionResult &#123; .code_float = 200.13 &#125;;</span><br><span class="line"></span><br><span class="line">    std.debug.print(&quot;code1 = &#123;d&#125;\n&quot;, .&#123;ar1.code_int&#125;);  // code1 = 200</span><br><span class="line">    std.debug.print(&quot;code2 = &#123;d:.2&#125;\n&quot;, .&#123;ar2.code_float&#125;);  // code2 = 200.13</span><br><span class="line">    // std.debug.print(&quot;code2 = &#123;d:.2&#125;\n&quot;, .&#123;ar2.code_int&#125;);  // 错误！</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="9">
+<li>使用控制结构</li>
+</ol>
+<p>每种编程语言通常都提供控制结构来处理程序的逻辑流程。Zig 支持所有常见的控制结构，如 if、switch、for 等。</p>
+<p>看看以下 if…else 语句的示例代码片段：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    var score: u8 = 100;</span><br><span class="line"></span><br><span class="line">    if(score &gt;= 90) &#123;</span><br><span class="line">        std.debug.print(&quot;Congrats!\n&quot;, .&#123;&#125;);</span><br><span class="line">        std.debug.print(&quot;&#123;s&#125;\n&quot;, .&#123;&quot;*&quot; ** 10&#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    else if(score &gt;= 50) &#123;</span><br><span class="line">        std.debug.print(&quot;Congrats!\n&quot;, .&#123;&#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    else &#123;</span><br><span class="line">        std.debug.print(&quot;Try again...\n&quot;, .&#123;&#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面是 switch 语句的一个示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    var score: u8 = 88;</span><br><span class="line"></span><br><span class="line">    switch(score) &#123;</span><br><span class="line">        90...100 =&gt; &#123;</span><br><span class="line">            std.debug.print(&quot;Congrats!\n&quot;, .&#123;&#125;);</span><br><span class="line">            std.debug.print(&quot;&#123;s&#125;\n&quot;, .&#123;&quot;*&quot; ** 10&#125;);</span><br><span class="line">        &#125;,</span><br><span class="line">        50...89 =&gt; &#123;</span><br><span class="line">            std.debug.print(&quot;Congrats!\n&quot;, .&#123;&#125;);</span><br><span class="line">        &#125;,</span><br><span class="line">        else =&gt; &#123;</span><br><span class="line">            std.debug.print(&quot;Try again...\n&quot;, .&#123;&#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面是while 语句的一个示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">zigCopy codeconst std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    var x: u8 = 0;</span><br><span class="line">    while(x &lt; 11) &#123;</span><br><span class="line">        std.debug.print(&quot;&#123;&#125;\n&quot;, .&#123;x&#125;);</span><br><span class="line">        x += 1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面是for 语句的一个示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">zigCopy codeconst std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    const A = [_]u8 &#123;2, 4, 6, 8&#125;;</span><br><span class="line"></span><br><span class="line">    for (A) |n| &#123;</span><br><span class="line">        std.debug.print(&quot;&#123;d&#125;\n&quot;, .&#123;n&#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="10">
+<li>函数</li>
+</ol>
+<p>函数通过允许我们使用可调用标识符来命名每个代码段来帮助我们创建可重用的代码段。我们已经使用了main 来启动我们的应用程序，让我们创建更多函数并进一步学习函数。</p>
+<p>下面是一个简单的函数，它返回两个整数的总和：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">fn add(a: i8, b: i8) i8 &#123;</span><br><span class="line">    return a + b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    const a: i8 = 10;</span><br><span class="line">    const b: i8 = -2;</span><br><span class="line">    const c = add(a, b);</span><br><span class="line"></span><br><span class="line">    std.debug.print(&quot;&#123;d&#125; + &#123;d&#125; = &#123;d&#125;\n&quot;, .&#123;a, b, c&#125;); // 10 + -2 = 8</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>递归也是 Zig 提供的一种编程功能，与许多其他通用语言一样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">fn fibonacci(n: u32) u32 &#123;</span><br><span class="line">    if(n == 0 or n == 1) return n;</span><br><span class="line">    return fibonacci(n - 1) + fibonacci(n - 2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    std.debug.print(&quot;&#123;d&#125;\n&quot;, .&#123;fibonacci(2)&#125;);   // 1</span><br><span class="line">    std.debug.print(&quot;&#123;d&#125;\n&quot;, .&#123;fibonacci(12)&#125;);  // 144</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>与 Go 一样，Zig 允许您在结构体中创建方法，并将它们用作 OOP 方法，如下例所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">const Rectangle = struct &#123;</span><br><span class="line">    width: u32,</span><br><span class="line">    height: u32,</span><br><span class="line">    fn calcArea(self: *Rectangle) u32 &#123;</span><br><span class="line">        return self.width * self.height;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    var rect = Rectangle &#123; .width = 200, .height = 25 &#125;;</span><br><span class="line">    var area = rect.calcArea();</span><br><span class="line">    std.debug.print(&quot;&#123;d&#125;\n&quot;, .&#123;area&#125;);   // 5000</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="11">
+<li>指针</li>
+</ol>
+<p>Zig 作为硬件友好的语言，其支持类似 C 的指针。看看下面的基本整数指针：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    var x: u8 = 10;</span><br><span class="line">    var ptr_x = &amp;x;</span><br><span class="line">    ptr_x.* = 12;</span><br><span class="line"></span><br><span class="line">    std.debug.print(&quot;&#123;d&#125;\n&quot;, .&#123;x&#125;);   // 12</span><br><span class="line">    std.debug.print(&quot;&#123;d&#125;\n&quot;, .&#123;ptr_x&#125;);   // u8@...mem_address</span><br><span class="line">    std.debug.print(&quot;&#123;&#125;\n&quot;, .&#123;@TypeOf(ptr_x)&#125;);   // *u8</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里，C&#x2F;C++ 开发人员需要注意，我们使用 ptr.* 语法对指针进行解引用，而不是像在 C&#x2F;C++ 中那样使用 *ptr。指向数组元素和指向整个数组的指针也能按预期工作，如下所示的代码片段：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    var A = [_]u8 &#123;2, 5, 6, 1, 1&#125;;</span><br><span class="line">    var ptr_x = &amp;A[1];</span><br><span class="line">    ptr_x.* = 12;</span><br><span class="line"></span><br><span class="line">    std.debug.print(&quot;&#123;d&#125;\n&quot;, .&#123;A[1]&#125;);            // 12</span><br><span class="line">    std.debug.print(&quot;&#123;d&#125;\n&quot;, .&#123;ptr_x&#125;);           // u8@...mem_address</span><br><span class="line">    std.debug.print(&quot;&#123;&#125;\n&quot;, .&#123;@TypeOf(ptr_x)&#125;);   // *u8</span><br><span class="line"></span><br><span class="line">    var ptr_y = &amp;A;</span><br><span class="line">    ptr_y[2] = 11;</span><br><span class="line">    std.debug.print(&quot;&#123;any&#125;\n&quot;, .&#123;A&#125;);             // &#123; 2, 12, 11, 1, 1 &#125;</span><br><span class="line">    std.debug.print(&quot;&#123;&#125;\n&quot;, .&#123;@TypeOf(ptr_y)&#125;);   // *[5]u8</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="12">
+<li>高级语言特性</li>
+</ol>
+<p>以下是您应该了解的一些 Zig 高级语言特性的摘要：</p>
+<ol>
+<li>通过分配器和 defer 关键字</li>
+<li>支持手动内存管理</li>
+<li>使用简单的语法支持泛型</li>
+<li>提供高效的关键字（async、suspend 和 resume）进行现代异步编程（后续版本已经撤回该特性）</li>
+<li>提供自动类型转换和手动类型转换，使用内置的 @as Zig 的 C-interop 允许您调用 C API。使用 -lc 标志进行以下运行以链接到 libc：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line">const c = @cImport(&#123;</span><br><span class="line">    @cInclude(&quot;stdio.h&quot;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    const char_count = c.printf(&quot;Hello %s\n&quot;, &quot;C...&quot;); // Hello C...</span><br><span class="line"></span><br><span class="line">    std.debug.print(&quot;&#123;&#125;\n&quot;, .&#123;@TypeOf(char_count)&#125;); // c_int</span><br><span class="line">    std.debug.print(&quot;&#123;&#125;\n&quot;, .&#123;char_count&#125;); // 11</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以通过关注官方 Zig 新闻页面，及时了解最新功能和高级概念。</p>
+<ol start="13">
+<li>Zig 中的标准库 API</li>
+</ol>
+<p>我们已经讨论了前面示例中的 Zig 语言语法和特性，但这些概念不足以开发通用程序 —— 我们经常需要使用复杂的数据结构、数学公式和操作系统级别的 API。Zig 通过 std 命名空间提供了一个功能齐全但又精简的标准库。</p>
+<p>我们将编写一个简单的 CLI 程序来学习几个 Zig 标准库的特性。将以下代码添加到一个新的 Zig 文件中：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line">const stdout = std.io.getStdOut().writer();</span><br><span class="line"></span><br><span class="line">fn print_help() !void &#123;</span><br><span class="line">    try stdout.print(&quot;&#123;s&#125;\n&quot; , .&#123;&quot;-&quot; ** 25&#125;);</span><br><span class="line">    try stdout.print(&quot;0: 退出\n&quot;, .&#123;&#125;);</span><br><span class="line">    try stdout.print(&quot;1: 显示帮助\n&quot;, .&#123;&#125;);</span><br><span class="line">    try stdout.print(&quot;2: 打印 Node.js 版本\n&quot;, .&#123;&#125;);</span><br><span class="line">    try stdout.print(&quot;&#123;s&#125;\n&quot; , .&#123;&quot;-&quot; ** 25&#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn print_node_version() !void &#123;</span><br><span class="line">    const cmd_res = try std.ChildProcess.exec(.&#123;</span><br><span class="line">        .allocator = std.heap.page_allocator,</span><br><span class="line">        .argv = &amp;[_][]const u8&#123;</span><br><span class="line">            &quot;node&quot;,</span><br><span class="line">            &quot;--version&quot;,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;);</span><br><span class="line">    try stdout.print(&quot;&#123;s&#125;\n&quot;, .&#123;cmd_res.stdout&#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fn ask_action() !i64 &#123;</span><br><span class="line">    const stdin = std.io.getStdIn().reader();</span><br><span class="line">    var buf: [10]u8 = undefined;</span><br><span class="line"></span><br><span class="line">    try stdout.print(&quot;输入操作：&quot;, .&#123;&#125;);</span><br><span class="line"></span><br><span class="line">    if (try stdin.readUntilDelimiterOrEof(buf[0..], &#x27;\n&#x27;)) |user_input| &#123;</span><br><span class="line">        return std.fmt.parseInt(i64, user_input, 10);</span><br><span class="line">    &#125;</span><br><span class="line">    else &#123;</span><br><span class="line">        return @as(i64, 0);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">pub fn main() !void &#123;</span><br><span class="line">    try print_help();</span><br><span class="line">    while(true) &#123;</span><br><span class="line">        const action = ask_action() catch -1;</span><br><span class="line">        switch(action) &#123;</span><br><span class="line">            0 =&gt; &#123;</span><br><span class="line">                std.debug.print(&quot;再见！\n&quot;, .&#123;&#125;);</span><br><span class="line">                break;</span><br><span class="line">            &#125;,</span><br><span class="line">            1 =&gt; &#123;</span><br><span class="line">                try print_help();</span><br><span class="line">            &#125;,</span><br><span class="line">            2 =&gt; &#123;</span><br><span class="line">                try print_node_version();</span><br><span class="line">            &#125;,</span><br><span class="line">            else =&gt; &#123;</span><br><span class="line">                std.debug.print(&quot;无效的操作：&#123;d&#125;\n&quot;, .&#123;action&#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个演示的 CLI 支持三种整数操作：</p>
+<ul>
+<li>0：退出程序</li>
+<li>1：显示程序帮助</li>
+<li>2：通过 Zig 子进程 API 打印当前 Node.js 版本</li>
+</ul>
+<p>在这里，我们使用了一些错误处理基础知识以及标准库的 io 命名空间和 ChildProcess 结构。您可以在官方标准库参考文档中查看所有可用的命名空间和结构。</p>
+<h2 id="开源的-Zig-生态系统"><a href="#开源的-Zig-生态系统" class="headerlink" title="开源的 Zig 生态系统"></a>开源的 Zig 生态系统</h2><p>Zig 是一种新的语言，因此开源软件包的可用性和开发者资源仍在不断增长。请查看以下流行的开源 Zig 库：</p>
+<ul>
+<li>zigzap&#x2F;zap：用于构建 Web 后端的微型框架</li>
+<li>JakubSzark&#x2F;zig-string：用于 Zig 的字符串库</li>
+<li>kooparse&#x2F;zalgebra：游戏和实时图形的线性代数库</li>
+<li>zigimg&#x2F;zigimg：用于读写不同图像格式的 Zig 库</li>
+<li>ziglibs&#x2F;ini：用于 Zig 的简单 INI 解析器 您还可以从 awesome-zig 存储库中了解更多与 Zig 有关的开发内容。</li>
+</ul>
+<h2 id="Zig-vs-C-vs-Rust"><a href="#Zig-vs-C-vs-Rust" class="headerlink" title="Zig vs. C vs. Rust"></a>Zig vs. C vs. Rust</h2><table>
+<thead>
+<tr>
+<th>比较因素</th>
+<th>Zig</th>
+<th>C</th>
+<th>Rust</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>语言影响</td>
+<td>受Rust、C和Python影响</td>
+<td>B</td>
+<td>受函数式语言和C++影响</td>
+</tr>
+<tr>
+<td>首次发布</td>
+<td>2017年（0.1.0）</td>
+<td>1972年</td>
+<td>2012年（0.1.0）</td>
+</tr>
+<tr>
+<td>语言语法复杂度</td>
+<td>极简</td>
+<td>极简</td>
+<td>复杂</td>
+</tr>
+<tr>
+<td>主要范式</td>
+<td>过程式</td>
+<td>过程式</td>
+<td>函数式和过程式</td>
+</tr>
+<tr>
+<td>内存管理</td>
+<td>手动（通过分配器）</td>
+<td>手动（通过malloc等）</td>
+<td>手动（但改进了以避免安全问题）</td>
+</tr>
+<tr>
+<td>性能和二进制文件大小</td>
+<td>生成超轻量、速度更快的二进制文件，无专用运行时（可选地链接libc）</td>
+<td>生成超轻量、速度更快的二进制文件，具有一个称为C运行时的最小运行时</td>
+<td>生成更快的二进制文件，没有专用运行时，二进制大小问题可以通过技巧解决</td>
+</tr>
+<tr>
+<td>第三方库生态系统</td>
+<td>作为新语言仍在发展中</td>
+<td>成熟的库生态系统，但没有标准化的库注册和集成方法（取决于构建工具）</td>
+<td>在官方包注册中心Crates中有成熟的库生态系统</td>
+</tr>
+<tr>
+<td>开发者资源</td>
+<td>良好，但除了官方文档外只有少量资源</td>
+<td>良好</td>
+<td>良好</td>
+</tr>
+<tr>
+<td>标准库功能</td>
+<td>良好</td>
+<td>仅具有低级API—需要第三方库或编写特定于平台的代码</td>
+<td>良好</td>
+</tr>
+<tr>
+<td>工具链</td>
+<td>功能齐全</td>
+<td>仅编译器、链接器和汇编器—需要单独的工具来运行测试、进行高级构建、使用包等</td>
+<td>功能齐全</td>
+</tr>
+<tr>
+<td>C语言互操作性</td>
+<td>无需FFI（外部函数接口）即可直接导入</td>
+<td>不适用</td>
+<td>通过Rust FFI</td>
+</tr>
+</tbody></table>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>在本教程中，我们学习了Zig编程语言开发背后的概念、目标和设计技术。通过测试通用的、通用的编程知识来学习Zig语言，这些知识可以用来构建现代计算机程序。</p>
+<p>Zig仍然是一种新语言，ZSF仍在定期实现和测试更多功能。学习Zig是一个很好的决定，因为它作为一种更好的C语言，有着光明的前景。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/categories/">Category</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Ziglang-%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">Ziglang 简明教程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#What%E2%80%98s-Ziglang"><span class="toc-number">1.1.</span> <span class="toc-text">What‘s Ziglang</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Zig%E7%9A%84%E7%AA%81%E5%87%BA%E7%89%B9%E7%82%B9"><span class="toc-number">1.1.1.</span> <span class="toc-text">Zig的突出特点</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E7%AE%80%E5%8D%95"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">设计简单</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E5%92%8C%E5%AE%89%E5%85%A8%E6%80%A7"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">性能和安全性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E7%9A%84%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">1.1.1.3.</span> <span class="toc-text">完整的系统编程解决方案</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AD%A6%E4%B9%A0Zig"><span class="toc-number">1.1.2.</span> <span class="toc-text">为什么学习Zig</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%81%E5%9C%A8%E4%BD%BF%E7%94%A8Zig%EF%BC%9F"><span class="toc-number">1.1.3.</span> <span class="toc-text">谁在使用Zig？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0Zig"><span class="toc-number">1.2.</span> <span class="toc-text">学习Zig</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E6%BA%90%E7%9A%84-Zig-%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.3.</span> <span class="toc-text">开源的 Zig 生态系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zig-vs-C-vs-Rust"><span class="toc-number">1.4.</span> <span class="toc-text">Zig vs. C vs. Rust</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">1.5.</span> <span class="toc-text">结论</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/7ea0589/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/7ea0589/&text=Ziglang 简明教程"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/7ea0589/&title=Ziglang 简明教程"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/7ea0589/&is_video=false&description=Ziglang 简明教程"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Ziglang 简明教程&body=Check out this article: https://zoues.com/posts/7ea0589/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/7ea0589/&title=Ziglang 简明教程"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/7ea0589/&title=Ziglang 简明教程"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/7ea0589/&title=Ziglang 简明教程"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/7ea0589/&title=Ziglang 简明教程"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/7ea0589/&name=Ziglang 简明教程&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/7ea0589/&t=Ziglang 简明教程"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zouyee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,3 +1,5 @@
+https://zoues.com/posts/5941d835/
+https://zoues.com/posts/7ea0589/
 https://zoues.com/posts/48bcc63c/
 https://zoues.com/posts/11831eff/
 https://zoues.com/about/index.html
@@ -21,7 +23,6 @@ https://zoues.com/posts/35342369/
 https://zoues.com/categories/index.html
 https://zoues.com/tags/index.html
 https://zoues.com/posts/911a61ad/
-https://zoues.com/posts/5941d835/
 https://zoues.com/posts/912f3650/
 https://zoues.com/posts/384ced4/
 https://zoues.com/posts/58fc8d19/
@@ -81,6 +82,7 @@ https://zoues.com/tags/Kubernetes/
 https://zoues.com/tags/Containerd/
 https://zoues.com/tags/%E7%AC%94%E8%AE%B0/
 https://zoues.com/tags/golang/
+https://zoues.com/tags/ziglang/
 https://zoues.com/categories/serverless/
 https://zoues.com/categories/containerd/
 https://zoues.com/categories/Kubernetes-GO/
