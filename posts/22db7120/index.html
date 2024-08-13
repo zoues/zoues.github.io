@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="比肩Rust？万字Ziglang项目实战Zig 是一种命令式、通用、静态类型、编译型系统编程语言和工具链，用于维护健壮、优化和可重用的软件。  健壮：即使在内存不足等极端情况下，行为也是正确的。 优化：以最佳方式编写程序，使其能够表现良好。 可重用：相同的代码在具有不同约束条件的许多环境中都可以使用。 可维护：精确地向编译器和其他程序员传达意图。该语言对于阅读代码的开销很小，并且对于需求和环境的变">
+<meta property="og:type" content="article">
+<meta property="og:title" content="比肩Rust？万字Ziglang项目实战">
+<meta property="og:url" content="https://zoues.com/posts/22db7120/index.html">
+<meta property="og:site_name" content="zouyee">
+<meta property="og:description" content="比肩Rust？万字Ziglang项目实战Zig 是一种命令式、通用、静态类型、编译型系统编程语言和工具链，用于维护健壮、优化和可重用的软件。  健壮：即使在内存不足等极端情况下，行为也是正确的。 优化：以最佳方式编写程序，使其能够表现良好。 可重用：相同的代码在具有不同约束条件的许多环境中都可以使用。 可维护：精确地向编译器和其他程序员传达意图。该语言对于阅读代码的开销很小，并且对于需求和环境的变">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/orhun/zig-http-benchmarks/output/benchmarks-bw.png">
+<meta property="og:image" content="https://blog.orhun.dev/zig-codecov.png">
+<meta property="og:image" content="https://blog.orhun.dev/zig-docs.png">
+<meta property="og:image" content="https://blog.orhun.dev/github-pages-1.png">
+<meta property="og:image" content="https://blog.orhun.dev/github-pages-2.png">
+<meta property="article:published_time" content="2024-08-12T10:00:43.000Z">
+<meta property="article:modified_time" content="2024-08-13T14:20:12.542Z">
+<meta property="article:author" content="zouyee">
+<meta property="article:tag" content="zig">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/orhun/zig-http-benchmarks/output/benchmarks-bw.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>比肩Rust？万字Ziglang项目实战</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="zouyee" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/7ea0589/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/22db7120/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/22db7120/&text=比肩Rust？万字Ziglang项目实战"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/22db7120/&title=比肩Rust？万字Ziglang项目实战"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/22db7120/&is_video=false&description=比肩Rust？万字Ziglang项目实战"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=比肩Rust？万字Ziglang项目实战&body=Check out this article: https://zoues.com/posts/22db7120/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/22db7120/&title=比肩Rust？万字Ziglang项目实战"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/22db7120/&title=比肩Rust？万字Ziglang项目实战"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/22db7120/&title=比肩Rust？万字Ziglang项目实战"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/22db7120/&title=比肩Rust？万字Ziglang项目实战"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/22db7120/&name=比肩Rust？万字Ziglang项目实战&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/22db7120/&t=比肩Rust？万字Ziglang项目实战"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%AF%94%E8%82%A9Rust%EF%BC%9F%E4%B8%87%E5%AD%97Ziglang%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98"><span class="toc-number">1.</span> <span class="toc-text">比肩Rust？万字Ziglang项目实战</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x1-%E4%BB%8E%E5%88%87%E7%89%87%E5%BC%80%E5%A7%8B"><span class="toc-number">1.1.</span> <span class="toc-text">0x1: 从切片开始</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E8%AF%B4%E6%98%8E"><span class="toc-number">1.1.1.</span> <span class="toc-text">分析说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">1.1.2.</span> <span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%B9%E8%BF%9B"><span class="toc-number">1.1.3.</span> <span class="toc-text">改进</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x2-%E4%BD%BF%E7%94%A8defer%E9%98%B2%E6%AD%A2%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">0x2: 使用defer防止内存泄漏</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84"><span class="toc-number">1.2.1.</span> <span class="toc-text">处理文件路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E8%AF%B4%E6%98%8E-1"><span class="toc-number">1.2.2.</span> <span class="toc-text">分析说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-1"><span class="toc-number">1.2.3.</span> <span class="toc-text">解决方案</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x3-%E4%BB%8E0%E5%88%B01%E6%9E%84%E5%BB%BAHTTP%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.3.</span> <span class="toc-text">0x3: 从0到1构建HTTP服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x4-%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98"><span class="toc-number">1.4.</span> <span class="toc-text">0x4: 项目实战</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.5.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">1.6.</span> <span class="toc-text">参考链接</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        比肩Rust？万字Ziglang项目实战
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zouyee</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-08-12T10:00:43.000Z" class="dt-published" itemprop="datePublished">2024-08-12</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/zig/" rel="tag">zig</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="比肩Rust？万字Ziglang项目实战"><a href="#比肩Rust？万字Ziglang项目实战" class="headerlink" title="比肩Rust？万字Ziglang项目实战"></a>比肩Rust？万字Ziglang项目实战</h1><p>Zig 是一种命令式、通用、静态类型、编译型系统编程语言和工具链，用于维护健壮、优化和可重用的软件。</p>
+<ul>
+<li>健壮：即使在内存不足等极端情况下，行为也是正确的。</li>
+<li>优化：以最佳方式编写程序，使其能够表现良好。</li>
+<li>可重用：相同的代码在具有不同约束条件的许多环境中都可以使用。</li>
+<li>可维护：精确地向编译器和其他程序员传达意图。该语言对于阅读代码的开销很小，并且对于需求和环境的变化具有韧性。</li>
+</ul>
+<p>它支持编译时泛型、反射和评估、交叉编译和手动内存管理。Zig 的一个主要目标是改进 C 语言，同时也受到 Rust 等其他语言的启发。</p>
+<p>学习 Zig 的资源有很多，主要包括：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://ziglang.org/learn/">Zig 文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://ziglang.org/documentation/master/std/">Zig 标准库参考</a></li>
+<li><a href="Ziglearn.org">Ziglearn.org</a></li>
+<li><a href="">Zig 简明教程</a></li>
+<li><a href="">三十分钟搞定Ziglang</a>等</li>
+</ul>
+<p>学习一门语言最快捷的方式，当然是用它，上手最快的方式，当属项目实战，在运用中去学习，在学习中输出。通过本文我们将学习到：</p>
+<ul>
+<li>切片的使用</li>
+<li>defer防止内存泄漏</li>
+<li>项目开发与维护</li>
+<li>从0到1开发HTTP服务等</li>
+</ul>
+<h2 id="0x1-从切片开始"><a href="#0x1-从切片开始" class="headerlink" title="0x1: 从切片开始"></a>0x1: 从切片开始</h2><p>以下是用于演示的代码片段：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">// Zig 版本：0.10.1</span><br><span class="line"></span><br><span class="line">// 导入标准库</span><br><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">/// 返回一个切片</span><br><span class="line">fn zigBits() []u8 &#123;</span><br><span class="line">    // 创建一个数组字面量</span><br><span class="line">    var message = [_]u8&#123; &#x27;z&#x27;, &#x27;i&#x27;, &#x27;g&#x27;, &#x27;b&#x27;, &#x27;i&#x27;, &#x27;t&#x27;, &#x27;s&#x27; &#125;;</span><br><span class="line"></span><br><span class="line">    // 将数组作为字符串打印出来</span><br><span class="line">    std.log.debug(&quot;&#123;s&#125;&quot;, .&#123;message&#125;);</span><br><span class="line"></span><br><span class="line">    // 我们需要使用地址运算符（&amp;）将其强制转换为切片类型 &#x27;[]u8&#x27;。</span><br><span class="line">    return &amp;message;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/// 程序的入口</span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    // 常量赋值</span><br><span class="line">    const message = zigBits();</span><br><span class="line"></span><br><span class="line">    // 打印message</span><br><span class="line">    std.log.debug(&quot;&#123;s&#125;&quot;, .&#123;message&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Q：上述实现是从一个函数中返回一个切片，并打印其值吗？</p>
+<p>A：是的！我们期望看到 zigbits 两次。一次来自函数内部，一次来自主函数。</p>
+<p>让我们运行它：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ zig build run</span><br><span class="line">plaintextCopy codedebug: zigbits</span><br><span class="line">debug: �,�$</span><br></pre></td></tr></table></figure>
+
+<p>这跟我们预期的结果不太一致。retry？</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ zig build run</span><br><span class="line">plaintextCopy codedebug: zigbits</span><br><span class="line">debug:</span><br><span class="line">       �;�</span><br></pre></td></tr></table></figure>
+
+<p>Q：这里打印的是 u8 数组而不是切片？结果显示不是同一个数组？</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">- std.log.debug(&quot;&#123;s&#125;&quot;, .&#123;message&#125;);</span><br><span class="line">+ std.log.debug(&quot;&#123;d&#125;&quot;, .&#123;message&#125;);</span><br><span class="line"></span><br><span class="line">$ zig build run</span><br><span class="line">debug: &#123; 122, 105, 103, 98, 105, 116, 115 &#125;</span><br><span class="line">debug: &#123; 80, 129, 179, 51, 255, 127, 0 &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="分析说明"><a href="#分析说明" class="headerlink" title="分析说明"></a>分析说明</h3><p>让我们看看这一行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">return &amp;message;</span><br></pre></td></tr></table></figure>
+
+<p>在这里，我们实际上返回的是一个栈上分配的数组切片。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">try std.testing.expect(@TypeOf(&amp;message) == *[7]u8);</span><br></pre></td></tr></table></figure>
+
+<p>由于数组是在栈上分配的，当我们从函数中返回时，它可能会被破坏，即当我们从函数返回时释放时。这在文档的“Lifetime and Ownership”部分有解释：</p>
+<p>Zig 使用者有责任确保指针在指向的内存不再可用时即不会被访问。注意，切片是指针的一种形式，因为它引用其他内存。</p>
+<p>这就是当我们尝试在从函数返回后打印数组内容时为什么会得到随机的无意义字符串的原因。</p>
+<p>此外，在 ziglang&#x2F;zig官方仓库中有一个相关问题说明：<a target="_blank" rel="noopener" href="https://github.com/ziglang/zig/issues/5725">https://github.com/ziglang/zig/issues/5725</a></p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>我们可以通过几种方式来解决这个问题：</p>
+<ol>
+<li>将切片作为参数传递给函数</li>
+<li>将数组设置为全局变量</li>
+<li>最常见的做法：分配切片（返回切片的分配副本）</li>
+</ol>
+<p>让我们看看每种解决方案是如何运作的。</p>
+<ol>
+<li>将切片作为参数传递</li>
+</ol>
+<p>不带 len 的话 main 函数不知道写入的字节数，因此最终的日志会打印整个缓冲区，而不单单是实际的消息部分。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">// Zig 版本：0.10.1</span><br><span class="line"></span><br><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">fn zigBits(slice: []u8) usize &#123;</span><br><span class="line">    </span><br><span class="line">    var message = [_]u8&#123; &#x27;z&#x27;, &#x27;i&#x27;, &#x27;g&#x27;, &#x27;b&#x27;, &#x27;i&#x27;, &#x27;t&#x27;, &#x27;s&#x27; &#125;;</span><br><span class="line"></span><br><span class="line">    std.log.debug(&quot;&#123;s&#125;&quot;, .&#123;message&#125;);</span><br><span class="line"></span><br><span class="line">    std.mem.copy(u8, slice, &amp;message);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    </span><br><span class="line">    var message: [9]u8 = undefined;</span><br><span class="line"></span><br><span class="line">    const len = zigBits(&amp;message);</span><br><span class="line"></span><br><span class="line">    std.log.debug(&quot;&#123;s&#125;&quot;, .&#123;message[0..len]&#125;);</span><br><span class="line">    std.log.debug(&quot;&#123;s&#125;&quot;, .&#123;message&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正如所看到的，将函数的返回值更新为 void，并使其接受一个切片参数。使用 std.mem.cpy 方法在函数中更新切片，而不是使用 return。</p>
+<blockquote>
+<p> 这种方法类似于在 Rust 中将可变引用（&amp;mut）传递给函数</p>
+</blockquote>
+<p>运行结果如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ zig build run</span><br><span class="line">plaintextCopy codedebug: zigbits</span><br><span class="line">debug: zigbits</span><br><span class="line">debug: zigbits�,�$</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="2">
+<li>使用全局数组</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// Zig 版本：0.10.1</span><br><span class="line"></span><br><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">var message = [_]u8&#123; &#x27;z&#x27;, &#x27;i&#x27;, &#x27;g&#x27;, &#x27;b&#x27;, &#x27;i&#x27;, &#x27;t&#x27;, &#x27;s&#x27; &#125;;</span><br><span class="line"></span><br><span class="line">fn zigBits() []u8 &#123;</span><br><span class="line">    </span><br><span class="line">    std.log.debug(&quot;&#123;s&#125;&quot;, .&#123;message&#125;);</span><br><span class="line">    return &amp;message;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    </span><br><span class="line">    const msg = zigBits();</span><br><span class="line"></span><br><span class="line">    std.log.debug(&quot;&#123;s&#125;&quot;, .&#123;msg&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们将数组字面量声明为全局变量，其将会被延迟解析，并且可以被内部作用域访问。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ zig build run</span><br><span class="line">debug: zigbits</span><br><span class="line">debug: zigbits</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="3">
+<li>分配切片</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// Zig 版本：0.10.1</span><br><span class="line"></span><br><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">fn zigBits() ![]u8 &#123;</span><br><span class="line">    </span><br><span class="line">    var message = [_]u8&#123; &#x27;z&#x27;, &#x27;i&#x27;, &#x27;g&#x27;, &#x27;b&#x27;, &#x27;i&#x27;, &#x27;t&#x27;, &#x27;s&#x27; &#125;;</span><br><span class="line"></span><br><span class="line">    std.log.debug(&quot;&#123;s&#125;&quot;, .&#123;message&#125;);</span><br><span class="line"></span><br><span class="line">    var message_copy = try std.heap.page_allocator.dupe(u8, &amp;message);</span><br><span class="line">    return message_copy;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">pub fn main() !void &#123;</span><br><span class="line"></span><br><span class="line">    const message = try zigBits();</span><br><span class="line"></span><br><span class="line">    std.log.debug(&quot;&#123;s&#125;&quot;, .&#123;message&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们在这一行上对切片进行了堆上的复制：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var message_copy = try std.heap.page_allocator.dupe(u8, &amp;message);</span><br></pre></td></tr></table></figure>
+
+<p>这使得切片可以在函数外部使用，因为现在它在堆上分配了：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ zig build run</span><br><span class="line">debug: zigbits</span><br><span class="line">debug: zigbits</span><br></pre></td></tr></table></figure>
+
+<p>更常见和符合惯例的处理此类情况的方式是将 std.mem.Allocator 传递给分配内存的函数。这样一来，我们可以允许调用者决定使用哪种分配器。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">// Zig 版本：0.10.1</span><br><span class="line"></span><br><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">fn zigBits(allocator: std.mem.Allocator) ![]u8 &#123;</span><br><span class="line">   </span><br><span class="line">    var message = [_]u8&#123; &#x27;z&#x27;, &#x27;i&#x27;, &#x27;g&#x27;, &#x27;b&#x27;, &#x27;i&#x27;, &#x27;t&#x27;, &#x27;s&#x27; &#125;;</span><br><span class="line"></span><br><span class="line">    std.log.debug(&quot;&#123;s&#125;&quot;, .&#123;message&#125;);</span><br><span class="line"></span><br><span class="line">    var message_copy = try allocator.dupe(u8, &amp;message);</span><br><span class="line">    return message_copy;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">pub fn main() !void &#123;</span><br><span class="line">    // https://ziglang.org/documentation/master/#Choosing-an-Allocator</span><br><span class="line">    const allocator = std.heap.page_allocator;</span><br><span class="line">    const message = try zigBits(allocator);</span><br><span class="line"></span><br><span class="line">    std.log.debug(&quot;&#123;s&#125;&quot;, .&#123;message&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h3><p>让我们改进我们的程序，以返回一个具有指定长度的切片，而非栈上分配的数组。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">// Zig 版本：0.10.1</span><br><span class="line"></span><br><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">fn zigBits(len: usize) ![]u8 &#123;</span><br><span class="line">    </span><br><span class="line">    var message = [_]u8&#123; &#x27;z&#x27;, &#x27;i&#x27;, &#x27;g&#x27;, &#x27;b&#x27;, &#x27;i&#x27;, &#x27;t&#x27;, &#x27;s&#x27; &#125;;</span><br><span class="line"></span><br><span class="line">    std.log.debug(&quot;&#123;s&#125;&quot;, .&#123;message&#125;);</span><br><span class="line"></span><br><span class="line">    // 切片是指针和长度。数组和切片的区别在于，数组的长度是类型的一部分，并且在编译时已知，而切片的长度在运行时已知。</span><br><span class="line">    try std.testing.expect(@TypeOf(message[0..len]) == []u8);</span><br><span class="line"></span><br><span class="line">    // 我们使用 `len` 参数来使用运行时已知的值进行切片。</span><br><span class="line">    // 如果 `len` 声明为 `comptime len`，那么此值将为 &#x27;*[N]u8&#x27;。</span><br><span class="line">    return message[0..len];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">pub fn main() !void &#123;</span><br><span class="line">    </span><br><span class="line">    const message = try zigBits(7);</span><br><span class="line"></span><br><span class="line">    std.log.debug(&quot;&#123;s&#125;&quot;, .&#123;message&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这与第一个示例中的悬挂指针问题相同。在 Zig 中，&amp;message 和 message[0..] 将返回相同的切片。</p>
+<p>我们可以使用 <a target="_blank" rel="noopener" href="https://godbolt.org/z/cPWjajYxb">https://godbolt.org/z/cPWjajYxb</a> 检查此行为，该行为显示了在使用 ![]u8 时，“zigbits” 放置在堆栈中的 40 个字节，而在使用 []u8 时，“zigbits” 放置在堆栈中的 16 个字节。</p>
+<h2 id="0x2-使用defer防止内存泄漏"><a href="#0x2-使用defer防止内存泄漏" class="headerlink" title="0x2: 使用defer防止内存泄漏"></a>0x2: 使用defer防止内存泄漏</h2><p>在第一章节中，我们讨论了从函数返回切片以及 Zig 如何管理内存这个话题。我们了解到 Zig 数组是在堆栈上分配的，当它们被访问时，如果指向它们的内存不再可用，它们可能会被破坏。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// Zig 版本：0.10.1</span><br><span class="line"></span><br><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">fn zigBits() ![]u8 &#123;</span><br><span class="line">    </span><br><span class="line">    var message = [_]u8&#123; &#x27;z&#x27;, &#x27;i&#x27;, &#x27;g&#x27;, &#x27;b&#x27;, &#x27;i&#x27;, &#x27;t&#x27;, &#x27;s&#x27; &#125;;</span><br><span class="line">    </span><br><span class="line">    std.log.debug(&quot;&#123;s&#125;&quot;, .&#123;message&#125;);</span><br><span class="line"></span><br><span class="line">    var message_copy = try std.heap.page_allocator.dupe(u8, &amp;message);</span><br><span class="line">    return message_copy;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">pub fn main() !void &#123;</span><br><span class="line">    const message = try zigBits();</span><br><span class="line"></span><br><span class="line">    std.log.debug(&quot;&#123;s&#125;&quot;, .&#123;message&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里，你可以看到我们使用了一个硬编码的 std.heap.page_allocator 来复制内存。然而，在 Zig 的分配器使用约定中，我们一般会声明一个分配器，然后将分配器作为参数传递给函数，如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">// Zig 版本：0.10.1</span><br><span class="line"></span><br><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">fn zigBits(allocator: std.mem.Allocator) ![]u8 &#123;</span><br><span class="line">    </span><br><span class="line">    var message = [_]u8&#123; &#x27;z&#x27;, &#x27;i&#x27;, &#x27;g&#x27;, &#x27;b&#x27;, &#x27;i&#x27;, &#x27;t&#x27;, &#x27;s&#x27; &#125;;</span><br><span class="line"></span><br><span class="line">    std.log.debug(&quot;&#123;s&#125;&quot;, .&#123;message&#125;);</span><br><span class="line"></span><br><span class="line">    var message_copy = try allocator.dupe(u8, &amp;message);</span><br><span class="line">    return message_copy;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">pub fn main() !void &#123;</span><br><span class="line">   </span><br><span class="line">    const allocator = std.heap.page_allocator;</span><br><span class="line">    const message = try zigBits(allocator);</span><br><span class="line"></span><br><span class="line">    std.log.debug(&quot;&#123;s&#125;&quot;, .&#123;message&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样，调用者可以根据定义为通用 std.mem.Allocator 的类型来决定分配器的类型。</p>
+<h3 id="处理文件路径"><a href="#处理文件路径" class="headerlink" title="处理文件路径"></a>处理文件路径</h3><p>下述为我们的示例程序，它的目标是连接文件系统路径并打印结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">// Zig 版本：0.10.1</span><br><span class="line"></span><br><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">/// 连接给定的路径，并返回 &#x27;/home&#x27; 目录下的路径。</span><br><span class="line">fn concatPath(allocator: std.mem.Allocator, p1: []const u8, p2: []const u8) ![]const u8 &#123;</span><br><span class="line">    // 定义路径分隔符（对于 POSIX 系统来说是 &#x27;/&#x27;）。</span><br><span class="line">    const separator = std.fs.path.sep_str;</span><br><span class="line"></span><br><span class="line">    // 连接路径并返回结果。</span><br><span class="line">    const path = try std.fs.path.join(allocator, &amp;.&#123; separator, &quot;home&quot;, p1, p2 &#125;);</span><br><span class="line">    return path;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">pub fn main() !void &#123;</span><br><span class="line">   </span><br><span class="line">    const allocator = std.heap.page_allocator;</span><br><span class="line"></span><br><span class="line">    const path = try concatPath(allocator, &quot;zig&quot;, &quot;bits&quot;);</span><br><span class="line"></span><br><span class="line">    std.log.debug(&quot;&#123;s&#125;&quot;, .&#123;path&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>你可能已经猜到，在这个程序中我们会围绕 concatPath 函数进行说明。它接受一个通用的分配器类型（allocator），并连接给定的 p1 和 p2 路径字符串。在最终路径前面添加了 “&#x2F;home”。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ zig build run</span><br><span class="line"></span><br><span class="line">debug: /home/zig/bits</span><br></pre></td></tr></table></figure>
+
+<p>你可以看到一切都正常，我们成功地打印出了最终路径，但你有没有发现内存泄漏？</p>
+<h3 id="分析说明-1"><a href="#分析说明-1" class="headerlink" title="分析说明"></a>分析说明</h3><p>首先，什么是内存泄漏，为什么会发生呢？</p>
+<p>在计算机编程中，内存泄漏就像那些永不满足的黑洞一样——程序不断地消耗着越来越多的内存，没有任何限制，程序也不会释放那些它们不再需要的内存。</p>
+<p>在我们的示例中，我们正在使用分配器将我们的字符串连接起来。但问题在于我们从未释放通过分配器分配的内存。所以我们的程序不断地分配内存。</p>
+<h3 id="解决方案-1"><a href="#解决方案-1" class="headerlink" title="解决方案"></a>解决方案</h3><p>幸运的是，Zig有方法简化我们的工作。与Golang等现代高级语言一样，我们可以使用 defer 语句来确保在函数返回时释放内存。什么是 defer 语句呢？它是一种执行在函数返回之前的语句，类似hook，让我们来看看如何使用它：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">// Zig 版本：0.10.1</span><br><span class="line"></span><br><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">fn concatPath(allocator: std.mem.Allocator, p1: []const u8, p2: []const u8) ![]const u8 &#123;</span><br><span class="line">    const separator = std.fs.path.sep_str;</span><br><span class="line"></span><br><span class="line">    defer allocator.free(path);</span><br><span class="line"></span><br><span class="line">    const path = try std.fs.path.join(allocator, &amp;.&#123; separator, &quot;home&quot;, p1, p2 &#125;);</span><br><span class="line">    return path;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">pub fn main() !void &#123;</span><br><span class="line">    </span><br><span class="line">    const allocator = std.heap.page_allocator;</span><br><span class="line"></span><br><span class="line">    const path = try concatPath(allocator, &quot;zig&quot;, &quot;bits&quot;);</span><br><span class="line"></span><br><span class="line">    std.log.debug(&quot;&#123;s&#125;&quot;, .&#123;path&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过上述示例，我们看看 defer 语句的具体用法。在我们的函数中，我们在调用 std.fs.path.join 之前添加了 defer 语句。这意味着当函数返回之前，我们将调用 allocator.free(path)，从而释放我们分配的内存。这样，就不会再有内存泄漏了！</p>
+<h2 id="0x3-从0到1构建HTTP服务"><a href="#0x3-从0到1构建HTTP服务" class="headerlink" title="0x3: 从0到1构建HTTP服务"></a>0x3: 从0到1构建HTTP服务</h2><p>现在让我们尝试使用 Zig &gt;&#x3D;0.11 的 std.http 模块，并从头开始创建一个 HTTP 服务器&#x2F;客户端（以及一些基准测试）。</p>
+<p>在学习一门新的编程语言时，一般都是从编写 HTTP 服务器&#x2F;客户端开始。 Zig 标准库将从 0.11.0 （现在已经到0.13版本了）开始具有一些令人兴奋的 HTTP 功能。作为第一步，让我们尝试使用新功能进行一些实验，并尝试设计出一些功能性的东西。此外，我们如果对性能&#x2F;速度方面的事情感兴趣，可以创建一些基准测试，以查看与其他编程语言（如 Rust）的比较，该章节包含以下内容</p>
+<ul>
+<li>查看 std.http</li>
+<li>构建一个 HTTP 客户端</li>
+<li>构建一个 HTTP 服务器</li>
+<li>基准测试</li>
+</ul>
+<ol>
+<li>std.http简介</li>
+</ol>
+<p>Zig 最近几个月终于实现了内置的 HTTP 服务器&#x2F;客户端支持，下述为具体说明：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://zig.news/nameless/coming-soon-to-a-zig-near-you-http-client-5b81">Coming Soon to a Zig Near You: HTTP Client</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/ziglang/zig/issues/910">标准库中的 HTTP 服务器（跟踪问题）</a></li>
+<li><a target="_blank" rel="noopener" href="https://news.ycombinator.com/item?id=35991684">Zig 现在在 std 中内置了 HTTP 服务器和客户端</a></li>
+</ul>
+<p>总结一下这个新添加的 std.http 模块的功能：</p>
+<ul>
+<li>仅在 Zig 0.11.0-dev.2675-0eebc2588 及以上版本中可用。</li>
+<li>支持 HTTP&#x2F;1.1（请参阅 A barely HTTP&#x2F;2 server in Zig ）</li>
+<li>支持诸如连接池、压缩内容、代理和 TLS 等功能。</li>
+</ul>
+<p>而我认为最令人兴奋的部分是：</p>
+<blockquote>
+<p>使用最新（0.11.0）的 Zig，无需找到额外的库，我们就可以通过Get获取网站的内容或发送 POST 请求，不费吹灰之力…</p>
+</blockquote>
+<p>std.http 具有以下 API：</p>
+<ul>
+<li>Client：HTTP 客户端实现。</li>
+<li>Server：HTTP 服务器实现。</li>
+<li>Connection：连接类型（keep_alive、close）</li>
+<li>ContentEncoding：压缩选项（compress、deflate、gzip 和 zstd）</li>
+<li>Field：名称和值的通用类型</li>
+<li>Headers：HTTP 标头</li>
+<li>Method：HTTP 方法，如 GET 和 POST</li>
+<li>Status：HTTP 状态码（not_found &#x3D; 404、teapot &#x3D; 418 等）</li>
+<li>TransferEncoding：用于传输正文的编码形式（chunked）</li>
+<li>Version：当前为 HTTP&#x2F;1.0 和 HTTP&#x2F;1.1</li>
+</ul>
+<p>正如您已经注意到的那样，这是一个非常简单直接的 HTTP 实现，与当前稳定版本的 Zig（0.10.1）相比，std.http 并不那么简陋，而是具有一些很酷的添加功能，比如内容&#x2F;传输编码和标头，进步很大！</p>
+<ol start="2">
+<li>构建一个 HTTP 客户端</li>
+</ol>
+<p>在开始之前，我们需要选择一个分配器来使用。这是 Zig 的一个有趣之处，另外，强烈建议你阅读关于分配器的资料，这样你可以精确地知晓如何进行内存分配。</p>
+<p>简单起见，我们使用 <code>std.heap.GeneralPurposeAllocator</code>，这是一个安全的分配器，可以防止双重释放（double-free）、使用已释放的内存（use-after-free），并且可以检测内存泄漏等情况。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">var gpa = std.heap.GeneralPurposeAllocator(.&#123;&#125;)&#123;&#125;;</span><br><span class="line">defer std.debug.assert(gpa.deinit() == .ok);</span><br><span class="line">const allocator = gpa.allocator();</span><br></pre></td></tr></table></figure>
+
+<p>接下来，我们创建 <code>Client</code> 对象：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">const http = std.http;</span><br><span class="line"></span><br><span class="line">var client = http.Client&#123; .allocator = allocator &#125;;</span><br><span class="line">defer client.deinit();</span><br></pre></td></tr></table></figure>
+
+<p>如你所见，创建 <code>Client</code> 唯一需要的参数是分配器。跟Rust、Golang一样，构造时还可以在选择性地提供证书包、连接池和代理。</p>
+<p>需要注意的是 <code>defer</code> 关键字。它指示在客户端超出作用域时将调用 <code>deinit</code> 方法，这意味着与客户端关联的所有资源将被释放。</p>
+<p>要发送请求，我们需要以下几样东西：</p>
+<ul>
+<li>一个 <code>std.http.Method</code></li>
+<li>一个 <code>std.Uri</code>，由一个 URL 解析而来。</li>
+<li>一个 <code>std.http.Headers</code>，用于保存发送到服务器的请求头。只有当我们向其中追加内容时，它才会分配内存。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const uri = std.Uri.parse(&quot;https://whatthecommit.com&quot;) catch unreachable;</span><br><span class="line"></span><br><span class="line">var headers = std.http.Headers&#123; .allocator = allocator &#125;;</span><br><span class="line">defer headers.deinit();</span><br><span class="line"></span><br><span class="line">try headers.append(&quot;accept&quot;, &quot;*/*&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>然后们准备创建一个 <code>Request</code> 对象：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var request = try client.request(.GET, uri, headers, .&#123;&#125;);</span><br><span class="line">defer request.deinit();</span><br></pre></td></tr></table></figure>
+
+<p>要真正发送请求，我们还需要使用 <code>start</code> 函数，如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">try request.start();</span><br></pre></td></tr></table></figure>
+
+<p>这种方式在很有用。例如，</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">var request = try client.request(.POST, uri, headers, .&#123;&#125;);</span><br><span class="line">defer request.deinit();</span><br><span class="line"></span><br><span class="line">request.transfer_encoding = .chunked;</span><br><span class="line"></span><br><span class="line">try request.start();</span><br></pre></td></tr></table></figure>
+
+<p>在发送请求后，我们需要等待服务器发送响应：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">try request.wait();</span><br></pre></td></tr></table></figure>
+
+<p>这个 <code>wait</code> 调用将为我们处理以下任务：</p>
+<ul>
+<li>重定向</li>
+<li>读取&#x2F;存储请求头</li>
+<li>设置解压</li>
+</ul>
+<p>最后，要读取来自服务器的响应，我们可以使用 <code>Request</code> 的 <code>reader()</code> 方法获取一个 <code>std.io.Reader</code>。剩下的就是在 Zig 中从流中读取数据：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const body = request.reader().readAllAlloc(allocator, 8192) catch unreachable;</span><br><span class="line">defer allocator.free(body);</span><br></pre></td></tr></table></figure>
+
+<p>以下是将所有步骤结合在一起并打印出响应的代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">// Zig 版本：0.11.0</span><br><span class="line"></span><br><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line">const http = std.http;</span><br><span class="line"></span><br><span class="line">pub fn main() !void &#123;</span><br><span class="line">   </span><br><span class="line">    var gpa = std.heap.GeneralPurposeAllocator(.&#123;&#125;)&#123;&#125;;</span><br><span class="line">    defer std.debug.assert(gpa.deinit() == .ok);</span><br><span class="line">    const allocator = gpa.allocator();</span><br><span class="line"></span><br><span class="line">    var client = http.Client&#123; .allocator = allocator &#125;;</span><br><span class="line">    defer client.deinit();</span><br><span class="line"></span><br><span class="line">    const uri = std.Uri.parse(&quot;https://whatthecommit.com/index.txt&quot;) catch unreachable;</span><br><span class="line"></span><br><span class="line">    var headers = std.http.Headers&#123; .allocator = allocator &#125;;</span><br><span class="line">    defer headers.deinit();</span><br><span class="line"></span><br><span class="line">    try headers.append(&quot;accept&quot;, &quot;*/*&quot;);</span><br><span class="line"></span><br><span class="line">    var request = try client.request(.GET, uri, headers, .&#123;&#125;);</span><br><span class="line">    defer request.deinit();</span><br><span class="line"></span><br><span class="line">    try request.start();</span><br><span class="line">    try request.wait();</span><br><span class="line"></span><br><span class="line">    const body = request.reader().readAllAlloc(allocator, 8192) catch unreachable;</span><br><span class="line">    defer allocator.free(body);</span><br><span class="line"></span><br><span class="line">    std.log.info(&quot;&#123;s&#125;&quot;, .&#123;body&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最终运行结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ zig build run</span><br><span class="line">error: TlsInitializationFailed</span><br></pre></td></tr></table></figure>
+
+<p>结果运行出错，新语言就是这么难查问题，我们在Zig官方issue中发现了一个问题：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/ziglang/zig/issues/14172">https://github.com/ziglang/zig/issues/14172</a></p>
+<p>当前标准库中的 TLS 实现仅支持 TLS 1.3，不幸的是，我们测试的网站 whatthecommit.com 使用的是 TLS 1.2。</p>
+<p>我们可以通过以下命令来验证是否支持 TLS 1.3：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -v --tlsv1.3 https://whatthecommit.com/index.txt</span><br></pre></td></tr></table></figure>
+
+<p>结果显示网站不支持 TLS 1.3。</p>
+<p>那么我们换个目标网址，更新程序中的 URL 并再次运行它：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sed -i <span class="string">&quot;s|https://.*\&quot;|https://godsays.xyz\&quot;|g&quot;</span> src/main.zig</span><br><span class="line"></span><br><span class="line">$ zig build run</span><br></pre></td></tr></table></figure>
+
+<p>结果成功了！那 POST 请求呢？我们可以这样写入数据：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">var request = try client.request(.POST, uri, headers, .&#123;&#125;);</span><br><span class="line">defer request.deinit();</span><br><span class="line">request.transfer_encoding = .chunked;</span><br><span class="line"></span><br><span class="line">try request.start();</span><br><span class="line"></span><br><span class="line">try request.writer().writeAll(&quot;Zig Bits!\n&quot;);</span><br><span class="line">try request.finish();</span><br><span class="line"></span><br><span class="line">try request.wait();</span><br></pre></td></tr></table></figure>
+
+
+
+<ol start="3">
+<li>构建一个 HTTP 服务器</li>
+</ol>
+<p>现在简单的部分已经完成了，让我们进入正题：如何实现一个HTTP服务器。</p>
+<p>在下面的实现中，我们从标准库中的测试中获得了一些灵感，并提出了一个简化版本，去掉了多线程和断言等。</p>
+<p>为了保持简单，直接添加一个名为 <code>/get</code> 的路径就足够了。</p>
+<p>所以我们想要实现的目标很简单：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ curl 127.0.0.1:8000/get</span><br><span class="line"></span><br><span class="line">Zig Bits!</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>你是否知道Python只需要一行就能创建 HTTP 服务器吗？ <code>python -m http.server 8000</code>。</p>
+</blockquote>
+<p>让我们快速定义一下服务器配置的常量：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line">const http = std.http;</span><br><span class="line">const log = std.log.scoped(.server);</span><br><span class="line"></span><br><span class="line">const server_addr = &quot;127.0.0.1&quot;;</span><br><span class="line">const server_port = 8000;</span><br></pre></td></tr></table></figure>
+
+<p>这里需要注意的是，我们为 <code>log</code> 模块指定了一个作用域，这样日志消息会显示为 <code>info(server)</code>、<code>debug(server)</code> 等等。</p>
+<p>接下来，我们需要选择一个分配器（allocator），再次使用 <code>std.heap.GeneralPurposeAllocator</code>，以保持与 HTTP 客户端示例的一致性。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var gpa = std.heap.GeneralPurposeAllocator(.&#123;&#125;)&#123;&#125;;</span><br><span class="line">defer std.debug.assert(gpa.deinit() == .ok);</span><br><span class="line">const allocator = gpa.allocator();</span><br></pre></td></tr></table></figure>
+
+<p>现在构建 <code>Server</code> 对象并指示在其作用域结束时释放资源。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var server = http.Server.init(allocator, .&#123; .reuse_address = true &#125;);</span><br><span class="line">defer server.deinit();</span><br></pre></td></tr></table></figure>
+
+<p>将服务器绑定到我们之前定义的地址上：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">log.info(&quot;Server is running at &#123;s&#125;:&#123;d&#125;&quot;, .&#123; server_addr, server_port &#125;);</span><br><span class="line"></span><br><span class="line">const address = std.net.Address.parseIp(server_addr, server_port) catch unreachable;</span><br><span class="line">try server.listen(address);</span><br></pre></td></tr></table></figure>
+
+
+
+<p>和每个 HTTP 服务器的实现一样，我们需要一个机制来阻塞当前线程，等待下一个请求并处理它。为此，在 Zig 中我们可以这样做：</p>
+<ul>
+<li><code>Server</code> 的 <code>accept</code> 方法返回一个 <code>Response</code>。</li>
+<li><code>Response</code> 包含有用的信息，如请求方法和头信息。</li>
+<li><code>Response</code> 还提供了用于处理请求的辅助方法。例如，<code>wait</code> 方法可以用来等待客户端完成请求头的发送。</li>
+</ul>
+<p>当我们把这些拼凑在一起时，服务器运行函数看起来像这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">// 运行服务器并处理传入的请求</span><br><span class="line">fn runServer(server: *http.Server, allocator: std.mem.Allocator) !void &#123;</span><br><span class="line">    outer: while (true) &#123;</span><br><span class="line">        // 接受传入的连接</span><br><span class="line">        var response = try server.accept(.&#123;</span><br><span class="line">            .allocator = allocator,</span><br><span class="line">        &#125;);</span><br><span class="line">        defer response.deinit();</span><br><span class="line"></span><br><span class="line">        while (response.reset() != .closing) &#123;</span><br><span class="line">            // 处理请求处理期间的错误</span><br><span class="line">            response.wait() catch |err| switch (err) &#123;</span><br><span class="line">                error.HttpHeadersInvalid =&gt; continue :outer,</span><br><span class="line">                error.EndOfStream =&gt; continue,</span><br><span class="line">                else =&gt; return err,</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            // 处理请求</span><br><span class="line">            try handleRequest(&amp;response, allocator);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里，我们首先创建一个无限循环来接受传入的连接。然后还有另一个循环用于通过 <code>wait</code> 方法从流中读取响应。同时，在Header无效时跳过读取循环中的响应。</p>
+<p>正如你所见，处理请求的步骤是在服务器循环的最后通过 <code>handleRequest</code> 函数完成的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">// 处理单个请求</span><br><span class="line">fn handleRequest(response: *http.Server.Response, allocator: std.mem.Allocator) !void &#123;</span><br><span class="line">    log.info(&quot;&#123;s&#125; &#123;s&#125; &#123;s&#125;&quot;, .&#123; @tagName(response.request.method), @tagName(response.request.version), response.request.target &#125;);</span><br><span class="line"></span><br><span class="line">    // 读取请求体</span><br><span class="line">    const body = try response.reader().readAllAlloc(allocator, 8192);</span><br><span class="line">    defer allocator.free(body);</span><br><span class="line"></span><br><span class="line">    // 如果请求头中存在 &quot;connection&quot;，将其设置为 &quot;keep-alive&quot;</span><br><span class="line">    if (response.request.headers.contains(&quot;connection&quot;)) &#123;</span><br><span class="line">        try response.headers.append(&quot;connection&quot;, &quot;keep-alive&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 检查请求目标是否以 &quot;/get&quot; 开头</span><br><span class="line">    if (std.mem.startsWith(u8, response.request.target, &quot;/get&quot;)) &#123;</span><br><span class="line">        // 检查请求目标是否包含 &quot;?chunked&quot;</span><br><span class="line">        if (std.mem.indexOf(u8, response.request.target, &quot;?chunked&quot;) != null) &#123;</span><br><span class="line">            response.transfer_encoding = .chunked;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            response.transfer_encoding = .&#123; .content_length = 10 &#125;;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // 设置 &quot;content-type&quot; 头为 &quot;text/plain&quot;</span><br><span class="line">        try response.headers.append(&quot;content-type&quot;, &quot;text/plain&quot;);</span><br><span class="line"></span><br><span class="line">        // 写入响应体</span><br><span class="line">        try response.do();</span><br><span class="line">        if (response.request.method != .HEAD) &#123;</span><br><span class="line">            try response.writeAll(&quot;Zig &quot;);</span><br><span class="line">            try response.writeAll(&quot;Bits!\n&quot;);</span><br><span class="line">            try response.finish();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        // 设置响应状态为 404（未找到）</span><br><span class="line">        response.status = .not_found;</span><br><span class="line">        try response.do();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们再来逐步分析一遍：</p>
+<ol>
+<li>首先，记录传入请求的详细信息。</li>
+<li>读取请求体并合理分配内存（最大8KB）。</li>
+<li>如有必要，设置 <code>Connection</code> 头。</li>
+<li>如果请求目标以 <code>/get</code> 开头，则将 <code>&quot;Zig Bits!&quot;</code> 写入响应体。</li>
+<li>如果目标包含 <code>?chunked</code>，则启用分块编码，否则使用固定内容长度。</li>
+<li>如果请求未匹配到配置的路由，则返回404。</li>
+</ol>
+<p>需要注意的一点是 <code>finish()</code> 和 <code>do()</code> 方法的区别。<code>do()</code> 方法只是发送响应头，而 <code>finish()</code> 会发送分块消息的最后一个块，或者验证我们发送了约定数量的字节。因此，如果我们在发送数据时，总是应该调用 <code>finish()</code> 来完成响应。</p>
+<p>现在请求已被处理，我们也有了服务器函数，下面看看如何运行服务器并记录错误：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 运行服务器</span><br><span class="line">runServer(&amp;server, allocator) catch |err| &#123;</span><br><span class="line">    // 处理服务器错误</span><br><span class="line">    log.err(&quot;server error: &#123;&#125;\n&quot;, .&#123;err&#125;);</span><br><span class="line">    if (@errorReturnTrace()) |trace| &#123;</span><br><span class="line">        std.debug.dumpStackTrace(trace.*);</span><br><span class="line">    &#125;</span><br><span class="line">    std.os.exit(1);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>最终的 HTTP 服务器代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line">// Zig 版本: 0.11.0</span><br><span class="line"></span><br><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line">const http = std.http;</span><br><span class="line">const log = std.log.scoped(.server);</span><br><span class="line"></span><br><span class="line">const server_addr = &quot;127.0.0.1&quot;;</span><br><span class="line">const server_port = 8000;</span><br><span class="line"></span><br><span class="line">fn runServer(server: *http.Server, allocator: std.mem.Allocator) !void &#123;</span><br><span class="line">    outer: while (true) &#123;</span><br><span class="line">        var response = try server.accept(.&#123;</span><br><span class="line">            .allocator = allocator,</span><br><span class="line">        &#125;);</span><br><span class="line">        defer response.deinit();</span><br><span class="line"></span><br><span class="line">        while (response.reset() != .closing) &#123;</span><br><span class="line">           </span><br><span class="line">            response.wait() catch |err| switch (err) &#123;</span><br><span class="line">                error.HttpHeadersInvalid =&gt; continue :outer,</span><br><span class="line">                error.EndOfStream =&gt; continue,</span><br><span class="line">                else =&gt; return err,</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            try handleRequest(&amp;response, allocator);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">fn handleRequest(response: *http.Server.Response, allocator: std.mem.Allocator) !void &#123;</span><br><span class="line">    log.info(&quot;&#123;s&#125; &#123;s&#125; &#123;s&#125;&quot;, .&#123; @tagName(response.request.method), @tagName(response.request.version), response.request.target &#125;);</span><br><span class="line">    const body = try response.reader().readAllAlloc(allocator, 8192);</span><br><span class="line">    defer allocator.free(body);</span><br><span class="line"></span><br><span class="line">    if (response.request.headers.contains(&quot;connection&quot;)) &#123;</span><br><span class="line">        try response.headers.append(&quot;connection&quot;, &quot;keep-alive&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (std.mem.startsWith(u8, response.request.target, &quot;/get&quot;)) &#123;</span><br><span class="line">        if (std.mem.indexOf(u8, response.request.target, &quot;?chunked&quot;) != null) &#123;</span><br><span class="line">            response.transfer_encoding = .chunked;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            response.transfer_encoding = .&#123; .content_length = 10 &#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        try response.headers.append(&quot;content-type&quot;, &quot;text/plain&quot;);</span><br><span class="line"></span><br><span class="line">        try response.do();</span><br><span class="line">        if (response.request.method != .HEAD) &#123;</span><br><span class="line">            try response.writeAll(&quot;Zig &quot;);</span><br><span class="line">            try response.writeAll(&quot;Bits!\n&quot;);</span><br><span class="line">            try response.finish();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        response.status = .not_found;</span><br><span class="line">        try response.do();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">pub fn main() !void &#123;</span><br><span class="line">    var gpa = std.heap.GeneralPurposeAllocator(.&#123;&#125;)&#123;&#125;;</span><br><span class="line">    defer std.debug.assert(gpa.deinit() == .ok);</span><br><span class="line">    const allocator = gpa.allocator();</span><br><span class="line"></span><br><span class="line">    var server = http.Server.init(allocator, .&#123; .reuse_address = true &#125;);</span><br><span class="line">    defer server.deinit();</span><br><span class="line"></span><br><span class="line">    log.info(&quot;Server is running at &#123;s&#125;:&#123;d&#125;&quot;, .&#123; server_addr, server_port &#125;);</span><br><span class="line"></span><br><span class="line">    const address = std.net.Address.parseIp(server_addr, server_port) catch unreachable;</span><br><span class="line">    try server.listen(address);</span><br><span class="line"></span><br><span class="line">    runServer(&amp;server, allocator) catch |err| &#123;</span><br><span class="line">        log.err(&quot;server error: &#123;&#125;\n&quot;, .&#123;err&#125;);</span><br><span class="line">        if (@errorReturnTrace()) |trace| &#123;</span><br><span class="line">            std.debug.dumpStackTrace(trace.*);</span><br><span class="line">        &#125;</span><br><span class="line">        std.os.exit(1);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>让我们看看运行情况：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ zig build run</span><br><span class="line"></span><br><span class="line">info(server): Server is running at 127.0.0.1:8000</span><br><span class="line">info(server): GET HTTP/1.1 /get</span><br><span class="line">info(server): GET HTTP/1.1 /get?chunked</span><br></pre></td></tr></table></figure>
+
+<p>在另一个终端中执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ curl 127.0.0.1:8000/get</span><br><span class="line">Zig Bits!</span><br><span class="line"></span><br><span class="line">$ curl 127.0.0.1:8000/get?chunked</span><br><span class="line">Zig Bits!</span><br></pre></td></tr></table></figure>
+
+<p>现在我们有了一个纯 Zig 编写的功能性 HTTP 服务器了。</p>
+<ol start="4">
+<li>基准测试</li>
+</ol>
+<p>为了查看 Zig HTTP 客户端相对于其他编程语言实现的速度，这里使用 hyperfine 创建了一些基准测试。</p>
+<p>这些基准测试可以在这个仓库中找到：<a target="_blank" rel="noopener" href="https://github.com/orhun/zig-http-benchmarks">https://github.com/orhun/zig-http-benchmarks</a></p>
+<p>将 HTTP 客户端与以下几种客户端进行比较：</p>
+<ul>
+<li>Rust HTTP 客户端（hyper、reqwest、ureq、attohttpc）</li>
+<li>Go HTTP 客户端（net&#x2F;http）</li>
+<li>Python HTTP 客户端（requests）</li>
+<li>curl</li>
+</ul>
+<p>工作的方式是，运行 Zig HTTP 服务器并接受来自不同客户端的 N 个请求，然后让 hyperfine 完成它。</p>
+<p>要运行基准测试，只需运行 <code>./bench.sh</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">rust-ureq 运行结果:</span><br><span class="line">    比 rust-hyper 快 1.18 ± 0.22 倍</span><br><span class="line">    比 rust-reqwest 快 1.30 ± 0.27 倍</span><br><span class="line">    比 go-http-client 快 1.74 ± 0.38 倍</span><br><span class="line">    比 rust-attohttpc 快 1.92 ± 0.40 倍</span><br><span class="line">    比 zig-http-client 快 2.17 ± 0.63 倍</span><br><span class="line">    比 curl 快 4.25 ± 0.73 倍</span><br><span class="line">    比 python-http-client 快 10.31 ± 1.47 倍</span><br></pre></td></tr></table></figure>
+
+<p>以下是具体的测试数据：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>平均时间 [ms]</th>
+<th>最小时间 [ms]</th>
+<th>最大时间 [ms]</th>
+<th>相对速度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>curl</td>
+<td>295.2 ± 29.3</td>
+<td>248.6</td>
+<td>367.9</td>
+<td>4.25 ± 0.73</td>
+</tr>
+<tr>
+<td>zig-http-client</td>
+<td>150.9 ± 38.1</td>
+<td>98.5</td>
+<td>250.2</td>
+<td>2.17 ± 0.63</td>
+</tr>
+<tr>
+<td>rust-attohttpc</td>
+<td>133.4 ± 20.6</td>
+<td>101.1</td>
+<td>174.7</td>
+<td>1.92 ± 0.40</td>
+</tr>
+<tr>
+<td>rust-hyper</td>
+<td>82.1 ± 10.1</td>
+<td>65.7</td>
+<td>106.0</td>
+<td>1.18 ± 0.22</td>
+</tr>
+<tr>
+<td>rust-reqwest</td>
+<td>90.0 ± 14.0</td>
+<td>67.8</td>
+<td>126.0</td>
+<td>1.30 ± 0.27</td>
+</tr>
+<tr>
+<td>rust-ureq</td>
+<td>69.5 ± 9.6</td>
+<td>55.3</td>
+<td>92.9</td>
+<td>1.00</td>
+</tr>
+<tr>
+<td>go-http-client</td>
+<td>120.8 ± 20.0</td>
+<td>84.6</td>
+<td>171.6</td>
+<td>1.74 ± 0.38</td>
+</tr>
+<tr>
+<td>python-http-client</td>
+<td>716.5 ± 22.0</td>
+<td>665.9</td>
+<td>765.7</td>
+<td>10.31 ± 1.47</td>
+</tr>
+</tbody></table>
+<p><img src="https://raw.githubusercontent.com/orhun/zig-http-benchmarks/output/benchmarks-bw.png"></p>
+<p>通过比较这两个服务器的性能指标，我们可以得出它们在处理相同请求的情况下的性能差异。通常来说，性能测试的结果可能会受到多种因素的影响，包括硬件配置、操作系统、编译优化等，因此需要在真实环境中进行测试以获得更准确的结果。</p>
+<h2 id="0x4-项目实战"><a href="#0x4-项目实战" class="headerlink" title="0x4: 项目实战"></a>0x4: 项目实战</h2><p>在核心功能实现并且 Zig 代码经过了彻底的测试之后，我们可以开始做与项目管理相关的琐事，我们将分享在 Zig 项目管理方面的经验，以便能够正常的使用github等工具维护你的开源代码。</p>
+<p>该章节将涵盖以下主题：</p>
+<ul>
+<li>添加库</li>
+<li>运行测试</li>
+<li>代码覆盖率</li>
+<li>文档生成</li>
+<li>CI&#x2F;CD</li>
+</ul>
+<ol>
+<li>添加库</li>
+</ol>
+<p>对于新手来说，这是一个棘手的问题之一。目前，似乎还没有一个像 cargo add 这样简单和标准的方法来为你的 Zig 项目添加库。但是，有一些用于此目的的包管理器可供选择：</p>
+<ul>
+<li>gyro：一个带有索引、构建运行器和构建依赖项的 Zig 包管理器。</li>
+<li>zigmod：Zig 编程语言的包管理器。</li>
+<li>aquila：一个用于 Zig 项目的包索引。</li>
+</ul>
+<p>对于我们接下来的项目，选择采取了一个更简单直接的方法：Git 子模块</p>
+<p>a. 在项目的根目录下创建 libs 目录。</p>
+<p>b. 将库作为 Git 子模块添加：</p>
+<p>要么运行 git submodule add <remote_url> libs&#x2F;<lib>，要么添加 .gitmodules 文件。例如，对于 zig-clap：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[submodule &quot;libs/zig-clap&quot;]</span><br><span class="line">  path = libs/zig-clap</span><br><span class="line">  url = https://github.com/Hejsil/zig-clap</span><br></pre></td></tr></table></figure>
+
+<p>c. 然后你需要在 build.zig 中将该包添加到你的项目中，如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">const exe = b.addExecutable(&quot;exe_name&quot;, &quot;src/main.zig&quot;);</span><br><span class="line">// ...</span><br><span class="line">// ...</span><br><span class="line">exe.addPackagePath(&quot;clap&quot;, &quot;libs/zig-clap/clap.zig&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>d. 现在可以在我们的源文件中导入库：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const clap = @import(&quot;clap&quot;);</span><br></pre></td></tr></table></figure>
+
+
+
+<p>当然，现在还没有标准的方法来安装 Zig 库。人们常用的一些常见方法有：</p>
+<ul>
+<li>使用 git 子模块或将库复制粘贴到自己的项目中。</li>
+<li>在 build.zig 文件中添加 exe.addPackagePath(“clap”, “path&#x2F;to&#x2F;clap.zig”); 以使用该库。</li>
+<li>使用非官方的包管理器，如 zigmod 或 gyro。</li>
+</ul>
+<p>关于如何使用这些包管理器安装包，请查看这些包管理器的文档。</p>
+<ol start="2">
+<li>运行测试</li>
+</ol>
+<p>在编写项目的测试时，我们需要为每个文件添加测试，并在 build.zig 中指定要测试的文件。例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const exe_tests = b.addTest(&quot;src/main.zig&quot;);</span><br><span class="line">exe_tests.setTarget(target);</span><br><span class="line">exe_tests.setBuildMode(mode);</span><br><span class="line"></span><br><span class="line">const test_step = b.step(&quot;test&quot;, &quot;Run unit tests&quot;);</span><br><span class="line">test_step.dependOn(&amp;exe_tests.step);</span><br></pre></td></tr></table></figure>
+
+<p>当运行 zig build test 时，它只会运行 main.zig 中的测试。我们希望运行项目中每个文件中的测试，所以我们做了下面的操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">const test_step = b.step(&quot;test&quot;, &quot;Run tests&quot;);</span><br><span class="line"></span><br><span class="line">// loop through the modules and add them for testing</span><br><span class="line">for ([_][]const u8&#123; &quot;main&quot;, &quot;wav&quot;, &quot;file&quot;, &quot;gen&quot; &#125;) |module| &#123;</span><br><span class="line">    const test_module = b.fmt(&quot;src/&#123;s&#125;.zig&quot;, .&#123;module&#125;);</span><br><span class="line">    var exe_tests = b.addTest(test_module);</span><br><span class="line">    test_step.dependOn(&amp;exe_tests.step);</span><br><span class="line">&#125;</span><br><span class="line">sqlCopy code$ zig build test</span><br><span class="line"></span><br><span class="line">1/1 test.run... OK</span><br><span class="line">All 1 tests passed.</span><br><span class="line">1/2 test.encode WAV... OK</span><br><span class="line">2/2 test.stream out WAV... OK</span><br><span class="line">All 2 tests passed.</span><br><span class="line">1/1 test.read bytes from the file... OK</span><br><span class="line">All 1 tests passed.</span><br><span class="line">1/1 test.generate music... OK</span><br><span class="line">All 1 tests passed.</span><br></pre></td></tr></table></figure>
+
+<p>这个方法运行结果符合预期，但还有另一种更好的方法，在是在 Reddit 帖子中找到的方法（其实我们看ziglang公共库也可以发现）。</p>
+<p>我们需要有一个通用的文件来“引用”测试代码，以便通过一个单独的 “addTest” 语句在你的构建文件中运行它们。例如，在 src&#x2F;myLibrary.zig 中：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">pub const A = @import(&quot;A.zig&quot;);</span><br><span class="line">pub const B = @import(&quot;B.zig&quot;);</span><br><span class="line">pub const SomeDataType = @import(&quot;C.zig&quot;).SomeDataType;</span><br><span class="line"></span><br><span class="line">test &#123;</span><br><span class="line">  @import(&quot;std&quot;).testing.refAllDecls(@This());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后在 build.zig 中，只需要简单地添加它作为 b.addTest(“src&#x2F;myLibrary.zig”)。</p>
+<ol start="3">
+<li>代码覆盖率</li>
+</ol>
+<p>追踪项目的测试覆盖率。有助于更好地测试功能并消除潜在地错误。有时，甚至需要重构你的代码来为某个函数&#x2F;模块编写测试，这样的代码将会更好。</p>
+<p>对于 Rust 项目，通常会按照以下步骤进行测试&#x2F;覆盖率检查：</p>
+<ul>
+<li>编写测试</li>
+<li>使用 cargo-nextest 运行测试</li>
+<li>使用工具生成代码覆盖率报告<ul>
+<li>cargo-tarpaulin</li>
+<li>cargo-llvm-cov</li>
+</ul>
+</li>
+<li>将其上传到 Codecov.io</li>
+</ul>
+<p>对于 Zig，我们将采取以下步骤：</p>
+<ul>
+<li>编写测试</li>
+<li>使用 zig build test 运行测试</li>
+<li>使用 kcov 生成代码覆盖率报告</li>
+<li>将其上传到 Codecov.io</li>
+</ul>
+<p>在测试通过后，第一步是生成代码覆盖率报告。我们只需要在 build.zig 中添加一个新的标志来生成覆盖率报告：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">const coverage = b.option(bool, &quot;test-coverage&quot;, &quot;Generate test coverage&quot;) orelse false;</span><br><span class="line"></span><br><span class="line">const exe_tests = b.addTest(&quot;src/main.zig&quot;);</span><br><span class="line">exe_tests.setTarget(target);</span><br><span class="line">exe_tests.setBuildMode(mode);</span><br><span class="line"></span><br><span class="line">if (coverage) &#123;</span><br><span class="line">    exe_tests.setExecCmd(&amp;[_]?[]const u8&#123;</span><br><span class="line">        &quot;kcov&quot;,</span><br><span class="line">        &quot;kcov-output&quot;,</span><br><span class="line">        null,</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在当你运行 zig build test -Dtest-coverage 时，报告将存放在 kcov-output。</p>
+<p>下一步是将这个报告上传到 Codecov。我们只需要编写了一个简单的 GitHub Actions 工作流程即可：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"># contents of .github/workflows/ci.yml</span><br><span class="line"></span><br><span class="line">name: Continuous Integration</span><br><span class="line"></span><br><span class="line">on:</span><br><span class="line">  push:</span><br><span class="line">    branches:</span><br><span class="line">      - main</span><br><span class="line"></span><br><span class="line">jobs:</span><br><span class="line">  test:</span><br><span class="line">    name: Test</span><br><span class="line">    runs-on: ubuntu-latest</span><br><span class="line">    steps:</span><br><span class="line">      - name: Checkout the repository</span><br><span class="line">        uses: actions/checkout@v3</span><br><span class="line">        with:</span><br><span class="line">          # include libraries</span><br><span class="line">          submodules: recursive</span><br><span class="line"></span><br><span class="line">      - name: Install Zig</span><br><span class="line">        uses: goto-bus-stop/setup-zig@v2</span><br><span class="line">        with:</span><br><span class="line">          version: 0.10.1</span><br><span class="line"></span><br><span class="line">      - name: Install kcov</span><br><span class="line">        run: |</span><br><span class="line">          sudo apt-get update</span><br><span class="line">          sudo apt-get install -y \</span><br><span class="line">            --no-install-recommends \</span><br><span class="line">            --allow-unauthenticated \</span><br><span class="line">            kcov</span><br><span class="line"></span><br><span class="line">      - name: Test</span><br><span class="line">        run: zig build test -Dtest-coverage</span><br><span class="line"></span><br><span class="line">      - name: Upload coverage to Codecov</span><br><span class="line">        uses: codecov/codecov-action@v3</span><br><span class="line">        with:</span><br><span class="line">          name: code-coverage-report</span><br><span class="line">          directory: kcov-output</span><br><span class="line">          fail_ci_if_error: true</span><br><span class="line">          verbose: true</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://blog.orhun.dev/zig-codecov.png" alt="codecov"></p>
+<ol start="4">
+<li>文档生成</li>
+</ol>
+<p>在 Ziglearn 的第 3 章中，详细解释了文档生成过程：</p>
+<p>Zig 编译器自带自动文档生成功能。你可以通过在 <code>zig build-&#123;exe, lib, obj&#125;</code> 或 <code>zig run</code> 命令中添加 <code>-femit-docs</code> 参数来调用这个功能。生成的文档会保存在 <code>./docs</code> 文件夹中，通常用于小型的静态网站。</p>
+<p>需要注意的是这个文档生成功能目前还是实验性的，对于复杂的例子经常会失败。标准库的文档就是通过这个方式生成的。</p>
+<p>因此，我们只需要激活 <code>emit_docs</code> 标志，就能自动生成文档。我们推荐在 <code>build.zig</code> 文件中添加一个标志，代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">const documentation = b.option(bool, &quot;docs&quot;, &quot;Generate documentation&quot;) orelse false;</span><br><span class="line"></span><br><span class="line">const exe = b.addExecutable(exe_name, &quot;src/main.zig&quot;);</span><br><span class="line">exe.setTarget(target);</span><br><span class="line">exe.setBuildMode(mode);</span><br><span class="line"></span><br><span class="line">if (documentation) &#123;</span><br><span class="line">    exe.emit_docs = .emit;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>之后，你可以通过 <code>zig build -Ddocs=true</code> 来生成文档。生成的静态网站将保存在 <code>docs/</code> 目录中，展示的样子如下：</p>
+<p><img src="https://blog.orhun.dev/zig-docs.png" alt="docs"></p>
+<p>但我们希望更进一步，把这个网站部署到 GitHub Pages 上。我们觉得在仓库中维护 <code>docs/</code> 文件夹不太合适，所以把它添加到了 <code>.gitignore</code> 中。我们想要的是在推送提交到主分支时，能够自动生成文档并部署它。</p>
+<p><img src="https://blog.orhun.dev/github-pages-1.png" alt="GitHub Pages I"></p>
+<p>要做到这一点，首先需要为 GitHub Pages 启用 GitHub Actions 功能：</p>
+<blockquote>
+<p> 仓库 -&gt; 设置 -&gt; 页面 -&gt; 构建和部署 -&gt; 源 -&gt; 选择 GitHub Actions 而不是以前从分支部署选项。</p>
+</blockquote>
+<p>之后，我们只需添加以下工作流程文件，即可将文档部署到 GitHub Pages：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"># contents of .github/workflows/pages.yml</span><br><span class="line"></span><br><span class="line">name: GitHub Pages</span><br><span class="line"></span><br><span class="line">on:</span><br><span class="line">  # Runs on pushes targeting the default branch</span><br><span class="line">  push:</span><br><span class="line">    branches: [main]</span><br><span class="line"></span><br><span class="line">  # Allows you to run this workflow manually from the Actions tab</span><br><span class="line">  workflow_dispatch:</span><br><span class="line"></span><br><span class="line"># Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages</span><br><span class="line">permissions:</span><br><span class="line">  contents: read</span><br><span class="line">  pages: write</span><br><span class="line">  id-token: write</span><br><span class="line"></span><br><span class="line"># Allow one concurrent deployment</span><br><span class="line">concurrency:</span><br><span class="line">  group: &quot;pages&quot;</span><br><span class="line">  cancel-in-progress: true</span><br><span class="line"></span><br><span class="line">jobs:</span><br><span class="line">  deploy:</span><br><span class="line">    name: Deploy website</span><br><span class="line">    runs-on: ubuntu-latest</span><br><span class="line">    environment:</span><br><span class="line">      name: github-pages</span><br><span class="line">      url: $&#123;&#123; steps.deployment.outputs.page_url &#125;&#125;</span><br><span class="line">    steps:</span><br><span class="line">      - name: Checkout the repository</span><br><span class="line">        uses: actions/checkout@v3</span><br><span class="line">        with:</span><br><span class="line">          submodules: recursive</span><br><span class="line"></span><br><span class="line">      - name: Install Zig</span><br><span class="line">        uses: goto-bus-stop/setup-zig@v2</span><br><span class="line">        with:</span><br><span class="line">          version: 0.10.1</span><br><span class="line"></span><br><span class="line">      - name: Generate documentation</span><br><span class="line">        run: zig build -Ddocs=true</span><br><span class="line"></span><br><span class="line">      - name: Setup Pages</span><br><span class="line">        uses: actions/configure-pages@v3</span><br><span class="line">      - name: Upload artifact</span><br><span class="line">        uses: actions/upload-pages-artifact@v1</span><br><span class="line">        with:</span><br><span class="line">          # upload documentation</span><br><span class="line">          path: docs</span><br><span class="line"></span><br><span class="line">      - name: Deploy to GitHub Pages</span><br><span class="line">        id: deployment</span><br><span class="line">        uses: actions/deploy-pages@v2</span><br></pre></td></tr></table></figure>
+
+<p>你可以在设置 &gt; 页面 中查看部署情况：</p>
+<p><img src="https://blog.orhun.dev/github-pages-2.png" alt="GitHub Pages II"></p>
+<ol start="5">
+<li>CI&#x2F;CD</li>
+</ol>
+<p>最后，为我们的项目设置一个 CI&#x2F;CD 工作流程。包含两个工作流程文件：</p>
+<ul>
+<li>ci.yml：用于确保项目正常构建<ul>
+<li>在提交时触发</li>
+</ul>
+</li>
+<li>cd.yml：用于为不同平台分发预构建的二进制文件。<ul>
+<li>在提交标签时触发</li>
+</ul>
+</li>
+</ul>
+<p><strong>持续集成</strong></p>
+<p>以下是一个 GitHub Actions 工作流程文件，它会在每次推送或拉取请求到主分支时自动化项目的构建、测试和格式检查过程：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">name: Continuous Integration</span><br><span class="line"></span><br><span class="line">on:</span><br><span class="line">  pull_request:</span><br><span class="line">  push:</span><br><span class="line">    branches:</span><br><span class="line">      - main</span><br><span class="line"></span><br><span class="line">jobs:</span><br><span class="line">  build:</span><br><span class="line">    name: &quot;Build with args: &#x27;$&#123;&#123; matrix.OPTIMIZE &#125;&#125;&#x27;&quot;</span><br><span class="line">    runs-on: ubuntu-latest</span><br><span class="line">    strategy:</span><br><span class="line">      fail-fast: false</span><br><span class="line">      matrix:</span><br><span class="line">        OPTIMIZE: [&quot;&quot;, &quot;-Drelease-safe&quot;, &quot;-Drelease-fast&quot;, &quot;-Drelease-small&quot;]</span><br><span class="line">    steps:</span><br><span class="line">      - name: Checkout the repository</span><br><span class="line">        uses: actions/checkout@v3</span><br><span class="line">        with:</span><br><span class="line">          submodules: recursive</span><br><span class="line"></span><br><span class="line">      - name: Install Zig</span><br><span class="line">        uses: goto-bus-stop/setup-zig@v2</span><br><span class="line">        with:</span><br><span class="line">          version: 0.10.1</span><br><span class="line"></span><br><span class="line">      - name: Build</span><br><span class="line">        run: zig build $&#123;&#123; matrix.OPTIMIZE &#125;&#125;</span><br><span class="line"></span><br><span class="line">      - name: Test</span><br><span class="line">        run: zig build test $&#123;&#123; matrix.OPTIMIZE &#125;&#125;</span><br><span class="line"></span><br><span class="line">      - name: Check formatting</span><br><span class="line">        run: zig fmt --check .</span><br></pre></td></tr></table></figure>
+
+<p>这个二进制文件会针对 3 种不同的优化配置进行测试：</p>
+<ul>
+<li>ReleaseFast<ul>
+<li>较快的运行时性能</li>
+<li>禁用安全检查</li>
+<li>编译速度慢</li>
+<li>二进制文件较大</li>
+</ul>
+</li>
+<li>ReleaseSafe<ul>
+<li>中等的运行时性能</li>
+<li>启用安全检查</li>
+<li>编译速度慢</li>
+<li>二进制文件较大</li>
+</ul>
+</li>
+<li>ReleaseSmall<ul>
+<li>中等的运行时性能</li>
+<li>禁用安全检查</li>
+<li>编译速度慢</li>
+<li>二进制文件较小</li>
+</ul>
+</li>
+</ul>
+<p><strong>持续部署</strong></p>
+<p>以下是一个 GitHub Actions 工作流程文件，它会在每次将新版本标签推送到存储库时自动构建一个特定目标的二进制文件，并将其发布到 GitHub：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">name: Continuous Deployment</span><br><span class="line"></span><br><span class="line">on:</span><br><span class="line">  push:</span><br><span class="line">    tags:</span><br><span class="line">      - &quot;v*.*.*&quot;</span><br><span class="line"></span><br><span class="line">jobs:</span><br><span class="line">  publish-github:</span><br><span class="line">    name: Publish on GitHub</span><br><span class="line">    runs-on: ubuntu-latest</span><br><span class="line">    strategy:</span><br><span class="line">      fail-fast: false</span><br><span class="line">      matrix:</span><br><span class="line">        TARGET:</span><br><span class="line">          [</span><br><span class="line">            x86_64-linux,</span><br><span class="line">            x86_64-macos,</span><br><span class="line">            x86_64-windows,</span><br><span class="line">            aarch64-linux,</span><br><span class="line">            aarch64-macos,</span><br><span class="line">            aarch64-windows,</span><br><span class="line">            arm-linux,</span><br><span class="line">            riscv64-linux,</span><br><span class="line">            i386-linux,</span><br><span class="line">          ]</span><br><span class="line"></span><br><span class="line">    steps:</span><br><span class="line">      - name: Checkout the repository</span><br><span class="line">        uses: actions/checkout@v3</span><br><span class="line">        with:</span><br><span class="line">          submodules: recursive</span><br><span class="line"></span><br><span class="line">      - name: Set the release version</span><br><span class="line">        run: echo &quot;RELEASE_VERSION=$&#123;GITHUB_REF:11&#125;&quot; &gt;&gt; $GITHUB_ENV</span><br><span class="line"></span><br><span class="line">      - name: Install Zig</span><br><span class="line">        uses: goto-bus-stop/setup-zig@v2</span><br><span class="line">        with:</span><br><span class="line">          version: 0.10.1</span><br><span class="line"></span><br><span class="line">      - name: Build</span><br><span class="line">        run: zig build -Drelease-safe -Dtarget=$&#123;&#123; matrix.TARGET &#125;&#125;</span><br><span class="line"></span><br><span class="line">      - name: Upload the binary</span><br><span class="line">        uses: svenstaro/upload-release-action@v2</span><br><span class="line">        with:</span><br><span class="line">          file: zig-out/bin/binary-$&#123;&#123; env.RELEASE_VERSION &#125;&#125;-$&#123;&#123; matrix.TARGET &#125;&#125;*</span><br><span class="line">          file_glob: true</span><br><span class="line">          overwrite: true</span><br><span class="line">          tag: $&#123;&#123; github.ref &#125;&#125;</span><br><span class="line">          repo_token: $&#123;&#123; secrets.GITHUB_TOKEN &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正如你在这里所看到的，通过只提供 -Dtarget 选项，轻松实现了 Zig 项目的交叉编译。</p>
+<p>此工作流程中的 TARGET 变量由两部分组成：</p>
+<ul>
+<li>CPU 架构（例如 x86_64）</li>
+<li>操作系统（例如 linux）</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在本教程中，我们学习了如何使用 Zig 编程语言构建一个简单的 HTTP 服务器，并使用 std.http 模块来处理 HTTP 请求和发送 HTTP 响应。我们还通过与 Rust 编写的 HTTP 服务器进行基准测试，比较了它们在处理相同请求时的性能表现，通过项目实战，让我们的代码能够通过github实现CICD管理项目的生命周期。</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/ziglang/zig/blob/master/lib/std/mem/Allocator.zig">https://github.com/ziglang/zig/blob/master/lib/std/mem/Allocator.zig</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.orhun.dev/zig-bits-01/">https://blog.orhun.dev/zig-bits-01/</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/categories/">Category</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%AF%94%E8%82%A9Rust%EF%BC%9F%E4%B8%87%E5%AD%97Ziglang%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98"><span class="toc-number">1.</span> <span class="toc-text">比肩Rust？万字Ziglang项目实战</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#0x1-%E4%BB%8E%E5%88%87%E7%89%87%E5%BC%80%E5%A7%8B"><span class="toc-number">1.1.</span> <span class="toc-text">0x1: 从切片开始</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E8%AF%B4%E6%98%8E"><span class="toc-number">1.1.1.</span> <span class="toc-text">分析说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">1.1.2.</span> <span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%B9%E8%BF%9B"><span class="toc-number">1.1.3.</span> <span class="toc-text">改进</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x2-%E4%BD%BF%E7%94%A8defer%E9%98%B2%E6%AD%A2%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">0x2: 使用defer防止内存泄漏</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84"><span class="toc-number">1.2.1.</span> <span class="toc-text">处理文件路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E8%AF%B4%E6%98%8E-1"><span class="toc-number">1.2.2.</span> <span class="toc-text">分析说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-1"><span class="toc-number">1.2.3.</span> <span class="toc-text">解决方案</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x3-%E4%BB%8E0%E5%88%B01%E6%9E%84%E5%BB%BAHTTP%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.3.</span> <span class="toc-text">0x3: 从0到1构建HTTP服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0x4-%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98"><span class="toc-number">1.4.</span> <span class="toc-text">0x4: 项目实战</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.5.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">1.6.</span> <span class="toc-text">参考链接</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/22db7120/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/22db7120/&text=比肩Rust？万字Ziglang项目实战"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/22db7120/&title=比肩Rust？万字Ziglang项目实战"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/22db7120/&is_video=false&description=比肩Rust？万字Ziglang项目实战"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=比肩Rust？万字Ziglang项目实战&body=Check out this article: https://zoues.com/posts/22db7120/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/22db7120/&title=比肩Rust？万字Ziglang项目实战"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/22db7120/&title=比肩Rust？万字Ziglang项目实战"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/22db7120/&title=比肩Rust？万字Ziglang项目实战"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/22db7120/&title=比肩Rust？万字Ziglang项目实战"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/22db7120/&name=比肩Rust？万字Ziglang项目实战&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/22db7120/&t=比肩Rust？万字Ziglang项目实战"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zouyee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
