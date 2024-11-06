@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="在编程语言领域，Zig相对来说是新成员。Zig由Andrew Kelly创立，于2016年正式面世，Zig社区将其定位为“用于开发健壮、优化和可复用软件的通用编程语言”。 在这简单的描述中，蕴含着一些宏大的目标。例如，Zig被视为一个能够与C语言竞争的编程语言（Rust在Linux内核方向进展更快一些）。此外，Zig提供一整套编译工具链，可以替代现有C编译器（Rust可以使用cargo-zigbu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go程序员为什么喜欢Ziglang">
+<meta property="og:url" content="https://zoues.com/posts/ffe3c38f/index.html">
+<meta property="og:site_name" content="zouyee">
+<meta property="og:description" content="在编程语言领域，Zig相对来说是新成员。Zig由Andrew Kelly创立，于2016年正式面世，Zig社区将其定位为“用于开发健壮、优化和可复用软件的通用编程语言”。 在这简单的描述中，蕴含着一些宏大的目标。例如，Zig被视为一个能够与C语言竞争的编程语言（Rust在Linux内核方向进展更快一些）。此外，Zig提供一整套编译工具链，可以替代现有C编译器（Rust可以使用cargo-zigbu">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-11-06T10:00:43.000Z">
+<meta property="article:modified_time" content="2024-11-06T02:45:10.634Z">
+<meta property="article:author" content="zouyee">
+<meta property="article:tag" content="zig">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Go程序员为什么喜欢Ziglang</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="zouyee" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/22db7120/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/ffe3c38f/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/ffe3c38f/&text=Go程序员为什么喜欢Ziglang"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/ffe3c38f/&title=Go程序员为什么喜欢Ziglang"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/ffe3c38f/&is_video=false&description=Go程序员为什么喜欢Ziglang"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Go程序员为什么喜欢Ziglang&body=Check out this article: https://zoues.com/posts/ffe3c38f/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/ffe3c38f/&title=Go程序员为什么喜欢Ziglang"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/ffe3c38f/&title=Go程序员为什么喜欢Ziglang"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/ffe3c38f/&title=Go程序员为什么喜欢Ziglang"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/ffe3c38f/&title=Go程序员为什么喜欢Ziglang"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/ffe3c38f/&name=Go程序员为什么喜欢Ziglang&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/ffe3c38f/&t=Go程序员为什么喜欢Ziglang"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Zig-%E4%B8%8E-Go"><span class="toc-number">1.</span> <span class="toc-text">Zig 与 Go</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E6%B4%81%E6%80%A7"><span class="toc-number">1.1.</span> <span class="toc-text">简洁性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%BA%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.2.</span> <span class="toc-text">强类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="toc-number">1.3.</span> <span class="toc-text">错误处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Zig%E6%B5%8B%E8%AF%95"><span class="toc-number">1.4.</span> <span class="toc-text">Zig测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Zig%E8%BF%90%E8%A1%8C"><span class="toc-number">1.5.</span> <span class="toc-text">Zig运行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Defer"><span class="toc-number">1.6.</span> <span class="toc-text">Defer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Comptime"><span class="toc-number">1.7.</span> <span class="toc-text">Comptime</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%9B%E5%9E%8B"><span class="toc-number">1.8.</span> <span class="toc-text">泛型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Zig-%E7%BC%96%E8%AF%91"><span class="toc-number">1.9.</span> <span class="toc-text">Zig 编译</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">2.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%91%E6%96%87%E9%93%BE%E6%8E%A5"><span class="toc-number">3.</span> <span class="toc-text">译文链接</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Go程序员为什么喜欢Ziglang
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zouyee</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-11-06T10:00:43.000Z" class="dt-published" itemprop="datePublished">2024-11-06</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/zig/" rel="tag">zig</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>在编程语言领域，Zig相对来说是新成员。Zig由Andrew Kelly创立，于2016年正式面世，Zig社区将其定位为“用于开发健壮、优化和可复用软件的通用编程语言”。</p>
+<p>在这简单的描述中，蕴含着一些宏大的目标。例如，Zig被视为一个能够与C语言竞争的编程语言（Rust在Linux内核方向进展更快一些）。此外，Zig提供一整套编译工具链，可以替代现有C编译器（Rust可以使用cargo-zigbuild跨平台编译）。</p>
+<p>作为一名Go开发者，我对Zig及其工具链的提议尤为感兴趣。在研究Zig时，发现这两种语言（Zig和Go）在某些方面有着共同的特性。在这篇博文中，将重点介绍作为Go程序员，对Zig感兴趣的一些特性。</p>
+<h2 id="Zig-与-Go"><a href="#Zig-与-Go" class="headerlink" title="Zig 与 Go"></a>Zig 与 Go</h2><h3 id="简洁性"><a href="#简洁性" class="headerlink" title="简洁性"></a>简洁性</h3><p>两种语言都秉承简洁的设计哲学，以减少语言的干扰，使开发者更快上手并能够高效地完成开发任务。Zig中没有宏、预处理器或操作符重载等功能，避免了执行流程中的“魔法”。</p>
+<p>Go通过运行时处理内存分配和释放。而Zig则坚持其“无隐藏控制流”的准则，没有自动内存管理，而是通过标准库提供内存管理API，让开发者管理内存。</p>
+<h3 id="强类型"><a href="#强类型" class="headerlink" title="强类型"></a>强类型</h3><p>作为一门系统编程语言，Zig围绕类型系统设计了许多功能，注重安全性和C ABI（应用二进制接口）兼容性。这里简要介绍一些有趣的特性：</p>
+<ul>
+<li>有符号&#x2F;无符号整数（预设大小从8位到128位）</li>
+<li>任意大小的有符号&#x2F;无符号整数（例如i7表示7位整数）</li>
+<li>浮点数（精度从16位到128位）</li>
+<li>切片和数组（例如 <code>[]u8&#123;‘h’, ‘i’, ‘!’&#125;</code> 或 <code>[4]i32&#123;1, 2, 3, 4&#125;</code>）</li>
+<li>以UTF-8编码的字符串字面量，存储为以空字符结尾的字节数组</li>
+<li>具有丰富功能的结构体类型，可与C ABI兼容</li>
+<li>具有隐式&#x2F;显式序数值的枚举，并支持方法</li>
+<li>可用于存储多种类型值的联合</li>
+<li>支持使用向量并行操作</li>
+<li>传统指针及多元素指针与切片表达式</li>
+</ul>
+<h3 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h3><p>Zig中的错误处理机制非常有特色，融合了try-catch异常语义和Go的错误值模式。</p>
+<p>首先，所有Zig错误都是必须分配和处理的值（否则会导致编译错误）。错误声明使用<code>error</code>关键字，如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const DigitError = error&#123; TooLarge, &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>有趣的是，Zig错误值可以与普通类型的值结合，使用<code>!</code>运算符形成一个联合类型。下面的函数可以返回错误或<code>u32</code>类型的值：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fn addSingleDigits(a: u32, b: u32) !u32 &#123;</span><br><span class="line">    if (a &gt; 9) return error.TooLarge;</span><br><span class="line">    if (b &gt; 9) return error.TooLarge;</span><br><span class="line">    return a + b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此外，Zig提供了类似Java等语言的<code>catch</code>关键字，用于错误处理：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">pub fn main() void &#123;</span><br><span class="line">    const result = addSingleDigits(4, 5) catch |err| &#123;</span><br><span class="line">        std.debug.print(&quot;Error: &#123;&#125;\n&quot;, .&#123;err&#125;);</span><br><span class="line">        return;</span><br><span class="line">    &#125;;</span><br><span class="line">    std.debug.print(&quot;Result: &#123;&#125;\n&quot;, .&#123;result&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Zig还支持通过<code>try</code>关键字将错误向上级调用传播。此外，还可以通过<code>if-else-switch</code>语句更精确地筛选和处理错误。</p>
+<h3 id="Zig测试"><a href="#Zig测试" class="headerlink" title="Zig测试"></a>Zig测试</h3><p>在Zig中，测试是语言的关键性能力，使用<code>test</code>关键字声明：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">test &quot;test that 1 + 1 equals 2&quot; &#123;</span><br><span class="line">    const result = 1 + 1;</span><br><span class="line">    assert(result == 2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>zig test</code>命令运行源代码中的测试，在标准库中，测试大多跟源代码处于同一文件。</p>
+<h3 id="Zig运行"><a href="#Zig运行" class="headerlink" title="Zig运行"></a>Zig运行</h3><p>类似于<code>go run</code>，Zig提供了<code>zig run</code>命令，将编译和运行源代码的步骤结合：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zig run my_program.zig</span><br></pre></td></tr></table></figure>
+
+<h3 id="Defer"><a href="#Defer" class="headerlink" title="Defer"></a>Defer</h3><p>Zig与Go一样，通过<code>defer</code>概念来管理退出堆栈，当作用域块结束时执行清理操作等。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">const print = @import(&quot;std&quot;).debug.print;</span><br><span class="line"></span><br><span class="line">fn addSingleDigits(a: u32, b: u32) !u32 &#123;</span><br><span class="line">    defer print(&quot;this is deferred!&quot;);</span><br><span class="line">    </span><br><span class="line">    if (a &gt; 9) return error.TooLarge;</span><br><span class="line">    if (b &gt; 9) return error.TooLarge;</span><br><span class="line"></span><br><span class="line">    return a + b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Comptime"><a href="#Comptime" class="headerlink" title="Comptime"></a>Comptime</h3><p><code>comptime</code>是Zig的一项有趣特性。Zig没有单独的宏系统，而是通过<code>comptime</code>将其代码编写的灵活性扩展到编译阶段。</p>
+<p><code>comptime</code>允许在编译时进行如下操作：</p>
+<ul>
+<li>在编译时解析变量和表达式</li>
+<li>根据编译时值行为的函数</li>
+<li>编译期间有选择性地执行<code>comptime</code>代码块</li>
+<li>编译时执行的元编程</li>
+</ul>
+<h3 id="泛型"><a href="#泛型" class="headerlink" title="泛型"></a>泛型</h3><p>在 Zig 中，<code>comptime</code> 提供了对类型值的访问，可以像普通数据值一样存储和传递这些类型值。</p>
+<p>这使得可以创建带有类型参数的函数，如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">fn max(comptime T: type, a: T, b: T) T &#123;</span><br><span class="line">    return if (a &gt; b) a else b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">test &quot;max with different types&quot; &#123;</span><br><span class="line">    const condition = false;</span><br><span class="line">    const result = max(if (condition) f32 else u64, 1234, 5678);</span><br><span class="line">    _ = result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于 <code>comptime</code> 类型值被视为普通类型，Zig 允许使用它们来构建泛型数据结构。例如，<code>MakeList</code> 使用 <code>comptime</code> 类型信息来返回一个编译时结构体：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">const std = @import(&quot;std&quot;);</span><br><span class="line"></span><br><span class="line">fn MakeList(comptime T: type, comptime size: usize) type &#123;</span><br><span class="line">    return struct &#123;</span><br><span class="line">        items: [size]T,</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">pub fn main() void &#123;</span><br><span class="line">    var list = MakeList(i32, 3)&#123;</span><br><span class="line">        .items = [3]i32&#123;1, 2, 3&#125;,</span><br><span class="line">    &#125;;</span><br><span class="line">    std.debug.print(&quot;List &#123;&#125;\n&quot;, .&#123;list&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这个示例中，<code>MakeList</code> 函数使用 <code>comptime</code> 类型和大小参数，返回一个包含固定数量元素的结构体。</p>
+<h3 id="Zig-编译"><a href="#Zig-编译" class="headerlink" title="Zig 编译"></a>Zig 编译</h3><ol>
+<li>Zig作为 C (交叉) 编译器</li>
+</ol>
+<p>Zig 工具链包含完整的 C 编译器，因此可以使用 Zig 来替换当前的 C 编译器工具链。以下是 <code>hello.c</code> 的源代码文件：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv)</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Hello world\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用以下命令，Zig 可以将该源代码编译成可执行的二进制文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zig build-exe hello.c --library c</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>Zig 和 C 交叉编译</li>
+</ol>
+<p>Zig 让交叉编译（无论是 C 代码还是 Zig 代码亦或Rust）变得简单。无需繁琐的“自行准备交叉编译工具链”。Zig 提供所有必要的工具和库，确保您可以面向其支持的任何架构进行编译。</p>
+<p>例如，Zig 可以将上述 C 源代码交叉编译成一个面向 Linux 的静态二进制文件（使用 <code>musl</code> 库）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zig build-exe hello.c --library c -target x86_64-linux-musl</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>Zig 和 CGo 交叉编译</li>
+</ol>
+<p>Zig 对 C 的交叉编译对在交叉编译启用了 CGo 的 Go 源代码时特别有用。例如， <code>add.c</code> 中的C 函数 <code>add</code>：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdint.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int32_t</span> <span class="title function_">add</span><span class="params">(<span class="type">int32_t</span> a, <span class="type">int32_t</span> b)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以在Go中 调用它：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">#include &quot;add.c&quot;</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;C&quot;</span></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">&quot;fmt&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    a, b := <span class="type">int32</span>(<span class="number">3</span>), <span class="type">int32</span>(<span class="number">4</span>)</span><br><span class="line">    result := C.add(a, b)</span><br><span class="line">    fmt.Printf(<span class="string">&quot;%d + %d = %d\n&quot;</span>, a, b, result)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>假设我们在 MacOS 上构建代码，可以使用命令 <code>zig cc</code> 来使用 Zig 的 C 编译器，将 C 代码交叉编译成目标文件并与 Go 的目标文件链接，以构建适用于 x86 架构 Linux 的静态二进制文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CGO_ENABLED=1 GOOS=linux CC=<span class="string">&quot;zig cc -target x86_64-linux-musl&quot;</span> go build .</span><br></pre></td></tr></table></figure>
+
+<p>要让这一步成功，您只需安装 Zig 工具链，无其他依赖项！</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这篇博客为您简单介绍了 Zig 的功能。Zig融合了简洁性、强大性、安全性和对 C 的兼容性，为开发者提供了一个令人兴奋的选择。无论您是为新项目寻找语言，还是像我一样想扩展编程技能，Zig 都是一个值得探索的创新选择。</p>
+<h2 id="译文链接"><a href="#译文链接" class="headerlink" title="译文链接"></a>译文链接</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://medium.com/@vladimirvivien/things-i-like-about-zig-as-a-go-programmer-75eb02aab00f">https://medium.com/@vladimirvivien/things-i-like-about-zig-as-a-go-programmer-75eb02aab00f</a></li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/categories/">Category</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Zig-%E4%B8%8E-Go"><span class="toc-number">1.</span> <span class="toc-text">Zig 与 Go</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E6%B4%81%E6%80%A7"><span class="toc-number">1.1.</span> <span class="toc-text">简洁性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%BA%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.2.</span> <span class="toc-text">强类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="toc-number">1.3.</span> <span class="toc-text">错误处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Zig%E6%B5%8B%E8%AF%95"><span class="toc-number">1.4.</span> <span class="toc-text">Zig测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Zig%E8%BF%90%E8%A1%8C"><span class="toc-number">1.5.</span> <span class="toc-text">Zig运行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Defer"><span class="toc-number">1.6.</span> <span class="toc-text">Defer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Comptime"><span class="toc-number">1.7.</span> <span class="toc-text">Comptime</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%9B%E5%9E%8B"><span class="toc-number">1.8.</span> <span class="toc-text">泛型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Zig-%E7%BC%96%E8%AF%91"><span class="toc-number">1.9.</span> <span class="toc-text">Zig 编译</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">2.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%91%E6%96%87%E9%93%BE%E6%8E%A5"><span class="toc-number">3.</span> <span class="toc-text">译文链接</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/ffe3c38f/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/ffe3c38f/&text=Go程序员为什么喜欢Ziglang"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/ffe3c38f/&title=Go程序员为什么喜欢Ziglang"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/ffe3c38f/&is_video=false&description=Go程序员为什么喜欢Ziglang"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Go程序员为什么喜欢Ziglang&body=Check out this article: https://zoues.com/posts/ffe3c38f/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/ffe3c38f/&title=Go程序员为什么喜欢Ziglang"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/ffe3c38f/&title=Go程序员为什么喜欢Ziglang"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/ffe3c38f/&title=Go程序员为什么喜欢Ziglang"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/ffe3c38f/&title=Go程序员为什么喜欢Ziglang"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/ffe3c38f/&name=Go程序员为什么喜欢Ziglang&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/ffe3c38f/&t=Go程序员为什么喜欢Ziglang"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zouyee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
