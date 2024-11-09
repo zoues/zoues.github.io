@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://zoues.com/posts/ae025efe/</loc>
+    
+    <lastmod>2024-11-09</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://zoues.com/posts/ffe3c38f/</loc>
     
     <lastmod>2024-11-06</lastmod>
@@ -607,7 +616,7 @@
 
   <url>
     <loc>https://zoues.com/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -615,133 +624,133 @@
   
   <url>
     <loc>https://zoues.com/tags/serverless/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/tags/cloudnative/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/tags/kubernetes/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/tags/CloudNative/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/tags/containerd/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/tags/Linux/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/tags/linux/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/tags/cncf/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/tags/kubevirt/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/tags/container/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/tags/zig/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/tags/almalinux/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/tags/grpc/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/tags/ziglang/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/tags/Docker/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/tags/Kubernetes/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/tags/Containerd/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/tags/%E7%AC%94%E8%AE%B0/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/tags/golang/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -750,63 +759,63 @@
   
   <url>
     <loc>https://zoues.com/categories/serverless/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/categories/containerd/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/categories/Kubernetes-GO/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/categories/kubevirt/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/categories/container/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/categories/Ziglang%E7%AE%80%E6%98%8E%E6%95%99%E7%A8%8B/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/categories/cgroupv2/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/categories/Notes/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://zoues.com/categories/%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2024-11-06</lastmod>
+    <lastmod>2024-11-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
