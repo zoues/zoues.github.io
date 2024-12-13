@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="It’s time to embark on the dockerless journeyBackground IntroductionDocker, as one of the earliest and most widely used container runtimes, has become deeply ingrained in user workflows due to its int">
+<meta property="og:type" content="article">
+<meta property="og:title" content="It&#39;s time to embark on the dockerless journey">
+<meta property="og:url" content="https://zoues.com/posts/58bd45d9/index.html">
+<meta property="og:site_name" content="zouyee">
+<meta property="og:description" content="It’s time to embark on the dockerless journeyBackground IntroductionDocker, as one of the earliest and most widely used container runtimes, has become deeply ingrained in user workflows due to its int">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://pic.imgdb.cn/item/673ab8f0d29ded1a8c3fc841.webp">
+<meta property="og:image" content="https://pic.imgdb.cn/item/673ab904d29ded1a8c3fdb48.webp">
+<meta property="og:image" content="https://pic.imgdb.cn/item/673ab91fd29ded1a8c3ff970.png">
+<meta property="article:published_time" content="2024-12-13T02:23:48.000Z">
+<meta property="article:modified_time" content="2024-12-13T02:28:06.792Z">
+<meta property="article:author" content="zouyee">
+<meta property="article:tag" content="Containerd">
+<meta property="article:tag" content="runtime">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic.imgdb.cn/item/673ab8f0d29ded1a8c3fc841.webp">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>It&#39;s time to embark on the dockerless journey</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="zouyee" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/posts/d1d12995/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/58bd45d9/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/58bd45d9/&text=It&#39;s time to embark on the dockerless journey"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/58bd45d9/&title=It&#39;s time to embark on the dockerless journey"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/58bd45d9/&is_video=false&description=It&#39;s time to embark on the dockerless journey"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=It&#39;s time to embark on the dockerless journey&body=Check out this article: https://zoues.com/posts/58bd45d9/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/58bd45d9/&title=It&#39;s time to embark on the dockerless journey"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/58bd45d9/&title=It&#39;s time to embark on the dockerless journey"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/58bd45d9/&title=It&#39;s time to embark on the dockerless journey"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/58bd45d9/&title=It&#39;s time to embark on the dockerless journey"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/58bd45d9/&name=It&#39;s time to embark on the dockerless journey&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/58bd45d9/&t=It&#39;s time to embark on the dockerless journey"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#It%E2%80%99s-time-to-embark-on-the-dockerless-journey"><span class="toc-number">1.</span> <span class="toc-text">It’s time to embark on the dockerless journey</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Background-Introduction"><span class="toc-number">1.1.</span> <span class="toc-text">Background Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Technical-Background"><span class="toc-number">1.2.</span> <span class="toc-text">Technical Background</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#OCI-Standards-Open-Container-Initiative"><span class="toc-number">1.2.1.</span> <span class="toc-text">OCI Standards (Open Container Initiative)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Main-High-Level-Container-Runtimes"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">Main High-Level Container Runtimes</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Container-Relationships"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">Container Relationships</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Containerd"><span class="toc-number">1.2.2.</span> <span class="toc-text">Containerd</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Key-Components-of-Containerd"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">Key Components of Containerd</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Comparison-Between-Docker-and-Containerd"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">Comparison Between Docker and Containerd</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CRI-Container-Runtime-Interface"><span class="toc-number">1.2.3.</span> <span class="toc-text">CRI (Container Runtime Interface)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Evolution-of-CRI-and-Dockershim"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">Evolution of CRI and Dockershim</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Command-Line-Overview"><span class="toc-number">1.3.</span> <span class="toc-text">Command Line Overview</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker"><span class="toc-number">1.3.1.</span> <span class="toc-text">Docker</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ctr"><span class="toc-number">1.3.2.</span> <span class="toc-text">ctr</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nerdctl"><span class="toc-number">1.3.3.</span> <span class="toc-text">nerdctl</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#crictl"><span class="toc-number">1.3.4.</span> <span class="toc-text">crictl</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Horizontal-Comparison-for-Specific-Use-Cases"><span class="toc-number">1.3.5.</span> <span class="toc-text">Horizontal Comparison for Specific Use Cases</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-Image-Management"><span class="toc-number">1.3.5.1.</span> <span class="toc-text">1. Image Management</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-Container-Management"><span class="toc-number">1.3.5.2.</span> <span class="toc-text">2. Container Management</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-Pod-Management"><span class="toc-number">1.3.5.3.</span> <span class="toc-text">3. Pod Management</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Summary"><span class="toc-number">1.3.6.</span> <span class="toc-text">Summary</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Guide-to-Using-Containerd"><span class="toc-number">1.4.</span> <span class="toc-text">Guide to Using Containerd</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Installation"><span class="toc-number">1.4.1.</span> <span class="toc-text">1. Installation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Command-Overview"><span class="toc-number">1.4.2.</span> <span class="toc-text">2. Command Overview</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Container-Management"><span class="toc-number">1.4.2.1.</span> <span class="toc-text">Container Management</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Image-Management"><span class="toc-number">1.4.2.2.</span> <span class="toc-text">Image Management</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CRICTL-Usage-Guide"><span class="toc-number">1.5.</span> <span class="toc-text">CRICTL Usage Guide</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Installation-1"><span class="toc-number">1.5.1.</span> <span class="toc-text">1. Installation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Command-Overview-1"><span class="toc-number">1.5.2.</span> <span class="toc-text">2. Command Overview</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Pod-Management"><span class="toc-number">1.5.2.1.</span> <span class="toc-text">Pod Management</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Image-Management-1"><span class="toc-number">1.5.2.2.</span> <span class="toc-text">Image Management</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Container-Management-1"><span class="toc-number">1.5.2.3.</span> <span class="toc-text">Container Management</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Links"><span class="toc-number">1.6.</span> <span class="toc-text">Links</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        It&#39;s time to embark on the dockerless journey
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zouyee</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-12-13T02:23:48.000Z" class="dt-published" itemprop="datePublished">2024-12-13</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/Containerd/" rel="tag">Containerd</a>, <a class="p-category" href="/tags/runtime/" rel="tag">runtime</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="It’s-time-to-embark-on-the-dockerless-journey"><a href="#It’s-time-to-embark-on-the-dockerless-journey" class="headerlink" title="It’s time to embark on the dockerless journey"></a>It’s time to embark on the dockerless journey</h1><h2 id="Background-Introduction"><a href="#Background-Introduction" class="headerlink" title="Background Introduction"></a>Background Introduction</h2><p>Docker, as one of the earliest and most widely used container runtimes, has become deeply ingrained in user workflows due to its intuitive interface and extensive features. In Kubernetes’ early days, it used the built-in <strong>dockershim</strong> component to integrate with Docker. However, as container technologies evolved, Kubernetes introduced the <strong>Container Runtime Interface (CRI)</strong> to standardize and expand container runtime support. This innovation enhanced Kubernetes’ compatibility with multiple container runtimes, offering users greater flexibility and choice.</p>
+<p>The CRI enables Kubernetes system components to interact seamlessly with various container runtimes. This shift expanded Kubernetes’ scope beyond Docker and reduced its dependency on Docker and dockershim. Today, Kubernetes users can confidently adopt other robust runtimes like <strong>containerd</strong> and <strong>CRI-O</strong>, simplifying the Kubernetes architecture and improving operational efficiency.</p>
+<p>Starting with Kubernetes version 1.24, official support for Docker (via dockershim) was removed. Similarly, Amazon EKS declared <strong>containerd</strong> as its sole supported runtime. Following this direction, our cluster’s container runtime was transitioned to <strong>containerd</strong>, replacing Docker CLI with <strong>nerdctl</strong>.</p>
+<p>To better understand this shift, it’s important to introduce key container ecosystem components such as <code>libcontainer</code>, <code>runc</code>, <code>containerd</code>, <code>CRI</code>, and <code>OCI</code>. These components play critical roles in creating an efficient and flexible container runtime environment. By delving into these concepts, we can enhance operational expertise and lay a solid foundation for future application deployment and maintenance. For detailed information on <strong>nerdctl</strong>, please refer to the corresponding section.</p>
+<hr>
+<h2 id="Technical-Background"><a href="#Technical-Background" class="headerlink" title="Technical Background"></a>Technical Background</h2><h3 id="OCI-Standards-Open-Container-Initiative"><a href="#OCI-Standards-Open-Container-Initiative" class="headerlink" title="OCI Standards (Open Container Initiative)"></a>OCI Standards (Open Container Initiative)</h3><p>The <strong>Open Container Initiative (OCI)</strong>, spearheaded by organizations like Docker and CoreOS (later acquired by Red Hat), establishes unified industry standards for container formats and runtimes. The OCI defines two primary specifications:</p>
+<ul>
+<li><strong>Image Specification (image-spec):</strong> Specifies the format and structure of container images.</li>
+<li><strong>Runtime Specification (runtime-spec):</strong> Governs the execution of container images. The most widely used low-level runtime today is <strong>runC</strong>, which includes <code>libcontainer</code> and supports operations like namespace and cgroup calls.</li>
+</ul>
+<h4 id="Main-High-Level-Container-Runtimes"><a href="#Main-High-Level-Container-Runtimes" class="headerlink" title="Main High-Level Container Runtimes"></a>Main High-Level Container Runtimes</h4><p>High-level container runtimes offer advanced functionality such as image management, unpacking, and API integration. The three most popular ones are:</p>
+<ol>
+<li><strong>containerd</strong>: A CNCF project originally contributed by Docker.</li>
+<li><strong>Podman</strong>: A Red Hat project, fully supported in RHEL 8.</li>
+<li><strong>CRI-O</strong>: Another CNCF project designed to integrate seamlessly with Kubernetes.</li>
+</ol>
+<h4 id="Container-Relationships"><a href="#Container-Relationships" class="headerlink" title="Container Relationships"></a>Container Relationships</h4><p>The diagram below illustrates the relationships within the container ecosystem, highlighting the interaction between various components.</p>
+<p><img src="https://pic.imgdb.cn/item/673ab8f0d29ded1a8c3fc841.webp" alt="OCI Container Relationships"></p>
+<p>Using Docker based on containerd as a container runtime can be categorized as a “high-high-level” runtime.</p>
+<hr>
+<h3 id="Containerd"><a href="#Containerd" class="headerlink" title="Containerd"></a>Containerd</h3><p>Launched as an independent project in early 2016 and donated to CNCF in March 2017, <strong>containerd</strong> is a lightweight, robust, and portable container runtime that supports Linux and Windows. It manages complete container lifecycles, including image management, container execution, and networking (via CNI plugins).</p>
+<h4 id="Key-Components-of-Containerd"><a href="#Key-Components-of-Containerd" class="headerlink" title="Key Components of Containerd"></a>Key Components of Containerd</h4><ol>
+<li><strong>Runtime:</strong> Manages container lifecycle tasks, including creation, execution, and monitoring.</li>
+<li><strong>Storage:</strong> Provides image storage and management capabilities.</li>
+<li><strong>gRPC:</strong> Facilitates communication with upper-layer applications, offering container management APIs.</li>
+<li><strong>Metrics:</strong> Offers performance and resource utilization metrics, primarily based on cgroups.</li>
+<li><strong>Metadata:</strong> Stores essential information about images and containers.</li>
+<li><strong>Tasks:</strong> Organizes containers as tasks, encompassing runtime states and process data.</li>
+<li><strong>Events:</strong> Emits state change notifications to help applications monitor and react to container events.</li>
+</ol>
+<p><img src="https://pic.imgdb.cn/item/673ab904d29ded1a8c3fdb48.webp" alt="Containerd Architecture"></p>
+<h4 id="Comparison-Between-Docker-and-Containerd"><a href="#Comparison-Between-Docker-and-Containerd" class="headerlink" title="Comparison Between Docker and Containerd"></a>Comparison Between Docker and Containerd</h4><table>
+<thead>
+<tr>
+<th><strong>Feature</strong></th>
+<th><strong>Containerd</strong></th>
+<th><strong>Docker</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Architecture</strong></td>
+<td>Focused on container lifecycle management.</td>
+<td>Comprehensive container platform.</td>
+</tr>
+<tr>
+<td><strong>Image Management</strong></td>
+<td>Basic image transfer and storage features.</td>
+<td>Advanced image building and versioning.</td>
+</tr>
+<tr>
+<td><strong>Ecosystem</strong></td>
+<td>Modular, integrates into larger ecosystems.</td>
+<td>Integrated tools and services.</td>
+</tr>
+<tr>
+<td><strong>Security</strong></td>
+<td>Optimized for core functionality.</td>
+<td>Enhanced with image signing and keys.</td>
+</tr>
+<tr>
+<td><strong>Extensibility</strong></td>
+<td>Lightweight, supports diverse scenarios.</td>
+<td>Plugin mechanism for customization.</td>
+</tr>
+<tr>
+<td><strong>Deployment</strong></td>
+<td>Requires tools like Kubernetes.</td>
+<td>All-in-one solution for containers.</td>
+</tr>
+<tr>
+<td><strong>Community</strong></td>
+<td>Backed by CNCF and cloud-native ecosystems.</td>
+<td>Docker-led, vibrant developer base.</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="CRI-Container-Runtime-Interface"><a href="#CRI-Container-Runtime-Interface" class="headerlink" title="CRI (Container Runtime Interface)"></a>CRI (Container Runtime Interface)</h3><p>The CRI, introduced by Kubernetes, standardizes interactions between Kubernetes and container runtimes. Initially, Kubernetes relied on Docker’s API but later adopted the CRI to reduce dependencies and support emerging runtimes.</p>
+<p>CRI defines two gRPC services:</p>
+<ol>
+<li><strong>ImageService:</strong> Manages operations like pulling, listing, and deleting container images.</li>
+<li><strong>RuntimeService:</strong> Handles Pod and container lifecycle management.</li>
+</ol>
+<h4 id="Evolution-of-CRI-and-Dockershim"><a href="#Evolution-of-CRI-and-Dockershim" class="headerlink" title="Evolution of CRI and Dockershim"></a>Evolution of CRI and Dockershim</h4><p>In early Kubernetes versions, dockershim acted as an adapter, enabling Docker to conform to CRI. Over time, this approach proved suboptimal due to the complexity of Docker’s architecture. By Kubernetes 1.20, dockershim was deprecated, and by 1.24, it was fully removed.</p>
+<p><img src="https://pic.imgdb.cn/item/673ab91fd29ded1a8c3ff970.png" alt="Dockershim Interaction"></p>
+<p>Switching to <strong>containerd</strong> offers significant efficiency improvements by simplifying the runtime stack. Kubernetes now interacts directly with CRI-compatible runtimes like containerd, without relying on dockershim. This evolution aligns with Kubernetes’ focus on modularity and scalability.</p>
+<h2 id="Command-Line-Overview"><a href="#Command-Line-Overview" class="headerlink" title="Command Line Overview"></a>Command Line Overview</h2><p>Docker, <code>ctr</code>, <code>nerdctl</code>, and <code>crictl</code> are container management tools, each designed for specific purposes and use cases. Here’s a comparison:</p>
+<h3 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a><strong>Docker</strong></h3><ul>
+<li><strong>Overview</strong>: Docker is a popular container management tool providing a comprehensive ecosystem for building, running, and managing containers.</li>
+<li><strong>Features</strong>: Supports image building, distribution (integrated with Docker Hub), and container lifecycle management (start, stop, delete, etc.).</li>
+<li><strong>Interface</strong>: Offers a powerful and user-friendly CLI and API, making it easy for developers and operators to adopt.</li>
+<li><strong>Key Characteristics</strong>:<ul>
+<li>Rich ecosystem (e.g., Docker Compose).</li>
+<li>Supports advanced orchestration (e.g., Swarm).</li>
+<li>Includes an additional daemon (<code>dockerd</code>) to collaborate with container runtimes.</li>
+</ul>
+</li>
+</ul>
+<h3 id="ctr"><a href="#ctr" class="headerlink" title="ctr"></a><strong>ctr</strong></h3><ul>
+<li><strong>Overview</strong>: <code>ctr</code> is the native CLI provided by <code>containerd</code> for direct interaction with it.</li>
+<li><strong>Features</strong>: Enables basic operations like pulling images, running containers, and managing image storage but is simplified for lower-level operations and debugging.</li>
+<li><strong>Interface</strong>: Unlike Docker, <code>ctr</code> targets <code>containerd</code> users without offering advanced APIs or ecosystem support.</li>
+<li><strong>Key Characteristics</strong>:<ul>
+<li>Suitable for developers and system integrators needing direct access to <code>containerd</code>.</li>
+<li>Lacks advanced features like image building (focused solely on runtime management).</li>
+</ul>
+</li>
+</ul>
+<h3 id="nerdctl"><a href="#nerdctl" class="headerlink" title="nerdctl"></a><strong>nerdctl</strong></h3><ul>
+<li><strong>Overview</strong>: <code>nerdctl</code> is a CLI tool based on <code>containerd</code> that supports Docker-style commands.</li>
+<li><strong>Features</strong>: Provides a Docker-like user experience for running containers, building images, and supporting CNI plugins and volumes.</li>
+<li><strong>Interface</strong>: Closely mirrors Docker CLI, making migration from Docker to <code>nerdctl</code> straightforward.</li>
+<li><strong>Key Characteristics</strong>:<ul>
+<li>Operates without the Docker daemon, relying solely on <code>containerd</code>.</li>
+<li>Integrates well with Kubernetes (when using <code>containerd</code> as the runtime) and supports Docker Compose-like functionality.</li>
+</ul>
+</li>
+</ul>
+<h3 id="crictl"><a href="#crictl" class="headerlink" title="crictl"></a><strong>crictl</strong></h3><ul>
+<li><strong>Overview</strong>: <code>crictl</code> is a CLI tool for the Container Runtime Interface (CRI), designed specifically for Kubernetes container management.</li>
+<li><strong>Features</strong>: Primarily interacts with CRI-compatible runtimes (e.g., <code>containerd</code> and <code>CRI-O</code>) for managing Pods, images, and containers.</li>
+<li><strong>Interface</strong>: Focuses on Kubernetes cluster debugging and management, with commands tailored to Kubernetes scenarios.</li>
+<li><strong>Key Characteristics</strong>:<ul>
+<li>Highly integrated with Kubernetes, often used to debug or manage Pod and container states.</li>
+<li>Cannot build images, focusing exclusively on container and Pod lifecycle management.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="Horizontal-Comparison-for-Specific-Use-Cases"><a href="#Horizontal-Comparison-for-Specific-Use-Cases" class="headerlink" title="Horizontal Comparison for Specific Use Cases"></a><strong>Horizontal Comparison for Specific Use Cases</strong></h3><h4 id="1-Image-Management"><a href="#1-Image-Management" class="headerlink" title="1. Image Management"></a>1. <strong>Image Management</strong></h4><table>
+<thead>
+<tr>
+<th><strong>Feature</strong></th>
+<th><strong>Docker CLI</strong></th>
+<th><strong>ctr</strong></th>
+<th><strong>crictl</strong></th>
+<th><strong>nerdctl</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>List local images</td>
+<td><code>docker images</code></td>
+<td><code>ctr i ls</code></td>
+<td><code>crictl images</code></td>
+<td><code>nerdctl images</code></td>
+</tr>
+<tr>
+<td>Pull image</td>
+<td><code>docker pull</code></td>
+<td><code>ctr i pull</code></td>
+<td><code>crictl pull</code></td>
+<td><code>nerdctl pull</code></td>
+</tr>
+<tr>
+<td>Push image</td>
+<td><code>docker push</code></td>
+<td><code>ctr i push</code></td>
+<td>N&#x2F;A</td>
+<td><code>nerdctl push</code></td>
+</tr>
+<tr>
+<td>Remove local image</td>
+<td><code>docker rmi</code></td>
+<td><code>ctr i rm</code></td>
+<td><code>crictl rmi</code></td>
+<td><code>nerdctl rmi</code></td>
+</tr>
+<tr>
+<td>View image details</td>
+<td><code>docker inspect</code></td>
+<td>N&#x2F;A</td>
+<td><code>crictl inspecti</code></td>
+<td><code>nerdctl inspect</code></td>
+</tr>
+<tr>
+<td>Tag image</td>
+<td><code>docker tag</code></td>
+<td><code>ctr i tag</code></td>
+<td>N&#x2F;A</td>
+<td><code>nerdctl tag</code></td>
+</tr>
+<tr>
+<td>Export image</td>
+<td><code>docker export</code></td>
+<td><code>ctr i export</code></td>
+<td>N&#x2F;A</td>
+<td><code>nerdctl save</code></td>
+</tr>
+<tr>
+<td>Import image</td>
+<td><code>docker import</code></td>
+<td><code>ctr i import</code></td>
+<td>N&#x2F;A</td>
+<td><code>nerdctl load</code></td>
+</tr>
+<tr>
+<td>Build image</td>
+<td><code>docker build</code></td>
+<td>N&#x2F;A</td>
+<td>N&#x2F;A</td>
+<td><code>nerdctl build</code></td>
+</tr>
+</tbody></table>
+<h4 id="2-Container-Management"><a href="#2-Container-Management" class="headerlink" title="2. Container Management"></a>2. <strong>Container Management</strong></h4><table>
+<thead>
+<tr>
+<th><strong>Feature</strong></th>
+<th><strong>Docker CLI</strong></th>
+<th><strong>ctr</strong></th>
+<th><strong>crictl</strong></th>
+<th><strong>nerdctl</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>List containers</td>
+<td><code>docker ps</code></td>
+<td><code>ctr c ls</code></td>
+<td><code>crictl ps</code></td>
+<td><code>nerdctl ps</code></td>
+</tr>
+<tr>
+<td>Create container</td>
+<td><code>docker create</code></td>
+<td><code>ctr c create</code></td>
+<td><code>crictl create</code></td>
+<td><code>nerdctl create</code></td>
+</tr>
+<tr>
+<td>Start container</td>
+<td><code>docker start</code></td>
+<td><code>ctr t start</code></td>
+<td><code>crictl start</code></td>
+<td><code>nerdctl start</code></td>
+</tr>
+<tr>
+<td>Stop container</td>
+<td><code>docker stop</code></td>
+<td>N&#x2F;A</td>
+<td><code>crictl stop</code></td>
+<td><code>nerdctl stop</code></td>
+</tr>
+<tr>
+<td>Remove container</td>
+<td><code>docker rm</code></td>
+<td><code>ctr c rm</code></td>
+<td><code>crictl rm</code></td>
+<td><code>nerdctl rm</code></td>
+</tr>
+<tr>
+<td>Inspect container</td>
+<td><code>docker inspect</code></td>
+<td><code>ctr c info</code></td>
+<td><code>crictl inspect</code></td>
+<td><code>nerdctl inspect</code></td>
+</tr>
+<tr>
+<td>Attach container</td>
+<td><code>docker attach</code></td>
+<td><code>ctr t attach</code></td>
+<td><code>crictl attach</code></td>
+<td><code>nerdctl attach</code></td>
+</tr>
+<tr>
+<td>Execute in container</td>
+<td><code>docker exec</code></td>
+<td><code>ctr t exec</code></td>
+<td><code>crictl exec</code></td>
+<td><code>nerdctl exec</code></td>
+</tr>
+<tr>
+<td>View logs</td>
+<td><code>docker logs</code></td>
+<td>N&#x2F;A</td>
+<td><code>crictl logs</code></td>
+<td><code>nerdctl logs</code></td>
+</tr>
+<tr>
+<td>Monitor stats</td>
+<td><code>docker stats</code></td>
+<td><code>ctr t metrics</code></td>
+<td><code>crictl stats</code></td>
+<td><code>nerdctl stats</code></td>
+</tr>
+</tbody></table>
+<h4 id="3-Pod-Management"><a href="#3-Pod-Management" class="headerlink" title="3. Pod Management"></a>3. <strong>Pod Management</strong></h4><table>
+<thead>
+<tr>
+<th><strong>Feature</strong></th>
+<th><strong>Docker CLI</strong></th>
+<th><strong>ctr</strong></th>
+<th><strong>crictl</strong></th>
+<th><strong>nerdctl</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>List Pods</td>
+<td>N&#x2F;A</td>
+<td>N&#x2F;A</td>
+<td><code>crictl pods</code></td>
+<td>N&#x2F;A</td>
+</tr>
+<tr>
+<td>Inspect Pods</td>
+<td>N&#x2F;A</td>
+<td>N&#x2F;A</td>
+<td><code>crictl inspectp</code></td>
+<td>N&#x2F;A</td>
+</tr>
+<tr>
+<td>Run Pod</td>
+<td>N&#x2F;A</td>
+<td>N&#x2F;A</td>
+<td><code>crictl runp</code></td>
+<td>N&#x2F;A</td>
+</tr>
+<tr>
+<td>Stop Pod</td>
+<td>N&#x2F;A</td>
+<td>N&#x2F;A</td>
+<td><code>crictl stopp</code></td>
+<td>N&#x2F;A</td>
+</tr>
+<tr>
+<td>Remove Pod</td>
+<td>N&#x2F;A</td>
+<td>N&#x2F;A</td>
+<td><code>crictl rmp</code></td>
+<td>N&#x2F;A</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a><strong>Summary</strong></h3><ul>
+<li><strong>Docker</strong>: User-friendly and feature-rich, ideal for standalone container management and development environments.</li>
+<li><strong>ctr</strong>: Lightweight, low-level tool for direct interaction with <code>containerd</code>, mainly for debugging and backend management.</li>
+<li><strong>nerdctl</strong>: Docker CLI-compatible, great for users wanting Docker-like commands while directly utilizing <code>containerd</code>.</li>
+<li><strong>crictl</strong>: A Kubernetes-focused tool for managing Pods and containers via CRI; not suitable for general development.</li>
+</ul>
+<p><code>nerdctl</code> is a lightweight alternative to Docker based on <code>containerd</code>, while <code>crictl</code> specializes in Kubernetes CRI-based Pod management.</p>
+<h2 id="Guide-to-Using-Containerd"><a href="#Guide-to-Using-Containerd" class="headerlink" title="Guide to Using Containerd"></a>Guide to Using Containerd</h2><p><strong>nerdctl</strong> is a CLI tool compatible with the Docker CLI style, and it directly supports Docker Compose syntax. This significantly enhances efficiency when using containerd for local development, testing, or single-node container deployment.</p>
+<hr>
+<h3 id="1-Installation"><a href="#1-Installation" class="headerlink" title="1. Installation"></a>1. Installation</h3><p>You can download the appropriate package from the <a target="_blank" rel="noopener" href="https://github.com/containerd/nerdctl/releases">GitHub Release</a> page and extract it to a directory in your <code>PATH</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># If containerd is not installed, use the nerdctl-full-&lt;VERSION&gt;-linux-amd64.tar.gz package.</span></span><br><span class="line">➜  ~ wget https://github.com/containerd/nerdctl/releases/download/v1.7.5/nerdctl-1.7.5-linux-amd64.tar.gz</span><br><span class="line"></span><br><span class="line">➜  ~ <span class="built_in">mkdir</span> -p /usr/local/containerd/bin/ &amp;&amp; tar -zxvf nerdctl-1.7.5-linux-amd64.tar.gz nerdctl &amp;&amp; <span class="built_in">mv</span> nerdctl /usr/local/containerd/bin/</span><br><span class="line">➜  ~ <span class="built_in">ln</span> -s /usr/local/containerd/bin/nerdctl /usr/local/bin/nerdctl</span><br><span class="line">➜  ~ nerdctl version</span><br></pre></td></tr></table></figure>
+
+<p>Sample output:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">WARN[0000] unable to determine buildctl version: exec: &quot;buildctl&quot;: executable file not found in $PATH </span><br><span class="line">Client:</span><br><span class="line"> Version:    v1.7.5</span><br><span class="line"> OS/Arch:    linux/amd64</span><br><span class="line"> Git commit: cffed372371dcbea3dc9a646ce5a913fc1c09513</span><br><span class="line"></span><br><span class="line">Server:</span><br><span class="line"> containerd:</span><br><span class="line">  Version: v2.0.0-beta.2-33-g96bf529cb</span><br><span class="line">  GitCommit: 96bf529cbf55940ddb96bb8adc8be51b11922ebb</span><br><span class="line"> runc:</span><br><span class="line">  Version: 1.1.4</span><br><span class="line">  GitCommit: v1.1.4-0-g5fd4c4d</span><br></pre></td></tr></table></figure>
+
+<p>After installation, you can start exploring the <code>nerdctl</code> CLI.</p>
+<hr>
+<h3 id="2-Command-Overview"><a href="#2-Command-Overview" class="headerlink" title="2. Command Overview"></a>2. Command Overview</h3><h4 id="Container-Management"><a href="#Container-Management" class="headerlink" title="Container Management"></a><strong>Container Management</strong></h4><p><strong>Run</strong><br>The <code>nerdctl run</code> command works similarly to <code>docker run</code>. For example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ nerdctl run -d -p 80:80 --name=nginx --restart=always nginx:alpine</span><br></pre></td></tr></table></figure>
+
+<p>Available options are consistent with Docker, such as <code>-i</code>, <code>-t</code>, <code>--cpus</code>, and <code>--memory</code>. Use <code>nerdctl run --help</code> for more options.</p>
+<p><strong>Exec</strong><br>Execute commands within a container:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ nerdctl <span class="built_in">exec</span> -it &lt;container_id&gt; <span class="built_in">date</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>List Containers (ps)</strong><br>List all containers (active containers by default):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ nerdctl ps</span><br></pre></td></tr></table></figure>
+
+<p>For Kubernetes containers, use the <code>-n k8s.io</code> namespace flag:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ nerdctl -n k8s.io ps</span><br></pre></td></tr></table></figure>
+
+<p><strong>Inspect</strong><br>Display detailed container information:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ nerdctl -n k8s.io inspect &lt;container_id&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Logs</strong><br>Fetch container logs:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ nerdctl -n k8s.io logs &lt;container_id&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Supports options like <code>-f</code>, <code>-t</code>, <code>-n</code>, <code>--since</code>, and <code>--until</code>.</p>
+<p><strong>Stop and Remove</strong><br>Stop and delete containers:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ nerdctl -n k8s.io stop &lt;container_id&gt;</span><br><span class="line">➜  ~ nerdctl -n k8s.io <span class="built_in">rm</span> &lt;container_id&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Use <code>-f</code> or <code>--force</code> for forced removal.</p>
+<hr>
+<h4 id="Image-Management"><a href="#Image-Management" class="headerlink" title="Image Management"></a><strong>Image Management</strong></h4><p><strong>List Images</strong><br>View available images:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ nerdctl -n k8s.io images</span><br></pre></td></tr></table></figure>
+
+<p><strong>Pull Images</strong><br>Pull an image from a registry:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ nerdctl -n k8s.io pull &lt;image_name&gt;:&lt;tag&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Other Commands</strong><br><code>nerdctl</code> supports other image-related commands like <code>build</code>, <code>tag</code>, <code>push</code>, and <code>inspect</code>. Use <code>nerdctl image --help</code> for a complete list.</p>
+<hr>
+<p>This guide highlights key <code>nerdctl</code> commands, demonstrating its compatibility with Docker-like workflows while leveraging containerd’s efficiency.</p>
+<h2 id="CRICTL-Usage-Guide"><a href="#CRICTL-Usage-Guide" class="headerlink" title="CRICTL Usage Guide"></a>CRICTL Usage Guide</h2><p><code>crictl</code> traces its roots to the Container Runtime Interface (CRI) introduced in Kubernetes version 1.5. CRI standardizes the interface between Kubernetes and container runtimes, enabling Kubernetes to interact seamlessly with various runtimes like Docker, containerd, and CRI-O.</p>
+<p>As Kubernetes evolved, the demand for more features and better performance from container runtimes grew. CRI addressed these needs by providing a standardized interface for runtime implementation, simplifying the development of custom runtimes.</p>
+<p>In this context, <code>crictl</code> was developed as a command-line tool to interact with CRI-compliant container runtimes. It facilitates managing containers and images, querying container states and metadata, and viewing logs. By streamlining runtime management and debugging, <code>crictl</code> promotes CRI adoption.</p>
+<p>Below are the primary uses and features of <code>crictl</code>:</p>
+<ol>
+<li><strong>Container Management</strong>: Start, stop, delete, and query container states.</li>
+<li><strong>Image Management</strong>: Pull, push, delete, and inspect container images.</li>
+<li><strong>Log Viewing</strong>: View stdout and stderr logs of containers.</li>
+<li><strong>Container Information</strong>: Query detailed container information such as ID, name, status, and IP.</li>
+<li><strong>Metadata Management</strong>: Annotate and tag containers.</li>
+</ol>
+<p><code>crictl</code> is a robust tool for managing containers and images within a runtime, debugging containerized applications, and integrating with orchestration systems like Kubernetes.</p>
+<hr>
+<h3 id="1-Installation-1"><a href="#1-Installation-1" class="headerlink" title="1. Installation"></a>1. Installation</h3><p>First, install <code>crictl</code> by downloading the appropriate binary from the <a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/cri-tools">cri-tools release page</a>. Extract the binary to a PATH location:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ VERSION=<span class="string">&quot;v1.22.0&quot;</span></span><br><span class="line">➜  ~ wget https://github.com/kubernetes-sigs/cri-tools/releases/download/<span class="variable">$VERSION</span>/crictl-<span class="variable">$VERSION</span>-linux-amd64.tar.gz</span><br><span class="line"><span class="comment"># Use a mirror for faster downloads if needed:</span></span><br><span class="line"><span class="comment"># wget https://download.fastgit.org/kubernetes-sigs/cri-tools/releases/download/$VERSION/crictl-$VERSION-linux-amd64.tar.gz</span></span><br><span class="line">➜  ~ tar zxvf crictl-<span class="variable">$VERSION</span>-linux-amd64.tar.gz -C /usr/local/bin</span><br><span class="line">➜  ~ <span class="built_in">rm</span> -f crictl-<span class="variable">$VERSION</span>-linux-amd64.tar.gz</span><br><span class="line">➜  ~ crictl -v</span><br><span class="line">crictl version v1.22.0</span><br></pre></td></tr></table></figure>
+
+<p>If the version command runs successfully, the <code>crictl</code> tool is installed.</p>
+<hr>
+<h3 id="2-Command-Overview-1"><a href="#2-Command-Overview-1" class="headerlink" title="2. Command Overview"></a>2. Command Overview</h3><p>After installation, configure the default settings in <code>/etc/crictl.yaml</code> by specifying the runtime and image endpoint addresses:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">runtime-endpoint:</span> <span class="string">unix:///var/run/containerd/containerd.sock</span></span><br><span class="line"><span class="attr">image-endpoint:</span> <span class="string">unix:///var/run/containerd/containerd.sock</span></span><br><span class="line"><span class="attr">debug:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">pull-image-on-create:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">disable-pull-on-run:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<p>Once configured, you can start using <code>crictl</code>.</p>
+<h4 id="Pod-Management"><a href="#Pod-Management" class="headerlink" title="Pod Management"></a>Pod Management</h4><p>Use the <code>crictl pods</code> command to list the running pods on a node:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ crictl pods</span><br><span class="line">POD ID              CREATED             STATE               NAME                       NAMESPACE           ATTEMPT             RUNTIME</span><br><span class="line">1f617ebf0524c       8 weeks ago         Ready               node-exporter-ggjwf        node-exporter       0                   (default)</span><br></pre></td></tr></table></figure>
+
+<p>Filter pods by name or label:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ crictl pods --label app=node-exporter</span><br><span class="line">POD ID              CREATED             STATE               NAME                  NAMESPACE           ATTEMPT             RUNTIME</span><br><span class="line">1f617ebf0524c       8 weeks ago         Ready               node-exporter-ggjwf   node-exporter       0                   (default)</span><br></pre></td></tr></table></figure>
+
+<h4 id="Image-Management-1"><a href="#Image-Management-1" class="headerlink" title="Image Management"></a>Image Management</h4><p>List all images with <code>crictl images</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ crictl images</span><br><span class="line">IMAGE                                      TAG                 IMAGE ID            SIZE</span><br><span class="line">hub.cloud.ctripcorp.com/prom/node-exporter v1.4.0              d3e443c987ef4       11.5MB</span><br></pre></td></tr></table></figure>
+
+<p>View detailed image information with the <code>-v</code> flag:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ crictl images -v</span><br><span class="line">ID: sha256:d3e443c987ef405e1be101647873d86b5729c9c47bb1dd1ab59ccb24bc9e322c</span><br><span class="line">RepoTags: docker.io/prom/node-exporter:v1.4.0</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h4 id="Container-Management-1"><a href="#Container-Management-1" class="headerlink" title="Container Management"></a>Container Management</h4><p>List running containers using <code>crictl ps</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ crictl ps</span><br><span class="line">CONTAINER           IMAGE               CREATED             STATE               NAME                ATTEMPT             POD ID</span><br><span class="line">e7f156d31942f       d3e443c987ef4       2 days ago          Running             main                2                   bf1704937991a</span><br></pre></td></tr></table></figure>
+
+<p>Filter containers by status with the <code>-s</code> option:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ crictl ps -s Exited</span><br><span class="line">CONTAINER           IMAGE               CREATED             STATE               NAME                ATTEMPT             POD ID</span><br><span class="line">22a0adacf702f       d3e443c987ef4       2 days ago          Exited              main                1                   bf1704937991a</span><br></pre></td></tr></table></figure>
+
+<p>Execute commands within a container:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ crictl <span class="built_in">exec</span> -it e7f156d31942f <span class="built_in">whoami</span></span><br><span class="line">root</span><br></pre></td></tr></table></figure>
+
+<p>View container logs:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ crictl logs e7f156d31942f</span><br><span class="line">ts=2024-11-15T08:37:07.980Z <span class="built_in">caller</span>=node_exporter.go:182 level=info msg=<span class="string">&quot;Starting node_exporter&quot;</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>Follow logs in real time using <code>-f</code> or limit output with <code>--tail N</code>.</p>
+<p>Monitor container resource usage with <code>crictl stats</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ crictl stats e7f156d31942f</span><br><span class="line">CONTAINER           NAME                CPU %               MEM                 DISK                INODES</span><br><span class="line">e7f156d31942f       main                0.00                37.13MB             0B                  18</span><br></pre></td></tr></table></figure>
+
+<p>For more features, refer to <a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/cri-tools">kubernetes-sigs&#x2F;cri-tools</a>.</p>
+<hr>
+<h2 id="Links"><a href="#Links" class="headerlink" title="Links"></a>Links</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/setup/production-environment/container-runtimes/">Kubernetes Container Runtimes</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/666200234">Zhihu Article</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.qikqiak.com/k8strain2/containerd/runtime/">Qikqiak Guide</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/kubernetes/cri-api/tree/master/pkg/apis">CRI API Reference</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.opennaru.com/kubernetes/containerd/">OpenNaru Article</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.slideshare.net/AkihiroSuda/container-plumbing-days-2023-why-was-nerdctl-made">Nerdctl Presentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.alibabacloud.com/blog/a-discussion-on-container-runtime---starting-with-dockershim-being-deleted-by-kubernetes_600118">Alibaba Cloud Blog</a></li>
+</ol>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/categories/">Category</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#It%E2%80%99s-time-to-embark-on-the-dockerless-journey"><span class="toc-number">1.</span> <span class="toc-text">It’s time to embark on the dockerless journey</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Background-Introduction"><span class="toc-number">1.1.</span> <span class="toc-text">Background Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Technical-Background"><span class="toc-number">1.2.</span> <span class="toc-text">Technical Background</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#OCI-Standards-Open-Container-Initiative"><span class="toc-number">1.2.1.</span> <span class="toc-text">OCI Standards (Open Container Initiative)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Main-High-Level-Container-Runtimes"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">Main High-Level Container Runtimes</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Container-Relationships"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">Container Relationships</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Containerd"><span class="toc-number">1.2.2.</span> <span class="toc-text">Containerd</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Key-Components-of-Containerd"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">Key Components of Containerd</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Comparison-Between-Docker-and-Containerd"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">Comparison Between Docker and Containerd</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CRI-Container-Runtime-Interface"><span class="toc-number">1.2.3.</span> <span class="toc-text">CRI (Container Runtime Interface)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Evolution-of-CRI-and-Dockershim"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">Evolution of CRI and Dockershim</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Command-Line-Overview"><span class="toc-number">1.3.</span> <span class="toc-text">Command Line Overview</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker"><span class="toc-number">1.3.1.</span> <span class="toc-text">Docker</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ctr"><span class="toc-number">1.3.2.</span> <span class="toc-text">ctr</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nerdctl"><span class="toc-number">1.3.3.</span> <span class="toc-text">nerdctl</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#crictl"><span class="toc-number">1.3.4.</span> <span class="toc-text">crictl</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Horizontal-Comparison-for-Specific-Use-Cases"><span class="toc-number">1.3.5.</span> <span class="toc-text">Horizontal Comparison for Specific Use Cases</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-Image-Management"><span class="toc-number">1.3.5.1.</span> <span class="toc-text">1. Image Management</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-Container-Management"><span class="toc-number">1.3.5.2.</span> <span class="toc-text">2. Container Management</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-Pod-Management"><span class="toc-number">1.3.5.3.</span> <span class="toc-text">3. Pod Management</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Summary"><span class="toc-number">1.3.6.</span> <span class="toc-text">Summary</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Guide-to-Using-Containerd"><span class="toc-number">1.4.</span> <span class="toc-text">Guide to Using Containerd</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Installation"><span class="toc-number">1.4.1.</span> <span class="toc-text">1. Installation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Command-Overview"><span class="toc-number">1.4.2.</span> <span class="toc-text">2. Command Overview</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Container-Management"><span class="toc-number">1.4.2.1.</span> <span class="toc-text">Container Management</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Image-Management"><span class="toc-number">1.4.2.2.</span> <span class="toc-text">Image Management</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CRICTL-Usage-Guide"><span class="toc-number">1.5.</span> <span class="toc-text">CRICTL Usage Guide</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Installation-1"><span class="toc-number">1.5.1.</span> <span class="toc-text">1. Installation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Command-Overview-1"><span class="toc-number">1.5.2.</span> <span class="toc-text">2. Command Overview</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Pod-Management"><span class="toc-number">1.5.2.1.</span> <span class="toc-text">Pod Management</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Image-Management-1"><span class="toc-number">1.5.2.2.</span> <span class="toc-text">Image Management</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Container-Management-1"><span class="toc-number">1.5.2.3.</span> <span class="toc-text">Container Management</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Links"><span class="toc-number">1.6.</span> <span class="toc-text">Links</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://zoues.com/posts/58bd45d9/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://zoues.com/posts/58bd45d9/&text=It&#39;s time to embark on the dockerless journey"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://zoues.com/posts/58bd45d9/&title=It&#39;s time to embark on the dockerless journey"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://zoues.com/posts/58bd45d9/&is_video=false&description=It&#39;s time to embark on the dockerless journey"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=It&#39;s time to embark on the dockerless journey&body=Check out this article: https://zoues.com/posts/58bd45d9/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://zoues.com/posts/58bd45d9/&title=It&#39;s time to embark on the dockerless journey"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://zoues.com/posts/58bd45d9/&title=It&#39;s time to embark on the dockerless journey"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://zoues.com/posts/58bd45d9/&title=It&#39;s time to embark on the dockerless journey"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://zoues.com/posts/58bd45d9/&title=It&#39;s time to embark on the dockerless journey"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://zoues.com/posts/58bd45d9/&name=It&#39;s time to embark on the dockerless journey&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://zoues.com/posts/58bd45d9/&t=It&#39;s time to embark on the dockerless journey"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zouyee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/zouyee">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
