@@ -1,3 +1,4 @@
+https://zoues.com/posts/4c0f55a2/
 https://zoues.com/posts/319cc956/
 https://zoues.com/posts/819cc60d/
 https://zoues.com/posts/99d0d9bd/
@@ -94,6 +95,7 @@ https://zoues.com/tags/%E7%AC%94%E8%AE%B0/
 https://zoues.com/tags/golang/
 https://zoues.com/tags/runtime/
 https://zoues.com/tags/misc/
+https://zoues.com/tags/java/
 https://zoues.com/categories/serverless/
 https://zoues.com/categories/containerd/
 https://zoues.com/categories/Kubernetes-GO/
